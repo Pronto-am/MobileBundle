@@ -85,3 +85,27 @@ DATABASE_URL=mysql://db_user:db_password@127.0.0.1:3306/db_name
 ### MobileBundle configuration
 
 The MobileBundle configuration is available in the `config/packages/pronto_mobile.yaml` file. At the moment, there are not a lot of options here. But you can configure your domain name, uploads folder and decryption password for the Firebase storage database records.
+
+
+### Cronjobs
+
+There are three cronjobs which need to run in the background to send push notifications, retrieve logging from Firebase and convert APNS tokens to Firebase tokens. Below are the commands you need to register on your server for these tasks to be executed in the background. You are free to change the interval at which they are executed.
+
+```console
+crontab -e
+```
+```console
+*    * * * * php /path/to/project/bin firebase:notifications:send   // every minute
+*/15 * * * * php /path/to/project/bin firebase:database:logs        // every 15 minutes
+*/15 * * * * php /path/to/project/bin firebase:tokens:convert       // every 15 minutes
+```
+
+### Firebase
+
+We use Firebase to send our push notifications and store information in the Firebase database. This information contains sign-ins of devices and app users. At a regular interval, these records are being fetched from the Firebase database and updated into the database of the CMS. This method is used to prevent a lot of requests to your server. 
+
+The CMS also stores notification templates in the cloud storage of Firebase. When a user receives a notification, there might be an html template which is being opened. That template is also retrieved from Firebase.
+
+At last, APNS tokens need to be converted to Firebase tokens for iOS devices to be able to receive the notifications.
+
+For all of this to work, you need to download a `google-service-account.json` file from your Firebase project and place it in the root of the project. The MobileBundle will auto detect it's presence and is then able to use the Firebase services.
