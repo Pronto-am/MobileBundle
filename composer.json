@@ -11,9 +11,7 @@
   "keywords": [
     "cms mobile pronto apps app bundle"
   ],
-  "license": [
-    "MIT"
-  ],
+  "license": "MIT",
   "require": {
     "php": "^7.1.3",
     "troovers/browser": "^1.0.0",
