@@ -47,11 +47,6 @@
     }
   },
   "target-dir": "Pronto/MobileBundle",
-  "extra": {
-    "branch-alias": {
-      "dev-master": "master"
-    }
-  },
   "minimum-stability": "dev",
   "prefer-stable": true
 }
