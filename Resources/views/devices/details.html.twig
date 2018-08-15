@@ -1,0 +1,217 @@
+{% extends '@ProntoMobile/base.html.twig' %}
+
+{% block body %}
+    {% include '@ProntoMobile/components/loader.html.twig' with {'initial': true} %}
+
+    {% include '@ProntoMobile/components/pageTitle.html.twig' with {entity: 'device', backButton: path('pronto_mobile_devices'), customAction: 'details'} %}
+
+    <div class="row card">
+        <ul class="tabs">
+            <li class="tab col s4"><a href="#details">{{ 'device.details'|trans }}</a></li>
+            <li class="tab col s4"><a href="#notifications">{{ 'device.notifications'|trans }}</a></li>
+            <li class="tab col s4"><a href="#segments">{{ 'segments'|trans }}</a></li>
+        </ul>
+    </div>
+
+    <div class="row card" id="details">
+        <div class="card-content col s12">
+            {% if is_granted('ROLE_SUPER_ADMIN') %}
+                <div class="row">
+                    <div class="col s12">
+                        <h3><span>/</span> {{ 'device.identifier'|trans|capitalize }}</h3>
+                        {{ device.id }}
+                    </div>
+                </div>
+            {% endif %}
+
+            <div class="row">
+                <div class="col s12">
+                    <h3><span>/</span> {{ 'device.name'|trans|capitalize }}</h3>
+                    {{ device.name }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s12">
+                    <h3><span>/</span> {{ 'device.specifications'|trans|capitalize }}</h3>
+                    {{ device.model }}, {{ device.manufacturer }}, {{ ('device.' ~ device.platform)|trans }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s12">
+                    <h3><span>/</span> {{ 'device.firebase_token'|trans|capitalize }}</h3>
+                    <span class="break-all">{{ device.firebaseToken }}</span>
+                </div>
+            </div>
+
+            {% if device.platform == 'ios' %}
+                <div class="row">
+                    <div class="col s12">
+                        <h3><span>/</span> {{ 'device.apns_token'|trans|capitalize }}</h3>
+                        <span class="break-all">{{ device.apnsToken }}</span>
+                    </div>
+                </div>
+            {% endif %}
+
+            <div class="row">
+                <div class="col s12">
+                    <h3><span>/</span> {{ 'device.os_version'|trans|capitalize }}</h3>
+                    {{ device.osVersion }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s12">
+                    <h3><span>/</span> {{ 'device.app_version'|trans|capitalize }}</h3>
+                    {{ device.appVersion }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s12">
+                    <h3><span>/</span> {{ 'device.language'|trans|capitalize }}</h3>
+                    {{ device.language }}, {{ languages.getByCode(device.language).name }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s12">
+                    <h3><span>/</span> {{ 'device.last_login'|trans|capitalize }}</h3>
+                    {{ device.lastLogin != null ? 'format.date_and_time'|trans({'%date%': device.lastLogin|date('d-m-Y'), '%time%': device.lastLogin|date('H:i')}) : '' }}
+                </div>
+            </div>
+
+            {% if device.extraData|length > 0 %}
+                <div class="row">
+                    <div class="col s12">
+                        <h3><span>/</span> {{ 'device.extra_data'|trans|capitalize }}</h3>
+                    </div>
+                </div>
+
+                {% for key, extra in device.extraData %}
+                    <div class="row">
+                        <div class="col s4">
+                            <b>{{ key|capitalize }}</b>
+                        </div>
+                        <div class="col s8">
+                            {{ extra }}
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <div class="row">
+                <div class="col s12">
+                    <h3><span>/</span> {{ 'device.mark_as_test_device'|trans|capitalize }}</h3>
+                </div>
+            </div>
+
+            {{ form_start(deviceForm) }}
+            <div class="row">
+                <div class="col s12">
+                    {{ form_row(deviceForm.testDevice) }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s12">
+                    <button type="submit" class="btn btn-primary" formnovalidate>{{ 'buttons.save'|trans }}</button>
+                </div>
+            </div>
+
+            {{ form_end(deviceForm) }}
+        </div>
+    </div>
+
+    <div class="row card" id="notifications">
+        <div class="card-content col s12">
+            {% if notificationsPageHelper.getList()|length > 0 %}
+                <table class="table striped bordered highlight responsive-table">
+                    <thead>
+                    <tr>
+                        <th width="50">#</th>
+                        <th>{{ notificationsPageHelper.createSortableLink('push_notification.title'|trans|capitalize, 'n.title') }}</th>
+                        <th>{{ notificationsPageHelper.createSortableLink('push_notification.sent_on'|trans|capitalize, 'n.sent') }}</th>
+                        <th>{{ notificationsPageHelper.createSortableLink('push_notification.received'|trans, 't.received') }}</th>
+                        <th>{{ notificationsPageHelper.createSortableLink('push_notification.failure_reason'|trans|capitalize, 't.description') }}</th>
+                        <th>{{ notificationsPageHelper.createSortableLink('push_notification.opened'|trans|capitalize, 't.opened') }}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for key, notification in notificationsPageHelper.getList() %}
+                        <tr>
+                            <td>
+                                {{ notificationsPageHelper.getRowNumber(key) }}
+                            </td>
+                            <td>
+                                {% set path = notification.pushNotification.sent == null and notification.pushNotification.scheduledSending != null ? 'notifications_edit' : 'notifications_details' %}
+
+                                <a href="{{ path(path, {'identifier': notification.pushNotification.id}) }}" class="regular">
+                                    {{ json_translator.getTranslation(notification.pushNotification.title) }}
+                                </a>
+                            </td>
+                            <td>
+                                {% if notification.sent == null and notification.pushNotification.scheduledSending != null %}
+                                    {{ 'format.date_and_time'|trans({'%date%': notification.pushNotification.scheduledSending|date('d-m-Y'), '%time%': notification.pushNotification.scheduledSending|date('H:i')}) }} &nbsp;&nbsp;<i class="fa fa-clock-o fa-lg text-primary tooltipped" data-position="right" data-delay="50" data-tooltip="{{ 'push_notification.scheduled'|trans|capitalize }}" aria-hidden="true"></i>
+                                {% elseif notification.sent != null and notification.pushNotification.scheduledSending != null %}
+                                    {{ 'format.date_and_time'|trans({'%date%': notification.pushNotification.sent|date('d-m-Y'), '%time%': notification.pushNotification.sent|date('H:i')}) }} &nbsp;&nbsp;<i class="fa fa-spin fa-circle-o-notch fa-lg text-primary tooltipped" data-position="right" data-delay="50" data-tooltip="{{ 'push_notification.being_send'|trans|capitalize }}" aria-hidden="true"></i>
+                                {% else %}
+                                    {{ 'format.date_and_time'|trans({'%date%': notification.pushNotification.sent|date('d-m-Y'), '%time%': notification.pushNotification.sent|date('H:i')}) }}
+                                {% endif %}
+                            </td>
+                            <td><i class="fa fa-{% if notification.sent %}check{% else %}remove{% endif %}" aria-hidden="true"></i></td>
+                            <td>
+                                {% if notification.sent == 0 %}
+                                    {{ ('push_notification.' ~ notification.description)|trans }}
+                                {% endif %}
+                            </td>
+                            <td>{{ notification.opened != null ? 'format.date_and_time'|trans({'%date%': notification.opened|date('d-m-Y'), '%time%': notification.opened|date('H:i')}) : '' }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+
+                {% include '@ProntoMobile/components/pagination.html.twig' with {pageHelper: notificationsPageHelper} %}
+            {% else %}
+                {% include '@ProntoMobile/components/alert.html.twig' with {type: 'info', collection: 'push_notifications', cantAdd: true} %}
+            {% endif %}
+        </div>
+    </div>
+
+
+    <div class="row card" id="segments">
+        <div class="card-content col s12">
+            {% if segments|length > 0 %}
+                <table class="table striped bordered highlight responsive-table">
+                    <thead>
+                    <tr>
+                        <th width="50">#</th>
+                        <th>{{ 'push_notification.segment.name'|trans|capitalize }}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for key, segment in segments %}
+                        <tr>
+                            <td>
+                                {{ key + 1 }}
+                            </td>
+                            <td>
+                                {% if is_granted('ROLE_SUPER_ADMIN') %}
+                                    <a href="{{ path('pronto_mobile_notification_segments_edit', {'id': segment.id}) }}" class="regular">
+                                        {{ json_translator.getTranslation(segment.name) }}
+                                    </a>
+                                {% else %}
+                                    {{ json_translator.getTranslation(segment.name) }}
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                {% include '@ProntoMobile/components/alert.html.twig' with {type: 'info', collection: 'segments', cantAdd: true} %}
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

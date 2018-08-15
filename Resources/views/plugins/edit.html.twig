@@ -1,0 +1,87 @@
+{% extends '@ProntoMobile/base.html.twig' %}
+
+{% block body %}
+
+    {% include '@ProntoMobile/components/pageTitle.html.twig' with {entity: 'plugin', exists: applicationPlugin != null, backButton: path('pronto_mobile_plugins')} %}
+
+    <div class="row card">
+        <div class="card-content">
+            <form action="{{ path('pronto_mobile_plugins_save', {id: plugin.id}) }}" method="POST">
+                <div class="row">
+                    <div class="col s12">
+                        <input type="checkbox" id="active" name="active" value="1" {% if applicationPlugin.active %}checked{% endif %}>
+                        <label for="active">{{ 'plugin.active'|trans }}</label>
+                    </div>
+                </div>
+
+                {% for key, setting in plugin.defaultConfig %}
+                    <div class="row">
+                        {% if setting.type == 'text' %}
+                            <div class="col s12">
+
+                                <label for="{{ key }}">{{ ('plugin.' ~ key)|trans }}</label>
+
+                                <input type="text" id="{{ key }}" name="{{ key }}"
+                                {% if setting.attributes is defined %}
+                                    {% for key, attribute in setting.attributes %}
+                                        {% if attribute == true %}
+                                            {{ key }}
+                                        {% else %}
+                                            {{ key }}="{{ attribute }}"
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+                                {% if applicationPlugin.config[key] is defined %}value="{{ applicationPlugin.config[key] }}"{% endif %}>
+                            </div>
+                        {% elseif setting.type == 'code' %}
+                            <div class="col m12 l7">
+
+                                <label for="{{ key }}">{{ ('plugin.' ~ key)|trans }}</label>
+
+                                <div id="{{ key }}" class="code-mirror" data-language="html">{% if applicationPlugin.config[key] is defined %}{{ applicationPlugin.config[key] }}{% endif %}</div>
+
+                                <textarea name="{{ key }}" style="display: none;"></textarea>
+                            </div>
+
+                            <div class="col m12 l5">
+                                {% include '@ProntoMobile/components/browser.html.twig' %}
+                            </div>
+                        {% elseif setting.type == 'checkbox' %}
+                            <div class="col s12">
+                                <input type="checkbox" id="{{ key }}" name="{{ key }}" value="1" {% if applicationPlugin.config[key] is defined and applicationPlugin.config[key] == true %}checked{% endif %}>
+                                <label for="{{ key }}">{{ ('plugin.' ~ key)|trans }}</label>
+                            </div>
+                        {% elseif setting.type == 'json' %}
+                            <div class="col s12">
+
+                                <label for="{{ key }}">{{ ('plugin.' ~ key)|trans }}</label>
+
+                                <div id="{{ key }}" class="code-mirror" data-language="json">{% if applicationPlugin.config[key] is defined %}{{ applicationPlugin.config[key]|json_encode }}{% endif %}</div>
+
+                                <textarea name="{{ key }}" style="display: none;"></textarea>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+
+                <div class="row">
+                    <div class="col s12">
+                        <button type="submit" class="btn btn-primary" formnovalidate>{{ 'buttons.save'|trans }}</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+    <link rel="stylesheet" href="{{ mix('/css/codeflask.css') }}">
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="text/javascript" src="{{ mix('/js/plugins.js') }}"></script>
+{% endblock %}

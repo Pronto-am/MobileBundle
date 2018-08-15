@@ -1,0 +1,47 @@
+{% extends '@ProntoMobile/authentication.html.twig' %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col s12 m8 l6 offset-m2 offset-l3">
+                <h1><img src="{{ mix('/images/logo-login.png') }}" alt="Pronto"/></h1>
+
+                <div class="card">
+                    {% include "@ProntoMobile/components/loader.html.twig" %}
+                    <div class="card-content">
+                        <h1 class="has-back-button"><a href="{{ path('pronto_mobile_select_customer') }}" class="activate-loader"><i class="fa fa-long-arrow-left" aria-hidden="true"></i></a><span>/</span> {{ 'account.add'|trans }}</h1>
+
+                        {{ form_start(customerForm) }}
+
+                        {{ form_row(customerForm.companyName) }}
+
+                        {{ form_row(customerForm.contactPerson) }}
+
+                        {{ form_row(customerForm.phoneNumber) }}
+
+                        {{ form_row(customerForm.email) }}
+
+                        {{ form_row(customerForm.primaryColor) }}
+
+                        {{ form_row(customerForm.secondaryColor) }}
+
+                        {{ form_row(customerForm.sidebarColor) }}
+
+                        <div class="right-align">
+                            <button type="submit" class="btn btn-primary activate-loader" formnovalidate>{{ 'buttons.save'|trans }}</button>
+                        </div>
+
+                        {{ form_end(customerForm) }}
+                    </div>
+                </div>
+                <a href="{{ path('pronto_mobile_select_customer') }}">{{ 'account.go_back'|trans }}</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script src="{{ mix('/js/jscolor.js') }}" type="text/javascript"></script>
+{% endblock %}

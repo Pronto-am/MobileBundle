@@ -1,0 +1,97 @@
+{% extends '@ProntoMobile/base.html.twig' %}
+
+{% block body %}
+    {% include '@ProntoMobile/components/pageTitle.html.twig' with {entity: 'user', exists: user != null, backButton: path('pronto_mobile_users')} %}
+
+    {% if is_granted('ROLE_SUPER_ADMIN') and user != null %}
+        <div class="row card">
+            <ul class="tabs">
+                <li class="tab col s6"><a href="#details">{{ 'device.details'|trans }}</a></li>
+                <li class="tab col s6"><a href="#logins">{{ 'user.login_information'|trans }}</a></li>
+            </ul>
+        </div>
+    {% endif %}
+
+    <div class="row card" id="details">
+        <div class="card-content col s12">
+            {{ form_start(userForm) }}
+
+            <div class="row">
+                <div class="col s12 m8">
+                    {{ form_row(userForm.firstName) }}
+                </div>
+
+                <div class="col s12 m4">
+                    {{ form_row(userForm.insertion) }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s12">
+                    {{ form_row(userForm.lastName) }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s12">
+                    {{ form_row(userForm.email) }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s12">
+                    {{ form_row(userForm.admin, {
+                        'checked': (user != null and user.hasRole('ROLE_ADMIN'))
+                    }) }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s12">
+                    <button type="submit" class="btn btn-primary" formnovalidate>{{ 'buttons.save'|trans }}</button>
+                </div>
+            </div>
+
+            {{ form_end(userForm) }}
+        </div>
+    </div>
+
+    {% if is_granted('ROLE_SUPER_ADMIN') and user != null %}
+        <div class="row card" id="logins">
+            <div class="card-content col s12">
+                {% if user.logins|length > 0 %}
+                    <table class="table striped bordered highlight responsive-table">
+                        <thead>
+                        <tr>
+                            <th width="50">#</th>
+                            <th>Datum</th>
+                            <th>Browser</th>
+                            <th>Platform</th>
+                            <th>Versie</th>
+                            <th>Mobile</th>
+                            <th>Tablet</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for key, login in user.logins %}
+                            <tr>
+                                <td>
+                                    {{ key + 1 }}
+                                </td>
+                                <td>{{ 'format.date_and_time'|trans({'%date%': login.date|date('d-m-Y'), '%time%': login.date|date('H:i')}) }}</td>
+                                <td>{{ login.browserName }}</td>
+                                <td>{{ login.platform }}</td>
+                                <td>{{ login.version }}</td>
+                                <td>{{ login.mobile == 1 ? '<i class="material-icons green-text text-lighten-2">check_circle_outline</i>' : '<i class="material-icons red-text text-lighten-2">remove_circle_outline</i>' }}</td>
+                                <td>{{ login.tablet == 1 ? '<i class="material-icons green-text text-lighten-2">check_circle_outline</i>' : '<i class="material-icons red-text text-lighten-2">remove_circle_outline</i>' }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    {% include '@ProntoMobile/components/alert.html.twig' with {type: 'info', collection: 'logins', cantAdd: true} %}
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

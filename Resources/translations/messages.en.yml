@@ -1,0 +1,313 @@
+
+##
+## General translations
+##
+
+default.welcome: Welcome
+default.impersonating: Pay attention, you are impersonating the user <b>%user%</b>.
+default.impersonating.go_back: Go back
+default.impersonating.to_your_own_account: to your own account.
+
+account.choose: Choose an account
+account.add: Add an account
+account.added: The accound was added
+account.removed: The account was removed
+account.go_back: Back to account overview
+
+alert.info.no_records: There are no %collection% yet.
+alert.info.no_records_add_one: There are no %collection% yet. Click on add to create a new record.
+alert.success.data_saved: The data was saved successfully
+alert.success.data_removed: The data was successfully removed
+alert.warning.something_went_wrong: Something went wrong when saving the data. Please refresh the page and try again.
+alert.warning.no_permission: You are not authorized to perform this request
+
+confirm.title: Are you sure?
+confirm.warning.title: Warning
+confirm.text: Are you sure you want to delete all the data?
+
+authentication.login: Login
+authentication.forgot_password: Forgot your password?
+authentication.remembered_password: I remember my password!
+authentication.create_password: Create password
+authentication.reset_password: Reset password
+authentication.reset_password_email_success: When the email address is connected to a user, you will receive an email to reset your password
+
+buttons.save: Save
+buttons.delete: Delete
+buttons.ok: Ok
+buttons.yes: Yes
+buttons.no: No
+buttons.cancel: Cancel
+
+form.required_field: This field is required
+form.invalid_format: The format is invalid
+form.inconsistent_field: This field is not consistent over all languages
+form.invalid_json: The provided JSON string is not valid
+form.number_below_minimum: Number is below the minimum value
+form.number_exceeds_maximum: Number exceeds the maximum value
+form.select_option: Select an option
+
+format.date_and_time: "%date% at %time%"
+
+
+##
+##  Mail translations
+##
+
+mails.base.link_reference: "When you can't click on the \"%button%\" button, you can also copy and paste the url below:"
+mails.base.rights_reserved: "All rights reserved"
+mails.base.greeting: "Dear %name%,"
+mails.base.salutation: "With kind regards,<br><br>Pronto"
+mails.base.custom_salutation: "With kind regards,<br><br>%company%"
+
+mails.password.header: "Reset password"
+mails.password.body: "You have requested a new password for the CMS via the website. You can reset your password by clicking on the link below. This link will remain valid for 1 hour. When you haven't requested a new password, you can ignore this email since it's only sent to you.<br>"
+
+mails.registration.header: "Your account"
+mails.registration.body: "An account has been created for you for the CMS of your app. To be able to login, you first need to create a password by clicking the link below. Your username is your email address."
+
+mails.app.password.body: "You have requested a new password for the %application% app. You can reset your password by clicking on the link below. This link will remain valid for 1 hour. When you haven't requested a new password, you can ignore this email since it's only sent to you.<br>"
+
+
+##
+##  Entity translations
+##
+
+app_user: app user
+app_users: app users
+cms_user: CMS user
+cms_users: CMS users
+logins: logins
+
+entity.add: "add %entity%"
+entity.edit: "edit %entity%"
+entity.custom_action: "%entity% %action%"
+
+customer: customer
+customers: customers
+customer.data: Customer information
+customer.edit_account: Edit account info
+customer.company_name: Company name
+customer.contact_person: Contact person
+customer.phone_number: Phone number
+customer.email: Email address
+customer.primary_color: Primary color
+customer.secondary_color: Secondary color
+customer.sidebar_color: Sidebar color
+customer.logo: Logo
+customer.logo_label: Logo (500px x 120px with transparent background)
+customer.delete_everything: Delete the account and all of it's data
+customer.delete_account: Delete the account
+
+user: user
+users: users
+user.name: Name
+user.first_name: First name
+user.insertion: Insertion
+user.last_name: Last name
+user.email: Email
+user.administrator: Administrator
+user.gender: Gender
+user.male: Male
+user.female: Female
+user.details: Details
+user.attributes: Attributes
+user.timezone: Timezone
+user.current_password: Current password
+user.new_password: New password
+user.password: Password
+user.password_confirm: Password confirmation
+user.leave_empty_to_ignore: Leave the password fields empty to keep your old password
+user.login_information: Login information
+user.control_user_activation: Activate or deactivate the users account
+user.activated: Activated
+user.reset_password_success: Your password has been successfully reset
+user.password_reset_link_expired: The password reset link has expired
+
+application: application
+applications: applications
+application.name: Name
+application.label: Label
+application.versions: Versions
+application.new_version: New version
+application.color: Color
+application.android_bundle_identifier: Android bundle identifier
+application.ios_bundle_identifier: iOS bundle identifier
+application.client_id: Client ID
+application.client_secret: Client secret
+application.default_language: Default language
+application.available_languages: Available languages
+application.choose: Select an application
+application.first: First application
+application.version: Application version
+application.version.not_deletable: There has to be at least one version of the application
+
+collection: collection
+collections: collections
+collection.general: general
+collection.properties: properties
+collection.name: Name
+collection.identifier: Identifier
+collection.icon: Icon
+collection.type: Type
+collection.list_view: List view
+collection.entry_title: Entry title
+collection.set_as_entry_title: Set as entry title
+collection.has_no_entry_title: Choose a property of the collection, to be used as the entry title
+
+property: property
+properties: properties
+collection.property.include_in_table_list_view: Include in table list view
+collection.property.include_in_json_list_view: Include in json list view
+collection.property.required: Required
+collection.property.key: Key
+collection.property.value: Value
+collection.property.add_select_option: Add another select option
+collection.property.leave_empty_to_ignore: Leave a key and or value empty to ignore the select option
+
+collection.property.type.label: Label (optional)
+collection.property.type.defaultValue: Default value
+collection.property.type.multiSelect: Enable multi selection
+collection.property.type.multipleFiles: Enable multiple file upload
+collection.property.type.max: Maximum value
+collection.property.type.min: Minimum value
+collection.property.type.step: Step size
+collection.property.type.address: Address
+collection.property.type.latitude: Latitude
+collection.property.type.longitude: Longitude
+collection.property.type.uploadedFiles: Uploaded files
+
+entry: entry
+entries: entries
+collection.entry.file_name: File name
+collection.entry.number_between: "Number between %min% and %max%"
+collection.entry.number_greater_then: "Value has to be greater than %min%"
+collection.entry.number_less_then: "Value has to be less than %max%"
+collection.entry.select_item: Select an item
+collection.entry.select_mutiple_items: Select one or more items
+collection.entry.active_entry: Entry is active
+collection.entry.time: Time
+collection.entry.value_true: True
+collection.entry.value_false: False
+
+relationship: relationship
+relationships: relationships
+collection.relationship.name: Name
+collection.relationship.related_collection: Related collection
+collection.relationship.type: Type
+collection.relationship.save_entry_first: You need to save the entry first before you can add a relationship to it.
+collection.relationship.edit: Edit this relationship
+collection.relationship.search_entry: Search for an entry
+
+push_notification: push notification
+push_notifications: push notifications
+push_notification.identifier: Identifier
+push_notification.title: Title
+push_notification.content: Content
+push_notification.click_action: Action after clicking on notification
+push_notification.nothing: Nothing, don't define an action
+push_notification.click_action_url: Go to this url
+push_notification.click_action_html: Show this text
+push_notification.schedule: Schedule this notification
+push_notification.date: Scheduled date
+push_notification.time: Scheduled time
+push_notification.scheduled: scheduled
+push_notification.being_send: is being send
+push_notification.send_now: send now
+push_notification.sent_on: sent on
+push_notification.sent_by: Sent by
+push_notification.filter_by_segments: Filter by segments
+push_notification.choose_segment: Choose a segment
+push_notification.details: details
+push_notification.statistics: statistics
+push_notification.recipient_failures: Recipient failures
+push_notification.successful_recipients: Successfully sent
+push_notification.received: Received
+push_notification.opened: Opened
+push_notification.test_notification: This is a test notification
+push_notification.is_test: Test notification
+push_notification.sent_statistics: Sent statistics
+push_notification.sent_successfully: Successfully sent
+push_notification.bounced: Bounce count
+push_notification.failure_reason: Reason of failure
+push_notification.segment: Segment
+push_notification.all_devices: All of the registered devices
+push_notification.selected_test_devices: The selected test devices
+push_notification.sent_to_everyone: This notification was sent to all of the registered devices
+push_notification.sent_to_segment: "This notification was sent to all of the registered devices, who are subscribed to '%segment%'"
+push_notification.missingregistration: Missing registration
+push_notification.notregistered: Device is not registered
+push_notification.invalidregistration: Registration is invalid
+push_notification.invalidapnscredential: APNS token is invalid
+push_notification.unavailable: Service is unavailable
+push_notification.messagerateexceeded: Devices' message rate is exceeded
+push_notification.internalservererror: Firebase internal server error
+push_notification.invalidparameters: Firebase token is invalid
+push_notification.nofirebasetoken: Device has no Firebase token (yet)
+push_notification.sent_notifications: Sent notifications
+push_notification.scheduled_notifications: Scheduled notifications
+push_notification.inconsistent_title: Inconsistent input
+push_notification.inconsistent_content: The provided input for some fields is inconsistent with other inputs, which means that not all translations are provided. These fields contain a warning message. When you want to continue anyway, the value of the default language will be used when the input field of a specific language is empty.
+push_notification.confirmation_content: You are about to send a notification to these devices. Click on OK to continue, or Cancel to change the notification.
+push_notification.invalid_form_title: Incorrect input
+push_notification.invalid_form_content: You haven't filled in all required fields, or the input is incorrect. Please correct the input at the fields with a warning message.
+push_notification.send_anyway: Send anyway
+push_notification.click_statistics: Click statistics
+push_notification.platform_statistics: Platform statistics
+push_notification.bar_statistics: "%success% sent, %failure% failed"
+push_notification.maximum_character_count_exceeded: The maximum character count is exceeded
+push_notification.recipients: Push notification recipients
+push_notification.schedule_this_notification: Schedule the sending of this notification
+push_notification.send_to_test_devices: Send this notification to the registered test devices
+push_notification.user_is_redirected_to: The user will be redirected to
+push_notification.user_will_see_webview: The user will see this webview
+
+segment: segment
+segments: segments
+push_notification.segment.name: name
+push_notification.segment.device_count: Number of devices
+push_notification.segment.details: Details
+push_notification.segment.subscribed_devices: Subscribed devices
+
+device: device
+devices: devices
+device.details: Details
+device.notifications: Push notificaties
+device.identifier: Identifier
+device.firebase_token: Firebase token
+device.apns_token: APNS token
+device.name: Name
+device.model: Model
+device.manufacturer: Manufacturer
+device.platform: Platform
+device.specifications: Specifications
+device.ios: iOS
+device.android: Android
+device.os_version: Operating system version
+device.app_version: App version
+device.last_login: Last logged in
+device.language: Device language
+device.extra_data: Extra data
+device.test_device: Test device
+device.mark_as_test_device: Mark this device as a test device
+device.is_test_device: Test device
+device.browser: Browser
+
+plugin: plugin
+plugins: plugins
+plugin.active: Active
+plugin.firebaseAccessToken: Firebase access token
+plugin.notificationHtmlTemplate: Notification HTML template
+plugin.nodejsEndpointToken: Node JS Facebook access token
+plugin.chatbaseApiToken: Chatbase API token
+plugin.facebookAccessToken: Facebook access token
+plugin.dialogflowDeveloperToken: Dialogflow developer token
+plugin.userExport: User export
+plugin.userExportConfig: User export configuration
+plugin.registrationEnabled: Registration for new users is enabled
+plugin.accountActivationViaEmail: Activation of account via email necessary
+
+settings: settings
+setting: setting
+setting.edit_account: Edit account
+setting.delete_account: Delete account

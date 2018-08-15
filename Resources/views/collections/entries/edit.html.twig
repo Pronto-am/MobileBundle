@@ -1,0 +1,110 @@
+{% extends '@ProntoMobile/base.html.twig' %}
+
+{% block body %}
+    {% include '@ProntoMobile/components/loader.html.twig' with {'initial': true} %}
+
+    {% include '@ProntoMobile/components/pageTitle.html.twig' with {entity: 'entry', exists: entry != null, backButton: path('pronto_mobile_collections')} %}
+
+    {% if translatableProperties|length > 0 %}
+        <div class="row card">
+            <ul class="tabs">
+                {% for language in applicationVersion.application.availableLanguages %}
+                    <li class="tab" data-language="{{ language.code }}">
+                        <a href="#{{ language.code }}">
+                            {{ language.name }}
+                            <i class="fa fa-exclamation-triangle orange-text" aria-hidden="true"></i>
+                            <i class="fa fa-exclamation-circle red-text" aria-hidden="true"></i>
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+    <form action="{{ path('pronto_mobile_collection_entries_save', {identifier: identifier, id: entry != null ? entry.id : null }) }}" method="post" enctype="multipart/form-data">
+        {% if translatableProperties|length > 0 %}
+            {% for language in applicationVersion.application.availableLanguages %}
+                <div class="row card language-card {{ language.code == applicationVersion.application.defaultLanguage ? 'is-fallback-language' : '' }}" id="{{ language.code }}">
+                    <div class="card-content">
+
+                        {% for property in translatableProperties %}
+                            {% include '@ProntoMobile/components/collections/entries/form/' ~ property.type.type ~ '.html.twig' with {property: property, entry: entry, language: language.code} %}
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="row card">
+            <div class="card-content">
+                {% for property in properties %}
+                    {% include '@ProntoMobile/components/collections/entries/form/' ~ property.type.type ~ '.html.twig' with {property: property, entry: entry} %}
+                {% endfor %}
+
+                <div class="row">
+                    <div class="col s12">
+                        {% for relationship in relationships %}
+                            {% if loop.first %}
+                                <h2><span>/</span>{{ 'relationships'|trans }}</h2>
+
+                                {% if entry == null %}
+                                    <p>{{ 'collection.relationship.save_entry_first'|trans }}</p>
+                                {% endif %}
+
+                                <div class="collection">
+                            {% endif %}
+
+                            {% set modalUrl = entry != null ? path('pronto_mobile_collection_entry_relationships_edit', {entry: entry.id, relationship: relationship.id}) : '' %}
+
+                            <a href="#!" data-href="{{ modalUrl }}" name="set-relationship" class="collection-item avatar {{ entry == null ? 'disabled' : '' }}">
+                                <i class="fa {{ relationship.relatedCollection.icon }} circle" style="background-color: {{ '#' ~ applicationVersion.application.color }};" aria-hidden="true"></i>
+                                <span class="title">{{ relationship.relatedCollection.name }}</span>
+                                {% if related[relationship.relatedCollection.id] is defined %}
+                                    <p>{{ related[relationship.relatedCollection.id]|join(', ') }}</p>
+                                {% endif %}
+                            </a>
+
+                            {% if loop.last %}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col s12">
+                        <div>
+                            <input type="checkbox" name="active" id="active" value="1" {{ entry == null or entry.active  ? 'checked' : '' }}>
+                            <label for="active">{{ 'collection.entry.active_entry'|trans }}</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col s12">
+                        <button type="submit" class="btn btn-primary" formnovalidate>{{ 'buttons.save'|trans }}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+    <link rel="stylesheet" href="{{ mix('/css/codeflask.css') }}">
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="text/javascript">
+        translations.form.invalid_json = '{{ 'form.invalid_json'|trans }}';
+        translations.form.number_below_minimum = '{{ 'form.number_below_minimum'|trans }}';
+        translations.form.number_exceeds_maximum = '{{ 'form.number_exceeds_maximum'|trans }}';
+    </script>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCND4B0Fb-SHz6nQHGiGNZn01QLM0SYzB4&libraries=places"></script>
+    <script type="text/javascript" src="{{ mix('/js/collections/entries.js') }}"></script>
+{% endblock %}

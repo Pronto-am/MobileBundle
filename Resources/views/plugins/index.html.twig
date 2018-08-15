@@ -1,0 +1,25 @@
+{% extends '@ProntoMobile/base.html.twig' %}
+
+{% block body %}
+
+    {% include '@ProntoMobile/components/toolbar.html.twig' with {pageTitle: 'plugins'|trans|capitalize} %}
+
+    {% if plugins|length > 0 %}
+        <div class="row">
+            {% for plugin in plugins %}
+                <div class="col s12 m6 l4">
+                    <div class="card card-clickable is-clickable {% if plugin.active == false %}plugin-disabled{% endif %}" data-href="{{ path('pronto_mobile_plugins_edit', {'id': plugin.plugin.id}) }}">
+                        <i class="fa {{ plugin.plugin.icon }}"></i>
+
+                        <div>
+                            <h1>{{ plugin.plugin.name }}</h1>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+    {% else %}
+        {% include '@ProntoMobile/components/alert.html.twig' with {'type': 'info', 'collection': 'plugins'} %}
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,29 @@
+<div class="html-preview">
+    <div class="browser">
+        <div class="toolbar">
+            <div class="column left">
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+            </div>
+            <div class="column middle">
+                <input type="text" class="browser-default" value="https://pronto.am">
+            </div>
+            <div class="column right">
+                <div>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="content">
+            {% if src is defined %}
+                <iframe src="{{ src }}"></iframe>
+            {% else %}
+                <iframe></iframe>
+            {% endif %}
+        </div>
+    </div>
+</div>

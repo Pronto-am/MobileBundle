@@ -1,0 +1,29 @@
+{
+  "bundles": {
+    "Doctrine\\Bundle\\DoctrineBundle\\DoctrineBundle": ["all"],
+    "Doctrine\\Bundle\\MigrationsBundle\\DoctrineMigrationsBundle": ["all"],
+    "Symfony\\Bundle\\SecurityBundle\\SecurityBundle": ["all"],
+    "Symfony\\Bundle\\TwigBundle\\TwigBundle": ["all"],
+    "FOS\\OAuthServerBundle": ["all"],
+    "Pronto\\MobileBundle\\ProntoMobileBundle": ["all"]
+  },
+  "copy-from-recipe": {
+    "config/": "%CONFIG_DIR%/",
+    "public/": "%PUBLIC_DIR%/",
+    "src/": "%SRC_DIR%/"
+  },
+  "composer-scripts": {
+    "cache:clear": "symfony-cmd",
+    "assets:install --symlink --relative %PUBLIC_DIR%": "symfony-cmd"
+  },
+  "env": {
+    "APP_ENV": "dev",
+    "APP_SECRET": "%generate(secret)%"
+  },
+  "gitignore": [
+    ".env",
+    "/public/bundles/",
+    "/var/",
+    "/vendor/"
+  ]
+}

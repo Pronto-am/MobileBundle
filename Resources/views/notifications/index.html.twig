@@ -1,0 +1,118 @@
+{% extends '@ProntoMobile/base.html.twig' %}
+
+{% block body %}
+
+    {% include '@ProntoMobile/components/toolbar.html.twig' with {pageTitle: 'push_notifications'|trans|capitalize, newObjectUrl: 'pronto_mobile_notifications_edit'} %}
+
+    {% if scheduledNotifications|length > 0 %}
+        <div class="card">
+            <div class="card-content">
+                <h3><span>/</span>{{ 'push_notification.scheduled_notifications'|trans }}</h3>
+                <table class="table striped bordered highlight responsive-table">
+                    <thead>
+                    <tr>
+                        <th width="50">#</th>
+                        <th>{{ 'push_notification.title'|trans|capitalize }}</th>
+                        <th>{{ 'push_notification.scheduled'|trans|capitalize }}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for key, notification in scheduledNotifications %}
+                        <tr>
+                            <td>
+                                {{ key + 1 }}
+                            </td>
+                            <td>
+                                {% set path = notification.sent == null and notification.scheduledSending != null ? 'notifications_edit' : 'notifications_details' %}
+
+                                <a href="{{ path('pronto_mobile_' ~ path, {identifier: notification.id}) }}" class="regular">
+                                    {{ json_translator.getTranslation(notification.title) }}
+                                    {% if notification.test %}<span class="new badge" data-badge-caption="{{ 'push_notification.is_test'|trans }}"></span>{% endif %}
+                                </a>
+                            </td>
+                            <td>
+                                {{ 'format.date_and_time'|trans({'%date%': notification.scheduledSending|date('d-m-Y'), '%time%': notification.scheduledSending|date('H:i')}) }} &nbsp;&nbsp;<i class="fa fa-clock-o fa-lg text-primary tooltipped" data-position="right" data-delay="50" data-tooltip="{{ 'push_notification.scheduled'|trans|capitalize }}" aria-hidden="true"></i>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if pageHelper.getList()|length > 0 %}
+        <div class="card">
+            <div class="card-content">
+                <h3><span>/</span>{{ 'push_notification.sent_notifications'|trans }}</h3>
+                <table class="table striped bordered highlight responsive-table">
+                    <thead>
+                    <tr>
+                        <th width="50">#</th>
+                        <th>{{ pageHelper.createSortableLink('push_notification.title'|trans|capitalize, 't.title') }}</th>
+                        <th>{{ pageHelper.createSortableLink('push_notification.sent_on'|trans|capitalize, 't.sent') }}</th>
+                        <th>{{ pageHelper.createSortableLink('devices'|trans|capitalize, 'devices') }}</th>
+                        <th>{{ 'push_notification.sent_statistics'|trans|capitalize }}</th>
+                        <th>{{ pageHelper.createSortableLink('push_notification.opened'|trans|capitalize, 'opened') }}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for key, notification in pageHelper.getList() %}
+                        <tr>
+                            <td>
+                                {{ pageHelper.getRowNumber(key) }}
+                            </td>
+                            <td>
+                                {% set path = notification.notification.sent == null and notification.notification.scheduledSending != null ? 'notifications_edit' : 'notifications_details' %}
+
+                                <a href="{{ path('pronto_mobile_' ~ path, {identifier: notification.notification.id}) }}" class="regular">
+                                    {{ json_translator.getTranslation(notification.notification.title) }}
+                                    {% if notification.notification.test %}<span class="new badge" data-badge-caption="{{ 'push_notification.is_test'|trans }}"></span>{% endif %}
+                                </a>
+                            </td>
+                            <td>
+                                {% if notification.notification.sent != null and notification.notification.scheduledSending != null %}
+                                    {{ 'format.date_and_time'|trans({'%date%': notification.notification.sent|date('d-m-Y'), '%time%': notification.notification.sent|date('H:i')}) }} &nbsp;&nbsp;<i class="fa fa-spin fa-circle-o-notch fa-lg text-primary tooltipped" data-position="right" data-delay="50" data-tooltip="{{ 'push_notification.being_send'|trans|capitalize }}" aria-hidden="true"></i>
+                                {% else %}
+                                    {{ 'format.date_and_time'|trans({'%date%': notification.notification.sent|date('d-m-Y'), '%time%': notification.notification.sent|date('H:i')}) }}
+                                {% endif %}
+                            </td>
+                            <td>{{ notification.devices }}</td>
+                            <td>
+                                <div class="bar-statistics tooltipped" data-position="bottom" data-delay="50" data-tooltip="{{ 'push_notification.bar_statistics'|trans({'%success%': notification.sent, '%failure%': notification.failed})|capitalize }}">
+                                    {% if notification.devices == 0 %}
+                                        <span class="no-devices"></span>
+                                    {% else %}
+                                        {% set success = (notification.sent / notification.devices) * 100 %}
+
+                                        {% if success > 0 %}
+                                            <span class="success" style="width: calc({{ success }}% - 2px);"></span>
+                                        {% endif %}
+
+                                        {% set failure = (notification.failed / notification.devices) * 100 %}
+
+                                        {% if failure > 0 %}
+                                            <span class="failure" style="width: calc({{ failure }}% - 2px);"></span>
+                                        {% endif %}
+                                    {% endif %}
+                                </div>
+                            </td>
+                            <td>
+                                {% set opened = notification.sent != 0 ? (notification.opened/notification.sent) * 100 : 0 %}
+
+                                {{ opened|number_format }} %
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        {% include '@ProntoMobile/components/pagination.html.twig' with {pageHelper: pageHelper} %}
+    {% endif %}
+
+    {% if pageHelper.getList()|length == 0 and scheduledNotifications|length == 0 %}
+        {% include '@ProntoMobile/components/alert.html.twig' with {'type': 'info', 'collection': 'push_notifications'} %}
+    {% endif %}
+{% endblock %}

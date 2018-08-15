@@ -1,0 +1,77 @@
+
+#### DEVICE REQUESTS ####
+
+devices_register:
+    path: /devices/registration
+    defaults:
+        _controller: ProntoMobileBundle:Api\V1\Device:register
+    condition: "context.getMethod() in ['POST']"
+
+devices_unregister:
+    path: /devices/registration/{deviceIdentifier}
+    defaults:
+        _controller: ProntoMobileBundle:Api\V1\Device:deregister
+    condition: "context.getMethod() in ['DELETE']"
+
+
+#### NOTIFICATION SEGMENTS REQUESTS ####
+
+notifications_segments:
+    path: /notifications/segments/{deviceIdentifier}
+    defaults:
+        _controller: ProntoMobileBundle:Api\V1\PushNotificationSegment:subscribed
+    condition: "context.getMethod() in ['GET']"
+
+notifications_segments_update:
+    path: /notifications/segments
+    defaults:
+        _controller: ProntoMobileBundle:Api\V1\PushNotificationSegment:update
+    condition: "context.getMethod() in ['PUT']"
+
+
+#### APP USER REQUESTS ####
+
+app_users_register:
+    path: /users/app/registration
+    defaults:
+        _controller: ProntoMobileBundle:Api\V1\AppUser:register
+    condition: "context.getMethod() in ['POST']"
+
+app_users_deregister:
+    path: /users/app/registration/{userIdentifier}
+    defaults:
+        _controller: ProntoMobileBundle:Api\V1\AppUser:deregister
+    condition: "context.getMethod() in ['DELETE']"
+
+app_users_profile:
+    path: /users/app/profile
+    defaults:
+        _controller: ProntoMobileBundle:Api\V1\AppUser:getProfile
+    condition: "context.getMethod() in ['GET']"
+
+app_users_update_profile:
+    path: /users/app/profile
+    defaults:
+        _controller: ProntoMobileBundle:Api\V1\AppUser:updateProfile
+    condition: "context.getMethod() in ['PUT']"
+
+app_users_password_reset:
+    path: /users/app/password/reset
+    defaults:
+        _controller: ProntoMobileBundle:Api\V1\AppUser:requestPasswordResetLink
+    condition: "context.getMethod() in ['POST']"
+
+
+#### COLLECTIONS ####
+
+collection_entries:
+    path: /collections/{version}/{identifier}
+    defaults:
+        _controller: ProntoMobileBundle:Api\V1\Collection:getEntries
+    condition: "context.getMethod() in ['GET']"
+
+collection_entry:
+    path: /collections/{version}/{identifier}/{id}
+    defaults:
+        _controller: ProntoMobileBundle:Api\V1\Collection:getEntry
+    condition: "context.getMethod() in ['GET']"

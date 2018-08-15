@@ -1,0 +1,34 @@
+{% extends '@ProntoMobile/authentication.html.twig' %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col s12 m10 l8 offset-m1 offset-l2">
+                <h1><img src="{{ mix('/images/logo-login.png') }}" alt="Pronto" /></h1>
+
+                <div class="card">
+                    {% include "@ProntoMobile/components/loader.html.twig" %}
+                    <div class="card-content">
+                        <h1 class="has-back-button"><a href="{{ path('pronto_mobile_select_customer') }}" class="activate-loader"><i class="fa fa-long-arrow-left" aria-hidden="true"></i></a><span>/</span> {{ 'application.choose'|trans }}</h1>
+                        <div class="collection collection-applications">
+                            {% for application in applications %}
+                                {% for version in application.applicationVersions %}
+                                    <a href="#!" class="collection-item avatar activate-loader" data-id="{{ version.id }}">
+                                        <div style="background-color: #{{ application.color }}" class="circle">{{ application.name|slice(0,1)|capitalize }}</div>
+                                        <span class="title">{{ application.name }} {% if application.label != '' %}<span class="label" style="background-color: #{{ application.color }};">{{ application.label }}</span>{% endif %} / {{ version.name }}</span>
+                                    </a>
+                                {% endfor %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="text/javascript" src="{{ mix('/js/applications/applications.js') }}"></script>
+{% endblock %}

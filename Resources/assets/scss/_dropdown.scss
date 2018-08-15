@@ -1,0 +1,18 @@
+.dropdown-content {
+  li {
+    &.disabled {
+      cursor: default;
+      color: #CCCCCC;
+
+      &:hover {
+        background-color: transparent;
+      }
+
+      a {
+        cursor: default;
+        color: #CCCCCC;
+        pointer-events: none;
+      }
+    }
+  }
+}

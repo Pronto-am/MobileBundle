@@ -1,0 +1,17 @@
+<div class="row">
+    <div class="col s12">
+        <h1 class="text-primary {% if backButton is defined %}has-back-button{% endif %}">
+            {% if backButton is defined %}
+                <a href="{{ backButton }}"><i class="fa fa-long-arrow-left" aria-hidden="true"></i></a>
+            {% endif %}
+
+            {% if exists is defined and exists %}
+                {{ 'entity.edit'|trans({'%entity%': entity|trans})|capitalize }}
+            {% elseif customAction is defined %}
+                {{ 'entity.custom_action'|trans({'%action%': customAction|trans, '%entity%': entity|trans})|capitalize }}
+            {% else %}
+                {{ 'entity.add'|trans({'%entity%': entity|trans})|capitalize }}
+            {% endif %}
+        </h1>
+    </div>
+</div>

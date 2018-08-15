@@ -1,0 +1,296 @@
+{% extends '@ProntoMobile/base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+    <link rel="stylesheet" href="{{ mix('/css/trumbowyg.css') }}">
+    <link rel="stylesheet" href="{{ mix('/css/codeflask.css') }}">
+{% endblock %}
+
+{% block body %}
+    {% include '@ProntoMobile/components/loader.html.twig' with {'initial': true} %}
+
+    {% include '@ProntoMobile/components/pageTitle.html.twig' with {entity: 'push_notification', backButton: path('pronto_mobile_notifications'), exists: notification != null} %}
+
+    {{ form_start(notificationForm) }}
+
+    <div class="row card">
+        <ul class="tabs">
+            {% for language in applicationVersion.application.availableLanguages %}
+                <li class="tab" data-language="{{ language.code }}">
+                    <a href="#{{ language.code }}">
+                        {{ language.name }}
+                        <i class="fa fa-exclamation-triangle orange-text" aria-hidden="true"></i>
+                        <i class="fa fa-exclamation-circle red-text" aria-hidden="true"></i>
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    {% for language in applicationVersion.application.availableLanguages %}
+        <div class="row card language-card {{ language.code == applicationVersion.application.defaultLanguage ? 'is-fallback-language' : '' }}" id="{{ language.code }}">
+            <div class="card-content col s12">
+                <div class="row">
+                    <div class="col s12">
+                        <label for="{{ language.code ~ '_title' }}" class="required">{{ 'push_notification.title'|trans|capitalize }}</label>
+                        <input name="{{ language.code ~ '_title' }}" placeholder="{{ 'push_notification.title'|trans|capitalize }}" class="title validate" id="{{ language.code ~ '_title' }}" type="text" value="{{ attribute(notification.title, language.code) is defined ? attribute(notification.title, language.code) : '' }}" required data-length="100">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col s12">
+                        <label for="{{ language.code ~ '_content' }}">{{ 'push_notification.content'|trans|capitalize }}</label>
+                        <input name="{{ language.code ~ '_content' }}" placeholder="{{ 'push_notification.content'|trans|capitalize }}" class="content" id="{{ language.code ~ '_content' }}" type="text" value="{{ attribute(notification.content, language.code) is defined ? attribute(notification.content, language.code) : '' }}" required data-length="200">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col s12">
+                        {% set selected = notification != null ? notification.clickAction : 0 %}
+
+                        <label for="{{ language.code ~ '_clickAction' }}">{{ 'push_notification.click_action'|trans|capitalize }}</label>
+                        <select name="{{ language.code ~ '_clickAction' }}" id="{{ language.code ~ '_clickAction' }}" class="click-action-trigger click-action">
+                            <option value="0">{{ 'push_notification.nothing'|trans|capitalize }}</option>
+                            <option value="1" {% if selected == 1 %}selected{% endif %}>{{ 'push_notification.click_action_url'|trans|capitalize }}</option>
+                            <option value="2" {% if selected == 2 %}selected{% endif %}>{{ 'push_notification.click_action_html'|trans|capitalize }}</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row click-action url">
+                    <div class="col s12">
+                        <label for="{{ language.code ~ '_clickActionUrl' }}">{{ 'push_notification.click_action_url'|trans|capitalize }}</label>
+                        <input name="{{ language.code ~ '_clickActionUrl' }}" placeholder="http://" class="click-action-url" id="{{ language.code ~ '_clickActionUrl' }}" type="text" value="{{ attribute(notification.clickActionUrl, language.code) is defined ? attribute(notification.clickActionUrl, language.code) : '' }}" required>
+                    </div>
+                </div>
+
+                <div class="row click-action html">
+                    <div class="col m12 l7">
+                        <label for="{{ language.code ~ '_clickActionHtml' }}">{{ 'push_notification.click_action_html'|trans|capitalize }}</label>
+                        <textarea name="{{ language.code ~ '_clickActionHtml' }}" placeholder="{{ 'push_notification.click_action_html'|trans|capitalize }}" class="trumbowyg click-action-html" id="{{ language.code ~ '_clickActionHtml' }}">{{ attribute(notification.clickActionHtml, language.code) is defined ? attribute(notification.clickActionHtml, language.code) : '' }}</textarea>
+                    </div>
+
+                    <div class="col m12 l5">
+                        {% include '@ProntoMobile/components/browser.html.twig' %}
+
+                        <textarea id="html-template" style="display: none;">{{ pluginConfig['notificationHtmlTemplate']|raw }}</textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+
+    <div class="row card">
+        <div class="card-content col s12">
+            {% if notificationForm.segment is defined %}
+                <div class="row">
+                    <div class="col s12">
+                        <h3><span>/</span>{{ 'push_notification.filter_by_segments'|trans|capitalize }}</h3>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col s12">
+                        {{ form_row(notificationForm.segment) }}
+                    </div>
+                </div>
+            {% endif %}
+
+            <div class="row">
+                <div class="col s12">
+                    <h3><span>/</span>{{ 'push_notification.schedule_this_notification'|trans }}</h3>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s12">
+                    {{ form_row(notificationForm.schedule, {
+                        'attr': {
+                            'checked': notification != null and notification.scheduledSending != null
+                        }
+                    }) }}
+                </div>
+            </div>
+
+            <div class="schedule">
+                <div class="row">
+                    <div class="col s12">
+                        {{ form_errors(notificationForm.scheduledSending) }}
+                    </div>
+
+                    <div class="col s8">
+                        {{ form_label(notificationForm.scheduledSending.date, null, {
+                            'label': 'push_notification.date'|trans,
+                        }) }}
+                        {{ form_widget(notificationForm.scheduledSending.date, {
+                            attr: {
+                                'class': 'datepicker'
+                            }
+                        }) }}
+                    </div>
+
+                    <div class="col s4">
+                        {{ form_label(notificationForm.scheduledSending.time, null, {
+                            'label': 'push_notification.time'|trans,
+                        }) }}
+                        {{ form_widget(notificationForm.scheduledSending.time, {
+                            attr: {
+                                'class': 'timepicker'
+                            }
+                        }) }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s12">
+                    <h3><span>/</span>{{ 'push_notification.send_to_test_devices'|trans }}</h3>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s12">
+                    {{ form_row(notificationForm.test) }}
+                </div>
+            </div>
+
+            <div class="row test">
+                <div class="col s12">
+                    {% if testDevices|length > 0 %}
+                        <table class="table striped bordered highlight responsive-table">
+                            <thead>
+                            <tr>
+                                <th width="60" class="has-checkbox">
+                                    <input type="checkbox" id="checkAll">
+                                    <label for="checkAll"></label>
+                                </th>
+                                <th width="50">#</th>
+                                <th>{{ 'device.name'|trans|capitalize }}</th>
+                                <th>{{ 'device.model'|trans|capitalize }}</th>
+                                <th>{{ 'device.manufacturer'|trans|capitalize }}</th>
+                                <th>{{ 'device.platform'|trans|capitalize }}</th>
+                                <th>{{ 'device.os_version'|trans|capitalize }}</th>
+                                <th>{{ 'device.app_version'|trans|capitalize }}</th>
+                                <th>{{ 'device.last_login'|trans|capitalize }}</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for key, device in testDevices %}
+                                <tr>
+                                    <td class="has-checkbox">
+                                        <input type="checkbox" id="testDevicesCheckbox{{ device.id }}" name="testDevices[]" value="{{ device.id }}" {% if notification != null and device.id in notification.testDevices %}checked{% endif %}>
+                                        <label for="testDevicesCheckbox{{ device.id }}"></label>
+                                    </td>
+                                    <td>{{ key + 1 }}</td>
+                                    <td>{{ device.name }}</td>
+                                    <td>{{ device.model }}</td>
+                                    <td>{{ device.manufacturer }}</td>
+                                    <td>{{ device.platform }}</td>
+                                    <td>{{ device.osVersion }}</td>
+                                    <td>{{ device.appVersion }}</td>
+                                    <td>{{ device.lastLogin != null ? 'format.date_and_time'|trans({'%date%': device.lastLogin|date('d-m-Y'), '%time%': device.lastLogin|date('H:i')}) : '' }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        {% include '@ProntoMobile/components/alert.html.twig' with {'type': 'info', 'collection': 'device.test_devices', 'cantAdd': true} %}
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="row sendnow">
+                <div class="col s12">
+                    {{ form_widget(notificationForm.sendNow) }}
+                </div>
+            </div>
+
+            <div class="row schedule">
+                <div class="col s12">
+                    {{ form_widget(notificationForm.sendLater) }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{ form_end(notificationForm) }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="text/javascript">
+        // Translations used in the sweet alert
+        translations.title = '{{ 'push_notification.title'|trans }}';
+        translations.content = '{{ 'push_notification.content'|trans }}';
+        translations.segment = '{{ 'push_notification.segment'|trans }}';
+        translations.allDevices = '{{ 'push_notification.all_devices'|trans }}';
+        translations.selectedTestDevices = '{{ 'push_notification.selected_test_devices'|trans }}';
+        translations.deviceCount = '{{ 'push_notification.segment.device_count'|trans }}';
+
+        translations.inconsistentTitle = '{{ 'push_notification.inconsistent_title'|trans }}';
+        translations.inconsistentContent = '{{ 'push_notification.inconsistent_content'|trans }}';
+        translations.confirmationContent = '{{ 'push_notification.confirmation_content'|trans }}';
+        translations.invalidFormTitle = '{{ 'push_notification.invalid_form_title'|trans }}';
+        translations.invalidFormContent = '{{ 'push_notification.invalid_form_content'|trans }}';
+        translations.sendAnyway = '{{ 'push_notification.send_anyway'|trans }}';
+
+        translations.maximumCharacterCountExceeded = '{{ 'push_notification.maximum_character_count_exceeded'|trans }}';
+    </script>
+
+    <script>
+        let notificationDeviceCountUrl = '{{ path('pronto_mobile_notifications_recipient_count') }}';
+    </script>
+
+    <script src="{{ mix('/js/notifications/notifications.js') }}"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            let totalTestDevices = $('.row.test table tbody').find('input:checkbox').length;
+            let checkedTestDevices = $('.row.test table tbody').find('input:checkbox:checked').length;
+
+            if (totalTestDevices === checkedTestDevices) {
+                $('#checkAll').prop('checked', true);
+            }
+
+
+            /**
+             * Define the functionality to listen to the click action events
+             */
+            let select = $('select.click-action-trigger');
+
+            select.change(function () {
+                $('.click-action').each(function () {
+                    $(this).hide();
+                });
+
+                let value = $(this).val();
+
+                $('select.click-action-trigger').each(function () {
+                    $(this).val(value);
+                    $(this).material_select();
+                });
+
+                if (value != 1) {
+                    $('.click-action.url').each(function () {
+                        $(this).val('')
+                    });
+                }
+
+                if (value == 1) {
+                    $('.click-action.url').each(function () {
+                        $(this).show()
+                    });
+                } else if (value == 2) {
+                    $('.click-action.html').each(function () {
+                        $(this).show()
+                    });
+                }
+            });
+
+            select.trigger('change');
+        });
+    </script>
+{% endblock %}

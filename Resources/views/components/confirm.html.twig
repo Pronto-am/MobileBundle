@@ -1,0 +1,11 @@
+<div id="modal-confirm-deletion" class="modal">
+    <div class="modal-content">
+        <h4>{{ 'confirm.title'|trans }}</h4>
+        <p>{{ 'confirm.text'|trans }}</p>
+    </div>
+    <div class="modal-footer">
+        <input type="hidden" name="postUrl" value="{{ postUrl }}">
+        <a href="#" class="modal-action modal-close btn-flat">{{ 'buttons.cancel'|trans }}</a>
+        <a href="#" id="modal-confirm-button" class="modal-action waves-effect waves-green btn red">{{ 'buttons.yes'|trans }}</a>
+    </div>
+</div>

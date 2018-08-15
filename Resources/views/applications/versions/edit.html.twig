@@ -1,0 +1,38 @@
+{% extends '@ProntoMobile/base.html.twig' %}
+
+{% block body %}
+    {% include '@ProntoMobile/components/pageTitle.html.twig' with {entity: 'application.version', exists: version != null, backButton: path('pronto_mobile_applications')} %}
+
+    <div class="row card">
+        <div class="card-content">
+            {{ form_start(applicationVersionForm, {
+                attr: {
+                    class: 'validate-required-fields'
+                }
+            }) }}
+
+            <div class="row">
+                <div class="col s12">
+                    {{ form_row(applicationVersionForm.name) }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s12">
+                    <button type="submit" class="btn btn-primary" formnovalidate>{{ 'buttons.save'|trans }}</button>
+                    {% if version != null %}
+                        <input type="hidden" name="id" value="{{ version.id }}">
+
+                        {% if deletable %}
+                            <a href="#!" name="single-delete" data-id="{{ version.id }}" data-url="{{ path('pronto_mobile_application_versions_delete') }}" class="btn-flat btn-text-red">{{ 'buttons.delete'|trans }}</a>
+                        {% else %}
+                            <a class="btn-flat tooltipped" disabled data-position="bottom" data-tooltip="{{ 'application.version.not_deletable'|trans }}">{{ 'buttons.delete'|trans }}</a>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+
+            {{ form_end(applicationVersionForm) }}
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,1 @@
+require('../bundles/location-picker/jquery-location-picker.min');

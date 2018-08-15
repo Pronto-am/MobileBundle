@@ -1,0 +1,14 @@
+<div>
+    <label for="{{ config.name }}" {% if required is defined and required == true %}class="required"{% endif %}>{{ ('collection.property.type.' ~ config.name)|trans }}</label>
+    <select name="type-{{ id }}-{{ config.name }}">
+        {% if config.values is defined %}
+            {% for key, option in config.values %}
+                <option value="{{ key }}" {{ attribute(property.config, config.name) is defined and attribute(property.config, config.name) == key ? 'selected' : '' }}>{{ option }}</option>
+            {% endfor %}
+        {% else %}
+            {% for key, collection in collections %}
+                <option value="{{ collection.id }}" {{ attribute(property.config, config.name) is defined and attribute(property.config, config.name) == collection.id ? 'selected' : '' }}>{{ collection.name }}</option>
+            {% endfor %}
+        {% endif %}
+    </select>
+</div>

@@ -1,0 +1,17 @@
+{% extends '@ProntoMobile/mails/base.html.twig' %}
+
+{% block header %}
+    {{ 'mails.registration.header'|trans }}
+{% endblock %}
+
+{% block greeting %}
+    {{ 'mails.base.greeting'|trans({'%name%': user.firstName}) }}
+{% endblock %}
+
+{% block content %}
+    {{ 'mails.registration.body'|trans }}
+{% endblock %}
+
+{% block salutation %}
+    {{ 'mails.base.salutation'|trans }}
+{% endblock %}

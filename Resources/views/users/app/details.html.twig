@@ -1,0 +1,127 @@
+{% extends '@ProntoMobile/base.html.twig' %}
+
+{% block body %}
+    {% include '@ProntoMobile/components/loader.html.twig' with {'initial': true} %}
+
+    {% include '@ProntoMobile/components/pageTitle.html.twig' with {entity: 'app_user', exists: user != null, backButton: path('pronto_mobile_app_users')} %}
+
+    {% if user != null %}
+        <div class="row card">
+            <ul class="tabs">
+                <li class="tab col s6"><a href="#details">{{ 'user.details'|trans }}</a></li>
+                <li class="tab col s6"><a href="#devices">{{ 'devices'|trans }}</a></li>
+            </ul>
+        </div>
+    {% endif %}
+
+    <div class="row card" id="details">
+        <div class="card-content col s12">
+
+            <div class="row">
+                <div class="col s12">
+                    <h3><span>/</span> {{ 'user.name'|trans|capitalize }}</h3>
+                    {{ user.fullName }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s12">
+                    <h3><span>/</span> {{ 'user.email'|trans|capitalize }}</h3>
+                    {{ user.email }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s12">
+                    <h3><span>/</span> {{ 'device.last_login'|trans|capitalize }}</h3>
+                    {{ user.lastLogin != null ? 'format.date_and_time'|trans({'%date%': user.lastLogin|date('d-m-Y'), '%time%': user.lastLogin|date('H:i')}) : '' }}
+                </div>
+            </div>
+
+            {% if user.extraData|length > 0 %}
+                <div class="row">
+                    <div class="col s12">
+                        <h3><span>/</span> {{ 'device.extra_data'|trans|capitalize }}</h3>
+                    </div>
+                </div>
+
+                {% for key, extra in user.extraData %}
+                    <div class="row">
+                        <div class="col s4">
+                            <b>{{ key|capitalize }}</b>
+                        </div>
+                        <div class="col s8">
+                            {{ extra }}
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <div class="row">
+                <div class="col s12">
+                    <h3><span>/</span> {{ 'user.control_user_activation'|trans|capitalize }}</h3>
+                </div>
+            </div>
+
+            {{ form_start(userForm) }}
+            <div class="row">
+                <div class="col s12">
+                    {{ form_row(userForm.activated) }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s12">
+                    <button type="submit" class="btn btn-primary" formnovalidate>{{ 'buttons.save'|trans }}</button>
+                </div>
+            </div>
+
+            {{ form_end(userForm) }}
+        </div>
+    </div>
+
+    {% if user != null %}
+        <div class="row card" id="devices">
+            <div class="card-content col s12">
+                {% if devicePageHelper.getList()|length > 0 %}
+                    <table class="table striped bordered highlight responsive-table">
+                        <thead>
+                        <tr>
+                            <th width="50">#</th>
+                            <th>{{ devicePageHelper.createSortableLink('device.name'|trans|capitalize, 't.name') }}</th>
+                            <th>{{ devicePageHelper.createSortableLink('device.model'|trans|capitalize, 't.model') }}</th>
+                            <th>{{ devicePageHelper.createSortableLink('device.manufacturer'|trans|capitalize, 't.manufacturer') }}</th>
+                            <th>{{ devicePageHelper.createSortableLink('device.platform'|trans|capitalize, 't.platform') }}</th>
+                            <th>{{ devicePageHelper.createSortableLink('device.os_version'|trans|capitalize, 't.osVersion') }}</th>
+                            <th>{{ devicePageHelper.createSortableLink('device.app_version'|trans|capitalize, 't.appVersion') }}</th>
+                            <th>{{ devicePageHelper.createSortableLink('device.last_login'|trans|capitalize, 't.lastLogin') }}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for key, device in devicePageHelper.getList() %}
+                            <tr>
+                                <td>
+                                    {{ key + 1 }}
+                                </td>
+                                <td>
+                                    <a href="{{ path('pronto_mobile_devices_details', {'identifier': device.id}) }}" class="regular">
+                                        {{ device.name }} {% if device.testDevice %}<span class="new badge" data-badge-caption="{{ 'device.is_test_device'|trans }}"></span>{% endif %}
+                                    </a>
+                                </td>
+                                <td>{{ device.model }}</td>
+                                <td>{{ device.manufacturer }}</td>
+                                <td>{{ device.platform }}</td>
+                                <td>{{ device.osVersion }}</td>
+                                <td>{{ device.appVersion }}</td>
+                                <td>{{ device.lastLogin != null ? 'format.date_and_time'|trans({'%date%': device.lastLogin|date('d-m-Y'), '%time%': device.lastLogin|date('H:i')}) : '' }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    {% include '@ProntoMobile/components/alert.html.twig' with {type: 'info', collection: 'devices', cantAdd: true} %}
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

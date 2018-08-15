@@ -1,0 +1,33 @@
+<div class="col s12">
+    {% set label = property.config.label is defined and property.config.label != '' ? property.config.label : property.name %}
+
+    <label for="{{ property.identifier }}" {% if property.required == true %}class="required"{% endif %}>
+        {{ label }}
+
+        {% if property.config.min != '' and property.config.max != '' %}
+            ({{ 'collection.entry.number_between'|trans({'%min%': property.config.min, '%max%': property.config.max}) }})
+        {% elseif property.config.min != '' and property.config.max == '' %}
+            ({{ 'collection.entry.number_greater_then'|trans({'%min%': property.config.min}) }})
+        {% elseif property.config.min == '' and property.config.max != '' %}
+            ({{ 'collection.entry.number_less_then'|trans({'%max%': property.config.max}) }})
+        {% endif %}
+    </label>
+
+    <input type="number"
+           name="{{ property.identifier }}"
+           id="{{ property.identifier }}"
+
+            {% if property.config.min != '' %}
+                min="{{ property.config.min }}"
+            {% endif %}
+
+            {% if property.config.max != '' %}
+                max="{{ property.config.max }}"
+            {% endif %}
+
+            {% if property.config.step != '' %}
+                step="{{ property.config.step }}"
+            {% endif %}
+
+           value="{{ attribute(entry.data, property.identifier) is defined ? attribute(entry.data, property.identifier) : property.config.defaultValue }}">
+</div>

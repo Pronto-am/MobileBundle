@@ -1,0 +1,64 @@
+{% extends '@ProntoMobile/base.html.twig' %}
+
+{% block body %}
+
+    {% include '@ProntoMobile/components/pageTitle.html.twig' with {entity: 'push_notification.recipients', backButton: path('pronto_mobile_notifications_details', {identifier: notification.id}), customAction: 'details'} %}
+
+    {% if pageHelper.getList()|length > 0 %}
+        <div class="row card">
+            <div class="card-content col s12">
+                <h3><span>/</span> {{ (sent ? 'push_notification.successful_recipients' : 'push_notification.recipient_failures')|trans|capitalize }}</h3>
+
+                <table class="table striped bordered highlight responsive-table">
+                    <thead>
+                    <tr>
+                        <th width="50">#</th>
+
+                        {% if pronto_mobile.pluginIsActive('appUsers') %}
+                            <th>{{ 'user'|trans|capitalize }}</th>
+                        {% endif %}
+
+                        <th>{{ 'device.name'|trans|capitalize }}</th>
+                        <th>{{ 'device.model'|trans|capitalize }}</th>
+                        <th>{{ 'device.platform'|trans|capitalize }}</th>
+
+                        {% if sent %}
+                            <th>{{ 'device.app_version'|trans|capitalize }}</th>
+                            <th>{{ 'push_notification.opened'|trans|capitalize }}</th>
+                        {% else %}
+                            <th>{{ 'push_notification.failure_reason'|trans|capitalize }}</th>
+                        {% endif %}
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for key, recipient in pageHelper.getList() %}
+                        <tr>
+                            <td>
+                                {{ pageHelper.getRowNumber(key) }}
+                            </td>
+
+                            {% if pronto_mobile.pluginIsActive('appUsers') %}
+                                <td>{{ recipient.device.appUser != null ? recipient.device.appUser.fullName : '' }}</td>
+                            {% endif %}
+
+                            <td>{{ recipient.device.name }}</td>
+                            <td>{{ recipient.device.model }}</td>
+                            <td>{{ recipient.device.platform }}</td>
+
+                            {% if sent %}
+                                <td>{{ recipient.device.appVersion }}</td>
+                                <td>{{ recipient.opened != null ? 'format.date_and_time'|trans({'%date%': recipient.opened|date('d-m-Y'), '%time%': recipient.opened|date('H:i')}) : '' }}</td>
+                            {% else %}
+                                <td>{{ ('push_notification.' ~ recipient.description)|trans }}</td>
+
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        {% include '@ProntoMobile/components/pagination.html.twig' with {pageHelper: pageHelper} %}
+    {% endif %}
+{% endblock %}

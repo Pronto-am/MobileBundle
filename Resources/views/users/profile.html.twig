@@ -1,0 +1,73 @@
+{% extends '@ProntoMobile/base.html.twig' %}
+
+{% block body %}
+    {% include '@ProntoMobile/components/pageTitle.html.twig' with {entity: 'profile', exists: true} %}
+
+    <div class="row card">
+        <div class="card-content col s12">
+            {{ form_start(profileForm) }}
+
+            <div class="row">
+                <div class="col s12 m8">
+                    {{ form_row(profileForm.firstName) }}
+                </div>
+
+                <div class="col s12 m4">
+                    {{ form_row(profileForm.insertion) }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s12">
+                    {{ form_row(profileForm.lastName) }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s12">
+                    {{ form_row(profileForm.email) }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s12">
+                    <button type="submit" class="btn btn-primary" formnovalidate>{{ 'buttons.save'|trans }}</button>
+                </div>
+            </div>
+
+            {{ form_end(profileForm) }}
+
+            {{ form_start(passwordForm) }}
+
+            <div class="row">
+                <div class="col s12">
+                    <h2><span>/</span>{{ 'user.password'|trans }}</h2>
+                    <p>{{ 'user.leave_empty_to_ignore'|trans }}</p>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s6">
+                    {{ form_row(passwordForm.currentPassword) }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s6">
+                    {{ form_row(passwordForm.password.first) }}
+                </div>
+                <div class="col s6">
+                    {{ form_row(passwordForm.password.second) }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s12">
+                    <button type="submit" class="btn btn-primary" formnovalidate>{{ 'buttons.save'|trans }}</button>
+                </div>
+            </div>
+
+            {{ form_end(passwordForm) }}
+        </div>
+    </div>
+{% endblock %}

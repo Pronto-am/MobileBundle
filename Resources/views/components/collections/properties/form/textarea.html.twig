@@ -1,0 +1,10 @@
+<div>
+    <label for="{{ config.name }}">{{ ('collection.property.type.' ~ config.name)|trans }}</label>
+    {% set class = config.class is defined ? config.class : '' %}
+
+    {% if 'codeflask' in class %}
+        <div class="{{ class }}" data-name="type-{{ id }}-{{ config.name }}"></div>
+    {% else %}
+        <textarea name="type-{{ id }}-{{ config.name }}" class="materialize-textarea {{ class }}" id="{{ config.name }}">{{ attribute(property.config, config.name) is defined ? attribute(property.config, config.name) : '' }}</textarea>
+    {% endif %}
+</div>

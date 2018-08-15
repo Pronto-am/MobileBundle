@@ -1,0 +1,4 @@
+<div>
+    <input type="checkbox" name="type-{{ id }}-{{ config.name }}" id="{{ config.name }}" value="1" {{ attribute(property.config, config.name) is defined and attribute(property.config, config.name) ? 'checked' : '' }}>
+    <label for="{{ config.name }}">{{ ('collection.property.type.' ~ config.name)|trans }}</label>
+</div>

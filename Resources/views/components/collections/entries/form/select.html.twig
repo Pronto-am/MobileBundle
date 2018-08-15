@@ -1,0 +1,17 @@
+<div class="row">
+    <div class="col s12">
+        <label for="{{ property.identifier }}" {% if property.required == true %}class="required"{% endif %}>{{ property.name }}</label>
+        <select name="{{ property.identifier }}{{ property.config.multiSelect ? '[]' : '' }}" id="{{ property.identifier }}" {{ property.config.multiSelect ? 'multiple' : '' }}>
+            <option disabled selected>{{ ('collection.' ~ (property.config.multiSelect ? 'entry.select_mutiple_items' : 'entry.select_item'))|trans }}</option>
+            {% for option in property.config.values %}
+                {% if property.config.multiSelect %}
+                    {% set selected = attribute(entry.data, property.identifier) is defined and option.key in attribute(entry.data, property.identifier) %}
+                {% else %}
+                    {% set selected = attribute(entry.data, property.identifier) is defined and attribute(entry.data, property.identifier) == option.key %}
+                {% endif %}
+
+                <option value="{{ option.key }}" {{ selected ? 'selected' : '' }}>{{ option.value }}</option>
+            {% endfor %}
+        </select>
+    </div>
+</div>

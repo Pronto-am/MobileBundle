@@ -1,0 +1,7 @@
+<div class="row">
+    <div class="col s12">
+        <label for="{{ property.identifier }}" {% if property.required == true %}class="required"{% endif %}>{{ property.name }}</label>
+
+        <div class="codeflask" data-name="{{ property.identifier }}" data-language="json">{{ attribute(entry.data, property.identifier) is defined ? attribute(entry.data, property.identifier) : property.config.structure }}</div>
+    </div>
+</div>

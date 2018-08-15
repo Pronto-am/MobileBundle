@@ -1,0 +1,4 @@
+<div>
+    <label for="{{ config.name }}" {% if required is defined and required == true %}class="required"{% endif %}>{{ ('collection.property.type.' ~ config.name)|trans }}</label>
+    <input type="number" name="type-{{ id }}-{{ config.name }}" id="{{ config.name }}" value="{{ attribute(property.config, config.name) is defined ? attribute(property.config, config.name) : '' }}">
+</div>

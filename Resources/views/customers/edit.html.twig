@@ -1,0 +1,110 @@
+{% extends '@ProntoMobile/base.html.twig' %}
+
+{% block body %}
+
+    {% include '@ProntoMobile/components/toolbar.html.twig' with {pageTitle: 'customer.data'|trans|capitalize} %}
+
+    <div class="row card">
+        <div class="card-content col s12">
+            <div class="row">
+                <div class="col s12">
+                    <h2><span>/</span> {{ 'customer.edit_account'|trans|capitalize }}</h2>
+                </div>
+            </div>
+
+            {{ form_start(customerForm) }}
+
+            <div class="row">
+                <div class="col s12">
+                    {{ form_row(customerForm.companyName) }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s12">
+                    {{ form_row(customerForm.contactPerson) }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s12">
+                    {{ form_row(customerForm.phoneNumber) }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s12">
+                    {{ form_row(customerForm.email) }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s12">
+                    {{ form_row(customerForm.primaryColor) }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s12">
+                    {{ form_row(customerForm.secondaryColor) }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s12">
+                    {{ form_row(customerForm.sidebarColor) }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s12">
+                    {{ form_label(customerForm.logo) }}
+                    {{ form_errors(customerForm.logo) }}
+                    <div class="file-field input-field">
+                        <div class="btn">
+                            <span>{{ 'customer.logo'|trans }}</span>
+                            {{ form_widget(customerForm.logo) }}
+                        </div>
+                        <div class="file-path-wrapper">
+                            <input class="file-path" type="text">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s12">
+                    <button type="submit" class="btn btn-primary">{{ 'buttons.save'|trans }}</button>
+                </div>
+            </div>
+
+            {{ form_end(customerForm) }}
+        </div>
+    </div>
+
+    <div class="row card">
+        <div class="card-content col s12">
+            <div class="row">
+                <div class="col s12">
+                    <h2><span>/</span> {{ 'customer.delete_everything'|trans|capitalize }}</h2>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s12 m4">
+                    <label class="label-left">{{ 'customer.delete_account'|trans|capitalize }}</label>
+                </div>
+
+                <div class="col s12 m8">
+                    <a href="#!" name="single-delete" data-id="{{ pronto_mobile.customer.id }}" data-url="{{ path('pronto_mobile_delete_customer') }}" class="btn waves-effect waves-red red">{{ 'customer.delete_account'|trans|capitalize }}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script src="{{ mix('/js/jscolor.js') }}" type="text/javascript"></script>
+{% endblock %}

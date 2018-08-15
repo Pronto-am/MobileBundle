@@ -1,0 +1,72 @@
+{% extends '@ProntoMobile/base.html.twig' %}
+
+{% block body %}
+
+    <div class="row">
+        <div class="col s12">
+            <h1>{{ 'settings'|trans|capitalize }}</h1>
+        </div>
+    </div>
+
+    <div class="row card">
+        <div class="card-content col s12">
+            <div class="col s12">
+                <h3><span>/</span> {{ 'setting.edit_account'|trans|capitalize }}</h3>
+            </div>
+
+            {{ form_start(customerForm) }}
+
+            <div class="row">
+                <div class="col s12">
+                    {{ form_row(customerForm.companyName) }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s12">
+                    {{ form_row(customerForm.contactPerson) }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s12">
+                    {{ form_row(customerForm.phoneNumber) }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s12">
+                    {{ form_row(customerForm.email) }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s12">
+                    {{ form_row(customerForm.color) }}
+                </div>
+            </div>
+
+            {{ form_end(customerForm) }}
+        </div>
+    </div>
+
+    <div class="row card">
+        <div class="card-content col s12">
+            <div class="row">
+                <div class="col s12">
+                    <h3><span>/</span> {{ 'setting.delete_account'|trans|capitalize }}</h3>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s12 m4">
+                    <label class="label-left">{{ 'setting.delete_account'|trans }}</label>
+                </div>
+
+                <div class="col s12 m8">
+                    <a href="#!" name="single-delete" data-id="{{ customer.id }}" data-url="{{ path('pronto_mobile_delete_customer') }}" class="btn waves-effect waves-red red">{{ 'setting.delete_account'|trans }}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

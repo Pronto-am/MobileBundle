@@ -1,0 +1,76 @@
+{% extends '@ProntoMobile/base.html.twig' %}
+
+{% block body %}
+
+    {% include '@ProntoMobile/components/toolbar.html.twig' with {pageTitle: 'cms_users'|trans|capitalize, newObjectUrl: 'pronto_mobile_users_edit', 'delete': pageHelper.getList()|length > 0} %}
+
+    {% if pageHelper.getList()|length > 0 %}
+        <div class="card">
+            <div class="card-content">
+                <form action="{{ path('pronto_mobile_users_delete') }}" method="POST">
+                    <table class="table striped bordered highlight responsive-table">
+                        <thead>
+                        <tr>
+                            <th width="60" class="has-checkbox">
+                                <input type="checkbox" id="checkAll">
+                                <label for="checkAll"></label>
+                            </th>
+                            <th width="50">#</th>
+                            <th>{{ pageHelper.createSortableLink('user.name'|trans|capitalize, 't.lastName') }}</th>
+                            <th>{{ pageHelper.createSortableLink('user.email'|trans|capitalize, 't.email') }}</th>
+                            <th>{{ 'device.last_login'|trans|capitalize }}</th>
+
+                            {% if is_granted('ROLE_SUPER_ADMIN') %}
+                                <th>{{ 'device.browser'|trans|capitalize }}</th>
+                                <th>&nbsp;</th>
+                            {% endif %}
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for key, user in pageHelper.getList() %}
+                            <tr>
+                                <td class="has-checkbox">
+                                    <input type="checkbox" id="usersCheckbox{{ user.id }}" name="users[]" value="{{ user.id }}">
+                                    <label for="usersCheckbox{{ user.id }}"></label>
+                                </td>
+                                <td>
+                                    {{ pageHelper.getRowNumber(key) }}
+                                </td>
+                                <td>
+                                    <a href="{{ path('pronto_mobile_users_edit', {'id': user.id}) }}" class="regular">
+                                        {{ user.fullName }}
+                                    </a>
+                                </td>
+                                <td>
+                                    {{ user.email }}
+                                </td>
+
+                                {% set lastLogin = user.logins.first %}
+
+                                <td>
+                                    {{ lastLogin != null ? 'format.date_and_time'|trans({'%date%': lastLogin.date|date('d-m-Y'), '%time%': lastLogin.date|date('H:i')}) : '' }}
+                                </td>
+
+                                {% if is_granted('ROLE_SUPER_ADMIN') %}
+                                    <td>
+                                        {{ lastLogin != null ? lastLogin.browserName ~ ' (' ~ lastLogin.version ~ ')' }}
+                                    </td>
+                                    <td>
+                                        <a href="{{ path('pronto_mobile_homepage', {'_switch_user': user.email}) }}" class="text-red"><i class="material-icons">swap_horiz</i></a>
+                                    </td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+        </div>
+
+        {% include '@ProntoMobile/components/pagination.html.twig' with {pageHelper: pageHelper} %}
+    {% else %}
+        {% include '@ProntoMobile/components/alert.html.twig' with {type: 'info', collection: 'users'} %}
+    {% endif %}
+
+    {% include '@ProntoMobile/components/confirm.html.twig' with {postUrl: path('pronto_mobile_users_delete')} %}
+{% endblock %}

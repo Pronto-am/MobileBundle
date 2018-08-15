@@ -1,0 +1,40 @@
+{
+  "name": "Pronto-Mobile",
+  "version": "1.0.0",
+  "description": "CMS for mobile solutions",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "dependencies": {
+    "ajv": "^6.5.2",
+    "chart.js": "^2.7.1",
+    "codeflask": "^0.3.0",
+    "font-awesome": "^4.7.0",
+    "jquery-ui": "^1.12.1",
+    "materialize-css": "^0.100.2",
+    "moment": "^2.22.1",
+    "sweetalert": "^2.1.0",
+    "trumbowyg": "^2.9.4"
+  },
+  "devDependencies": {
+    "css-loader": "^1.0.0",
+    "file-loader": "^1.1.11",
+    "laravel-mix": "^2.1.11",
+    "style-loader": "^0.21.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+    "watch": "NODE_ENV=development node_modules/webpack/bin/webpack.js --watch --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+    "hot": "NODE_ENV=development webpack-dev-server --inline --hot --config=node_modules/laravel-mix/setup/webpack.config.js",
+    "production": "NODE_ENV=production node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
+  },
+  "keywords": [
+    "E-sites",
+    "CMS",
+    "Mobile"
+  ],
+  "author": "Thomas Roovers, E-sites",
+  "license": "ISC"
+}

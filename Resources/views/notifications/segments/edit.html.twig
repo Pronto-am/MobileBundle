@@ -1,0 +1,84 @@
+{% extends '@ProntoMobile/base.html.twig' %}
+
+{% block body %}
+    {% include '@ProntoMobile/components/loader.html.twig' with {'initial': true} %}
+
+    {% include '@ProntoMobile/components/pageTitle.html.twig' with {entity: 'segment', exists: segment != null, backButton: path('pronto_mobile_notification_segments')} %}
+
+    {% if segment != null %}
+        <div class="row card">
+            <ul class="tabs">
+                <li class="tab col s6"><a href="#details">{{ 'push_notification.segment.details'|trans }}</a></li>
+                <li class="tab col s6"><a href="#devices">{{ 'push_notification.segment.subscribed_devices'|trans }}</a></li>
+            </ul>
+        </div>
+    {% endif %}
+
+    <div class="row card" id="details">
+        <div class="card-content col s12">
+            <form action="{{ path('pronto_mobile_notification_segments_save', {id: segment != null ? segment.id : null}) }}" method="POST">
+                {% for language in applicationVersion.application.availableLanguages %}
+                    <div class="row">
+                        <div class="col s12">
+                            <label for="{{ language.code ~ '_name' }}">{{ language.name }}</label>
+                            <input name="{{ language.code ~ '_name' }}" placeholder="{{ 'push_notification.segment.name'|trans|capitalize }}" id="{{ language.code ~ '_name' }}" type="text" class="validate" value="{{ attribute(segment.name, language.code) is defined ? attribute(segment.name, language.code) : '' }}" required>
+                        </div>
+                    </div>
+                {% endfor %}
+
+                <div class="row">
+                    <div class="col s12">
+                        <button type="submit" class="btn btn-primary">{{ 'buttons.save'|trans }}</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {% if segment != null %}
+        <div class="row card" id="devices">
+            <div class="card-content col s12">
+                {% if pageHelper.getList()|length > 0 %}
+                    <table class="table striped bordered highlight responsive-table">
+                        <thead>
+                        <tr>
+                            <th width="50">#</th>
+                            <th>{{ pageHelper.createSortableLink('device.name'|trans|capitalize, 't.name') }}</th>
+                            <th>{{ pageHelper.createSortableLink('device.model'|trans|capitalize, 't.model') }}</th>
+                            <th>{{ pageHelper.createSortableLink('device.manufacturer'|trans|capitalize, 't.manufacturer') }}</th>
+                            <th>{{ pageHelper.createSortableLink('device.platform'|trans|capitalize, 't.platform') }}</th>
+                            <th>{{ pageHelper.createSortableLink('device.os_version'|trans|capitalize, 't.osVersion') }}</th>
+                            <th>{{ pageHelper.createSortableLink('device.app_version'|trans|capitalize, 't.appVersion') }}</th>
+                            <th>{{ pageHelper.createSortableLink('device.last_login'|trans|capitalize, 't.lastLogin') }}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for key, device in pageHelper.getList() %}
+                            <tr>
+                                <td>
+                                    {{ pageHelper.getRowNumber(key) }}
+                                </td>
+                                <td>
+                                    <a href="{{ path('pronto_mobile_devices_details', {'identifier': device.id}) }}" class="regular">
+                                        {{ device.name }} {% if device.testDevice %}<span class="new badge" data-badge-caption="{{ 'device.is_test_device'|trans }}"></span>{% endif %}
+                                    </a>
+                                </td>
+                                <td>{{ device.model }}</td>
+                                <td>{{ device.manufacturer }}</td>
+                                <td>{{ device.platform }}</td>
+                                <td>{{ device.osVersion }}</td>
+                                <td>{{ device.appVersion }}</td>
+                                <td>{{ device.lastLogin != null ? 'format.date_and_time'|trans({'%date%': device.lastLogin|date('d-m-Y'), '%time%': device.lastLogin|date('H:i')}) : '' }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+
+                    {% include '@ProntoMobile/components/pagination.html.twig' with {pageHelper: pageHelper} %}
+                {% else %}
+                    {% include '@ProntoMobile/components/alert.html.twig' with {'type': 'info', 'collection': 'segments'} %}
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

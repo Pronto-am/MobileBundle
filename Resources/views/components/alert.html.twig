@@ -1,0 +1,11 @@
+<div class="alert alert-{{ type }} {% if floating is defined %}floating{% endif %}">
+    {% if message is defined %}
+        {{ message }}
+    {% else %}
+        {% if cantAdd is defined and cantAdd == true %}
+            {% trans with {'%collection%': collection|trans} %}alert.info.no_records{% endtrans %}
+        {% else %}
+            {% trans with {'%collection%': collection|trans} %}alert.info.no_records_add_one{% endtrans %}
+        {% endif %}
+    {% endif %}
+</div>

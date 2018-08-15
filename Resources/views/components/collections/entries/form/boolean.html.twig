@@ -1,0 +1,12 @@
+<div class="row">
+    <div class="col s12">
+        {% if attribute(entry.data, property.identifier) is defined %}
+            {% set checked = attribute(entry.data, property.identifier) ? 'checked' : '' %}
+        {% else %}
+            {% set checked = property.config.defaultValue ? 'checked' : '' %}
+        {% endif %}
+
+        <input type="checkbox" name="{{ property.identifier }}" id="{{ property.identifier }}" value="1" {{ checked }}>
+        <label for="{{ property.identifier }}" {% if property.required == true %}class="required"{% endif %}>{{ property.name }}</label>
+    </div>
+</div>

@@ -1,0 +1,63 @@
+{% extends '@ProntoMobile/base.html.twig' %}
+
+{% block body %}
+
+    {% include '@ProntoMobile/components/toolbar.html.twig' with {pageTitle: 'devices'|trans|capitalize, 'delete': pageHelper.getList()|length > 0 and is_granted('ROLE_SUPER_ADMIN')} %}
+
+    {% if pageHelper.getList()|length > 0 %}
+        <div class="card">
+            <div class="card-content">
+                <form action="{{ path('pronto_mobile_devices_delete') }}" method="POST">
+                    <table class="table striped bordered highlight responsive-table">
+                        <thead>
+                        <tr>
+                            <th width="60" class="has-checkbox">
+                                <input type="checkbox" id="checkAll">
+                                <label for="checkAll"></label>
+                            </th>
+                            <th width="50">#</th>
+                            <th>{{ pageHelper.createSortableLink('device.name'|trans|capitalize, 't.name') }}</th>
+                            <th>{{ pageHelper.createSortableLink('device.model'|trans|capitalize, 't.model') }}</th>
+                            <th>{{ pageHelper.createSortableLink('device.manufacturer'|trans|capitalize, 't.manufacturer') }}</th>
+                            <th>{{ pageHelper.createSortableLink('device.platform'|trans|capitalize, 't.platform') }}</th>
+                            <th>{{ pageHelper.createSortableLink('device.os_version'|trans|capitalize, 't.osVersion') }}</th>
+                            <th>{{ pageHelper.createSortableLink('device.app_version'|trans|capitalize, 't.appVersion') }}</th>
+                            <th>{{ pageHelper.createSortableLink('device.last_login'|trans|capitalize, 't.lastLogin') }}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for key, device in pageHelper.getList() %}
+                            <tr>
+                                <td class="has-checkbox">
+                                    <input type="checkbox" id="devicesCheckbox{{ device.id }}" name="devices[]" value="{{ device.id }}">
+                                    <label for="devicesCheckbox{{ device.id }}"></label>
+                                </td>
+                                <td>
+                                    {{ pageHelper.getRowNumber(key) }}
+                                </td>
+                                <td>
+                                    <a href="{{ path('pronto_mobile_devices_details', {'identifier': device.id}) }}" class="regular">
+                                        {{ device.name }} {% if device.testDevice %}<span class="new badge" data-badge-caption="{{ 'device.is_test_device'|trans }}"></span>{% endif %}
+                                    </a>
+                                </td>
+                                <td>{{ device.model }}</td>
+                                <td>{{ device.manufacturer }}</td>
+                                <td>{{ device.platform }}</td>
+                                <td>{{ device.osVersion }}</td>
+                                <td>{{ device.appVersion }}</td>
+                                <td>{{ device.lastLogin != null ? 'format.date_and_time'|trans({'%date%': device.lastLogin|date('d-m-Y'), '%time%': device.lastLogin|date('H:i')}) : '' }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+        </div>
+
+        {% include '@ProntoMobile/components/pagination.html.twig' with {pageHelper: pageHelper} %}
+    {% else %}
+        {% include '@ProntoMobile/components/alert.html.twig' with {type: 'info', collection: 'devices', cantAdd: true} %}
+    {% endif %}
+
+    {% include '@ProntoMobile/components/confirm.html.twig' with {postUrl: path('pronto_mobile_devices_delete')} %}
+{% endblock %}

@@ -1,0 +1,8 @@
+{% set propertyValue = attribute(attribute(entry.data, property.identifier), language) is defined ? attribute(attribute(entry.data, property.identifier), language) : property.config.defaultValue %}
+
+<div class="row">
+    <div class="col s12">
+        <label for="{{ language ~ ':' ~ property.identifier }}" {% if property.required == true %}class="required"{% endif %}>{{ property.name }}</label>
+        <input type="url" name="{{ language ~ ':' ~ property.identifier }}" id="{{ language ~ ':' ~ property.identifier }}" value="{{ propertyValue }}">
+    </div>
+</div>

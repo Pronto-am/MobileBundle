@@ -1,0 +1,14 @@
+<div class="row">
+    <div class="col s8">
+        <label for="{{ property.identifier }}-date" {% if property.required == true %}class="required"{% endif %}>{{ property.name }}</label>
+
+        {% set value = attribute(entry.data, property.identifier) is defined ? attribute(entry.data, property.identifier) : property.config.defaultValue %}
+
+        <input type="text" class="datepicker" name="{{ property.identifier }}-date" id="{{ property.identifier }}-date" value="{{ value == 'now' ? 'now'|date('d-m-Y') : (value != '' ? value|date('d-m-Y') : '') }}">
+    </div>
+    <div class="col s4">
+        <label for="{{ property.identifier }}-date" {% if property.required == true %}class="required"{% endif %}>{{ 'collection.entry.time'|trans }}</label>
+
+        <input type="text" class="timepicker" name="{{ property.identifier }}-time" id="{{ property.identifier }}-time" value="{{ value == 'now' ? 'now'|date('H:i') : (value != '' ? value|date('H:i') : '') }}">
+    </div>
+</div>

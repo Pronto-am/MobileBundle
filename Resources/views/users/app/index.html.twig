@@ -1,0 +1,50 @@
+{% extends '@ProntoMobile/base.html.twig' %}
+
+{% block body %}
+
+    {% include '@ProntoMobile/components/toolbar.html.twig' with {pageTitle: 'app_users'|trans|capitalize, delete: pageHelper.getList()|length > 0} %}
+
+    {% if pageHelper.getList()|length > 0 %}
+        <div class="card">
+            <div class="card-content">
+                <form action="{{ path('pronto_mobile_app_users_delete') }}" method="POST">
+                    <table class="table striped bordered highlight responsive-table">
+                        <thead>
+                        <tr>
+                            <th width="60" class="has-checkbox">
+                                <input type="checkbox" id="checkAll">
+                                <label for="checkAll"></label>
+                            </th>
+                            <th width="50">#</th>
+                            <th>{{ pageHelper.createSortableLink('user.name'|trans|capitalize, 't.lastName') }}</th>
+                            <th>{{ pageHelper.createSortableLink('user.email'|trans|capitalize, 't.email') }}</th>
+                            <th>{{ 'device.last_login'|trans|capitalize }}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for key, user in pageHelper.getList() %}
+                            <tr>
+                                <td class="has-checkbox">
+                                    <input type="checkbox" id="usersCheckbox{{ user.id }}" name="users[]" value="{{ user.id }}">
+                                    <label for="usersCheckbox{{ user.id }}"></label>
+                                </td>
+                                <td>{{ pageHelper.getRowNumber(key) }}</td>
+                                <td><a href="{{ path('pronto_mobile_app_users_details', {identifier: user.id}) }}" class="regular">{{ user.fullName }}</a>
+                                </td>
+                                <td>{{ user.email }}</td>
+                                <td>
+                                    {{ user.lastLogin != null ? 'format.date_and_time'|trans({'%date%': user.lastLogin.date|date('d-m-Y'), '%time%': user.lastLogin.date|date('H:i')}) : '' }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+        </div>
+
+        {% include '@ProntoMobile/components/pagination.html.twig' with {pageHelper: pageHelper} %}
+    {% else %}
+        {% include '@ProntoMobile/components/alert.html.twig' with {type: 'info', collection: 'app_users', cantAdd: true} %}
+    {% endif %}
+{% endblock %}

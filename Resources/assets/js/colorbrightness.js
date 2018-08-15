@@ -1,0 +1,1 @@
+require('../bundles/color-brightness/colorbrightness.min');

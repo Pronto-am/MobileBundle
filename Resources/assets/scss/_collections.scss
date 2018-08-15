@@ -1,0 +1,30 @@
+div.collection {
+  a.collection-item {
+    min-height: 62px;
+
+    p {
+      color: #696969;
+    }
+
+    &.disabled {
+      pointer-events: none;
+      cursor: default;
+
+      i.circle {
+        background-color: #cccccc !important;
+      }
+
+      color: #cccccc;
+
+      p {
+        color: #cccccc;
+      }
+    }
+  }
+}
+
+ul.collection {
+  li.collection-item {
+    // It has different styling
+  }
+}

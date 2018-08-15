@@ -1,0 +1,59 @@
+{
+  "name": "pronto/mobilebundle",
+  "description": "A CMS bundle for mobile solutions",
+  "type": "symfony-bundle",
+  "authors": [
+    {
+      "name": "Thomas Roovers",
+      "email": "troovers@e-sites.nl"
+    }
+  ],
+  "keywords": [
+    "cms mobile pronto apps app bundle"
+  ],
+  "license": [
+    "MIT"
+  ],
+  "require": {
+    "php": "^7.1.3",
+    "troovers/browser": "^1.0.0",
+    "ramsey/uuid": "^3.8",
+    "doctrine/orm": "^2.5",
+    "awps/font-awesome-php": "^4.7",
+    "guzzlehttp/guzzle": "^6.3",
+    "kreait/firebase-php": "^4.13",
+    "league/flysystem": "^1.0",
+    "league/flysystem-sftp": "^1.0",
+    "php-http/guzzle6-adapter": "^1.1",
+    "symfony/swiftmailer-bundle": "^3.2",
+    "symfony/translation": "^4.1",
+    "symfony/orm-pack": "^1.0",
+    "symfony/form": "^4.1",
+    "friendsofsymfony/oauth-server-bundle": "dev-master",
+    "symfony/twig-bundle": "^4.1",
+    "symfony/templating": "^4.1",
+    "symfony/validator": "^4.1",
+    "symfony/serializer": "^4.1",
+    "doctrine/doctrine-fixtures-bundle": "^3.0",
+    "symfony/proxy-manager-bridge": "^4.1",
+    "symfony/expression-language": "^4.1"
+  },
+  "require-dev": {
+    "nelmio/alice": "3.4.1",
+    "symfony/phpunit-bridge": "^4.1",
+    "phpunit/phpunit": "^7"
+  },
+  "autoload": {
+    "psr-0": {
+      "Pronto\\MobileBundle": ""
+    }
+  },
+  "target-dir": "Pronto/MobileBundle",
+  "extra": {
+    "branch-alias": {
+      "dev-master": "master"
+    }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
+}

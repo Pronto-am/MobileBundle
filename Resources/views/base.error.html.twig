@@ -1,0 +1,51 @@
+{% trans_default_domain 'error' %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <title>{% block title %}Pronto - App management{% endblock %}</title>
+
+    {% block stylesheets %}
+        <link href="{{ mix('/css/error.css') }}" rel="stylesheet"/>
+    {% endblock %}
+
+    <link rel="icon" type="image/x-icon" href="{{ mix('/images/favicon.ico') }}"/>
+</head>
+<body>
+<div id="container">
+    <div id="header">
+        <img src="{{ mix('/images/logo-login.png') }}" vspace="20" height="100" alt="Pronto - App Management">
+
+        <div id="status-code">
+            {{ exception.statusCode }}
+        </div>
+    </div>
+
+    <div class="card" id="status-message">
+        <div class="card-content">
+            <h1>{{ 'awkwardTitle'|trans }}</h1>
+
+            <p>
+                {% block explanation %}{% endblock %}
+            </p>
+
+            <h2>{{ 'errorMessageTitle'|trans }}</h2>
+            <p class="code">
+                {{ exception.message }}
+            </p>
+        </div>
+        <div class="card-action">
+            <a href="{{ path('pronto_mobile_homepage') }}">{{ 'backHome'|trans }}</a>
+            <a href="mailto:complaints-we-should-not-ignore@pronto.am" class="pull-right red-text">{{ 'sendComplaintMail'|trans }}</a>
+        </div>
+    </div>
+
+    <div id="footer">
+        {{ 'prontoDisclaimer'|trans }} <a class="esites" target="_blank" href="https://www.e-sites.nl">E-sites</a>.<br>
+        &copy; {{ 'now'|date('Y') }}
+    </div>
+</div>
+<script src="{{ mix('/js/error.js') }}" type="text/javascript"></script>
+</body>
+</html>

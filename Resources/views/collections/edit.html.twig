@@ -1,0 +1,189 @@
+{% extends '@ProntoMobile/base.html.twig' %}
+
+{% block body %}
+    {% include '@ProntoMobile/components/loader.html.twig' with {'initial': true} %}
+
+    {% include '@ProntoMobile/components/pageTitle.html.twig' with {entity: 'collection', exists: collection != null, backButton: path('pronto_mobile_collections')} %}
+
+    {% if collection != null %}
+        {% set activeTab = 'general' %}
+
+        {% for message in app.flashes('activeTab') %}
+            {% set activeTab = message %}
+        {% endfor %}
+
+        <div class="row card">
+            <ul class="tabs">
+                <li class="tab col s4"><a {% if activeTab == 'general' %}class="active"{% endif %} href="#general">{{ 'collection.general'|trans }}</a></li>
+                <li class="tab col s4"><a {% if activeTab == 'properties' %}class="active"{% endif %} href="#properties">{{ 'collection.properties'|trans }}</a></li>
+                <li class="tab col s4"><a {% if activeTab == 'relationships' %}class="active"{% endif %} href="#relationships">{{ 'relationships'|trans }}</a></li>
+            </ul>
+        </div>
+    {% endif %}
+
+    <div class="row card" id="general">
+        <div class="card-content">
+            {{ form_start(collectionForm) }}
+
+            <div class="row">
+                <div class="col s12">
+                    {{ form_row(collectionForm.name) }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s12">
+                    {{ form_row(collectionForm.identifier) }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s12">
+                    {{ form_row(collectionForm.icon) }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s12">
+                    <button type="submit" class="btn btn-primary" formnovalidate>{{ 'buttons.save'|trans }}</button>
+
+                    {% if collection != null %}
+                        <a href="#!" name="single-delete" data-id="{{ collection.id }}" data-url="{{ path('pronto_mobile_collections_delete') }}" class="btn-flat btn-text-red">{{ 'buttons.delete'|trans }}</a>
+                    {% endif %}
+                </div>
+            </div>
+
+            {{ form_end(collectionForm) }}
+        </div>
+    </div>
+
+    {% if collection != null %}
+        <div class="row card" id="properties">
+            <div class="card-content">
+
+                {% include '@ProntoMobile/components/toolbar.html.twig' with {pageTitle: '', newObjectPath: path('pronto_mobile_collection_properties_edit', {identifier: collection.identifier, id: null}), delete: collection.properties|length > 0 and is_granted('ROLE_SUPER_ADMIN')} %}
+
+                {% if collection.properties|length > 0 %}
+                    <form action="{{ path('pronto_mobile_collection_properties_delete', {identifier: collection.identifier}) }}" method="POST">
+                        <table class="table striped bordered highlight responsive-table">
+                            <thead>
+                            <tr>
+                                <th width="40"></th>
+                                <th width="60" class="has-checkbox">
+                                    <input type="checkbox" id="checkAll">
+                                    <label for="checkAll"></label>
+                                </th>
+                                <th>{{ 'collection.name'|trans|capitalize }}</th>
+                                <th>{{ 'collection.identifier'|trans|capitalize }}</th>
+                                <th>{{ 'collection.type'|trans|capitalize }}</th>
+                                <th>{{ 'collection.list_view'|trans|capitalize }}</th>
+                                <th>{{ 'collection.property.required'|trans|capitalize }}</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody class="sortable" data-url="{{ path('pronto_mobile_collection_properties_order') }}">
+                            {% for key, property in collection.properties %}
+                                <tr id="property-{{ property.id }}">
+                                    <td>
+                                        <i class="material-icons">drag_handle</i>
+                                    </td>
+                                    <td class="has-checkbox">
+                                        <input type="checkbox" id="propertiesCheckbox{{ property.id }}" name="properties[]" value="{{ property.id }}">
+                                        <label for="propertiesCheckbox{{ property.id }}"></label>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path('pronto_mobile_collection_properties_edit', {'identifier': collection.identifier, 'id': property.id}) }}" class="regular">
+                                            {{ property.name }}
+                                        </a>
+
+                                        {% if property.entryTitle %}
+                                            <span class="new badge" data-badge-caption="{{ 'collection.entry_title'|trans }}"></span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ property.identifier }}</td>
+                                    <td>{{ property.type.type }}</td>
+                                    <td>{{ property.includeInListView ? 'buttons.yes'|trans : 'buttons.no'|trans }}</td>
+                                    <td>{{ property.required ? 'buttons.yes'|trans : 'buttons.no'|trans }}</td>
+                                    <td>
+                                        {% if property.type.listviewCompatible %}
+                                            <a href="#!" class="dropdown-button" data-activates="property-dropdown-{{ property.id }}"><i class="material-icons">more_horiz</i></a>
+
+                                            <ul id="property-dropdown-{{ property.id }}" class="dropdown-content">
+                                                <li {% if property.entryTitle %}class="disabled"{% endif %}><a href="{{ path('pronto_mobile_collection_properties_set_entry_title') }}" data-id="{{ property.id }}">{{ 'collection.set_as_entry_title'|trans }}</a></li>
+                                            </ul>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </form>
+                {% else %}
+                    {% include '@ProntoMobile/components/alert.html.twig' with {'type': 'info', 'collection': 'properties'} %}
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="row card" id="relationships">
+            <div class="card-content">
+
+                {% include '@ProntoMobile/components/toolbar.html.twig' with {pageTitle: '', newObjectPath: path('pronto_mobile_collection_relationships_edit', {identifier: collection.identifier, id: null}), 'delete': collection.relationships|length > 0 and is_granted('ROLE_SUPER_ADMIN')} %}
+
+                {% if collection.relationships|length > 0 %}
+                    <form action="{{ path('pronto_mobile_collection_relationships_delete', {identifier: collection.identifier}) }}" method="POST">
+                        <table class="table striped bordered highlight responsive-table">
+                            <thead>
+                            <tr>
+                                <th width="60" class="has-checkbox">
+                                    <input type="checkbox" id="checkAll">
+                                    <label for="checkAll"></label>
+                                </th>
+                                <th>{{ 'collection.relationship.name'|trans|capitalize }}</th>
+                                <th>{{ 'collection.relationship.related_collection'|trans|capitalize }}</th>
+                                <th>{{ 'collection.relationship.type'|trans|capitalize }}</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for key, relationship in collection.relationships %}
+                                <tr>
+                                    <td class="has-checkbox">
+                                        <input type="checkbox" id="relationshipsCheckbox{{ relationship.id }}" name="relationships[]" value="{{ relationship.id }}">
+                                        <label for="relationshipsCheckbox{{ relationship.id }}"></label>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path('pronto_mobile_collection_relationships_edit', {'identifier': collection.identifier, 'id': relationship.id}) }}" class="regular">
+                                            {{ relationship.name }}
+                                        </a>
+                                    </td>
+                                    <td>{{ relationship.relatedCollection.name }}</td>
+                                    <td>{{ relationship.type.name }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </form>
+                {% else %}
+                    {% include '@ProntoMobile/components/alert.html.twig' with {'type': 'info', 'collection': 'relationships'} %}
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+    <link href="{{ mix('/css/select2.css') }}" rel="stylesheet"/>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="text/javascript">
+        let canCreateIdentifier = {{ collection == null ? 'true' : 'false' }};
+    </script>
+
+    <script type="text/javascript" src="/bundles/prontomobile/libraries/select2/js/select2.min.js"></script>
+    <script type="text/javascript" src="/bundles/prontomobile/libraries/jquery-ui/js/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="{{ mix('/js/collections/collections.js') }}"></script>
+{% endblock %}

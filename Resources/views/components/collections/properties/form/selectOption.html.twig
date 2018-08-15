@@ -1,0 +1,25 @@
+{% if property == null or property.config.values is not defined %}
+    <div class="row select-option">
+        <div class="col s6 no-padding-left">
+            <label for="{{ config.name }}" {% if required is defined and required == true %}class="required"{% endif %}>{{ 'collection.property.key'|trans }}</label>
+            <input type="text" name="type-{{ id }}-{{ config.name }}-key-1" id="{{ config.name }}">
+        </div>
+        <div class="col s6 no-padding-right">
+            <label for="{{ config.name }}" {% if required is defined and required == true %}class="required"{% endif %}>{{ 'collection.property.value'|trans }}</label>
+            <input type="text" name="type-{{ id }}-{{ config.name }}-value-1" id="{{ config.name }}">
+        </div>
+    </div>
+{% else %}
+    {% for key, value in property.config.values %}
+        <div class="row select-option">
+            <div class="col s6 no-padding-left">
+                <label for="{{ config.name }}" {% if required is defined and required == true %}class="required"{% endif %}>{{ 'collection.property.key'|trans }}</label>
+                <input type="text" name="type-{{ id }}-{{ config.name }}-key-{{ key + 1 }}" id="{{ config.name }}" value="{{ value.key }}">
+            </div>
+            <div class="col s6 no-padding-right">
+                <label for="{{ config.name }}" {% if required is defined and required == true %}class="required"{% endif %}>{{ 'collection.property.value'|trans }}</label>
+                <input type="text" name="type-{{ id }}-{{ config.name }}-value-{{ key + 1 }}" id="{{ config.name }}" value="{{ value.value }}">
+            </div>
+        </div>
+    {% endfor %}
+{% endif %}

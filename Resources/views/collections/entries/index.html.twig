@@ -1,0 +1,83 @@
+{% extends '@ProntoMobile/base.html.twig' %}
+
+{% block body %}
+
+    {% if is_granted('ROLE_SUPER_ADMIN') %}
+        {% set customActions = [
+            {
+                path: path('pronto_mobile_collections_edit', {identifier: collection.identifier}),
+                color: 'blue-grey lighten-3',
+                icon: 'cog'
+            }
+        ] %}
+    {% else %}
+        {% set customActions = [] %}
+    {% endif %}
+
+    {% include '@ProntoMobile/components/toolbar.html.twig' with {
+        pageTitle: 'entries'|trans|capitalize,
+        newObjectPath: path('pronto_mobile_collection_entries_edit', {identifier: collection.identifier}),
+        customActions: customActions,
+        delete: entries|length > 0} %}
+
+    {% if entries|length > 0 %}
+        <div class="card">
+            <div class="card-content">
+                <form action="{{ path('pronto_mobile_collection_entries_delete', {identifier: collection.identifier}) }}" method="POST">
+                    <table class="table striped bordered highlight responsive-table">
+                        <thead>
+                        <tr>
+                            <th width="60" class="has-checkbox">
+                                <input type="checkbox" id="checkAll">
+                                <label for="checkAll"></label>
+                            </th>
+                            <th width="50">#</th>
+
+                            {% for property in properties %}
+                                <th>{{ property.name }}</th>
+                            {% endfor %}
+
+                            <th>Actief</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for key, entry in entries %}
+                            <tr>
+                                <td class="has-checkbox">
+                                    <input type="checkbox" id="entryCheckbox{{ entry.id }}" name="entries[]" value="{{ entry.id }}">
+                                    <label for="entryCheckbox{{ entry.id }}"></label>
+                                </td>
+                                <td>
+                                    {{ key + 1 }}
+                                </td>
+
+                                {% for property in properties %}
+                                    {% set value = entry.data[property.identifier] is defined ? entry.data[property.identifier] : '' %}
+
+                                    <td>
+                                        {% if property.entryTitle %}
+                                            <a href="{{ path('pronto_mobile_collection_entries_edit', {identifier: collection.identifier, id: entry.id}) }}" class="regular">
+                                                {{ entry_value_parser.parse(property.type, value) }}
+                                            </a>
+                                        {% else %}
+                                            {{ entry_value_parser.parse(property.type, value) }}
+                                        {% endif %}
+                                    </td>
+                                {% endfor %}
+
+                                <td>{{ entry.active ? 'buttons.yes'|trans : 'buttons.no'|trans }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+        </div>
+    {% else %}
+        {% if hasEntryTitle == false %}
+            {% include '@ProntoMobile/components/alert.html.twig' with {'type': 'danger', 'message': 'collection.has_no_entry_title'|trans} %}
+        {% else %}
+            {% include '@ProntoMobile/components/alert.html.twig' with {'type': 'info', 'collection': 'entries'} %}
+        {% endif %}
+    {% endif %}
+{% endblock %}

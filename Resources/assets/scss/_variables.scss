@@ -1,0 +1,32 @@
+// Color scheme from colors.co: https://coolors.co/264653-2a9d8f-e9c46a-f4a261-e76f51
+
+$japanese-indigo: #264653;
+$jungle-green: #2a9d8f;
+$hansa-yellow: #ffa801;
+$sandy-brown: #F4A261;
+$light-red-ochre: #e76f51;
+
+$black: $japanese-indigo;
+
+$body-background: #f5f8fa;
+
+$side-nav-background: #40474f;
+$side-nav-background-focus: rgba(255, 255, 255, 0.13);
+
+$primary-color: $jungle-green !default;
+$primary-color-light: lighten($primary-color, 15%) !default;
+$primary-color-dark: darken($primary-color, 15%) !default;
+
+$secondary-color: $hansa-yellow !default;
+
+$input-focus-color: $secondary-color;
+$checkbox-checked-color: #2A9D8F;
+
+$dropdown-color: $black !default;
+
+$table-striped-color: #f9f9f9;
+
+$collection-link-color: #272727;
+$collection-hover-bg-color: #f7f9fa;
+
+// https://raw.githubusercontent.com/Dogfalo/materialize/master/sass/components/_variables.scss

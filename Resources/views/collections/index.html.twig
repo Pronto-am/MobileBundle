@@ -1,0 +1,37 @@
+{% extends '@ProntoMobile/base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+    <link rel="stylesheet" type="text/css" href="{{ mix('/css/collections/collections.css') }}"/>
+{% endblock %}
+
+{% block body %}
+
+    {% include '@ProntoMobile/components/toolbar.html.twig' with {pageTitle: 'collections'|trans|capitalize, newObjectUrl: 'pronto_mobile_collections_edit'} %}
+
+    {% if collections|length > 0 %}
+        <div class="row">
+            {% for collection in collections %}
+                <div class="col s12 m6 l4 xl3 collection-card">
+                    <div class="card card-clickable is-clickable hoverable" data-href="{{ path('pronto_mobile_collection_entries', {'identifier': collection.identifier}) }}">
+                        <i class="fa {{ collection.icon }}" aria-hidden="true"></i>
+
+                        <div>
+                            <h1>{{ collection.name }}</h1>
+                            <span class="new badge" data-badge-caption="">{{ collection.entries|length }}</span>
+                        </div>
+                    </div>
+
+                    <div class="entry-settings">
+                        {% if is_granted('ROLE_SUPER_ADMIN') %}
+                            <a class="settings" href="{{ path('pronto_mobile_collections_edit', {'identifier': collection.identifier}) }}"><i class="fa fa-cog" aria-hidden="true"></i></a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        {% include '@ProntoMobile/components/alert.html.twig' with {'type': 'info', 'collection': 'collections'} %}
+    {% endif %}
+{% endblock %}

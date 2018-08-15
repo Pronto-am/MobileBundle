@@ -1,0 +1,372 @@
+#### CUSTOMER SELECTION ####
+
+select_customer:
+    path: /customers
+    defaults:
+        _controller: ProntoMobileBundle:Web\Customer:selectCustomer
+    condition: "context.getMethod() in ['GET']"
+
+set_customer:
+    path: /customers
+    defaults:
+        _controller: ProntoMobileBundle:Web\Customer:setCustomer
+    condition: "context.getMethod() in ['POST']"
+
+add_customer:
+    path: /customers/add
+    defaults:
+        _controller: ProntoMobileBundle:Web\Customer:add
+
+edit_customer:
+    path: /customers/edit
+    defaults:
+        _controller: ProntoMobileBundle:Web\Customer:edit
+
+delete_customer:
+    path: /customers/delete
+    defaults:
+        _controller: ProntoMobileBundle:Web\Customer:delete
+    condition: "context.getMethod() in ['POST']"
+
+
+#### APPLICATION SELECTION ####
+
+select_application:
+    path: /applications/select
+    defaults:
+        _controller: ProntoMobileBundle:Web\Application:selectApplication
+    condition: "context.getMethod() in ['GET']"
+
+set_application:
+    path: /applications
+    defaults:
+        _controller: ProntoMobileBundle:Web\Application:setApplication
+    condition: "context.getMethod() in ['POST']"
+
+
+#### MAIN ####
+
+homepage:
+    path: /
+    defaults:
+        _controller: ProntoMobileBundle:Web\Default:index
+
+
+#### USERS ####
+
+profile:
+    path: /profile
+    defaults:
+        _controller: ProntoMobileBundle:Web\User:profile
+
+users:
+    path: /users
+    defaults:
+        _controller: ProntoMobileBundle:Web\User:index
+
+users_edit:
+    path: /users/edit/{id}
+    defaults:
+        _controller: ProntoMobileBundle:Web\User:edit
+        id: null
+
+users_delete:
+    path: /users/delete
+    defaults:
+        _controller: ProntoMobileBundle:Web\User:delete
+
+
+#### APPLICATIONS ####
+
+applications:
+    path: /applications
+    defaults:
+        _controller: ProntoMobileBundle:Web\Application:index
+
+applications_edit:
+    path: /applications/edit/{id}
+    defaults:
+        _controller: ProntoMobileBundle:Web\Application:edit
+        id: null
+
+applications_delete:
+    path: /applications/delete
+    defaults:
+        _controller: ProntoMobileBundle:Web\Application:delete
+    condition: "context.getMethod() in ['POST']"
+
+
+#### APPLICATION VERSIONS ####
+
+application_versions_edit:
+    path: /applications/versions/edit/{id}
+    defaults:
+        _controller: ProntoMobileBundle:Web\Application\Version:edit
+        id: null
+
+application_versions_delete:
+    path: /applications/versions/delete
+    defaults:
+        _controller: ProntoMobileBundle:Web\Application\Version:delete
+    condition: "context.getMethod() in ['POST']"
+
+
+#### COLLECTIONS ####
+
+collections:
+    path: /collections
+    defaults:
+        _controller: ProntoMobileBundle:Web\Collection:index
+
+collections_edit:
+    path: /collections/edit/{identifier}
+    defaults:
+        _controller: ProntoMobileBundle:Web\Collection:edit
+        identifier: null
+
+collections_delete:
+    path: /collections/delete
+    defaults:
+        _controller: ProntoMobileBundle:Web\Collection:delete
+    condition: "context.getMethod() in ['POST']"
+
+
+#### COLLECTION PROPERTIES ####
+
+collection_properties:
+    path: /collections/{identifier}/properties
+    defaults:
+        _controller: ProntoMobileBundle:Web\Collection\Property:index
+
+collection_properties_edit:
+    path: /collections/{identifier}/properties/edit/{id}
+    defaults:
+        _controller: ProntoMobileBundle:Web\Collection\Property:edit
+        id: null
+    condition: "context.getMethod() in ['GET']"
+
+collection_properties_save:
+    path: /collections/{identifier}/properties/edit/{id}
+    defaults:
+        _controller: ProntoMobileBundle:Web\Collection\Property:save
+        id: null
+    condition: "context.getMethod() in ['POST']"
+
+collection_properties_delete:
+    path: /collections/{identifier}/properties/delete
+    defaults:
+        _controller: ProntoMobileBundle:Web\Collection\Property:delete
+    condition: "context.getMethod() in ['POST']"
+
+collection_properties_order:
+    path: /collections/properties/order
+    defaults:
+        _controller: ProntoMobileBundle:Web\Collection\Property:order
+    condition: "context.getMethod() in ['POST']"
+
+collection_properties_set_entry_title:
+    path: /collections/properties/title
+    defaults:
+        _controller: ProntoMobileBundle:Web\Collection\Property:entryTitle
+    condition: "context.getMethod() in ['POST']"
+
+
+#### COLLECTION RELATIONSHIPS ####
+
+collection_relationships:
+    path: /collections/{identifier}/relationships
+    defaults:
+        _controller: ProntoMobileBundle:Web\Collection\Relationship:index
+
+collection_relationships_edit:
+    path: /collections/{identifier}/relationships/edit/{id}
+    defaults:
+        _controller: ProntoMobileBundle:Web\Collection\Relationship:edit
+        id: null
+    condition: "context.getMethod() in ['GET', 'POST']"
+
+collection_relationships_delete:
+    path: /collections/{identifier}/relationships/delete
+    defaults:
+        _controller: ProntoMobileBundle:Web\Collection\Relationship:delete
+    condition: "context.getMethod() in ['POST']"
+
+
+#### COLLECTION ENTRIES ####
+
+collection_entries:
+    path: /collections/{identifier}/entries
+    defaults:
+        _controller: ProntoMobileBundle:Web\Collection\Entry:index
+
+collection_entries_edit:
+    path: /collections/{identifier}/entries/edit/{id}
+    defaults:
+        _controller: ProntoMobileBundle:Web\Collection\Entry:edit
+        id: null
+    condition: "context.getMethod() in ['GET']"
+
+collection_entries_save:
+    path: /collections/{identifier}/entries/edit/{id}
+    defaults:
+        _controller: ProntoMobileBundle:Web\Collection\Entry:save
+        id: null
+    condition: "context.getMethod() in ['POST']"
+
+collection_entries_delete:
+    path: /collections/{identifier}/entries/delete
+    defaults:
+        _controller: ProntoMobileBundle:Web\Collection\Entry:delete
+    condition: "context.getMethod() in ['POST']"
+
+collection_entry_files_delete:
+    path: /collections/{identifier}/entries/{id}/files/delete
+    defaults:
+        _controller: ProntoMobileBundle:Web\Collection\Entry:deleteFile
+    condition: "context.getMethod() in ['POST']"
+
+
+#### COLLECTION ENTRY RELATIONSHIPS ####
+
+collection_entry_relationships_edit:
+    path: /collections/entries/{entry}/relationships/{relationship}
+    defaults:
+        _controller: ProntoMobileBundle:Web\Collection\Relationship:editRelationships
+    condition: "context.getMethod() in ['GET']"
+
+collection_entry_relationships_save:
+    path: /collections/entries/{entry}/relationships/{relationship}
+    defaults:
+        _controller: ProntoMobileBundle:Web\Collection\Relationship:saveRelationships
+    condition: "context.getMethod() in ['POST']"
+
+
+#### APP USERS ####
+
+app_users:
+    path: /users/app
+    defaults:
+        _controller: ProntoMobileBundle:Web\AppUser:index
+
+app_users_delete:
+    path: /users/app/delete
+    defaults:
+        _controller: ProntoMobileBundle:Web\AppUser:delete
+    condition: "context.getMethod() in ['POST']"
+
+app_users_details:
+    path: /users/app/{identifier}
+    defaults:
+        _controller: ProntoMobileBundle:Web\AppUser:details
+
+app_users_password_reset:
+    path: /users/app/password/reset
+    defaults:
+        _controller: ProntoMobileBundle:Web\AppUser:resetPassword
+
+
+#### PUSH NOTIFICATIONS ####
+
+notifications:
+    path: /notifications
+    defaults:
+        _controller: ProntoMobileBundle:Web\PushNotification:index
+
+notifications_details:
+    path: /notifications/details/{identifier}
+    defaults:
+        _controller: ProntoMobileBundle:Web\PushNotification:details
+
+notifications_edit:
+    path: /notifications/edit/{identifier}
+    defaults:
+        _controller: ProntoMobileBundle:Web\PushNotification:edit
+        identifier: null
+    condition: "context.getMethod() in ['GET']"
+
+notifications_save:
+    path: /notifications/edit/{identifier}
+    defaults:
+        _controller: ProntoMobileBundle:Web\PushNotification:save
+        identifier: null
+    condition: "context.getMethod() in ['POST']"
+
+notifications_recipient_count:
+    path: /notifications/recipients
+    defaults:
+        _controller: ProntoMobileBundle:Web\PushNotification:recipients
+    condition: "context.getMethod() in ['POST']"
+
+
+#### PUSH NOTIFICATION RECIPIENTS ####
+
+notification_recipients:
+    path: /notifications/{identifier}/recipients/{sent}
+    defaults:
+        _controller: ProntoMobileBundle:Web\PushNotification\Recipient:index
+
+
+#### PUSH NOTIFICATION SEGMENTS ####
+
+notification_segments:
+    path: /notifications/segments
+    defaults:
+        _controller: ProntoMobileBundle:Web\PushNotification\Segment:index
+
+notification_segments_edit:
+    path: /notifications/segments/edit/{id}
+    defaults:
+        _controller: ProntoMobileBundle:Web\PushNotification\Segment:edit
+        id: null
+    condition: "context.getMethod() in ['GET']"
+
+notification_segments_save:
+    path: /notifications/segments/edit/{id}
+    defaults:
+        _controller: ProntoMobileBundle:Web\PushNotification\Segment:save
+        id: null
+    condition: "context.getMethod() in ['POST']"
+
+notification_segments_delete:
+    path: /notifications/segments/delete
+    defaults:
+        _controller: ProntoMobileBundle:Web\PushNotification\Segment:delete
+
+
+#### DEVICES ####
+
+devices:
+    path: /devices
+    defaults:
+        _controller: ProntoMobileBundle:Web\Device:index
+
+devices_delete:
+    path: /devices/delete
+    defaults:
+        _controller: ProntoMobileBundle:Web\Device:delete
+    condition: "context.getMethod() in ['POST']"
+
+devices_details:
+    path: /devices/{identifier}
+    defaults:
+        _controller: ProntoMobileBundle:Web\Device:details
+
+
+#### PLUGINS ####
+
+plugins:
+    path: /plugins
+    defaults:
+        _controller: ProntoMobileBundle:Web\Plugin:index
+
+plugins_edit:
+    path: /plugins/edit/{id}
+    defaults:
+        _controller: ProntoMobileBundle:Web\Plugin:edit
+    condition: "context.getMethod() in ['GET']"
+
+plugins_save:
+    path: /plugins/edit/{id}
+    defaults:
+        _controller: ProntoMobileBundle:Web\Plugin:save
+    condition: "context.getMethod() in ['POST']"

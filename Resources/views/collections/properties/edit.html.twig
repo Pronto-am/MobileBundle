@@ -1,0 +1,110 @@
+{% extends '@ProntoMobile/base.html.twig' %}
+
+{% block body %}
+    {% include '@ProntoMobile/components/loader.html.twig' with {'initial': true} %}
+
+    {% include '@ProntoMobile/components/pageTitle.html.twig' with {entity: 'property', exists: property != null, backButton: path('pronto_mobile_collection_properties', {identifier: identifier})} %}
+
+    <div class="row card">
+        <div class="card-content">
+            {{ form_start(propertyForm) }}
+
+            <div class="row">
+                <div class="col s12">
+                    {{ form_row(propertyForm.name) }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s12">
+                    {{ form_row(propertyForm.identifier) }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s12">
+                    {{ form_row(propertyForm.type, {
+                        attr: {
+                            readonly: editable == false,
+                            disabled: editable == false
+                        }
+                    }) }}
+                </div>
+            </div>
+
+            {% for type in types %}
+                <div class="type-config" id="type-{{ type.id }}">
+                    {% for config in type.config %}
+                        {% if config.configurable is not defined or (config.configurable is defined and config.configurable == true) %}
+                            <div class="row">
+                                <div class="col s12">
+                                    {% set collectionList = type.type == 'relation' ? collections : null %}
+
+                                    {% include '@ProntoMobile/components/collections/properties/form/' ~ config.type ~ '.html.twig' with {property: property, config: config, id: type.id, collection: collectionList} %}
+
+                                    {% if config.type == 'selectOption' %}
+                                        <a href="#!" name="add-select-option">{{ 'collection.property.add_select_option'|trans }}</a>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endfor %}
+
+            <div class="row">
+                <div class="col s12">
+                    {{ form_row(propertyForm.includeInListView, {
+                        attr: {
+                            disabled: property != null and property.entryTitle,
+                            class: property != null and property.entryTitle ? 'filled-in' : ''
+                        }
+                    }) }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s12">
+                    {{ form_row(propertyForm.includeInJsonListView, {
+                        attr: {
+                            disabled: property != null and property.entryTitle,
+                            class: property != null and property.entryTitle ? 'filled-in' : ''
+                        }
+                    }) }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s12">
+                    {{ form_row(propertyForm.required) }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s12">
+                    <button type="submit" class="btn btn-primary" formnovalidate>{{ 'buttons.save'|trans }}</button>
+                </div>
+            </div>
+
+            {{ form_end(propertyForm) }}
+        </div>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+    <link rel="stylesheet" href="{{ mix('/css/codeflask.css') }}">
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="text/javascript">
+        let canCreateIdentifier = {{ property == null ? 'true' : 'false' }};
+        translations.leaveEmptyToIgnoreSelectOption = '{{ 'collection.property.leave_empty_to_ignore'|trans }}';
+    </script>
+
+    <script type="text/javascript" src="{{ mix('/js/collections/properties.js') }}"></script>
+{% endblock %}

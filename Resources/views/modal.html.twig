@@ -1,0 +1,21 @@
+<div class="modal-header">
+    <h1>{% block title %}{% endblock %}</h1>
+</div>
+
+{% if action is defined %}
+<form method="post" action="{{ action }}" {% if fileUpload is defined and fileUpload == true %}enctype="multipart/form-data"{% endif %}>
+    {% endif %}
+
+    <div class="modal-content">
+        {% block body %}{% endblock %}
+    </div>
+
+    <div class="modal-footer">
+        {% block footer %}{% endblock %}
+    </div>
+
+    {% if action is defined %}
+</form>
+{% endif %}
+
+{% block modalScripts %}{% endblock %}

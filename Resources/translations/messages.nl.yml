@@ -1,0 +1,315 @@
+
+##
+## General translations
+##
+
+default.welcome: Welkom
+default.impersonating: Let op, u impersoneert de gebruiker <b>%user%</b>.
+default.impersonating.go_back: Keer terug
+default.impersonating.to_your_own_account: naar uw eigen account.
+
+account.choose: Selecteer een account
+account.add: Een account toevoegen
+account.added: Het account is toegevoegd
+account.removed: Het account is verwijderd
+account.go_back: Terug naar het accountoverzicht
+
+alert.info.no_records: Er zijn geen %collection% gevonden.
+alert.info.no_records_add_one: Er zijn geen %collection% gevonden. Klik op toevoegen om er een toe te voegen.
+alert.success.data_saved: De gegevens zijn succesvol opgeslagen
+alert.success.data_removed: De gegevens zijn verwijderd
+alert.warning.something_went_wrong: Er is iets mis gegaan bij het opslaan. Laad de pagina opnieuw en probeer het nogmaals.
+alert.warning.no_permission: U heeft niet de juiste rechten om deze actie uit te voeren
+
+confirm.title: Weet u het zeker?
+confirm.warning.title: Let op
+confirm.text: Weet u zeker dat u deze gegevens wilt verwijderen?
+
+authentication.login: Inloggen
+authentication.forgot_password: Wachtwoord vergeten?
+authentication.remembered_password: Ik weet mijn wachtwoord weer!
+authentication.create_password: Wachtwoord aanmaken
+authentication.reset_password: Wachtwoord resetten
+authentication.reset_password_email_success: Als het e-mailadres gekoppeld zit aan een gebruiker, ontvangt u zometeen een mail met daarin instructies om uw wachtwoord te resetten
+
+buttons.save: Opslaan
+buttons.delete: Verwijderen
+buttons.ok: Oke
+buttons.yes: Ja
+buttons.no: Nee
+buttons.cancel: Annuleren
+
+form.required_field: Dit veld is verplicht
+form.invalid_format: Het formaat is ongeldig
+form.inconsistent_field: Dit veld is niet voor iedere taal gevuld
+form.invalid_json: De ingevoerde JSON code is niet geldig
+form.number_below_minimum: Waarde is lager dan de minimale toegestane waarde
+form.number_exceeds_maximum: Waarde is hoger dan de maximale toegestane waarde
+form.select_option: Selecteer een optie
+
+format.date_and_time: "%date% om %time% uur"
+
+
+##
+##  Mail translations
+##
+
+mails.base.link_reference: "Wanneer je niet op de \"%button%\" knop kunt klikken, kun je onderstaande link kopi&euml;ren en plakken in je browser:"
+mails.base.rights_reserved: "Alle rechten voorbehouden"
+mails.base.greeting: "Beste %name%,"
+mails.base.salutation: "Met vriendelijke groet,<br><br>Pronto"
+mails.base.custom_salutation: "Met vriendelijke groet,<br><br>%company%"
+
+mails.password.header: "Wachtwoord resetten"
+mails.password.body: "Via de website heeft u een nieuw wachtwoord aangevraagd voor het CMS. Uw wachtwoord kunt u resetten door op onderstaande link te klikken. Deze link blijft slechts 1 uur geldig. Indien u geen nieuw wachtwoord heeft aangevraagd, dan hoeft u niets te doen, deze mail is enkel naar u verzonden.<br>"
+
+mails.registration.header: "Uw account"
+mails.registration.body: "Er is een account voor u aangemaakt voor het CMS van uw app. Hiervoor kunt u dit e-mailadres gebruiken om in te loggen. U kunt uw wachtwoord maken door op onderstaande link te klikken."
+
+mails.app.password.body: "U heeft een nieuw wachtwoord aangevraagd voor de %application% app. Uw wachtwoord kunt u resetten door op onderstaande link te klikken. Deze link blijft slechts 1 uur geldig. Indien u geen nieuw wachtwoord heeft aangevraagd, dan hoeft u niets te doen, deze mail is enkel naar u verzonden.<br>"
+
+##
+##  Entity translations
+##
+
+app_user: app gebruiker
+app_users: app gebruikers
+cms_user: CMS gebruiker
+cms_users: CMS gebruikers
+logins: logins
+
+entity.add: "%entity% toevoegen"
+entity.edit: "%entity% bewerken"
+entity.custom_action: "%entity% %action%"
+
+customer: klant
+customers: klanten
+customer.data: Klant informatie
+customer.edit_account: Bewerk klantgegevens
+customer.company_name: Bedrijfsnaam
+customer.contact_person: Contactpersoon
+customer.phone_number: Telefoonnummer
+customer.email: E-mailadres
+customer.primary_color: Primary color
+customer.secondary_color: Secondary color
+customer.sidebar_color: Sidebar color
+customer.logo: Logo
+customer.logo_label: Logo (500px x 120px with transparent background)
+customer.delete_everything: Verwijder het account en alle gegevens
+customer.delete_account: Verwijder het account
+
+user: gebruiker
+users: gebruikers
+user.name: Naam
+user.first_name: Voornaam
+user.insertion: Tussenvoegsel
+user.last_name: Achternaam
+user.email: E-mailadres
+user.administrator: Administrator
+user.gender: Geslacht
+user.male: Mannelijk
+user.female: Vrouwelijk
+user.details: Details
+user.attributes: Attributen
+user.timezone: Timezone
+user.current_password: Huidig wachtwoord
+user.new_password: Nieuw wachtwoord
+user.password: Wachtwoord
+user.password_confirm: Wachtwoord bevestiging
+user.leave_empty_to_ignore: Laat deze velden leeg wanneer u uw wachtwoord niet wenst te wijzigen
+user.login_information: Login informatie
+user.activated: Geactiveerd
+user.control_user_activation: Activeer of deactiveer het gebruikersaccount
+user.reset_password_success: Uw wachtwoord is opnieuw ingesteld
+user.password_reset_link_expired: De wachtwoord reset link is verouderd
+
+application: applicatie
+applications: applicaties
+application.name: Naam
+application.label: Label
+application.versions: Versies
+application.new_version: Nieuwe versie
+application.color: Kleur
+application.android_bundle_identifier: Android bundle identifier
+application.ios_bundle_identifier: iOS bundle identifier
+application.client_id: Client ID
+application.client_secret: Client secret
+application.default_language: Standaard taal
+application.available_languages: Beschikbare talen
+application.choose: Selecteer een applicatie
+application.first: Eerste applicatie
+application.version: Applicatie versie
+application.version.not_deletable: Er dient tenminste een versie van de applicatie te zijn
+
+collection: collectie
+collections: collecties
+collection.general: algemeen
+collection.properties: eigenschappen
+collection.name: Naam
+collection.identifier: Identifier
+collection.icon: Icon
+collection.type: Type
+collection.list_view: Lijstweergave
+collection.entry_title: Entry titel
+collection.set_as_entry_title: Maak dit de entry titel
+collection.has_no_entry_title: Kies een eigenschap van de collectie als entry titel
+
+property: eigenschap
+properties: eigenschappen
+collection.property.include_in_table_list_view: Weergeven in lijstweergave
+collection.property.include_in_json_list_view: Weergeven in json lijstweergave
+collection.property.required: Verplicht veld
+collection.property.key: Key
+collection.property.value: Value
+collection.property.add_select_option: Nog een select-optie toevoegen
+collection.property.leave_empty_to_ignore: Laat een key en/of value leeg om een optie te negeren
+
+collection.property.type.label: Label (optioneel)
+collection.property.type.defaultValue: Standaardwaarde
+collection.property.type.multiSelect: Sta meerdere selecties toe
+collection.property.type.multipleFiles: Sta meerdere bestanden toe
+collection.property.type.max: Maximale waarde
+collection.property.type.min: Minimale waarde
+collection.property.type.step: Stap grootte
+collection.property.type.address: Adres
+collection.property.type.latitude: Latitude
+collection.property.type.longitude: Longitude
+collection.property.type.uploadedFiles: Geüploade bestanden
+
+entry: entry
+entries: entries
+collection.entry.file_name: Bestandsnaam
+collection.entry.number_between: "Waarde tussen %min% en %max%"
+collection.entry.number_greater_than: "Waarde moet groter zijn dan %min%"
+collection.entry.number_less_then: "Waarde moet kleiner zijn dan %max%"
+collection.entry.select_item: Selecteer een item
+collection.entry.select_mutiple_items: Selecteer een of meerdere items
+collection.entry.active_entry: Entry is actief
+collection.entry.time: Tijd
+collection.entry.value_true: Waar
+collection.entry.value_false: Onwaar
+
+relationship: relatie
+relationships: relaties
+collection.relationship.name: Naam
+collection.relationship.related_collection: Gerelateerde collectie
+collection.relationship.type: Type
+collection.relationship.save_entry_first: U dient de entry eerst op te slaan, voordat u relaties kunt bewerken.
+collection.relationship.edit: Bewerk deze relatie
+collection.relationship.search_entry: Zoek een entry
+
+push_notification: push notificatie
+push_notifications: push notificaties
+push_notification.identifier: Identifier
+push_notification.title: Titel
+push_notification.content: Inhoud
+push_notification.click_action: Actie na het aanklikken van de notificatie
+push_notification.nothing: Niks, definieer geen actie
+push_notification.click_action_url: Laad deze url
+push_notification.click_action_html: Laat deze tekst zien
+push_notification.schedule: Plan deze notificatie
+push_notification.date: Geplande datum
+push_notification.time: Gepland tijdstip
+push_notification.scheduled: Gepland
+push_notification.being_send: Wordt verzonden
+push_notification.send_now: nu versturen
+push_notification.sent_on: verzonden op
+push_notification.sent_by: Verzonden door
+push_notification.filter_by_segments: Filter in segmenten
+push_notification.choose_segment: Kies een segment
+push_notification.details: details
+push_notification.statistics: statistieken
+push_notification.recipient_failures: Foutmeldingen bij versturen
+push_notification.successful_recipients: Succesvol verzonden
+push_notification.received: Ontvangen
+push_notification.opened: Geopend
+push_notification.test_notification: Dit is een test notificatie
+push_notification.is_test: Test notificatie
+push_notification.sent_statistics: Verzonden statistieken
+push_notification.sent_successfully: Succesvol verzonden
+push_notification.bounced: Verzenden mislukt
+push_notification.failure_reason: Foutmelding
+push_notification.segment: Segment
+push_notification.all_devices: Alle geregistreerde apparaten
+push_notification.selected_test_devices: De geselecteerde test apparaten
+push_notification.sent_to_everyone: Deze notificatie is verzonden naar alle geregistreerde apparaten
+push_notification.sent_to_segment: "Deze notificatie is verzonden naar alle geregistreerde apparaten, die geabonneerd zijn op %segment%"
+push_notification.sent_notifications: Verzonden notificaties
+push_notification.scheduled_notifications: Geplande notificaties
+push_notification.inconsistent_title: Inconsistente waarden
+push_notification.inconsistent_content: De ingevulde waarde van sommige velden is inconsistent met andere talen, wat betekent dat niet alle vertalingen ingevoerd zijn. Deze velden hebben een waarschuwingstekst gekregen. Als u de notificatie toch wilt verzenden, wordt de waarde van de standaard taal gebruikt wanneer een vertaling niet is gegeven.
+push_notification.confirmation_content: U gaat een push notificatie versturen naar onderstaande apparaten. Klik op Oke om door te gaan, of Annuleren om de notificatie te wijzigen.
+push_notification.invalid_form_title: Incorrecte invoer
+push_notification.invalid_form_content: U heeft niet alle verplichte velden ingevuld, of de invoer is incorrect. Pas de gegevens aan bij de velden met een waarschuwing.
+push_notification.send_anyway: Toch versturen
+push_notification.click_statistics: Klik statistieken
+push_notification.platform_statistics: Platform statistieken
+push_notification.bar_statistics: "%success% verzonden, %failure% gefaald"
+push_notification.maximum_character_count_exceeded: Het maximale aantal karakters is overschreven
+push_notification.recipients: Push notificatie ontvangers
+push_notification.schedule_this_notification: Plan het versturen van deze notificatie
+push_notification.send_to_test_devices: Verstuur deze notificatie naar geregistreerde test apparaten
+push_notification.user_is_redirected_to: De gebruiker zal doorgestuurd worden naar
+push_notification.user_will_see_webview: De gebruiker zal onderstaande webview te zien krijgen
+
+# Firebase notification error messages
+push_notification.missingregistration: Geen registratie
+push_notification.notregistered: Apparaat is niet geregistreerd
+push_notification.invalidregistration: Registratie is ongeldig
+push_notification.invalidapnscredential: APNS token is ongeldig
+push_notification.unavailable: Service is niet beschikbaar
+push_notification.nofirebasetoken: Apparaat heeft (nog) geen Firebase token
+push_notification.messagerateexceeded: Message rate van het apparaat overschreden
+push_notification.internalservererror: Firebase internal server error
+push_notification.invalidparameters: Firebase token is ongeldig
+
+segment: segment
+segemnts: segmenten
+push_notification.segment.name: naam
+push_notification.segment.device_count: Aantal apparaten
+push_notification.segment.details: Details
+push_notification.segment.subscribed_devices: Geabonneerde apparaten
+
+device: apparaat
+devices: apparaten
+device.details: Details
+device.notifications: Push notificaties
+device.identifier: Identifier
+device.firebase_token: Firebase token
+device.apns_token: APNS token
+device.name: Naam
+device.model: Model
+device.manufacturer: Fabrikant
+device.platform: Platform
+device.specifications: Specificaties
+device.ios: iOS
+device.android: Android
+device.os_version: Systeemversie
+device.app_version: App versie
+device.last_login: Laatst ingelogd
+device.language: Apparaat taal
+device.extra_data: Extra gegevens
+device.test_device: Test apparaat
+device.mark_as_test_device: Markeer dit apparaat als een test apparaat
+device.is_test_device: Test apparaat
+device.browser: Browser
+device.test_devices: test apparaten
+
+plugin: plugin
+plugins: plugins
+plugin.active: Actief
+plugin.firebaseAccessToken: Firebase access token
+plugin.notificationHtmlTemplate: Notificatie HTML template
+plugin.nodejsEndpointToken: Node JS Facebook access token
+plugin.chatbaseApiToken: Chatbase API token
+plugin.facebookAccessToken: Facebook access token
+plugin.dialogflowDeveloperToken: Dialogflow developer token
+plugin.userExport: Gebruikers export
+plugin.userExportConfig: Gebruikers export configuratie
+plugin.registrationEnabled: Registratie voor nieuwe gebruikers is toegestaan
+plugin.accountActivationViaEmail: Activatie van gebruikersaccount via e-mail vereist
+
+settings: instellingen
+setting: instelling
+setting.edit_account: Account bewerken
+setting.delete_account: Account verwijderen

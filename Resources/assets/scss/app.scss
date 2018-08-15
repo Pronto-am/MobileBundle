@@ -1,0 +1,138 @@
+@import 'global';
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  background-color: $body-background;
+  color: #24282a;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.page-loader-container {
+  display: block;
+}
+
+#container {
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
+
+  @import 'side-nav';
+
+  #main {
+    flex: auto;
+    display: flex;
+    flex-direction: column;
+
+    @import 'top-nav';
+
+    @import 'impersonating';
+
+    @import 'page';
+
+    .text-primary {
+      color: $primary-color;
+    }
+
+    .text-secondary {
+      color: $secondary-color;
+    }
+
+    .text-red {
+      color: $light-red-ochre;
+    }
+
+    .bold {
+      font-weight: bold;
+    }
+
+    .text-large {
+      font-size: 18px;
+    }
+
+    .material-icons {
+      &.inline-icon {
+        vertical-align: middle;
+        font-size: 18px !important;
+      }
+    }
+
+    .to-copy {
+      border: 1px solid #CCCCCC;
+      background-color: #F4F4F4;
+      font-family: "Courier New", sans-serif;
+      padding: 3px;
+      border-radius: 2px;
+      margin-right: 3px;
+    }
+
+    .is-clickable {
+      cursor: pointer;
+    }
+
+    .break-all {
+      word-break: break-all;
+    }
+
+    .label {
+      position: relative;
+      padding: 3px 6px;
+      border-radius: 5px;
+      margin: 0 5px;
+
+      &.light {
+        color: #133454;
+      }
+
+      &.dark {
+        color: #ffffff;
+      }
+    }
+
+    div.webview {
+      border: 1px solid #cccccc;
+      background-color: #f9f9f9;
+      padding: 20px;
+      margin: 20px 0 0 0;
+    }
+
+    .col {
+      &.no-padding-left {
+        padding-left: 0;
+      }
+
+      &.no-padding-right {
+        padding-right: 0;
+      }
+    }
+
+    h1 {
+      &.border-bottom {
+        border-bottom: 1px solid $secondary-color;
+      }
+    }
+
+    .btn, .btn-flat, .btn-floating {
+      &.btn-padding-small {
+        padding: 0 1rem;
+      }
+
+      i.left {
+        margin-right: 5px;
+      }
+    }
+
+    .btn, .btn-flat {
+      padding: 0 16px;
+    }
+
+    pre {
+      margin: 0;
+    }
+  }
+}

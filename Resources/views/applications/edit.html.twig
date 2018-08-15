@@ -1,0 +1,90 @@
+{% extends '@ProntoMobile/base.html.twig' %}
+
+{% block body %}
+
+    {% include '@ProntoMobile/components/pageTitle.html.twig' with {entity: 'application', exists: application != null, backButton: path('pronto_mobile_applications')} %}
+
+    <div class="row card">
+        <div class="card-content">
+            {{ form_start(applicationForm) }}
+
+            <div class="row">
+                <div class="col s12">
+                    {{ form_row(applicationForm.name) }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s12">
+                    {{ form_row(applicationForm.label) }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s12">
+                    {{ form_row(applicationForm.color) }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s12">
+                    {{ form_row(applicationForm.androidBundleIdentifier) }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s12">
+                    {{ form_row(applicationForm.iosBundleIdentifier) }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s12">
+                    {{ form_row(applicationForm.defaultLanguage) }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s12">
+                    {{ form_row(applicationForm.availableLanguages) }}
+                </div>
+            </div>
+
+            {% if application != null %}
+                <div class="row">
+                    <div class="col s6">
+                        {{ form_row(applicationForm.clientId) }}
+                    </div>
+                    <div class="col s6">
+                        {{ form_row(applicationForm.clientSecret) }}
+                    </div>
+                </div>
+            {% endif %}
+
+            <div class="row">
+                <div class="col s12">
+                    <button type="submit" class="btn btn-primary" formnovalidate>{{ 'buttons.save'|trans }}</button>
+
+                    {% if application != null %}
+                        <a href="#!" name="single-delete" data-id="{{ application.id }}" data-url="{{ path('pronto_mobile_applications_delete') }}" class="btn-flat btn-text-red">{{ 'buttons.delete'|trans }}</a>
+                    {% endif %}
+                </div>
+            </div>
+
+            {{ form_end(applicationForm) }}
+        </div>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+    <link href="{{ mix('/css/select2.css') }}" rel="stylesheet"/>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script src="/bundles/prontomobile/libraries/select2/js/select2.min.js"></script>
+    <script type="text/javascript" src="{{ mix('/js/applications/applications.js') }}"></script>
+{% endblock %}

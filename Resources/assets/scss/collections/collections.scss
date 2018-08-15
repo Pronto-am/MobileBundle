@@ -1,0 +1,16 @@
+.col.collection-card {
+  position: relative;
+
+  .entry-settings {
+    position: absolute;
+    z-index: 1;
+    bottom: calc(1rem + 13px);
+    left: calc(0.75rem + 15px);
+
+    a {
+      padding: 3px;
+      font-size: 22px;
+      color: #a4a4a4;
+    }
+  }
+}

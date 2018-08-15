@@ -1,0 +1,47 @@
+{% extends '@ProntoMobile/base.html.twig' %}
+
+{% block body %}
+
+    {% include '@ProntoMobile/components/toolbar.html.twig' with {pageTitle: 'applications'|trans|capitalize, newObjectUrl: 'pronto_mobile_applications_edit'} %}
+
+    {% if pageHelper.getList()|length > 0 %}
+        <div class="card">
+            <div class="card-content">
+                <table class="table responsive-table">
+                    <thead>
+                    <tr>
+                        <th width="50">#</th>
+                        <th>{{ pageHelper.createSortableLink('application.name'|trans|capitalize, 't.name') }}</th>
+                        <th>{{ 'application.versions'|trans|capitalize }}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for key, application in pageHelper.getList() %}
+                        {% for version in application.applicationVersions %}
+                            <tr class="{{ key % 2 == 0 ? 'stripe' : '' }}">
+                                <td>
+                                    {% if loop.first %}{{ key + 1 }}{% endif %}
+                                </td>
+                                <td>
+                                    {% if loop.first %}<a href="{{ path('pronto_mobile_applications_edit', {id: application.id}) }}" class="regular">{{ application.name }}</a> {% if application.label != '' %}<span class="label" style="background-color: #{{ application.color }};">{{ application.label }}</span>{% endif %}{% endif %}
+                                </td>
+                                <td>
+                                    <a href="{{ path('pronto_mobile_application_versions_edit', {application: application.id, 'id': version.id}) }}" class="regular">{{ version.name|capitalize }}</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        <tr class="bottom-border {{ key % 2 == 0 ? 'stripe' : '' }}">
+                            <td colspan="2"></td>
+                            <td colspan="2"><a href="{{ path('pronto_mobile_application_versions_edit', {application: application.id}) }}" class="regular">{{ 'application.new_version'|trans|capitalize }}</a></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        {% include '@ProntoMobile/components/pagination.html.twig' with {pageHelper: pageHelper} %}
+    {% else %}
+        {% include '@ProntoMobile/components/alert.html.twig' with {'type': 'info', 'collection': 'applications'} %}
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,17 @@
+{% set propertyValue = attribute(attribute(entry.data, property.identifier), language) is defined ? attribute(attribute(entry.data, property.identifier), language) : property.config.defaultValue %}
+
+<div class="row">
+    <div class="col s12">
+        {% set label = property.config.label is defined and property.config.label != '' ? property.config.label : property.name %}
+
+        <label for="{{ language ~ ':' ~ property.identifier }}" {% if property.required == true %}class="required"{% endif %}>{{ label }}</label>
+
+        {% set class = property.type.config.defaultValue.class is defined ? property.type.config.defaultValue.class : '' %}
+
+        {% if 'codeflask' in class %}
+            <div class="{{ class }}" data-name="{{ language ~ ':' ~ property.identifier }}" data-language="html"></div>
+        {% else %}
+            <textarea name="{{ language ~ ':' ~ property.identifier }}" class="materialize-textarea {{ class }}" id="{{ language ~ ':' ~ property.identifier }}">{{ propertyValue }}</textarea>
+        {% endif %}
+    </div>
+</div>

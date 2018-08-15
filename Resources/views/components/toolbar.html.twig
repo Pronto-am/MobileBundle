@@ -1,0 +1,26 @@
+<div class="row toolbar">
+    <div class="col s6">
+        {% if subHeader is defined and subHeader == true %}
+            <h2><span>/</span>{{ pageTitle }}</h2>
+        {% else %}
+            <h1 class="text-primary">{{ pageTitle }}</h1>
+        {% endif %}
+    </div>
+    <div class="col s6 right-align">
+        {% if newObjectUrl is defined %}
+            <a href="{{ path(newObjectUrl, {id: null}) }}" class="btn-floating waves-effect waves-light blue"><i class="fa fa-plus" aria-hidden="true"></i></a>
+        {% elseif newObjectPath is defined %}
+            <a href="{{ newObjectPath }}" class="btn-floating waves-effect waves-light blue"><i class="fa fa-plus" aria-hidden="true"></i></a>
+        {% endif %}
+
+        {% if customActions is defined %}
+            {% for action in customActions %}
+                <a href="{{ action.path }}" class="btn-floating waves-effect waves-light {{ action.color }}"><i class="fa fa-{{ action.icon }}" aria-hidden="true"></i></a>
+            {% endfor %}
+        {% endif %}
+
+        {% if delete is defined and delete == true %}
+            <a href="#!" class="multiple-delete btn-floating waves-effect waves-light red"><i class="fa fa-trash" aria-hidden="true"></i></a>
+        {% endif %}
+    </div>
+</div>

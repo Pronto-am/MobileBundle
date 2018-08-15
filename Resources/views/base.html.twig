@@ -1,0 +1,171 @@
+{% set customer = pronto_mobile.customer %}
+{% set applicationVersion = pronto_mobile.applicationVersion %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <title>{% block title %}Pronto - App management{% endblock %}</title>
+
+    {% block stylesheets %}
+        <link href="{{ mix('/css/app.css') }}" rel="stylesheet"/>
+    {% endblock %}
+
+    <link rel="icon" type="image/x-icon" href="{{ mix('/images/favicon.ico') }}"/>
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" href="/bundles/prontomobile/styles/customer.php?primaryColor={{ customer.primaryColor~ '&secondaryColor=' ~ customer.secondaryColor ~ '&sidebarColor=' ~ customer.sidebarColor }}"/>
+</head>
+<body>
+<div id="container">
+    <div id="side-nav">
+        <a href="{{ path('pronto_mobile_homepage') }}">
+            {% if customer.logo != null %}
+                <img src="uploads/customers/images/{{ (attribute(customer.logo, 'fileName') is defined ? customer.logo.fileName : customer.logo) }}" alt="Pronto"/>
+            {% else %}
+                <img id="logo" src="{{ mix('/images/logo-sidemenu.png') }}" alt="Pronto"/>
+            {% endif %}
+        </a>
+
+        <div id="menu">
+            <ul>
+                {% if is_granted('ROLE_SUPER_ADMIN') %}
+                    <li><a href="{{ path('pronto_mobile_applications') }}" {% if pronto_mobile.activeModule == 'applications' %}class="active"{% endif %}><span><i class="fa fa-list-ul" aria-hidden="true"></i></span><span>{{ 'applications'|trans|capitalize }}</span></a></li>
+                {% endif %}
+
+                {% if pronto_mobile.pluginIsActive('app_users') %}
+                    <li><a href="{{ path('pronto_mobile_app_users') }}" {% if pronto_mobile.activeModule == 'users/app' %}class="active"{% endif %}><span><i class="fa fa-mobile fa-lg" aria-hidden="true"></i></span><span>{{ 'app_users'|trans|capitalize }}</span></a></li>
+                {% endif %}
+
+                {% if applicationVersion != null and pronto_mobile.pluginIsActive('collections') %}
+                    {% set submenu_open = 'collections' in pronto_mobile.activeModule %}
+
+                    <li class="has-sub-menu {% if submenu_open %}submenu-open{% endif %}">
+                        <a href="{{ path('pronto_mobile_collections') }}" {% if pronto_mobile.activeModule == 'collections' %}class="active"{% endif %}>
+                            <span><i class="fa fa-copy" aria-hidden="true"></i></span>
+                            <span>{{ 'collections'|trans|capitalize }}</span>
+                            {% if applicationVersion.collections|length > 0 %}<span class="submenu-dropdown-toggle"><i class="fa fa-caret-down" aria-hidden="true"></i></span>{% endif %}
+                        </a>
+                        {% if applicationVersion.collections|length > 0 %}
+                            <ul>
+                                {% for collection in applicationVersion.collections %}
+                                    <li><a href="{{ path('pronto_mobile_collection_entries', {'identifier': collection.identifier}) }}" {% if pronto_mobile.activeModule == 'collections/' ~ collection.identifier %}class="active"{% endif %}><span>{{ collection.name|capitalize }}</span></a></li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </li>
+                {% endif %}
+
+                {% if applicationVersion != null and pronto_mobile.pluginIsActive('notifications') %}
+                    {% set submenu_open = 'notifications' in pronto_mobile.activeModule and is_granted('ROLE_SUPER_ADMIN') %}
+
+                    <li class="{% if is_granted('ROLE_SUPER_ADMIN') %}has-sub-menu{% endif %} {% if submenu_open %}submenu-open{% endif %}">
+                        <a href="{{ path('pronto_mobile_notifications') }}" {% if pronto_mobile.activeModule == 'notifications' %}class="active"{% endif %}>
+                            <span><i class="fa fa-bell" aria-hidden="true"></i></span>
+                            <span>{{ 'push_notifications'|trans|capitalize }}</span>
+                            {% if is_granted('ROLE_SUPER_ADMIN') %}<span class="submenu-dropdown-toggle"><i class="fa fa-caret-down" aria-hidden="true"></i></span>{% endif %}
+                        </a>
+                        {% if is_granted('ROLE_SUPER_ADMIN') %}
+                            <ul>
+                                <li><a href="{{ path('pronto_mobile_notification_segments') }}" {% if pronto_mobile.activeModule == 'notifications/segments' %}class="active"{% endif %}><span>{{ 'segments'|trans|capitalize }}</span></a></li>
+                            </ul>
+                        {% endif %}
+                    </li>
+                {% endif %}
+
+                {% if pronto_mobile.pluginIsActive('app_users') or pronto_mobile.pluginIsActive('notifications') %}
+                    <li><a href="{{ path('pronto_mobile_devices') }}" {% if pronto_mobile.activeModule == 'devices' %}class="active"{% endif %}><span><i class="fa fa-tablet fa-lg" aria-hidden="true"></i></span><span>{{ 'devices'|trans|capitalize }}</span></a></li>
+                {% endif %}
+
+                {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN') %}
+                    <li><a href="{{ path('pronto_mobile_users') }}" {% if pronto_mobile.activeModule == 'users' %}class="active"{% endif %}><span><i class="fa fa-users" aria-hidden="true"></i></span><span>{{ 'cms_users'|trans }}</span></a></li>
+                {% endif %}
+
+                {% if is_granted('ROLE_SUPER_ADMIN') %}
+                    {% if applicationVersion != null %}
+                        <li><a href="{{ path('pronto_mobile_plugins') }}" {% if pronto_mobile.activeModule == 'plugins' %}class="active"{% endif %}><span><i class="fa fa-plug" aria-hidden="true"></i></span><span>{{ 'plugins'|trans|capitalize }}</span></a></li>
+                    {% endif %}
+                    <li><a href="{{ path('pronto_mobile_edit_customer') }}" {% if pronto_mobile.activeModule == 'customers' %}class="active"{% endif %}><span><i class="fa fa-cogs" aria-hidden="true"></i></span><span>{{ 'customer.data'|trans|capitalize }}</span></a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+
+    <div id="main">
+        <div id="top-nav">
+            <ul>
+                <li><a href="{{ path('pronto_mobile_select_customer') }}" class="{% if is_granted('ROLE_SUPER_ADMIN') == false %}disabled{% endif %}">{{ customer.companyName }}{% if is_granted('ROLE_SUPER_ADMIN') %} <i class="fa fa-caret-down text-primary" aria-hidden="true"></i>{% endif %}</a>
+                </li>
+                {% if customer.applications|length != 0 %}
+                    <li>
+                        <a href="{{ path('pronto_mobile_select_application') }}" class="{% if customer.applications|length == 1 and customer.applications[0].applicationVersions|length == 1 %}disabled{% endif %}">{{ applicationVersion.application.name }} {% if applicationVersion.application.label != '' %}<span class="label" style="background-color: {{ '#' ~ applicationVersion.application.color }};">{{ applicationVersion.application.label }}</span>{% endif %} <span class="text-primary bold">/</span> {{ applicationVersion.name }}{% if customer.applications|length > 1 or customer.applications[0].applicationVersions|length > 1 %} <i class="fa fa-caret-down text-primary" aria-hidden="true"></i>{% endif %}</a>
+                    </li>
+                {% endif %}
+            </ul>
+
+            <ul>
+                <li><a href="{{ path('pronto_mobile_profile') }}" {% if pronto_mobile.activeModule == 'profile' %}class="active"{% endif %}><i class="fa fa-user-circle-o" aria-hidden="true"></i> {{ app.user.firstName }}</a></li>
+                <li><a href="{{ path('pronto_mobile_logout') }}"><i class="fa fa-sign-out" aria-hidden="true"></i></a></li>
+            </ul>
+        </div>
+
+        {% if is_granted('ROLE_PREVIOUS_ADMIN') %}
+            <div id="impersonating">
+                {{ 'default.impersonating'|trans({'%user%': app.user.fullName})|raw }} <a href="{{ path('pronto_mobile_users', {'_switch_user': '_exit'}) }}" class="btn white custom-background text-red"><i class="material-icons left">keyboard_backspace</i>{{ 'default.impersonating.go_back'|trans }}</a> {{ 'default.impersonating.to_your_own_account'|trans }}
+            </div>
+        {% endif %}
+
+        <div id="page">
+            <div class="progress hide">
+                <div class="indeterminate"></div>
+            </div>
+
+            <div class="row">
+                <div class="col s12">
+                    {% for type, messages in app.flashes(['success', 'info', 'warning', 'danger']) %}
+                        {% for message in messages %}
+                            {% include '@ProntoMobile/components/alert.html.twig' with {'type': type, 'message': message, 'floating': true} %}
+                        {% endfor %}
+                    {% endfor %}
+
+                    {% block body %}{% endblock %}
+
+                    <div id="modal-small" class="modal modal-fixed-footer"></div>
+
+                    <div id="modal-medium" class="modal"></div>
+
+                    <div id="modal-large" class="modal"></div>
+                </div>
+            </div>
+
+            {% include '@ProntoMobile/components/loader.html.twig' %}
+
+        </div>
+    </div>
+</div>
+
+{% block javascripts %}
+    <script type="text/javascript">
+        let translations = {
+            confirmTitle: '{{ 'confirm.title'|trans }}',
+            confirmText: '{{ 'confirm.text'|trans }}',
+            delete: '{{ 'buttons.delete'|trans }}',
+            ok: '{{ 'buttons.ok'|trans }}',
+            yes: '{{ 'buttons.yes'|trans }}',
+            no: '{{ 'buttons.no'|trans }}',
+            cancel: '{{ 'buttons.cancel'|trans }}',
+            requiredField: '{{ 'form.required_field'|trans }}',
+            invalidFormat: '{{ 'form.invalid_format'|trans }}',
+            inconsistentField: '{{ 'form.inconsistent_field'|trans }}',
+            warningTitle: '{{ 'confirm.warning.title'|trans }}',
+            dataSavedSuccessfully: '{{ 'alert.success.data_saved'|trans }}',
+            somethingWentWrong: '{{ 'alert.warning.something_went_wrong'|trans }}'
+        };
+
+        let globalVariables = {};
+    </script>
+    <script src="{{ mix('/js/app.js') }}"></script>
+{% endblock %}
+</body>
+</html>

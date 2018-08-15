@@ -1,0 +1,328 @@
+{% extends '@ProntoMobile/base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+    <link rel="stylesheet" href="{{ mix('/css/codeflask.css') }}">
+{% endblock %}
+
+{% block body %}
+    {% include '@ProntoMobile/components/loader.html.twig' with {'initial': true} %}
+
+    {% include '@ProntoMobile/components/pageTitle.html.twig' with {entity: 'push_notification', backButton: path('pronto_mobile_notifications'), customAction: 'details'} %}
+
+    <div class="row card">
+        <ul class="tabs">
+            <li class="tab col s6"><a href="#details">{{ 'push_notification.details'|trans }}</a></li>
+            <li class="tab col s6"><a href="#statistics">{{ 'push_notification.statistics'|trans }}</a></li>
+        </ul>
+    </div>
+
+    <div class="row card" id="details">
+        <div class="card-content col s12">
+            {% if is_granted('ROLE_SUPER_ADMIN') %}
+                <div class="row">
+                    <div class="col s12">
+                        <h3><span>/</span> {{ 'push_notification.identifier'|trans|capitalize }}</h3>
+                        {{ notification.id }}
+                    </div>
+                </div>
+            {% endif %}
+
+            <div class="row">
+                <div class="col s12">
+                    <h3><span>/</span> {{ 'push_notification.title'|trans|capitalize }}</h3>
+                    {{ json_translator.getTranslation(notification.title) }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s12">
+                    <h3><span>/</span> {{ 'push_notification.content'|trans|capitalize }}</h3>
+                    {{ json_translator.getTranslation(notification.content) }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s12">
+                    <h3><span>/</span> {{ 'push_notification.sent_on'|trans|capitalize }}</h3>
+                    {{ 'format.date_and_time'|trans({'%date%': notification.sent|date('d-m-Y'), '%time%': notification.sent|date('H:i')}) }}
+                </div>
+            </div>
+
+            {% if notification.sentBy != null %}
+                <div class="row">
+                    <div class="col s12">
+                        <h3><span>/</span> {{ 'push_notification.sent_by'|trans|capitalize }}</h3>
+                        {{ notification.sentBy.fullName }}
+                    </div>
+                </div>
+            {% endif %}
+
+            <div class="row">
+                <div class="col s12">
+                    <h3><span>/</span> {{ 'push_notification.segment'|trans|capitalize }}</h3>
+                    {% if notification.segment == null %}
+                        {{ 'push_notification.sent_to_everyone'|trans }}
+                    {% else %}
+                        {{ 'push_notification.sent_to_segment'|trans({'%segment%': json_translator.getTranslation(notification.segment.name) }) }}
+                    {% endif %}
+                </div>
+            </div>
+
+            {% if notification.clickAction > 0 %}
+                <div class="row">
+                    <div class="col s12">
+                        <h3><span>/</span> {{ 'push_notification.click_action'|trans|capitalize }}</h3>
+
+                        {% if notification.clickAction == 1 %}
+                            {{ 'push_notification.user_is_redirected_to'|trans }} <a href="{{ json_translator.getTranslation(notification.clickActionUrl) }}" target="_blank">{{ json_translator.getTranslation(notification.clickActionUrl) }}</a>
+                        {% else %}
+                            {{ 'push_notification.user_will_see_webview'|trans }}
+
+                            {% include '@ProntoMobile/components/browser.html.twig' with {src: 'https://firebasestorage.googleapis.com/v0/b/pronto-am.appspot.com/o/notifications%2F' ~ notification.id ~ '%2F' ~ json_translator.getLanguage(notification.clickActionHtml) ~ '%2F' ~ notification.id ~ '.html?alt=media' } %}
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div id="statistics">
+        <div class="row card">
+            <div class="card-content col s12">
+                <h3><span>/</span> {{ 'push_notification.statistics'|trans|capitalize }}</h3>
+
+                <div style="height: 300px; width: 99%">
+                    <canvas id="sentStatistics"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="row card">
+            <div class="card-content col s12">
+                <h3><span>/</span> {{ 'push_notification.click_statistics'|trans|capitalize }}</h3>
+
+                <div style="height: 300px; width: 99%">
+                    <canvas id="clickStatistics"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+
+            {% set sent = sentStatistics[1] %}
+
+            <div class="card col s5 m3 hoverable">
+                <div class="card-content">
+                    <h3><span>/</span> {{ 'push_notification.successful_recipients'|trans|capitalize }}</h3>
+
+                    <div class="statistics-number text-primary">
+                        {{ sent }}
+                    </div>
+
+                    {% if sent > 0 %}
+                        <div class="right-align">
+                            <a href="{{ path('pronto_mobile_notification_recipients', {identifier: notification.id, sent: 1}) }}" class="waves-effect waves-light btn">{{ 'details'|trans }}</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="card col s5 offset-s2 m4 offset-m1 hoverable">
+                <div class="card-content">
+                    <h3><span>/</span> {{ 'push_notification.platform_statistics'|trans|capitalize }}</h3>
+
+                    <div style="min-height: 200px; overflow-y: auto; width: 99%;">
+                        <canvas id="platformStatistics"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            {% set bounced = sentStatistics[0] %}
+
+            <div class="card col s5 offset-s2 m3 offset-m1 hoverable">
+                <div class="card-content">
+                    <h3><span>/</span> {{ 'push_notification.recipient_failures'|trans|capitalize }}</h3>
+
+                    <div class="statistics-number text-red">
+                        {{ bounced }}
+                    </div>
+
+                    {% if bounced > 0 %}
+                        <div class="right-align">
+                            <a href="{{ path('pronto_mobile_notification_recipients', {identifier: notification.id, sent: 0}) }}" class="waves-effect waves-light btn">{{ 'details'|trans }}</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="text/javascript" src="{{ mix('/js/notifications/statistics.js') }}"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            createSentStatistics();
+
+            createClickStatistics();
+
+            createPlatformStatistics();
+        });
+
+
+        /**
+         * Create the bar chart with sent statistics
+         */
+        function createSentStatistics() {
+            let statistics = document.getElementById("sentStatistics");
+
+            let data = {
+                datasets: [{
+                    data: {{ sentStatistics|json_encode() }},
+                    backgroundColor: ["rgba(244,0,77,0.2)", "rgba(0,244,167,0.2)", "rgba(255,127,10,0.2)"],
+                    borderColor: ["rgb(244,0,77)", "rgb(0,244,167)", "rgb(255,127,10)"],
+                    borderWidth: 1
+                }],
+
+                // These labels appear in the legend and in the tooltips when hovering different arcs
+                labels: [
+                    '{{ 'push_notification.bounced'|trans }}',
+                    '{{ 'push_notification.sent_successfully'|trans }}',
+                    '{{ 'push_notification.opened'|trans }}'
+                ]
+            };
+
+            new Chart(statistics, {
+                type: 'bar',
+                data: data,
+                options: {
+                    legend: {
+                        display: false
+                    },
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true,
+                                callback: function (value, index, values) {
+                                    if (Math.floor(value) === value) {
+                                        return value;
+                                    }
+                                }
+                            }
+                        }]
+                    },
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+        }
+
+
+        /**
+         * Create the line chart with click statistics
+         */
+        function createClickStatistics() {
+            let statistics = document.getElementById("clickStatistics");
+
+            let labels = [];
+            let clicked = [];
+
+            let data = {{ clickStatistics|json_encode()|raw }};
+
+            let y = 0;
+
+            for (let i in data) {
+                y += parseInt(data[i].y);
+
+                clicked.push({
+                    x: dates.toDate(data[i].x.date),
+                    y: y
+                });
+
+                labels.push(dates.toDate(data[i].x.date));
+            }
+
+            new Chart(statistics, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: clicked,
+                        backgroundColor: "rgba(255,127,10,0.2)",
+                        borderColor: "rgb(255,127,10)",
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    legend: {
+                        display: false
+                    },
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true,
+                                callback: function (value, index, values) {
+                                    if (Math.floor(value) === value) {
+                                        return value;
+                                    }
+                                }
+                            }
+                        }],
+                        xAxes: [{
+                            type: 'time',
+                            time: {
+                                displayFormats: {
+                                    millisecond: 'HH:mm:ss',
+                                    second: 'HH:mm:ss',
+                                    minute: 'DD-MM HH:mm',
+                                    hour: 'DD-MM HH:mm',
+                                    day: 'DD-MM',
+                                },
+                                tooltipFormat: 'D MMMM HH:mm'
+                            }
+                        }]
+                    },
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+        }
+
+
+        /**
+         * Create the doughnut chart with sent statistics, grouped by platform
+         */
+        function createPlatformStatistics() {
+            let statistics = document.getElementById("platformStatistics");
+
+            let data = {{ platformStatistics|json_encode()|raw }};
+
+            let labels = [];
+            let sent = [];
+
+            for (let i in data) {
+                labels.push(data[i].platform);
+                sent.push(data[i].count);
+            }
+
+            new Chart(statistics, {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: sent,
+                        backgroundColor: ["rgba(244,0,77,0.8)", "rgba(0,199,244,0.8)", "rgba(0,244,167,0.8)", "rgba(255,127,10,0.8)"],
+                        borderColor: ["rgb(244,0,77)", "rgb(0,199,244)", "rgb(0,244,167)", "rgb(255,127,10)"],
+                        borderWidth: 1
+                    }]
+                },
+                responsive: true,
+                maintainAspectRatio: false
+            });
+        }
+    </script>
+{% endblock %}
