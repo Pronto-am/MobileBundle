@@ -21,17 +21,17 @@ Next, open the folder in your command console and install the MobileBundle:
 $ composer require pronto/mobilebundle
 ```
 
-Applications which use Symfony Flex are done after this step. For those who don't, you have to add the Bundle manually to the `app/AppKernel.php` file:
+Applications which use Symfony Flex are done after this step. For those who don't, you have to add the Bundle manually to the `src/Kernel.php` file:
 
 
 ### Step 3: Enable the Bundle
 
 Then, enable the bundle by adding it to the list of registered bundles
-in the `app/AppKernel.php` file of your project:
+in the `src/Kernel.php` file of your project:
 
 ```php
 <?php
-// app/AppKernel.php
+// src/Kernel.php
  
 // ...
  
@@ -52,6 +52,23 @@ class AppKernel extends Kernel
 ```
 
 
+### Step 4: Setup the database
+
+Create the database schema:
+
+```console
+$ php bin/console doctrine:schema:create
+```
+
+And run the fixtures to provide initial data:
+
+```console
+$ php bin/console doctrine:fixtures:load
+```
+
+This creates a first customer of the CMS, along with a super administrator. You are now able to login using: **admin@example.com** and password **admin**.
+
+
 Configuration
 =============
 
@@ -67,3 +84,4 @@ DATABASE_URL=mysql://db_user:db_password@127.0.0.1:3306/db_name
 
 ### MobileBundle configuration
 
+The MobileBundle configuration is available in the `config/packages/pronto_mobile.yaml` file. At the moment, there are not a lot of options here. But you can configure your domain name, uploads folder and decryption password for the Firebase storage database records.
