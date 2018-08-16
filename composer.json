@@ -27,7 +27,7 @@
     "symfony/translation": "^4.1",
     "symfony/orm-pack": "^1.0",
     "symfony/form": "^4.1",
-    "friendsofsymfony/oauth-server-bundle": "dev-master",
+    "friendsofsymfony/oauth-server-bundle": "^1.6.1",
     "symfony/twig-bundle": "^4.1",
     "symfony/templating": "^4.1",
     "symfony/validator": "^4.1",
