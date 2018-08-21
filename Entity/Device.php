@@ -2,6 +2,8 @@
 
 namespace Pronto\MobileBundle\Entity;
 
+use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -179,61 +181,61 @@ class Device implements ApiEntityInterface
 
 
 	/**
-	 * @return mixed
+	 * @return string
 	 */
-	public function getId()
+	public function getId(): string
 	{
 		return $this->id;
 	}
 
 
 	/**
-	 * @param mixed $application
+	 * @param Application $application
 	 */
-	public function setApplication($application): void
+	public function setApplication(Application $application): void
 	{
 		$this->application = $application;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return Application
 	 */
-	public function getApplication()
+	public function getApplication(): Application
 	{
 		return $this->application;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return AppUser|null
 	 */
-	public function getAppUser()
+	public function getAppUser(): ?AppUser
 	{
 		return $this->appUser;
 	}
 
 
 	/**
-	 * @param mixed $appUser
+	 * @param AppUser $appUser
 	 */
-	public function setAppUser($appUser): void
+	public function setAppUser(AppUser $appUser): void
 	{
 		$this->appUser = $appUser;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return string
 	 */
-	public function getFirebaseToken()
+	public function getFirebaseToken(): ?string
 	{
 		return $this->firebaseToken;
 	}
 
 
 	/**
-	 * @param mixed $firebaseToken
+	 * @param string $firebaseToken
 	 */
 	public function setFirebaseToken($firebaseToken): void
 	{
@@ -242,27 +244,27 @@ class Device implements ApiEntityInterface
 
 
 	/**
-	 * @return mixed
+	 * @return string
 	 */
-	public function getApnsToken()
+	public function getApnsToken(): ?string
 	{
 		return $this->apnsToken;
 	}
 
 
 	/**
-	 * @param mixed $apnsToken
+	 * @param string $apnsToken
 	 */
-	public function setApnsToken($apnsToken): void
+	public function setApnsToken(string $apnsToken): void
 	{
 		$this->apnsToken = $apnsToken;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return string
 	 */
-	public function getName()
+	public function getName(): string
 	{
 		return $this->name;
 	}
@@ -278,16 +280,16 @@ class Device implements ApiEntityInterface
 
 
 	/**
-	 * @return mixed
+	 * @return string
 	 */
-	public function getModel()
+	public function getModel(): string
 	{
 		return $this->model;
 	}
 
 
 	/**
-	 * @param mixed $model
+	 * @param string $model
 	 */
 	public function setModel($model): void
 	{
@@ -296,16 +298,16 @@ class Device implements ApiEntityInterface
 
 
 	/**
-	 * @return mixed
+	 * @return string
 	 */
-	public function getManufacturer()
+	public function getManufacturer(): string
 	{
 		return $this->manufacturer;
 	}
 
 
 	/**
-	 * @param mixed $manufacturer
+	 * @param string $manufacturer
 	 */
 	public function setManufacturer($manufacturer): void
 	{
@@ -314,153 +316,153 @@ class Device implements ApiEntityInterface
 
 
 	/**
-	 * @return mixed
+	 * @return string
 	 */
-	public function getPlatform()
+	public function getPlatform(): string
 	{
 		return $this->platform;
 	}
 
 
 	/**
-	 * @param mixed $platform
+	 * @param string $platform
 	 */
-	public function setPlatform($platform): void
+	public function setPlatform(string $platform): void
 	{
 		$this->platform = $platform;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return string
 	 */
-	public function getOsVersion()
+	public function getOsVersion(): string
 	{
 		return $this->osVersion;
 	}
 
 
 	/**
-	 * @param mixed $osVersion
+	 * @param string $osVersion
 	 */
-	public function setOsVersion($osVersion): void
+	public function setOsVersion(string $osVersion): void
 	{
 		$this->osVersion = $osVersion;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return string
 	 */
-	public function getAppVersion()
+	public function getAppVersion(): string
 	{
 		return $this->appVersion;
 	}
 
 
 	/**
-	 * @param mixed $appVersion
+	 * @param string $appVersion
 	 */
-	public function setAppVersion($appVersion): void
+	public function setAppVersion(string $appVersion): void
 	{
 		$this->appVersion = $appVersion;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return bool
 	 */
-	public function getTestDevice()
+	public function getTestDevice(): bool
 	{
 		return $this->testDevice;
 	}
 
 
 	/**
-	 * @param mixed $testDevice
+	 * @param bool $testDevice
 	 */
-	public function setTestDevice($testDevice): void
+	public function setTestDevice(bool $testDevice): void
 	{
 		$this->testDevice = $testDevice;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return bool
 	 */
-	public function getTokenState()
+	public function getTokenState(): bool
 	{
 		return $this->tokenState;
 	}
 
 
 	/**
-	 * @param mixed $tokenState
+	 * @param bool $tokenState
 	 */
-	public function setTokenState($tokenState): void
+	public function setTokenState(bool $tokenState): void
 	{
 		$this->tokenState = $tokenState;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return bool
 	 */
-	public function getPushNotifications()
+	public function getPushNotifications(): bool
 	{
 		return $this->pushNotifications;
 	}
 
 
 	/**
-	 * @param mixed $pushNotifications
+	 * @param bool $pushNotifications
 	 */
-	public function setPushNotifications($pushNotifications): void
+	public function setPushNotifications(bool $pushNotifications): void
 	{
 		$this->pushNotifications = $pushNotifications;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return DateTime|null
 	 */
-	public function getLastLogin()
+	public function getLastLogin(): ?DateTime
 	{
 		return $this->lastLogin;
 	}
 
 
 	/**
-	 * @param mixed $lastLogin
+	 * @param DateTime $lastLogin
 	 */
-	public function setLastLogin($lastLogin): void
+	public function setLastLogin(DateTime $lastLogin): void
 	{
 		$this->lastLogin = $lastLogin;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return string
 	 */
-	public function getLanguage()
+	public function getLanguage(): string
 	{
 		return $this->language;
 	}
 
 
 	/**
-	 * @param mixed $language
+	 * @param string $language
 	 */
-	public function setLanguage($language): void
+	public function setLanguage(string $language): void
 	{
 		$this->language = $language;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return array|null
 	 */
-	public function getExtraData()
+	public function getExtraData(): ?array
 	{
 		return $this->extraData;
 	}
@@ -480,18 +482,18 @@ class Device implements ApiEntityInterface
 
 
 	/**
-	 * @param mixed $extraData
+	 * @param array $extraData
 	 */
-	public function setExtraData($extraData): void
+	public function setExtraData(array $extraData): void
 	{
 		$this->extraData = $extraData;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return ArrayCollection
 	 */
-	public function getPushNotificationRecipients()
+	public function getPushNotificationRecipients(): ArrayCollection
 	{
 		return $this->pushNotificationRecipients;
 	}

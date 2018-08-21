@@ -12,6 +12,7 @@ use Pronto\MobileBundle\Entity\Customer;
 use Pronto\MobileBundle\Entity\User;
 use Pronto\MobileBundle\Repository\UserRepository;
 use Pronto\MobileBundle\Service\Collection\EntryParser;
+use Pronto\MobileBundle\Tests\Mocks\ApplicationMock;
 
 class EntryParserTest extends TestCase
 {
@@ -20,6 +21,9 @@ class EntryParserTest extends TestCase
 
 	/** @var EntityManager $entityManager */
 	private $entityManager;
+
+	/** @var ApplicationMock $applicationMock */
+	private $applicationMock;
 
 
 	/**
@@ -30,6 +34,8 @@ class EntryParserTest extends TestCase
 		$this->createCollection();
 
 		$this->createEntityManager();
+
+		$this->applicationMock = new ApplicationMock();
 	}
 
 
@@ -39,25 +45,25 @@ class EntryParserTest extends TestCase
 	public function testParseSingleEntryWithTranslatableProperty(): void
 	{
 		$propertyString = new Collection\Property();
-		$propertyString->setType($this->createPropertyTypeText());
+		$propertyString->setType($this->applicationMock->getCollectionPropertyType(Collection\Property\Type::TYPE_TEXT, true));
 		$propertyString->setIdentifier('text');
 		$propertyString->setName('Text');
 		$propertyString->setCollection($this->collection);
 
 		$propertyMultiline = new Collection\Property();
-		$propertyMultiline->setType($this->createPropertyTypeMultiline());
+		$propertyMultiline->setType($this->applicationMock->getCollectionPropertyType(Collection\Property\Type::TYPE_MULTILINE_TEXT, true));
 		$propertyMultiline->setIdentifier('multiline');
 		$propertyMultiline->setName('Multiline');
 		$propertyMultiline->setCollection($this->collection);
 
 		$propertyHtml = new Collection\Property();
-		$propertyHtml->setType($this->createPropertyTypeHtml());
+		$propertyHtml->setType($this->applicationMock->getCollectionPropertyType(Collection\Property\Type::TYPE_HTML_TEXT, true));
 		$propertyHtml->setIdentifier('html');
 		$propertyHtml->setName('Html');
 		$propertyHtml->setCollection($this->collection);
 
 		$propertyUrl = new Collection\Property();
-		$propertyUrl->setType($this->createPropertyTypeUrl());
+		$propertyUrl->setType($this->applicationMock->getCollectionPropertyType(Collection\Property\Type::TYPE_URL, true));
 		$propertyUrl->setIdentifier('url');
 		$propertyUrl->setName('Url');
 		$propertyUrl->setCollection($this->collection);
@@ -129,13 +135,13 @@ class EntryParserTest extends TestCase
 	public function testParseSingleEntryWithDateProperty(): void
 	{
 		$propertyVisited = new Collection\Property();
-		$propertyVisited->setType($this->createPropertyTypeDate());
+		$propertyVisited->setType($this->applicationMock->getCollectionPropertyType(Collection\Property\Type::TYPE_DATE));
 		$propertyVisited->setIdentifier('visited');
 		$propertyVisited->setName('Visited');
 		$propertyVisited->setCollection($this->collection);
 
 		$propertyVisitedAt = new Collection\Property();
-		$propertyVisitedAt->setType($this->createPropertyTypeDateTime());
+		$propertyVisitedAt->setType($this->applicationMock->getCollectionPropertyType(Collection\Property\Type::TYPE_DATE_TIME));
 		$propertyVisitedAt->setIdentifier('visited_at');
 		$propertyVisitedAt->setName('Visited at');
 		$propertyVisitedAt->setCollection($this->collection);
@@ -179,7 +185,7 @@ class EntryParserTest extends TestCase
 	public function testParseSingleEntryWithSelectProperty(): void
 	{
 		$property = new Collection\Property();
-		$property->setType($this->createPropertyTypeSelect());
+		$property->setType($this->applicationMock->getCollectionPropertyType(Collection\Property\Type::TYPE_SELECT));
 		$property->setIdentifier('select');
 		$property->setName('Select');
 		$property->setCollection($this->collection);
@@ -218,13 +224,13 @@ class EntryParserTest extends TestCase
 	public function testParseSingleEntryWithBooleanProperty(): void
 	{
 		$propertyTrue = new Collection\Property();
-		$propertyTrue->setType($this->createPropertyTypeBoolean());
+		$propertyTrue->setType($this->applicationMock->getCollectionPropertyType(Collection\Property\Type::TYPE_BOOLEAN));
 		$propertyTrue->setIdentifier('boolean_true');
 		$propertyTrue->setName('Boolean true');
 		$propertyTrue->setCollection($this->collection);
 
 		$propertyFalse = new Collection\Property();
-		$propertyFalse->setType($this->createPropertyTypeBoolean());
+		$propertyFalse->setType($this->applicationMock->getCollectionPropertyType(Collection\Property\Type::TYPE_BOOLEAN));
 		$propertyFalse->setIdentifier('boolean_false');
 		$propertyFalse->setName('Boolean false');
 		$propertyFalse->setCollection($this->collection);
@@ -266,7 +272,7 @@ class EntryParserTest extends TestCase
 	public function testParseSingleEntryWithNumberProperty(): void
 	{
 		$propertyNumber = new Collection\Property();
-		$propertyNumber->setType($this->createPropertyTypeNumber());
+		$propertyNumber->setType($this->applicationMock->getCollectionPropertyType(Collection\Property\Type::TYPE_NUMBER));
 		$propertyNumber->setIdentifier('number');
 		$propertyNumber->setName('Number');
 		$propertyNumber->setCollection($this->collection);
@@ -308,13 +314,13 @@ class EntryParserTest extends TestCase
 	public function testParseSingleEntryWithJsonProperty(): void
 	{
 		$propertyJson = new Collection\Property();
-		$propertyJson->setType($this->createPropertyTypeJson());
+		$propertyJson->setType($this->applicationMock->getCollectionPropertyType(Collection\Property\Type::TYPE_JSON));
 		$propertyJson->setIdentifier('json');
 		$propertyJson->setName('Json');
 		$propertyJson->setCollection($this->collection);
 
 		$propertyCoordinates = new Collection\Property();
-		$propertyCoordinates->setType($this->createPropertyTypeCoordinates());
+		$propertyCoordinates->setType($this->applicationMock->getCollectionPropertyType(Collection\Property\Type::TYPE_COORDINATES));
 		$propertyCoordinates->setIdentifier('coordinates');
 		$propertyCoordinates->setName('Coordinates');
 		$propertyCoordinates->setCollection($this->collection);
@@ -370,7 +376,7 @@ class EntryParserTest extends TestCase
 	public function testParseSingleEntryWithFileProperty(): void
 	{
 		$propertyNumber = new Collection\Property();
-		$propertyNumber->setType($this->createPropertyTypeFile());
+		$propertyNumber->setType($this->applicationMock->getCollectionPropertyType(Collection\Property\Type::TYPE_FILE));
 		$propertyNumber->setIdentifier('file');
 		$propertyNumber->setName('File');
 		$propertyNumber->setCollection($this->collection);
@@ -474,201 +480,5 @@ class EntryParserTest extends TestCase
 			->getMockForAbstractClass();
 
 		$this->entityManager->expects($this->once())->method('getRepository')->with(User::class)->willReturn($userRepository);
-	}
-
-
-	/**
-	 * Create a property of type text
-	 *
-	 * @return Collection\Property\Type
-	 */
-	private function createPropertyTypeText(): Collection\Property\Type
-	{
-		$type = new Collection\Property\Type();
-		$type->setType('text');
-		$type->setTranslatable(true);
-		$type->setOrdering(1);
-		$type->setJsonListviewCompatible(true);
-
-		return $type;
-	}
-
-
-	/**
-	 * Create a property of type multiline text
-	 *
-	 * @return Collection\Property\Type
-	 */
-	private function createPropertyTypeMultiline(): Collection\Property\Type
-	{
-		$type = new Collection\Property\Type();
-		$type->setType('multilineText');
-		$type->setTranslatable(true);
-		$type->setOrdering(1);
-		$type->setJsonListviewCompatible(true);
-
-		return $type;
-	}
-
-
-	/**
-	 * Create a property of type html
-	 *
-	 * @return Collection\Property\Type
-	 */
-	private function createPropertyTypeHtml(): Collection\Property\Type
-	{
-		$type = new Collection\Property\Type();
-		$type->setType('htmlText');
-		$type->setTranslatable(true);
-		$type->setOrdering(1);
-		$type->setJsonListviewCompatible(true);
-
-		return $type;
-	}
-
-
-	/**
-	 * Create a property of type url
-	 *
-	 * @return Collection\Property\Type
-	 */
-	private function createPropertyTypeUrl(): Collection\Property\Type
-	{
-		$type = new Collection\Property\Type();
-		$type->setType('url');
-		$type->setTranslatable(true);
-		$type->setOrdering(1);
-		$type->setJsonListviewCompatible(true);
-
-		return $type;
-	}
-
-
-	/**
-	 * Create a property of type date
-	 *
-	 * @return Collection\Property\Type
-	 */
-	private function createPropertyTypeDate(): Collection\Property\Type
-	{
-		$type = new Collection\Property\Type();
-		$type->setType('date');
-		$type->setOrdering(1);
-		$type->setJsonListviewCompatible(true);
-
-		return $type;
-	}
-
-
-	/**
-	 * Create a property of type date
-	 *
-	 * @return Collection\Property\Type
-	 */
-	private function createPropertyTypeDateTime(): Collection\Property\Type
-	{
-		$type = new Collection\Property\Type();
-		$type->setType('dateTime');
-		$type->setOrdering(1);
-		$type->setJsonListviewCompatible(true);
-
-		return $type;
-	}
-
-
-	/**
-	 * Create a property of type select
-	 *
-	 * @return Collection\Property\Type
-	 */
-	private function createPropertyTypeSelect(): Collection\Property\Type
-	{
-		$type = new Collection\Property\Type();
-		$type->setType('select');
-		$type->setOrdering(1);
-		$type->setJsonListviewCompatible(true);
-
-		return $type;
-	}
-
-
-	/**
-	 * Create a property of type boolean
-	 *
-	 * @return Collection\Property\Type
-	 */
-	private function createPropertyTypeBoolean(): Collection\Property\Type
-	{
-		$type = new Collection\Property\Type();
-		$type->setType('boolean');
-		$type->setOrdering(1);
-		$type->setJsonListviewCompatible(true);
-
-		return $type;
-	}
-
-
-	/**
-	 * Create a property of type number
-	 *
-	 * @return Collection\Property\Type
-	 */
-	private function createPropertyTypeNumber(): Collection\Property\Type
-	{
-		$type = new Collection\Property\Type();
-		$type->setType('number');
-		$type->setOrdering(1);
-		$type->setJsonListviewCompatible(true);
-
-		return $type;
-	}
-
-
-	/**
-	 * Create a property of type json
-	 *
-	 * @return Collection\Property\Type
-	 */
-	private function createPropertyTypeJson(): Collection\Property\Type
-	{
-		$type = new Collection\Property\Type();
-		$type->setType('json');
-		$type->setOrdering(1);
-		$type->setJsonListviewCompatible(true);
-
-		return $type;
-	}
-
-
-	/**
-	 * Create a property of type coordinates
-	 *
-	 * @return Collection\Property\Type
-	 */
-	private function createPropertyTypeCoordinates(): Collection\Property\Type
-	{
-		$type = new Collection\Property\Type();
-		$type->setType('coordinates');
-		$type->setOrdering(1);
-		$type->setJsonListviewCompatible(true);
-
-		return $type;
-	}
-
-
-	/**
-	 * Create a property of type file
-	 *
-	 * @return Collection\Property\Type
-	 */
-	private function createPropertyTypeFile(): Collection\Property\Type
-	{
-		$type = new Collection\Property\Type();
-		$type->setType('file');
-		$type->setOrdering(1);
-		$type->setJsonListviewCompatible(true);
-
-		return $type;
 	}
 }

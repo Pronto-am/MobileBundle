@@ -2,6 +2,7 @@
 
 namespace Pronto\MobileBundle\Entity;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
 
@@ -36,6 +37,10 @@ class PasswordReset
 	private $createdAt;
 
 
+	/**
+	 * PasswordReset constructor.
+	 * @param User $user
+	 */
 	public function __construct(User $user)
 	{
 		$this->user = $user;
@@ -56,27 +61,27 @@ class PasswordReset
 
 
 	/**
-	 * @return mixed
+	 * @return string
 	 */
-	public function getToken()
+	public function getToken(): string
 	{
 		return $this->token;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return User
 	 */
-	public function getUser()
+	public function getUser(): User
 	{
 		return $this->user;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return DateTime
 	 */
-	public function getCreatedAt()
+	public function getCreatedAt(): DateTime
 	{
 		return $this->createdAt;
 	}

@@ -3,8 +3,8 @@
 namespace Pronto\MobileBundle\Service;
 
 
-use Pronto\MobileBundle\Entity\Application\Version;
 use Doctrine\ORM\EntityManagerInterface;
+use Pronto\MobileBundle\Entity\Application\Version;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 

@@ -2,8 +2,11 @@
 
 namespace Pronto\MobileBundle\Entity\Collection\Relationship;
 
+use Pronto\MobileBundle\Entity\Collection;
+use Pronto\MobileBundle\Entity\Collection\Entry;
 use Pronto\MobileBundle\Entity\TimestampedEntity;
 use Doctrine\ORM\Mapping as ORM;
+use Pronto\MobileBundle\Service\Collection\EntryValueParser;
 use Ramsey\Uuid\Uuid;
 
 
@@ -60,63 +63,63 @@ class Mapper extends TimestampedEntity
 
 
 	/**
-	 * @return mixed
+	 * @return string
 	 */
-	public function getId()
+	public function getId(): string
 	{
 		return $this->id;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return Entry
 	 */
-	public function getEntryLeft()
+	public function getEntryLeft(): Entry
 	{
 		return $this->entryLeft;
 	}
 
 
 	/**
-	 * @param mixed $entryLeft
+	 * @param Entry $entryLeft
 	 */
-	public function setEntryLeft($entryLeft): void
+	public function setEntryLeft(Entry $entryLeft): void
 	{
 		$this->entryLeft = $entryLeft;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return Entry
 	 */
-	public function getEntryRight()
+	public function getEntryRight(): Entry
 	{
 		return $this->entryRight;
 	}
 
 
 	/**
-	 * @param mixed $entryRight
+	 * @param Entry $entryRight
 	 */
-	public function setEntryRight($entryRight): void
+	public function setEntryRight(Entry $entryRight): void
 	{
 		$this->entryRight = $entryRight;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return Collection
 	 */
-	public function getRelatedCollection()
+	public function getRelatedCollection(): Collection
 	{
 		return $this->relatedCollection;
 	}
 
 
 	/**
-	 * @param mixed $relatedCollection
+	 * @param Collection $relatedCollection
 	 */
-	public function setRelatedCollection($relatedCollection): void
+	public function setRelatedCollection(Collection $relatedCollection): void
 	{
 		$this->relatedCollection = $relatedCollection;
 	}

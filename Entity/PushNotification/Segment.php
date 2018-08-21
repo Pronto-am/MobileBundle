@@ -4,6 +4,7 @@ namespace Pronto\MobileBundle\Entity\PushNotification;
 
 use Doctrine\ORM\Mapping as ORM;
 use Pronto\MobileBundle\Entity\ApiEntityInterface;
+use Pronto\MobileBundle\Entity\Application;
 use Symfony\Component\Validator\Constraints as Assert;
 use Pronto\MobileBundle\Traits\ApiEntityTrait;
 
@@ -53,54 +54,54 @@ class Segment implements ApiEntityInterface
 
 
 	/**
-	 * @return mixed
+	 * @return int
 	 */
-	public function getId()
+	public function getId(): int
 	{
 		return $this->id;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return Application
 	 */
-	public function getApplication()
+	public function getApplication(): Application
 	{
 		return $this->application;
 	}
 
 
 	/**
-	 * @param mixed $application
+	 * @param Application $application
 	 */
-	public function setApplication($application): void
+	public function setApplication(Application $application): void
 	{
 		$this->application = $application;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return array
 	 */
-	public function getName()
+	public function getName(): array
 	{
 		return $this->name;
 	}
 
 
 	/**
-	 * @param mixed $name
+	 * @param array $name
 	 */
-	public function setName($name): void
+	public function setName(array $name): void
 	{
 		$this->name = $name;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return array
 	 */
-	public function getDeviceSegments()
+	public function getDeviceSegments(): array
 	{
 		return $this->deviceSegments;
 	}

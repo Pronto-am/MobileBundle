@@ -2,6 +2,8 @@
 
 namespace Pronto\MobileBundle\Entity;
 
+use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Pronto\MobileBundle\Entity\ApiEntityInterface;
 use Pronto\MobileBundle\Utils\ErrorResponse;
@@ -137,45 +139,45 @@ class AppUser extends TimestampedEntity implements UserInterface, ApiEntityInter
 
 
 	/**
-	 * @return mixed
+	 * @return string
 	 */
-	public function getId()
+	public function getId(): string
 	{
 		return $this->id;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return string
 	 */
-	public function getFirstName()
+	public function getFirstName(): string
 	{
 		return $this->firstName;
 	}
 
 
 	/**
-	 * @param mixed $firstName
+	 * @param string $firstName
 	 */
-	public function setFirstName($firstName): void
+	public function setFirstName(string $firstName): void
 	{
 		$this->firstName = $firstName;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return string
 	 */
-	public function getLastName()
+	public function getLastName(): string
 	{
 		return $this->lastName;
 	}
 
 
 	/**
-	 * @param mixed $lastName
+	 * @param string $lastName
 	 */
-	public function setLastName($lastName): void
+	public function setLastName(string $lastName): void
 	{
 		$this->lastName = $lastName;
 	}
@@ -195,45 +197,45 @@ class AppUser extends TimestampedEntity implements UserInterface, ApiEntityInter
 
 
 	/**
-	 * @return mixed
+	 * @return string
 	 */
-	public function getEmail()
+	public function getEmail(): string
 	{
 		return $this->email;
 	}
 
 
 	/**
-	 * @param mixed $email
+	 * @param string $email
 	 */
-	public function setEmail($email): void
+	public function setEmail(string $email): void
 	{
 		$this->email = $email;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return string
 	 */
-	public function getPassword()
+	public function getPassword(): string
 	{
 		return $this->password;
 	}
 
 
 	/**
-	 * @param mixed $password
+	 * @param string $password
 	 */
-	public function setPassword($password): void
+	public function setPassword(string $password): void
 	{
 		$this->password = $password;
 	}
 
 
 	/**
-	 * @param $plainPassword
+	 * @param string $plainPassword
 	 */
-	public function setPlainPassword($plainPassword): void
+	public function setPlainPassword(string $plainPassword): void
 	{
 		$this->plainPassword = $plainPassword;
 
@@ -251,102 +253,101 @@ class AppUser extends TimestampedEntity implements UserInterface, ApiEntityInter
 
 
 	/**
-	 * @return mixed
+	 * @return Application
 	 */
-	public function getApplication()
+	public function getApplication(): Application
 	{
 		return $this->application;
 	}
 
 
 	/**
-	 * @param mixed $application
+	 * @param Application $application
 	 */
-	public function setApplication($application): void
+	public function setApplication(Application $application): void
 	{
 		$this->application = $application;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return bool
 	 */
-	public function getActivated()
+	public function getActivated(): bool
 	{
 		return $this->activated;
 	}
 
 
 	/**
-	 * @param mixed $activated
+	 * @param bool $activated
 	 */
-	public function setActivated($activated): void
+	public function setActivated(bool $activated): void
 	{
 		$this->activated = $activated;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return string
 	 */
-	public function getActivationToken()
+	public function getActivationToken(): string
 	{
 		return $this->activationToken;
 	}
 
 
 	/**
-	 * @param mixed $activationToken
+	 * @param string $activationToken
 	 */
-	public function setActivationToken($activationToken): void
+	public function setActivationToken(string $activationToken): void
 	{
 		$this->activationToken = $activationToken;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return DateTime|null
 	 */
-	public function getLastLogin()
+	public function getLastLogin(): ?DateTime
 	{
 		return $this->lastLogin;
 	}
 
 
 	/**
-	 * @param mixed $lastLogin
+	 * @param DateTime $lastLogin
 	 */
-	public function setLastLogin($lastLogin): void
+	public function setLastLogin(DateTime $lastLogin): void
 	{
 		$this->lastLogin = $lastLogin;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return array|null
 	 *
 	 * @Groups({"AppUser", "Device"})
 	 */
-	public function getExtraData()
+	public function getExtraData(): ?array
 	{
 		return (array)$this->extraData;
 	}
 
 
 	/**
-	 * @param mixed $extraData
+	 * @param array $extraData
 	 */
-	public function setExtraData($extraData): void
+	public function setExtraData(array $extraData): void
 	{
 		$this->extraData = $extraData;
 	}
 
 
 	/**
-	 * @return mixed
-	 *
+	 * @return ArrayCollection
 	 */
-	public function getDevices()
+	public function getDevices(): ArrayCollection
 	{
 		return $this->devices;
 	}
@@ -381,7 +382,7 @@ class AppUser extends TimestampedEntity implements UserInterface, ApiEntityInter
 	 *
 	 * @return string|null The salt
 	 */
-	public function getSalt()
+	public function getSalt(): ?string
 	{
 		//
 	}
@@ -403,7 +404,7 @@ class AppUser extends TimestampedEntity implements UserInterface, ApiEntityInter
 	 * This is important if, at any given point, sensitive information like
 	 * the plain-text password is stored on this object.
 	 */
-	public function eraseCredentials()
+	public function eraseCredentials(): void
 	{
 		$this->plainPassword = null;
 	}

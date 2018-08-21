@@ -22,7 +22,6 @@ class Configuration implements ConfigurationInterface
 				->scalarNode('uploads_folder')->end()
 				->arrayNode('firebase')
 					->children()
-					->scalarNode('storage_decryption_method')->end()
 					->scalarNode('storage_decryption_password')->end()
 					->end()
 				->end()// Firebase end

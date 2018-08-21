@@ -2,9 +2,12 @@
 
 namespace Pronto\MobileBundle\Entity;
 
+use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Pronto\MobileBundle\Entity\ApiEntityInterface;
 use PascalDeVink\ShortUuid\ShortUuid;
+use Pronto\MobileBundle\Entity\PushNotification\Segment;
 use Ramsey\Uuid\Uuid;
 use Pronto\MobileBundle\Traits\ApiEntityTrait;
 
@@ -136,9 +139,9 @@ class PushNotification implements ApiEntityInterface
 
 
 	/**
-	 * @return mixed
+	 * @return string
 	 */
-	public function getId()
+	public function getId(): string
 	{
 		return $this->id;
 	}
@@ -154,9 +157,9 @@ class PushNotification implements ApiEntityInterface
 
 
 	/**
-	 * @param mixed $application
+	 * @param Application $application
 	 */
-	public function setApplication($application): void
+	public function setApplication(Application $application): void
 	{
 		$this->application = $application;
 	}
@@ -174,149 +177,149 @@ class PushNotification implements ApiEntityInterface
 	/**
 	 * @param User $sentBy
 	 */
-	public function setSentBy($sentBy): void
+	public function setSentBy(User $sentBy): void
 	{
 		$this->sentBy = $sentBy;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return Segment|null
 	 */
-	public function getSegment()
+	public function getSegment(): ?Segment
 	{
 		return $this->segment;
 	}
 
 
 	/**
-	 * @param mixed $segment
+	 * @param Segment $segment
 	 */
-	public function setSegment($segment): void
+	public function setSegment(Segment $segment): void
 	{
 		$this->segment = $segment;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return array
 	 */
-	public function getTitle()
+	public function getTitle(): array
 	{
 		return $this->title;
 	}
 
 
 	/**
-	 * @param mixed $title
+	 * @param array $title
 	 */
-	public function setTitle($title): void
+	public function setTitle(array $title): void
 	{
 		$this->title = $title;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return array|null
 	 */
-	public function getContent()
+	public function getContent(): ?array
 	{
 		return $this->content;
 	}
 
 
 	/**
-	 * @param mixed $content
+	 * @param array $content
 	 */
-	public function setContent($content): void
+	public function setContent(array $content): void
 	{
 		$this->content = $content;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return int
 	 */
-	public function getClickAction()
+	public function getClickAction(): int
 	{
 		return $this->clickAction;
 	}
 
 
 	/**
-	 * @param mixed $clickAction
+	 * @param int $clickAction
 	 */
-	public function setClickAction($clickAction): void
+	public function setClickAction(int $clickAction): void
 	{
 		$this->clickAction = $clickAction;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return array|null
 	 */
-	public function getClickActionUrl()
+	public function getClickActionUrl(): ?array
 	{
 		return $this->clickActionUrl;
 	}
 
 
 	/**
-	 * @param mixed $clickActionUrl
+	 * @param array $clickActionUrl
 	 */
-	public function setClickActionUrl($clickActionUrl): void
+	public function setClickActionUrl(array $clickActionUrl): void
 	{
 		$this->clickActionUrl = $clickActionUrl;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return array|null
 	 */
-	public function getClickActionHtml()
+	public function getClickActionHtml(): ?array
 	{
 		return $this->clickActionHtml;
 	}
 
 
 	/**
-	 * @param mixed $clickActionHtml
+	 * @param array $clickActionHtml
 	 */
-	public function setClickActionHtml($clickActionHtml): void
+	public function setClickActionHtml(array $clickActionHtml): void
 	{
 		$this->clickActionHtml = $clickActionHtml;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return DateTime|null
 	 */
-	public function getSent()
+	public function getSent(): ?DateTime
 	{
 		return $this->sent;
 	}
 
 
 	/**
-	 * @param mixed $sent
+	 * @param DateTime $sent
 	 */
-	public function setSent($sent): void
+	public function setSent(DateTime $sent): void
 	{
 		$this->sent = $sent;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return DateTime|null
 	 */
-	public function getScheduledSending()
+	public function getScheduledSending(): ?DateTime
 	{
 		return $this->scheduledSending;
 	}
 
 
 	/**
-	 * @param mixed $scheduledSending
+	 * @param DateTime|null $scheduledSending
 	 */
 	public function setScheduledSending($scheduledSending): void
 	{
@@ -325,63 +328,63 @@ class PushNotification implements ApiEntityInterface
 
 
 	/**
-	 * @return mixed
+	 * @return bool
 	 */
-	public function getTest()
+	public function getTest(): bool
 	{
 		return $this->test;
 	}
 
 
 	/**
-	 * @param mixed $test
+	 * @param bool $test
 	 */
-	public function setTest($test): void
+	public function setTest(bool $test): void
 	{
 		$this->test = $test;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return array
 	 */
-	public function getTestDevices()
+	public function getTestDevices(): array
 	{
 		return $this->testDevices;
 	}
 
 
 	/**
-	 * @param mixed $testDevices
+	 * @param array $testDevices
 	 */
-	public function setTestDevices($testDevices): void
+	public function setTestDevices(array $testDevices): void
 	{
 		$this->testDevices = $testDevices;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return bool
 	 */
-	public function getBeingProcessed()
+	public function getBeingProcessed(): bool
 	{
 		return $this->beingProcessed;
 	}
 
 
 	/**
-	 * @param mixed $beingProcessed
+	 * @param bool $beingProcessed
 	 */
-	public function setBeingProcessed($beingProcessed): void
+	public function setBeingProcessed(bool $beingProcessed): void
 	{
 		$this->beingProcessed = $beingProcessed;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return ArrayCollection
 	 */
-	public function getPushNotificationRecipients()
+	public function getPushNotificationRecipients(): ArrayCollection
 	{
 		return $this->pushNotificationRecipients;
 	}

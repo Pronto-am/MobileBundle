@@ -79,7 +79,7 @@ class Response
 	/**
 	 * @return int
 	 */
-	public function getSuccesCount(): int
+	public function getSuccessCount(): int
 	{
 		return $this->successCount;
 	}

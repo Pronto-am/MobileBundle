@@ -61,6 +61,8 @@ class ErrorResponse extends BaseResponse
 	public function forEntity(string $entity): self
 	{
 		$this->entity = $entity;
+
+		return $this;
 	}
 
 

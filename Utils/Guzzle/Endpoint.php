@@ -17,9 +17,9 @@ class Endpoint
 	 * Get an endpoint instance
 	 *
 	 * @param ClientInterface $client
-	 * @return mixed
+	 * @return self
 	 */
-	public static function getInstance(ClientInterface $client)
+	public static function getInstance(ClientInterface $client): self
 	{
 		$class = static::class;
 
@@ -115,7 +115,7 @@ class Endpoint
 	 * @param array $query
 	 * @param array $body
 	 */
-	public function request(string $endpoint, string $method = 'GET', array $query = [], array $body = [])
+	public function request(string $endpoint, string $method = 'GET', array $query = [], array $body = []): void
 	{
 		// Provide parameters and body when they are set
 		if (!empty($query)) {

@@ -3,14 +3,13 @@
 namespace Pronto\MobileBundle\Service\Collection;
 
 
+use DateTime;
+use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Pronto\MobileBundle\Entity\Collection;
 use Pronto\MobileBundle\Entity\Customer;
 use Pronto\MobileBundle\Entity\User;
 use Pronto\MobileBundle\Utils\Collect;
-use Pronto\MobileBundle\Utils\Date;
-use DateTime;
-use Doctrine\ORM\EntityManagerInterface;
-use Exception;
 
 class EntryParser
 {

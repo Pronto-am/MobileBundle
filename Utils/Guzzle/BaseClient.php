@@ -71,7 +71,6 @@ class BaseClient implements ClientInterface
 	 * Set the query for the request
 	 *
 	 * @param array $query
-	 * @return void
 	 */
 	public function setQuery(array $query = []): void
 	{
@@ -94,7 +93,6 @@ class BaseClient implements ClientInterface
 	 * Set the json body for the request
 	 *
 	 * @param array $body
-	 * @return void
 	 */
 	public function setBody(array $body = []): void
 	{
@@ -121,7 +119,7 @@ class BaseClient implements ClientInterface
 	 *
 	 * @param string $endpoint
 	 * @param string $method
-	 * @return \Psr\Http\Message\ResponseInterface
+	 * @return ResponseInterface
 	 */
 	public function send(string $endpoint = '', string $method = 'GET'): ResponseInterface
 	{

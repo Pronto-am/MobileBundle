@@ -106,10 +106,10 @@ class MessageGroup
 	/**
 	 * Get the translation of a property
 	 *
-	 * @param $json
-	 * @return mixed
+	 * @param array $json
+	 * @return string
 	 */
-	private function getTranslation($json)
+	private function getTranslation(array $json): string
 	{
 		if ($this->language !== null && isset($json[$this->language]) && !empty($json[$this->language])) {
 			return $json[$this->language];

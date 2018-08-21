@@ -40,18 +40,18 @@ class DeviceSegment
 
 
 	/**
-	 * @return mixed
+	 * @return Segment
 	 */
-	public function getSegment()
+	public function getSegment(): Segment
 	{
 		return $this->segment;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return Device
 	 */
-	public function getDevice()
+	public function getDevice(): Device
 	{
 		return $this->device;
 	}

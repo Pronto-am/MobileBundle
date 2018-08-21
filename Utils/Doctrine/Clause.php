@@ -11,7 +11,7 @@ interface Clause
 	 * Add the clause to the query
 	 *
 	 * @param QueryBuilder $query
-	 * @return mixed
+	 * @return void
 	 */
-	public function addToQuery(&$query);
+	public function addToQuery(&$query): void;
 }

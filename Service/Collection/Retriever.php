@@ -3,10 +3,9 @@
 namespace Pronto\MobileBundle\Service\Collection;
 
 
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Pronto\MobileBundle\Entity\Collection;
 use Pronto\MobileBundle\Utils\Collect;
-use Doctrine\ORM\EntityManagerInterface;
 
 class Retriever
 {

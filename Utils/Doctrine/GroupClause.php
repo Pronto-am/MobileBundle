@@ -10,6 +10,10 @@ class GroupClause implements Clause
 	private $column;
 
 
+	/**
+	 * GroupClause constructor.
+	 * @param $column
+	 */
 	public function __construct($column)
 	{
 		$this->column = $column;
@@ -19,9 +23,9 @@ class GroupClause implements Clause
 	 * Add the clause to the query
 	 *
 	 * @param \Doctrine\ORM\QueryBuilder $query
-	 * @return mixed|void
+	 * @return void
 	 */
-	public function addToQuery(&$query)
+	public function addToQuery(&$query): void
 	{
 		$query->groupBy($this->column);
 	}

@@ -2,6 +2,7 @@
 
 namespace Pronto\MobileBundle\Entity\PushNotification;
 
+use DateTime;
 use Pronto\MobileBundle\Entity\ApiEntityInterface;
 use Pronto\MobileBundle\Entity\Device;
 use Pronto\MobileBundle\Entity\PushNotification;
@@ -63,79 +64,79 @@ class Recipient implements ApiEntityInterface
 
 
 	/**
-	 * @return mixed
+	 * @return PushNotification
 	 */
-	public function getPushNotification()
+	public function getPushNotification(): PushNotification
 	{
 		return $this->pushNotification;
 	}
 
 
 	/**
-	 * @param mixed $pushNotification
+	 * @param PushNotification $pushNotification
 	 */
-	public function setPushNotification($pushNotification): void
+	public function setPushNotification(PushNotification $pushNotification): void
 	{
 		$this->pushNotification = $pushNotification;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return Device
 	 */
-	public function getDevice()
+	public function getDevice(): Device
 	{
 		return $this->device;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return bool
 	 */
-	public function getSent()
+	public function getSent(): bool
 	{
 		return $this->sent;
 	}
 
 
 	/**
-	 * @param mixed $sent
+	 * @param bool $sent
 	 */
-	public function setSent($sent): void
+	public function setSent(bool $sent): void
 	{
 		$this->sent = $sent;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return string|null
 	 */
-	public function getDescription()
+	public function getDescription(): ?string
 	{
 		return $this->description;
 	}
 
 
 	/**
-	 * @param mixed $description
+	 * @param string $description
 	 */
-	public function setDescription($description): void
+	public function setDescription(string $description): void
 	{
 		$this->description = $description;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return DateTime|null
 	 */
-	public function getOpened()
+	public function getOpened(): ?DateTime
 	{
 		return $this->opened;
 	}
 
 
 	/**
-	 * @param mixed $opened
+	 * @param DateTime|string $opened
 	 */
 	public function setOpened($opened): void
 	{

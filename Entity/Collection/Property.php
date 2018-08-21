@@ -2,6 +2,7 @@
 
 namespace Pronto\MobileBundle\Entity\Collection;
 
+use Pronto\MobileBundle\Entity\Collection;
 use Pronto\MobileBundle\Entity\Collection\Property\Type;
 use Pronto\MobileBundle\Entity\TimestampedEntity;
 use Doctrine\ORM\Mapping as ORM;
@@ -87,63 +88,63 @@ class Property extends TimestampedEntity
 
 
     /**
-     * @return mixed
+     * @return int
      */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
 
     /**
-     * @return mixed
+     * @return Collection
      */
-    public function getCollection()
+    public function getCollection(): Collection
     {
         return $this->collection;
     }
 
 
     /**
-     * @param mixed $collection
+     * @param Collection $collection
      */
-    public function setCollection($collection): void
+    public function setCollection(Collection $collection): void
     {
         $this->collection = $collection;
     }
 
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
 
     /**
-     * @param mixed $name
+     * @param string $name
      */
-    public function setName($name): void
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
 
 
 	/**
-	 * @return mixed
+	 * @return string
 	 */
-	public function getIdentifier()
+	public function getIdentifier(): string
 	{
 		return $this->identifier;
 	}
 
 
 	/**
-	 * @param mixed $identifier
+	 * @param string $identifier
 	 */
-	public function setIdentifier($identifier): void
+	public function setIdentifier(string $identifier): void
 	{
 		$this->identifier = $identifier;
 	}
@@ -159,63 +160,63 @@ class Property extends TimestampedEntity
 
 
     /**
-     * @param mixed $type
+     * @param Type $type
      */
-    public function setType($type): void
+    public function setType(Type $type): void
     {
         $this->type = $type;
     }
 
 
 	/**
-	 * @return mixed
+	 * @return array
 	 */
-	public function getConfig()
+	public function getConfig(): array
 	{
 		return $this->config;
 	}
 
 
 	/**
-	 * @param mixed $config
+	 * @param array $config
 	 */
-	public function setConfig($config): void
+	public function setConfig(array $config): void
 	{
 		$this->config = $config;
 	}
 
 
     /**
-     * @return mixed
+     * @return bool
      */
-    public function getRequired()
+    public function getRequired(): bool
     {
         return $this->required;
     }
 
 
     /**
-     * @param mixed $required
+     * @param bool $required
      */
-    public function setRequired($required): void
+    public function setRequired(bool $required): void
     {
         $this->required = $required;
     }
 
 
 	/**
-	 * @return mixed
+	 * @return bool
 	 */
-	public function getIncludeInListView()
+	public function getIncludeInListView(): bool
 	{
 		return $this->includeInListView;
 	}
 
 
 	/**
-	 * @param mixed $includeInListView
+	 * @param bool $includeInListView
 	 */
-	public function setIncludeInListView($includeInListView): void
+	public function setIncludeInListView(bool $includeInListView): void
 	{
 		$this->includeInListView = $includeInListView;
 	}
@@ -231,45 +232,45 @@ class Property extends TimestampedEntity
 
 
 	/**
-	 * @param mixed $includeInJsonListView
+	 * @param bool $includeInJsonListView
 	 */
-	public function setIncludeInJsonListView($includeInJsonListView): void
+	public function setIncludeInJsonListView(bool $includeInJsonListView): void
 	{
 		$this->includeInJsonListView = $includeInJsonListView;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return bool
 	 */
-	public function getEntryTitle()
+	public function getEntryTitle(): bool
 	{
 		return $this->entryTitle;
 	}
 
 
 	/**
-	 * @param mixed $entryTitle
+	 * @param bool $entryTitle
 	 */
-	public function setEntryTitle($entryTitle): void
+	public function setEntryTitle(bool $entryTitle): void
 	{
 		$this->entryTitle = $entryTitle;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return int
 	 */
-	public function getOrdering()
+	public function getOrdering(): int
 	{
 		return $this->ordering;
 	}
 
 
 	/**
-	 * @param mixed $ordering
+	 * @param int $ordering
 	 */
-	public function setOrdering($ordering): void
+	public function setOrdering(int $ordering): void
 	{
 		$this->ordering = $ordering;
 	}

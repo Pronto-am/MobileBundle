@@ -67,7 +67,12 @@ class EntryParser
 	}
 
 
-
+	/**
+	 * Get the transformer by property type
+	 *
+	 * @param Property $property
+	 * @return PropertyType
+	 */
 	private function getPropertyTransformer(Property $property): PropertyType
 	{
 		$type = $property->getType()->getType();

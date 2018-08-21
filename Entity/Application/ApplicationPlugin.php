@@ -5,6 +5,7 @@ namespace Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\Plugin;
 use Doctrine\ORM\Mapping as ORM;
+use Pronto\MobileBundle\Tests\Mocks\ApplicationMock;
 
 
 /**
@@ -52,72 +53,72 @@ class ApplicationPlugin
 
 
     /**
-     * @return mixed
+     * @return Application
      */
-    public function getApplication()
+    public function getApplication(): Application
     {
         return $this->application;
     }
 
 
     /**
-     * @param mixed $application
+     * @param Application $application
      */
-    public function setApplication($application): void
+    public function setApplication(Application $application): void
 	{
         $this->application = $application;
     }
 
 
     /**
-     * @return mixed
+     * @return Plugin
      */
-    public function getPlugin()
+    public function getPlugin(): Plugin
     {
         return $this->plugin;
     }
 
 
     /**
-     * @param mixed $plugin
+     * @param Plugin $plugin
      */
-    public function setPlugin($plugin): void
+    public function setPlugin(Plugin $plugin): void
     {
         $this->plugin = $plugin;
     }
 
 
     /**
-     * @return mixed
+     * @return bool
      */
-    public function getActive()
+    public function getActive(): bool
     {
         return $this->active;
     }
 
 
     /**
-     * @param mixed $active
+     * @param bool $active
      */
-    public function setActive($active): void
+    public function setActive(bool $active): void
     {
         $this->active = $active;
     }
 
 
     /**
-     * @return mixed
+     * @return array
      */
-    public function getConfig()
+    public function getConfig(): array
     {
         return $this->config;
     }
 
 
     /**
-     * @param mixed $config
+     * @param array $config
      */
-    public function setConfig($config): void
+    public function setConfig(array $config): void
     {
         $this->config = $config;
     }

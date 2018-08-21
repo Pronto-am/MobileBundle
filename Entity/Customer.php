@@ -97,6 +97,9 @@ class Customer
 	private $logo;
 
 
+	/**
+	 * Customer constructor.
+	 */
     public function __construct()
     {
         $this->applications = new ArrayCollection();
@@ -104,9 +107,9 @@ class Customer
 
 
     /**
-     * @return mixed
+     * @return int
      */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
@@ -122,144 +125,144 @@ class Customer
 
 
     /**
-     * @param mixed $companyName
+     * @param string $companyName
      */
-    public function setCompanyName($companyName): void
+    public function setCompanyName(string $companyName): void
     {
         $this->companyName = $companyName;
     }
 
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getContactPerson()
+    public function getContactPerson(): string
     {
         return $this->contactPerson;
     }
 
 
     /**
-     * @param mixed $contactPerson
+     * @param string $contactPerson
      */
-    public function setContactPerson($contactPerson): void
+    public function setContactPerson(string $contactPerson): void
     {
         $this->contactPerson = $contactPerson;
     }
 
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getPhoneNumber()
+    public function getPhoneNumber(): string
     {
         return $this->phoneNumber;
     }
 
 
     /**
-     * @param mixed $phoneNumber
+     * @param string $phoneNumber
      */
-    public function setPhoneNumber($phoneNumber): void
+    public function setPhoneNumber(string $phoneNumber): void
     {
         $this->phoneNumber = $phoneNumber;
     }
 
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getEmail()
+    public function getEmail(): string
     {
         return $this->email;
     }
 
 
     /**
-     * @param mixed $email
+     * @param string $email
      */
-    public function setEmail($email): void
+    public function setEmail(string $email): void
     {
         $this->email = $email;
     }
 
 
 	/**
-	 * @return mixed
+	 * @return string
 	 */
-	public function getPrimaryColor()
+	public function getPrimaryColor(): string
 	{
 		return $this->primaryColor;
 	}
 
 
 	/**
-	 * @param mixed $primaryColor
+	 * @param string $primaryColor
 	 */
-	public function setPrimaryColor($primaryColor): void
+	public function setPrimaryColor(string $primaryColor): void
 	{
 		$this->primaryColor = $primaryColor;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return string
 	 */
-	public function getSecondaryColor()
+	public function getSecondaryColor(): string
 	{
 		return $this->secondaryColor;
 	}
 
 
 	/**
-	 * @param mixed $secondaryColor
+	 * @param string $secondaryColor
 	 */
-	public function setSecondaryColor($secondaryColor): void
+	public function setSecondaryColor(string $secondaryColor): void
 	{
 		$this->secondaryColor = $secondaryColor;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return string
 	 */
-	public function getSidebarColor()
+	public function getSidebarColor(): string
 	{
 		return $this->sidebarColor;
 	}
 
 	
 	/**
-	 * @param mixed $sidebarColor
+	 * @param string $sidebarColor
 	 */
-	public function setSidebarColor($sidebarColor): void
+	public function setSidebarColor(string $sidebarColor): void
 	{
 		$this->sidebarColor = $sidebarColor;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return string|null
 	 */
-	public function getLogo()
+	public function getLogo(): ?string
 	{
 		return $this->logo;
 	}
 
 
 	/**
-	 * @param mixed $logo
+	 * @param string $logo
 	 */
-	public function setLogo($logo): void
+	public function setLogo(string $logo): void
 	{
 		$this->logo = $logo;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return ArrayCollection
 	 */
-	public function getApplications()
+	public function getApplications(): ArrayCollection
 	{
 		return $this->applications;
 	}

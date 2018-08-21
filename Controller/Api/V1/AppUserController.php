@@ -218,7 +218,6 @@ class AppUserController extends BaseApiController
 	 *       "message": "The user has received a password reset link"
 	 *     }
 	 *
-	 * @apiUse ObjectNotFound
 	 * @apiUse AuthorizationErrors
 	 */
 

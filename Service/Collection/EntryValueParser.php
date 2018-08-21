@@ -5,7 +5,6 @@ namespace Pronto\MobileBundle\Service\Collection;
 
 use DateTime;
 use Pronto\MobileBundle\Entity\Collection\Property\Type;
-use Pronto\MobileBundle\Utils\Date;
 use Pronto\MobileBundle\Service\JsonTranslator;
 use Symfony\Component\Translation\TranslatorInterface;
 

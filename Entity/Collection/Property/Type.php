@@ -14,6 +14,21 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Type
 {
+	// Set the types as publicly accessible variables
+	public const TYPE_TEXT = 'text';
+	public const TYPE_MULTILINE_TEXT = 'multilineText';
+	public const TYPE_HTML_TEXT = 'htmlText';
+	public const TYPE_SELECT = 'select';
+	public const TYPE_DATE = 'date';
+	public const TYPE_DATE_TIME = 'dateTime';
+	public const TYPE_BOOLEAN = 'boolean';
+	public const TYPE_URL = 'url';
+	public const TYPE_NUMBER = 'number';
+	public const TYPE_JSON = 'json';
+	public const TYPE_COORDINATES = 'coordinates';
+	public const TYPE_FILE = 'file';
+
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -59,27 +74,27 @@ class Type
 
 
     /**
-     * @return mixed
+     * @return int
      */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }
 
 
     /**
-     * @param mixed $type
+     * @param string $type
      */
-    public function setType($type): void
+    public function setType(string $type): void
     {
         $this->type = $type;
     }
@@ -95,9 +110,9 @@ class Type
 
 
 	/**
-	 * @param mixed $translatable
+	 * @param bool $translatable
 	 */
-	public function setTranslatable($translatable): void
+	public function setTranslatable(bool $translatable): void
 	{
 		$this->translatable = $translatable;
 	}
@@ -113,9 +128,9 @@ class Type
 
 
 	/**
-	 * @param mixed $listviewCompatible
+	 * @param bool $listviewCompatible
 	 */
-	public function setListviewCompatible($listviewCompatible): void
+	public function setListviewCompatible(bool $listviewCompatible): void
 	{
 		$this->listviewCompatible = $listviewCompatible;
 	}
@@ -131,9 +146,9 @@ class Type
 
 
 	/**
-	 * @param mixed $jsonListviewCompatible
+	 * @param bool $jsonListviewCompatible
 	 */
-	public function setJsonListviewCompatible($jsonListviewCompatible): void
+	public function setJsonListviewCompatible(bool $jsonListviewCompatible): void
 	{
 		$this->jsonListviewCompatible = $jsonListviewCompatible;
 	}
@@ -149,9 +164,9 @@ class Type
 
 
 	/**
-	 * @param mixed $ordering
+	 * @param int $ordering
 	 */
-	public function setOrdering($ordering): void
+	public function setOrdering(int $ordering): void
 	{
 		$this->ordering = $ordering;
 	}
@@ -167,9 +182,9 @@ class Type
 
 
 	/**
-	 * @param mixed $config
+	 * @param array $config
 	 */
-	public function setConfig($config): void
+	public function setConfig(array $config): void
 	{
 		$this->config = $config;
 	}

@@ -5,7 +5,6 @@ namespace Pronto\MobileBundle\Service;
 
 use Exception;
 use Symfony\Component\HttpKernel\Config\FileLocator;
-use Symfony\Component\HttpKernel\KernelInterface;
 
 class LanguagesLoader
 {

@@ -59,7 +59,7 @@ interface ClientInterface
 	 *
 	 * @param array $parameters
 	 */
-	public function addQueryParameter(array $parameters = []);
+	public function addQueryParameter(array $parameters = []): void;
 
 
 	/**
@@ -67,7 +67,7 @@ interface ClientInterface
 	 *
 	 * @param array $body
 	 */
-	public function setBody(array $body = []);
+	public function setBody(array $body = []): void;
 
 
 	/**

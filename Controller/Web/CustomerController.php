@@ -26,12 +26,6 @@ class CustomerController extends BaseController
 
 		$customers = $entityManager->getRepository(Customer::class)->findBy([], ['companyName' => 'asc']);
 
-		if (count($customers) === 1) {
-			$request->getSession()->set(Customer::SESSION_IDENTIFIER, $customers[0]->getId());
-
-			return $this->redirectToRoute('pronto_mobile_select_application');
-		}
-
 		return $this->render('@ProntoMobile/customers/customers.html.twig',
 			[
 				'customers' => $customers

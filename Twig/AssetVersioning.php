@@ -15,8 +15,6 @@ class AssetVersioning extends AbstractExtension
 	/** @var array $manifest */
 	private $manifest;
 
-	/** @var FileLocator $fileLocator */
-	private $fileLocator;
 
 	/**
 	 * AssetVersioning constructor.
@@ -29,7 +27,7 @@ class AssetVersioning extends AbstractExtension
 			$fileLocation = $kernel->getProjectDir() . '/public/bundles/prontomobile/mix-manifest.json';
 
 			$this->manifest = json_decode(file_get_contents($fileLocation), true);
-		} catch(Exception $exception) {
+		} catch (Exception $exception) {
 			$this->manifest = [];
 		}
 	}

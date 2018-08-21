@@ -2,6 +2,7 @@
 
 namespace Pronto\MobileBundle\Entity;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -50,45 +51,45 @@ abstract class TimestampedWithUserEntity
 
 
 	/**
-	 * @return mixed
+	 * @return DateTime
 	 */
-	public function getCreatedAt()
+	public function getCreatedAt(): DateTime
 	{
 		return $this->createdAt;
 	}
 
 
 	/**
-	 * @param mixed $createdAt
+	 * @param DateTime $createdAt
 	 */
-	public function setCreatedAt($createdAt): void
+	public function setCreatedAt(DateTime $createdAt): void
 	{
 		$this->createdAt = $createdAt;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return User|null
 	 */
-	public function getCreatedBy()
+	public function getCreatedBy(): ?User
 	{
 		return $this->createdBy;
 	}
 
 
 	/**
-	 * @param mixed $createdBy
+	 * @param User $createdBy
 	 */
-	public function setCreatedBy($createdBy): void
+	public function setCreatedBy(User $createdBy): void
 	{
 		$this->createdBy = $createdBy;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return DateTime
 	 */
-	public function getUpdatedAt()
+	public function getUpdatedAt(): DateTime
 	{
 		return $this->updatedAt;
 	}
@@ -97,25 +98,25 @@ abstract class TimestampedWithUserEntity
 	/**
 	 * @param mixed $updatedAt
 	 */
-	public function setUpdatedAt($updatedAt): void
+	public function setUpdatedAt(DateTime $updatedAt): void
 	{
 		$this->updatedAt = $updatedAt;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return User|null
 	 */
-	public function getUpdatedBy()
+	public function getUpdatedBy(): ?User
 	{
 		return $this->updatedBy;
 	}
 
 
 	/**
-	 * @param mixed $updatedBy
+	 * @param User $updatedBy
 	 */
-	public function setUpdatedBy($updatedBy): void
+	public function setUpdatedBy(User $updatedBy): void
 	{
 		$this->updatedBy = $updatedBy;
 	}

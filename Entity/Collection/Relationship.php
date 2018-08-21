@@ -2,6 +2,7 @@
 
 namespace Pronto\MobileBundle\Entity\Collection;
 
+use Doctrine\ORM\Cache\CollectionCacheEntry;
 use Pronto\MobileBundle\Entity\Collection;
 use Pronto\MobileBundle\Entity\Collection\Relationship\Type;
 use Pronto\MobileBundle\Entity\TimestampedEntity;
@@ -85,27 +86,27 @@ class Relationship extends TimestampedEntity
 
 
 	/**
-	 * @return mixed
+	 * @return string
 	 */
-	public function getId()
+	public function getId(): string
 	{
 		return $this->id;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return Collection
 	 */
-	public function getCollection()
+	public function getCollection(): Collection
 	{
 		return $this->collection;
 	}
 
 
 	/**
-	 * @param mixed $collection
+	 * @param Collection $collection
 	 */
-	public function setCollection($collection): void
+	public function setCollection(Collection $collection): void
 	{
 		$this->collection = $collection;
 	}
@@ -121,45 +122,45 @@ class Relationship extends TimestampedEntity
 
 
 	/**
-	 * @param mixed $relatedCollection
+	 * @param Collection $relatedCollection
 	 */
-	public function setRelatedCollection($relatedCollection): void
+	public function setRelatedCollection(Collection $relatedCollection): void
 	{
 		$this->relatedCollection = $relatedCollection;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return string
 	 */
-	public function getName()
+	public function getName(): string
 	{
 		return $this->name;
 	}
 
 
 	/**
-	 * @param mixed $name
+	 * @param string $name
 	 */
-	public function setName($name): void
+	public function setName(string $name): void
 	{
 		$this->name = $name;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return string
 	 */
-	public function getIdentifier()
+	public function getIdentifier(): string
 	{
 		return $this->identifier;
 	}
 
 
 	/**
-	 * @param mixed $identifier
+	 * @param string $identifier
 	 */
-	public function setIdentifier($identifier): void
+	public function setIdentifier(string $identifier): void
 	{
 		$this->identifier = $identifier;
 	}
@@ -175,9 +176,9 @@ class Relationship extends TimestampedEntity
 
 
 	/**
-	 * @param mixed $type
+	 * @param Type $type
 	 */
-	public function setType($type): void
+	public function setType(Type $type): void
 	{
 		$this->type = $type;
 	}
@@ -193,9 +194,9 @@ class Relationship extends TimestampedEntity
 
 
 	/**
-	 * @param mixed $includeInListView
+	 * @param bool $includeInListView
 	 */
-	public function setIncludeInJsonListView($includeInListView): void
+	public function setIncludeInJsonListView(bool $includeInListView): void
 	{
 		$this->includeInJsonListview = $includeInListView;
 	}

@@ -2,6 +2,8 @@
 
 namespace Pronto\MobileBundle\Service\PushNotification;
 
+use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\Device;
 use Pronto\MobileBundle\Entity\PushNotification;
@@ -9,10 +11,6 @@ use Pronto\MobileBundle\Entity\PushNotification\Recipient;
 use Pronto\MobileBundle\Utils\Firebase\CloudMessaging\Client;
 use Pronto\MobileBundle\Utils\Firebase\CloudMessaging\MessageGroup;
 use Pronto\MobileBundle\Utils\Firebase\CloudMessaging\Response;
-use Doctrine\ORM\EntityManagerInterface;
-use Exception;
-use Symfony\Component\HttpKernel\Kernel;
-use Symfony\Component\HttpKernel\KernelInterface;
 
 class Sender
 {
@@ -184,7 +182,7 @@ class Sender
 	public function getSuccessCount(): int
 	{
 		if ($this->response !== null) {
-			return $this->response->getSuccesCount();
+			return $this->response->getSuccessCount();
 		}
 
 		return 0;
