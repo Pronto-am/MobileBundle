@@ -3,10 +3,10 @@
 namespace Pronto\MobileBundle\DataFixtures;
 
 
-use Pronto\MobileBundle\Entity\Customer;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
+use Doctrine\Common\Persistence\ObjectManager;
+use Pronto\MobileBundle\Entity\Customer;
 
 class CustomerFixtures extends Fixture implements DependentFixtureInterface
 {

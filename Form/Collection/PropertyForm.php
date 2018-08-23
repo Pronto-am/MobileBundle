@@ -3,8 +3,8 @@
 namespace Pronto\MobileBundle\Form\Collection;
 
 
-use Pronto\MobileBundle\Entity\Collection\Property;
 use Pronto\MobileBundle\Entity\Collection\Property\Type;
+use Pronto\MobileBundle\Request\Collection\PropertyRequest;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -80,7 +80,7 @@ class PropertyForm extends AbstractType
 	public function configureOptions(OptionsResolver $resolver): void
 	{
 		$resolver->setDefaults([
-			'data_class' => Property::class
+			'data_class' => PropertyRequest::class
 		]);
 
 		$resolver->setRequired(['types']);

@@ -6,13 +6,14 @@ use Pronto\MobileBundle\Controller\BaseController;
 use Pronto\MobileBundle\Entity\Device;
 use Pronto\MobileBundle\Entity\Device\DeviceSegment;
 use Pronto\MobileBundle\Entity\PushNotification\Recipient;
+use Pronto\MobileBundle\EventSubscriber\ValidateApplicationSelectionInterface;
+use Pronto\MobileBundle\EventSubscriber\ValidateCustomerSelectionInterface;
 use Pronto\MobileBundle\Form\DeviceForm;
+use Pronto\MobileBundle\Request\DeviceRequest;
 use Pronto\MobileBundle\Utils\Doctrine\LeftJoinClause;
 use Pronto\MobileBundle\Utils\Doctrine\SelectClause;
 use Pronto\MobileBundle\Utils\Doctrine\WhereClause;
 use Pronto\MobileBundle\Utils\PageHelper;
-use Pronto\MobileBundle\EventSubscriber\ValidateApplicationSelectionInterface;
-use Pronto\MobileBundle\EventSubscriber\ValidateCustomerSelectionInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 class DeviceController extends BaseController implements ValidateCustomerSelectionInterface, ValidateApplicationSelectionInterface
@@ -69,13 +70,16 @@ class DeviceController extends BaseController implements ValidateCustomerSelecti
 		// Get the segments of the device
 		$segments = $entityManager->getRepository(DeviceSegment::class)->findSegmentsByDevice($device);
 
-		$form = $this->createForm(DeviceForm::class, $device);
+		$deviceRequest = DeviceRequest::fromEntity($device);
+
+		$form = $this->createForm(DeviceForm::class, $deviceRequest);
 
 		$form->handleRequest($request);
 
 		if ($form->isSubmitted() && $form->isValid()) {
-			/** @var Device $device */
-			$device = $form->getData();
+			/** @var DeviceRequest $deviceRequest */
+			$deviceRequest = $form->getData();
+			$device = $deviceRequest->toEntity($device);
 
 			$entityManager->persist($device);
 			$entityManager->flush();

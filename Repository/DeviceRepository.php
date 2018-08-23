@@ -2,11 +2,9 @@
 
 namespace Pronto\MobileBundle\Repository;
 
-use Pronto\MobileBundle\Entity\Application;
-use Pronto\MobileBundle\Entity\Device;
-use Pronto\MobileBundle\Entity\PushNotification;
-use Pronto\MobileBundle\Entity\PushNotification\Segment;
 use Doctrine\ORM\EntityRepository;
+use Pronto\MobileBundle\Entity\Application;
+use Pronto\MobileBundle\Entity\PushNotification;
 
 class DeviceRepository extends EntityRepository
 {

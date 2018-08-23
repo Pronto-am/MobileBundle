@@ -3,10 +3,10 @@
 namespace Pronto\MobileBundle\DataFixtures;
 
 
-use Pronto\MobileBundle\Entity\Collection\Property\Type as PropertyType;
-use Pronto\MobileBundle\Entity\Collection\Relationship\Type as RelationshipType;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
+use Pronto\MobileBundle\Entity\Collection\Property\Type as PropertyType;
+use Pronto\MobileBundle\Entity\Collection\Relationship\Type as RelationshipType;
 
 class CollectionFixtures extends Fixture
 {

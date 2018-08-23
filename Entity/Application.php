@@ -4,11 +4,11 @@ namespace Pronto\MobileBundle\Entity;
 
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection as DoctrineCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Pronto\MobileBundle\Entity\ApiEntityInterface;
 use FOS\OAuthServerBundle\Entity\Client;
-use Symfony\Component\Validator\Constraints as Assert;
 use Pronto\MobileBundle\Traits\ApiEntityTrait;
+use Symfony\Component\Validator\Constraints as Assert;
 
 
 /**
@@ -199,9 +199,9 @@ class Application extends Client implements ApiEntityInterface
 
 
 	/**
-	 * @return ArrayCollection
+	 * @return DoctrineCollection
 	 */
-	public function getApplicationVersions(): ArrayCollection
+	public function getApplicationVersions(): DoctrineCollection
 	{
 		return $this->applicationVersions;
 	}
@@ -334,9 +334,9 @@ class Application extends Client implements ApiEntityInterface
 
 
 	/**
-	 * @return ArrayCollection
+	 * @return DoctrineCollection
 	 */
-	public function getApplicationPlugins(): ArrayCollection
+	public function getApplicationPlugins(): DoctrineCollection
 	{
 		return $this->applicationPlugins;
 	}

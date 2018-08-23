@@ -3,6 +3,7 @@
 namespace Pronto\MobileBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection as DoctrineCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -253,16 +254,16 @@ class Customer
 	/**
 	 * @param string $logo
 	 */
-	public function setLogo(string $logo): void
+	public function setLogo(?string $logo): void
 	{
 		$this->logo = $logo;
 	}
 
 
 	/**
-	 * @return ArrayCollection
+	 * @return DoctrineCollection
 	 */
-	public function getApplications(): ArrayCollection
+	public function getApplications(): DoctrineCollection
 	{
 		return $this->applications;
 	}

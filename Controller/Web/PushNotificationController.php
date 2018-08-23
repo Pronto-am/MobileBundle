@@ -9,7 +9,11 @@ use Pronto\MobileBundle\Entity\Plugin;
 use Pronto\MobileBundle\Entity\PushNotification;
 use Pronto\MobileBundle\Entity\PushNotification\Recipient;
 use Pronto\MobileBundle\Entity\PushNotification\Segment;
+use Pronto\MobileBundle\EventSubscriber\ValidateApplicationSelectionInterface;
+use Pronto\MobileBundle\EventSubscriber\ValidateCustomerSelectionInterface;
+use Pronto\MobileBundle\EventSubscriber\ValidatePluginStateInterface;
 use Pronto\MobileBundle\Form\PushNotificationForm;
+use Pronto\MobileBundle\Request\PushNotificationRequest;
 use Pronto\MobileBundle\Utils\Date;
 use Pronto\MobileBundle\Utils\Doctrine\GroupClause;
 use Pronto\MobileBundle\Utils\Doctrine\LeftJoinClause;
@@ -17,9 +21,6 @@ use Pronto\MobileBundle\Utils\Doctrine\SelectClause;
 use Pronto\MobileBundle\Utils\Doctrine\WhereClause;
 use Pronto\MobileBundle\Utils\Doctrine\WhereNotNullClause;
 use Pronto\MobileBundle\Utils\PageHelper;
-use Pronto\MobileBundle\EventSubscriber\ValidateApplicationSelectionInterface;
-use Pronto\MobileBundle\EventSubscriber\ValidateCustomerSelectionInterface;
-use Pronto\MobileBundle\EventSubscriber\ValidatePluginStateInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -110,7 +111,9 @@ class PushNotificationController extends BaseController implements ValidateCusto
 
 		$segments = $entityManager->getRepository(Segment::class)->findBy(['application' => $this->getApplication()]);
 
-		$form = $this->createForm(PushNotificationForm::class, $notification, [
+		$notificationRequest = PushNotificationRequest::fromEntity($notification);
+
+		$form = $this->createForm(PushNotificationForm::class, $notificationRequest, [
 			'segments'        => $segments,
 			'json_translator' => $this->get('pronto_mobile.global.json_translator'),
 			'entityManager'   => $entityManager
@@ -178,7 +181,7 @@ class PushNotificationController extends BaseController implements ValidateCusto
 
 		// Get the translated fields
 		foreach ($body as $key => $value) {
-			list($language, $field) = explode('_', $key);
+			[$language, $field] = explode('_', $key);
 
 			$translations[$field][$language] = $value;
 		}

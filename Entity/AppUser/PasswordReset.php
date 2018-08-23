@@ -3,9 +3,8 @@
 namespace Pronto\MobileBundle\Entity\AppUser;
 
 use DateTime;
-use Pronto\MobileBundle\Entity\AppUser;
 use Doctrine\ORM\Mapping as ORM;
-use Pronto\MobileBundle\Entity\User;
+use Pronto\MobileBundle\Entity\AppUser;
 use Ramsey\Uuid\Uuid;
 
 

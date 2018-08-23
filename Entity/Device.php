@@ -3,11 +3,11 @@
 namespace Pronto\MobileBundle\Entity;
 
 use DateTime;
-use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection as DoctrineCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Pronto\MobileBundle\Traits\ApiEntityTrait;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Serializer\Annotation\Groups;
-use Pronto\MobileBundle\Traits\ApiEntityTrait;
 
 /**
  * Class Device
@@ -482,18 +482,18 @@ class Device implements ApiEntityInterface
 
 
 	/**
-	 * @param array $extraData
+	 * @param array|object|null $extraData
 	 */
-	public function setExtraData(array $extraData): void
+	public function setExtraData($extraData): void
 	{
 		$this->extraData = $extraData;
 	}
 
 
 	/**
-	 * @return ArrayCollection
+	 * @return DoctrineCollection
 	 */
-	public function getPushNotificationRecipients(): ArrayCollection
+	public function getPushNotificationRecipients(): DoctrineCollection
 	{
 		return $this->pushNotificationRecipients;
 	}

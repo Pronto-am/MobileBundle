@@ -6,6 +6,7 @@ use Pronto\MobileBundle\Controller\BaseController;
 use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\Application\Version;
 use Pronto\MobileBundle\Form\Application\VersionForm;
+use Pronto\MobileBundle\Request\Application\VersionRequest;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -28,12 +29,17 @@ class VersionController extends BaseController
 
 		$applicationVersion = $id !== null ? $entityManager->getRepository(Version::class)->find($id) : null;
 
-		$form = $this->createForm(VersionForm::class, $applicationVersion);
+		$versionRequest = VersionRequest::fromEntity($applicationVersion);
+
+		$form = $this->createForm(VersionForm::class, $versionRequest);
 
 		$form->handleRequest($request);
 
 		if ($form->isSubmitted() && $form->isValid()) {
-			$applicationVersion = $form->getData();
+			/** @var VersionRequest $versionRequest */
+			$versionRequest = $form->getData();
+			$applicationVersion = $versionRequest->toEntity($applicationVersion);
+
 			$applicationVersion->setApplication($application);
 
 			$entityManager->persist($applicationVersion);

@@ -6,6 +6,7 @@ use Pronto\MobileBundle\Controller\BaseController;
 use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\Application\Version;
 use Pronto\MobileBundle\Form\ApplicationForm;
+use Pronto\MobileBundle\Request\ApplicationRequest;
 use Pronto\MobileBundle\Service\LanguagesLoader;
 use Pronto\MobileBundle\Utils\Doctrine\WhereClause;
 use Pronto\MobileBundle\Utils\PageHelper;
@@ -55,7 +56,9 @@ class ApplicationController extends BaseController
 			return $this->redirectToRoute('pronto_mobile_applications');
 		}
 
-		$form = $this->createForm(ApplicationForm::class, $application, [
+		$applicationRequest = ApplicationRequest::fromEntity($application);
+
+		$form = $this->createForm(ApplicationForm::class, $applicationRequest, [
 			'languages' => $languages,
 			'locale'    => $request->getLocale()
 		]);
@@ -68,14 +71,13 @@ class ApplicationController extends BaseController
 		$form->handleRequest($request);
 
 		if ($form->isSubmitted() && $form->isValid()) {
-			/** @var Application $application */
-			$application = $form->getData();
+			/** @var ApplicationRequest $applicationRequest */
+			$applicationRequest = $form->getData();
+			$application = $applicationRequest->toEntity($application);
 
 			$application->setCustomer($customer);
 
 			$defaultLanguage = $form->get('defaultLanguage')->getData();
-
-			$application->setDefaultLanguage($defaultLanguage->code);
 
 			$availableLanguages = $application->getAvailableLanguages();
 

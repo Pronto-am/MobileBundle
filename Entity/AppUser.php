@@ -3,15 +3,13 @@
 namespace Pronto\MobileBundle\Entity;
 
 use DateTime;
-use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection as DoctrineCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Pronto\MobileBundle\Entity\ApiEntityInterface;
-use Pronto\MobileBundle\Utils\ErrorResponse;
+use Pronto\MobileBundle\Traits\ApiEntityTrait;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
-use Pronto\MobileBundle\Traits\ApiEntityTrait;
 
 
 /**
@@ -65,7 +63,7 @@ class AppUser extends TimestampedEntity implements UserInterface, ApiEntityInter
 
 
 	/**
-	 * @ORM\Column(type="string", unique=true)
+	 * @ORM\Column(type="string")
 	 * @Assert\NotBlank()
 	 * @Assert\Email()
 	 *
@@ -244,9 +242,9 @@ class AppUser extends TimestampedEntity implements UserInterface, ApiEntityInter
 
 
 	/**
-	 * @return string
+	 * @return string|null
 	 */
-	public function getPlainPassword(): string
+	public function getPlainPassword(): ?string
 	{
 		return $this->plainPassword;
 	}
@@ -345,9 +343,9 @@ class AppUser extends TimestampedEntity implements UserInterface, ApiEntityInter
 
 
 	/**
-	 * @return ArrayCollection
+	 * @return DoctrineCollection
 	 */
-	public function getDevices(): ArrayCollection
+	public function getDevices(): DoctrineCollection
 	{
 		return $this->devices;
 	}

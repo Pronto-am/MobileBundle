@@ -3,13 +3,13 @@
 namespace Pronto\MobileBundle\Command\Firebase;
 
 
-use Pronto\MobileBundle\Entity\AppUser;
-use Pronto\MobileBundle\Entity\Device;
-use Pronto\MobileBundle\Entity\PushNotification\Recipient;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Kreait\Firebase\Factory;
+use Pronto\MobileBundle\Entity\AppUser;
+use Pronto\MobileBundle\Entity\Device;
+use Pronto\MobileBundle\Entity\PushNotification\Recipient;
 use Pronto\MobileBundle\Service\ProntoMobile;
 use Pronto\MobileBundle\Service\PushNotification\GoogleServiceAccountLoader;
 use Symfony\Component\Console\Command\Command;

@@ -4,7 +4,6 @@ namespace Pronto\MobileBundle\Utils\Collection\Property;
 
 
 use Pronto\MobileBundle\Entity\Collection\Property;
-use Exception;
 use Symfony\Component\HttpFoundation\FileBag;
 
 class BaseType implements PropertyType

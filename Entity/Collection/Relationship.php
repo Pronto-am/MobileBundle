@@ -2,11 +2,10 @@
 
 namespace Pronto\MobileBundle\Entity\Collection;
 
-use Doctrine\ORM\Cache\CollectionCacheEntry;
+use Doctrine\ORM\Mapping as ORM;
 use Pronto\MobileBundle\Entity\Collection;
 use Pronto\MobileBundle\Entity\Collection\Relationship\Type;
 use Pronto\MobileBundle\Entity\TimestampedEntity;
-use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 

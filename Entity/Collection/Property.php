@@ -2,10 +2,10 @@
 
 namespace Pronto\MobileBundle\Entity\Collection;
 
+use Doctrine\ORM\Mapping as ORM;
 use Pronto\MobileBundle\Entity\Collection;
 use Pronto\MobileBundle\Entity\Collection\Property\Type;
 use Pronto\MobileBundle\Entity\TimestampedEntity;
-use Doctrine\ORM\Mapping as ORM;
 
 
 /**

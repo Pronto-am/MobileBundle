@@ -26,13 +26,13 @@
                                     {% if loop.first %}<a href="{{ path('pronto_mobile_applications_edit', {id: application.id}) }}" class="regular">{{ application.name }}</a> {% if application.label != '' %}<span class="label" style="background-color: #{{ application.color }};">{{ application.label }}</span>{% endif %}{% endif %}
                                 </td>
                                 <td>
-                                    <a href="{{ path('pronto_mobile_application_versions_edit', {application: application.id, 'id': version.id}) }}" class="regular">{{ version.name|capitalize }}</a>
+                                    <a href="{{ path('pronto_mobile_application_versions_edit', {applicationId: application.id, 'id': version.id}) }}" class="regular">{{ version.name|capitalize }}</a>
                                 </td>
                             </tr>
                         {% endfor %}
                         <tr class="bottom-border {{ key % 2 == 0 ? 'stripe' : '' }}">
                             <td colspan="2"></td>
-                            <td colspan="2"><a href="{{ path('pronto_mobile_application_versions_edit', {application: application.id}) }}" class="regular">{{ 'application.new_version'|trans|capitalize }}</a></td>
+                            <td colspan="2"><a href="{{ path('pronto_mobile_application_versions_edit', {applicationId: application.id}) }}" class="regular">{{ 'application.new_version'|trans|capitalize }}</a></td>
                         </tr>
                     {% endfor %}
                     </tbody>

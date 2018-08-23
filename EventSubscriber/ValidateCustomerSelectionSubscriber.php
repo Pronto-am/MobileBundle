@@ -3,10 +3,10 @@
 namespace Pronto\MobileBundle\EventSubscriber;
 
 
+use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Pronto\MobileBundle\Entity\Customer;
 use Pronto\MobileBundle\Exceptions\InvalidCustomerSelectionException;
-use Doctrine\ORM\EntityManagerInterface;
 use Pronto\MobileBundle\Service\ProntoMobile;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;

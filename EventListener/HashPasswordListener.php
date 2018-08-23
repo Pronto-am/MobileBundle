@@ -3,9 +3,9 @@
 namespace Pronto\MobileBundle\EventListener;
 
 
+use Doctrine\ORM\Event\LifecycleEventArgs;
 use Pronto\MobileBundle\Entity\AppUser;
 use Pronto\MobileBundle\Entity\User;
-use Doctrine\ORM\Event\LifecycleEventArgs;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class HashPasswordListener

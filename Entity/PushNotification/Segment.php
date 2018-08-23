@@ -5,8 +5,8 @@ namespace Pronto\MobileBundle\Entity\PushNotification;
 use Doctrine\ORM\Mapping as ORM;
 use Pronto\MobileBundle\Entity\ApiEntityInterface;
 use Pronto\MobileBundle\Entity\Application;
-use Symfony\Component\Validator\Constraints as Assert;
 use Pronto\MobileBundle\Traits\ApiEntityTrait;
+use Symfony\Component\Validator\Constraints as Assert;
 
 
 /**

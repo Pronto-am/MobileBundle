@@ -5,6 +5,7 @@ namespace Pronto\MobileBundle\Controller\Web;
 use Pronto\MobileBundle\Controller\BaseController;
 use Pronto\MobileBundle\Entity\Customer;
 use Pronto\MobileBundle\Form\CustomerForm;
+use Pronto\MobileBundle\Request\CustomerRequest;
 use Pronto\MobileBundle\Utils\Str;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -71,7 +72,9 @@ class CustomerController extends BaseController
 		$form->handleRequest($request);
 
 		if ($form->isSubmitted() && $form->isValid()) {
-			$customer = $form->getData();
+			/** @var CustomerRequest $customerRequest */
+			$customerRequest = $form->getData();
+			$customer = $customerRequest->toEntity();
 
 			$entityManager = $this->getDoctrine()->getManager();
 			$entityManager->persist($customer);
@@ -109,12 +112,16 @@ class CustomerController extends BaseController
 
 		$file = $originalCustomer->getLogo();
 
-		$form = $this->createForm(CustomerForm::class, $originalCustomer);
+		$customerRequest = CustomerRequest::fromEntity($originalCustomer);
+
+		$form = $this->createForm(CustomerForm::class, $customerRequest);
 
 		$form->handleRequest($request);
 
 		if ($form->isSubmitted() && $form->isValid()) {
-			$customer = $form->getData();
+			/** @var CustomerRequest $customerRequest */
+			$customerRequest = $form->getData();
+			$customer = $customerRequest->toEntity($originalCustomer);
 
 			if ($file !== null && $customer->getLogo() === null) {
 				$customer->setLogo($file->getFileName());

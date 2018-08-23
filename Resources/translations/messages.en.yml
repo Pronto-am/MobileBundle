@@ -250,7 +250,7 @@ push_notification.inconsistent_title: Inconsistent input
 push_notification.inconsistent_content: The provided input for some fields is inconsistent with other inputs, which means that not all translations are provided. These fields contain a warning message. When you want to continue anyway, the value of the default language will be used when the input field of a specific language is empty.
 push_notification.confirmation_content: You are about to send a notification to these devices. Click on OK to continue, or Cancel to change the notification.
 push_notification.invalid_form_title: Incorrect input
-push_notification.invalid_form_content: You haven't filled in all required fields, or the input is incorrect. Please correct the input at the fields with a warning message.
+push_notification.invalid_form_content: "You haven't filled in all required fields, or the input is incorrect. Please correct the input at the fields with a warning message."
 push_notification.send_anyway: Send anyway
 push_notification.click_statistics: Click statistics
 push_notification.platform_statistics: Platform statistics
@@ -288,10 +288,11 @@ device.app_version: App version
 device.last_login: Last logged in
 device.language: Device language
 device.extra_data: Extra data
-device.test_device: Test device
 device.mark_as_test_device: Mark this device as a test device
 device.is_test_device: Test device
 device.browser: Browser
+device.test_device: Test device
+device.test_devices: Test devices
 
 plugin: plugin
 plugins: plugins

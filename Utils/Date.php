@@ -4,7 +4,6 @@ namespace Pronto\MobileBundle\Utils;
 
 
 use DateTime;
-use DateTimeZone;
 
 class Date
 {

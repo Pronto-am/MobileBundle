@@ -3,8 +3,8 @@
 namespace Pronto\MobileBundle\Exceptions;
 
 
-use Pronto\MobileBundle\Utils\Responses\ErrorResponse;
 use Exception;
+use Pronto\MobileBundle\Utils\Responses\ErrorResponse;
 use Throwable;
 
 class ApiException extends Exception

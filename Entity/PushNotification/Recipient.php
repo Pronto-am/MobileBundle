@@ -3,10 +3,10 @@
 namespace Pronto\MobileBundle\Entity\PushNotification;
 
 use DateTime;
+use Doctrine\ORM\Mapping as ORM;
 use Pronto\MobileBundle\Entity\ApiEntityInterface;
 use Pronto\MobileBundle\Entity\Device;
 use Pronto\MobileBundle\Entity\PushNotification;
-use Doctrine\ORM\Mapping as ORM;
 use Pronto\MobileBundle\Traits\ApiEntityTrait;
 
 

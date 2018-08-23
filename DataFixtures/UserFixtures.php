@@ -3,9 +3,9 @@
 namespace Pronto\MobileBundle\DataFixtures;
 
 
-use Pronto\MobileBundle\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
+use Pronto\MobileBundle\Entity\User;
 
 class UserFixtures extends Fixture
 {

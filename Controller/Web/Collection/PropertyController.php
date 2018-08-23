@@ -7,10 +7,11 @@ use Pronto\MobileBundle\Entity\Collection;
 use Pronto\MobileBundle\Entity\Collection\Property;
 use Pronto\MobileBundle\Entity\Collection\Property\Type;
 use Pronto\MobileBundle\Entity\Plugin;
-use Pronto\MobileBundle\Form\Collection\PropertyForm;
 use Pronto\MobileBundle\EventSubscriber\ValidateApplicationSelectionInterface;
 use Pronto\MobileBundle\EventSubscriber\ValidateCustomerSelectionInterface;
 use Pronto\MobileBundle\EventSubscriber\ValidatePluginStateInterface;
+use Pronto\MobileBundle\Form\Collection\PropertyForm;
+use Pronto\MobileBundle\Request\Collection\PropertyRequest;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -46,12 +47,11 @@ class PropertyController extends BaseController implements ValidatePluginStateIn
 	/**
 	 * Edit a property
 	 *
-	 * @param Request $request
 	 * @param $identifier
 	 * @param Property|null $property
 	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
 	 */
-	public function editAction(Request $request, $identifier, Property $property = null)
+	public function editAction($identifier, Property $property = null)
 	{
 		$entityManager = $this->getDoctrine()->getManager();
 
@@ -62,7 +62,10 @@ class PropertyController extends BaseController implements ValidatePluginStateIn
 			'applicationVersion' => $this->getApplicationVersion()
 		]);
 
-		$form = $this->createForm(PropertyForm::class, $property, [
+		// Create the form request from the entity
+		$propertyRequest = PropertyRequest::fromEntity($property);
+
+		$form = $this->createForm(PropertyForm::class, $propertyRequest, [
 			'types' => $types
 		]);
 

@@ -2,10 +2,9 @@
 
 namespace Pronto\MobileBundle\Entity\Application;
 
+use Doctrine\ORM\Mapping as ORM;
 use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\Plugin;
-use Doctrine\ORM\Mapping as ORM;
-use Pronto\MobileBundle\Tests\Mocks\ApplicationMock;
 
 
 /**

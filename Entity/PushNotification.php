@@ -3,13 +3,12 @@
 namespace Pronto\MobileBundle\Entity;
 
 use DateTime;
-use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection as DoctrineCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Pronto\MobileBundle\Entity\ApiEntityInterface;
 use PascalDeVink\ShortUuid\ShortUuid;
 use Pronto\MobileBundle\Entity\PushNotification\Segment;
-use Ramsey\Uuid\Uuid;
 use Pronto\MobileBundle\Traits\ApiEntityTrait;
+use Ramsey\Uuid\Uuid;
 
 
 /**
@@ -382,9 +381,9 @@ class PushNotification implements ApiEntityInterface
 
 
 	/**
-	 * @return ArrayCollection
+	 * @return DoctrineCollection
 	 */
-	public function getPushNotificationRecipients(): ArrayCollection
+	public function getPushNotificationRecipients(): DoctrineCollection
 	{
 		return $this->pushNotificationRecipients;
 	}

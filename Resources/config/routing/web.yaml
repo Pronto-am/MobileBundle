@@ -99,7 +99,7 @@ applications_delete:
 #### APPLICATION VERSIONS ####
 
 application_versions_edit:
-    path: /applications/versions/edit/{id}
+    path: /applications/{applicationId}/versions/edit/{id}
     defaults:
         _controller: ProntoMobileBundle:Web\Application\Version:edit
         id: null

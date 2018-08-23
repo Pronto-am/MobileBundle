@@ -2,8 +2,8 @@
 
 namespace Pronto\MobileBundle\Repository\Application;
 
-use Pronto\MobileBundle\Entity\Application;
 use Doctrine\ORM\EntityRepository;
+use Pronto\MobileBundle\Entity\Application;
 
 class PluginRepository extends EntityRepository
 {

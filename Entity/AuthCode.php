@@ -2,8 +2,8 @@
 
 namespace Pronto\MobileBundle\Entity;
 
-use FOS\OAuthServerBundle\Entity\AuthCode as BaseAuthCode;
 use Doctrine\ORM\Mapping as ORM;
+use FOS\OAuthServerBundle\Entity\AuthCode as BaseAuthCode;
 use Ramsey\Uuid\Uuid;
 
 /**

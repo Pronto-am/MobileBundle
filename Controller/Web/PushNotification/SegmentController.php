@@ -6,14 +6,14 @@ use Pronto\MobileBundle\Controller\BaseController;
 use Pronto\MobileBundle\Entity\Device;
 use Pronto\MobileBundle\Entity\Plugin;
 use Pronto\MobileBundle\Entity\PushNotification\Segment;
+use Pronto\MobileBundle\EventSubscriber\ValidateApplicationSelectionInterface;
+use Pronto\MobileBundle\EventSubscriber\ValidateCustomerSelectionInterface;
+use Pronto\MobileBundle\EventSubscriber\ValidatePluginStateInterface;
 use Pronto\MobileBundle\Utils\Doctrine\GroupClause;
 use Pronto\MobileBundle\Utils\Doctrine\LeftJoinClause;
 use Pronto\MobileBundle\Utils\Doctrine\SelectClause;
 use Pronto\MobileBundle\Utils\Doctrine\WhereClause;
 use Pronto\MobileBundle\Utils\PageHelper;
-use Pronto\MobileBundle\EventSubscriber\ValidateApplicationSelectionInterface;
-use Pronto\MobileBundle\EventSubscriber\ValidateCustomerSelectionInterface;
-use Pronto\MobileBundle\EventSubscriber\ValidatePluginStateInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 class SegmentController extends BaseController implements ValidateCustomerSelectionInterface, ValidateApplicationSelectionInterface, ValidatePluginStateInterface

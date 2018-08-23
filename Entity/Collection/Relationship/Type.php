@@ -2,7 +2,6 @@
 
 namespace Pronto\MobileBundle\Entity\Collection\Relationship;
 
-use Pronto\MobileBundle\Entity\TimestampedEntity;
 use Doctrine\ORM\Mapping as ORM;
 
 

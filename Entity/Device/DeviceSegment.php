@@ -2,9 +2,9 @@
 
 namespace Pronto\MobileBundle\Entity\Device;
 
+use Doctrine\ORM\Mapping as ORM;
 use Pronto\MobileBundle\Entity\Device;
 use Pronto\MobileBundle\Entity\PushNotification\Segment;
-use Doctrine\ORM\Mapping as ORM;
 
 
 /**

@@ -3,12 +3,9 @@
 namespace Pronto\MobileBundle\Utils\Firebase\CloudMessaging;
 
 
-use Pronto\MobileBundle\Entity\PushNotification;
 use Exception;
-use Kreait\Firebase\Factory;
-use Kreait\Firebase\ServiceAccount;
+use Pronto\MobileBundle\Entity\PushNotification;
 use Pronto\MobileBundle\Service\PushNotification\GoogleServiceAccountLoader;
-use Symfony\Component\HttpKernel\Kernel;
 
 class MessageGroup
 {

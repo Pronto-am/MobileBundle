@@ -2,13 +2,13 @@
 
 namespace Pronto\MobileBundle\Entity\Collection;
 
+use Doctrine\ORM\Mapping as ORM;
 use Pronto\MobileBundle\Entity\ApiEntityInterface;
 use Pronto\MobileBundle\Entity\Collection;
 use Pronto\MobileBundle\Entity\TimestampedWithUserEntity;
-use Doctrine\ORM\Mapping as ORM;
+use Pronto\MobileBundle\Traits\ApiEntityTrait;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Serializer\Annotation\Groups;
-use Pronto\MobileBundle\Traits\ApiEntityTrait;
 
 
 /**

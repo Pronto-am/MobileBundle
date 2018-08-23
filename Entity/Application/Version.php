@@ -2,10 +2,9 @@
 
 namespace Pronto\MobileBundle\Entity\Application;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Pronto\MobileBundle\Entity\Application;
+use Doctrine\Common\Collections\Collection as DoctrineCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Pronto\MobileBundle\Tests\Mocks\ApplicationMock;
+use Pronto\MobileBundle\Entity\Application;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
@@ -95,9 +94,9 @@ class Version
 
 
 	/**
-	 * @return ArrayCollection
+	 * @return DoctrineCollection
 	 */
-	public function getCollections(): ArrayCollection
+	public function getCollections(): DoctrineCollection
 	{
 		return $this->collections;
 	}

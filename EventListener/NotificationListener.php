@@ -3,15 +3,15 @@
 namespace Pronto\MobileBundle\EventListener;
 
 
-use Pronto\MobileBundle\Entity\Application\ApplicationPlugin;
-use Pronto\MobileBundle\Entity\Plugin;
-use Pronto\MobileBundle\Entity\PushNotification;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Exception;
 use Kreait\Firebase\Factory;
 use League\Flysystem\FileExistsException;
 use League\Flysystem\FileNotFoundException;
+use Pronto\MobileBundle\Entity\Application\ApplicationPlugin;
+use Pronto\MobileBundle\Entity\Plugin;
+use Pronto\MobileBundle\Entity\PushNotification;
 use Pronto\MobileBundle\Service\PushNotification\GoogleServiceAccountLoader;
 use Psr\Log\LoggerInterface;
 

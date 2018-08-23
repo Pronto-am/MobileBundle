@@ -2,8 +2,8 @@
 
 namespace Pronto\MobileBundle\Repository\Collection;
 
-use Pronto\MobileBundle\Entity\Collection;
 use Doctrine\ORM\EntityRepository;
+use Pronto\MobileBundle\Entity\Collection;
 
 class PropertyRepository extends EntityRepository
 {

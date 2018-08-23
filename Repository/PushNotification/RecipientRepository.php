@@ -2,9 +2,9 @@
 
 namespace Pronto\MobileBundle\Repository\PushNotification;
 
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Pronto\MobileBundle\Entity\PushNotification;
-use Doctrine\ORM\EntityRepository;
 
 class RecipientRepository extends EntityRepository
 {

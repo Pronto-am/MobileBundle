@@ -3,10 +3,10 @@
 namespace Pronto\MobileBundle\EventListener;
 
 
-use Pronto\MobileBundle\Entity\AccessToken;
-use Pronto\MobileBundle\Entity\AppUser;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\LifecycleEventArgs;
+use Pronto\MobileBundle\Entity\AccessToken;
+use Pronto\MobileBundle\Entity\AppUser;
 
 class AccessTokenListener
 {

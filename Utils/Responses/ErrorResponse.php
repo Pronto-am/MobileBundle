@@ -82,8 +82,10 @@ class ErrorResponse extends BaseResponse
 
 		// Generate the main content
 		$content = [
-			'code'    => $this->getStatus(),
-			'message' => $message ?? $this->getMessage()
+			'error' => [
+				'code'    => $this->getStatus(),
+				'message' => $message ?? $this->getMessage()
+			]
 		];
 
 		// Set the optional data

@@ -82,11 +82,10 @@ class DeviceController extends BaseApiController
 
 	/**
 	 * @param Request $request
-	 * @param JsonSerializer $serializer
 	 * @return \Symfony\Component\HttpFoundation\JsonResponse
 	 * @throws \Pronto\MobileBundle\Exceptions\ApiException
 	 */
-	public function registerAction(Request $request, JsonSerializer $serializer)
+	public function registerAction(Request $request)
 	{
 		// Validate the authorization
 		$this->validateAuthorization($request);
@@ -123,6 +122,8 @@ class DeviceController extends BaseApiController
 				'application' => $application
 			]);
 		}
+
+		$serializer = $this->get('pronto_mobile.global.json_serializer');
 
 		if ($device !== null) {
 			if ($device->getTokenState()) {

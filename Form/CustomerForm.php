@@ -4,6 +4,7 @@ namespace Pronto\MobileBundle\Form;
 
 
 use Pronto\MobileBundle\Entity\Customer;
+use Pronto\MobileBundle\Request\CustomerRequest;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -51,6 +52,7 @@ class CustomerForm extends AbstractType
 			]);
 
 		$builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($options) {
+			/** @var CustomerRequest $customer */
 			$customer = $event->getData();
 			$form = $event->getForm();
 
@@ -60,21 +62,21 @@ class CustomerForm extends AbstractType
 					'attr'  => [
 						'class' => 'jscolor'
 					],
-					'data'  => $customer === null ? '2a9d8f' : $customer->getPrimaryColor(),
+					'data'  => $customer === null ? '2a9d8f' : $customer->primaryColor,
 					'label' => 'customer.primary_color'
 				])
 				->add('secondaryColor', null, [
 					'attr'  => [
 						'class' => 'jscolor'
 					],
-					'data'  => $customer === null ? 'ffa801' : $customer->getSecondaryColor(),
+					'data'  => $customer === null ? 'ffa801' : $customer->secondaryColor,
 					'label' => 'customer.secondary_color'
 				])
 				->add('sidebarColor', null, [
 					'attr'  => [
 						'class' => 'jscolor'
 					],
-					'data'  => $customer === null ? '40474f' : $customer->getSidebarColor(),
+					'data'  => $customer === null ? '40474f' : $customer->sidebarColor,
 					'label' => 'customer.sidebar_color'
 				]);
 
@@ -87,7 +89,7 @@ class CustomerForm extends AbstractType
 	public function configureOptions(OptionsResolver $resolver): void
 	{
 		$resolver->setDefaults([
-			'data_class' => Customer::class
+			'data_class' => CustomerRequest::class
 		]);
 	}
 }

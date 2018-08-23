@@ -4,16 +4,15 @@ namespace Pronto\MobileBundle\EventListener;
 
 
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Event\LifecycleEventArgs;
 use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\Customer;
 use Pronto\MobileBundle\Service\FileUploader;
-use Doctrine\ORM\Event\LifecycleEventArgs;
 use Pronto\MobileBundle\Service\ProntoMobile;
 use Pronto\MobileBundle\Utils\Str;
 use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class CustomerListener

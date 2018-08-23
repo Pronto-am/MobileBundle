@@ -5,7 +5,6 @@ namespace Pronto\MobileBundle\Controller\Web;
 use Pronto\MobileBundle\Controller\BaseController;
 use Pronto\MobileBundle\Entity\Application\ApplicationPlugin;
 use Pronto\MobileBundle\EventSubscriber\ValidateCustomerSelectionInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 class DefaultController extends BaseController implements ValidateCustomerSelectionInterface
 {

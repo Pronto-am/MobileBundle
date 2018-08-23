@@ -3,10 +3,9 @@
 namespace Pronto\MobileBundle\Twig;
 
 
-use Symfony\Component\HttpKernel\Config\FileLocator;
+use Exception;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Twig\Extension\AbstractExtension;
-use Exception;
 use Twig\TwigFunction;
 use Twig_Function;
 

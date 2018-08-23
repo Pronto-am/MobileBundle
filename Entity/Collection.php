@@ -3,12 +3,12 @@
 namespace Pronto\MobileBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection as DoctrineCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Pronto\MobileBundle\Entity\ApiEntityInterface;
 use Pronto\MobileBundle\Entity\Application\Version;
+use Pronto\MobileBundle\Traits\ApiEntityTrait;
 use Pronto\MobileBundle\Utils\ErrorResponse;
 use Symfony\Component\Validator\Constraints as Assert;
-use Pronto\MobileBundle\Traits\ApiEntityTrait;
 
 
 /**
@@ -167,9 +167,9 @@ class Collection extends TimestampedEntity implements ApiEntityInterface
 
 
 	/**
-	 * @return ArrayCollection
+	 * @return DoctrineCollection
 	 */
-	public function getProperties(): ArrayCollection
+	public function getProperties(): DoctrineCollection
 	{
 		return $this->properties;
 	}
@@ -187,18 +187,18 @@ class Collection extends TimestampedEntity implements ApiEntityInterface
 
 
 	/**
-	 * @return ArrayCollection
+	 * @return DoctrineCollection
 	 */
-	public function getEntries(): ArrayCollection
+	public function getEntries(): DoctrineCollection
 	{
 		return $this->entries;
 	}
 
 
 	/**
-	 * @return ArrayCollection
+	 * @return DoctrineCollection
 	 */
-	public function getRelationships(): ArrayCollection
+	public function getRelationships(): DoctrineCollection
 	{
 		return $this->relationships;
 	}

@@ -2,13 +2,13 @@
 
 namespace Pronto\MobileBundle\Controller\Api\V1;
 
+use Exception;
 use Pronto\MobileBundle\Controller\Api\BaseApiController;
 use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\Application\Version;
 use Pronto\MobileBundle\Entity\Collection;
 use Pronto\MobileBundle\Entity\Collection\Entry;
 use Pronto\MobileBundle\Service\Collection\Retriever;
-use Exception;
 use Symfony\Component\HttpFoundation\Request;
 
 class CollectionController extends BaseApiController

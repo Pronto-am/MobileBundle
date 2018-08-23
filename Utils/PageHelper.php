@@ -3,12 +3,12 @@
 namespace Pronto\MobileBundle\Utils;
 
 
-use Pronto\MobileBundle\Utils\Doctrine\Clause;
-use Pronto\MobileBundle\Utils\Doctrine\GroupClause;
-use Pronto\MobileBundle\Utils\Doctrine\SelectClause;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;
 use Exception;
+use Pronto\MobileBundle\Utils\Doctrine\Clause;
+use Pronto\MobileBundle\Utils\Doctrine\GroupClause;
+use Pronto\MobileBundle\Utils\Doctrine\SelectClause;
 use Symfony\Component\HttpFoundation\Request;
 
 class PageHelper

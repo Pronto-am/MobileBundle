@@ -2,13 +2,11 @@
 
 namespace Pronto\MobileBundle\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection as DoctrineCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
-use Symfony\Component\Validator\Constraints as Assert;
 
 
 /**
@@ -17,7 +15,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Entity(repositoryClass="Pronto\MobileBundle\Repository\UserRepository")
  * @ORM\Table(name="users")
- * @UniqueEntity("email")
  * @ORM\HasLifecycleCallbacks
  */
 class User extends TimestampedEntity implements UserInterface
@@ -41,7 +38,6 @@ class User extends TimestampedEntity implements UserInterface
 
 	/**
 	 * @ORM\Column(type="string")
-	 * @Assert\NotBlank()
 	 *
 	 * @Groups({"TimestampedWithUserEntity"})
 	 */
@@ -58,7 +54,6 @@ class User extends TimestampedEntity implements UserInterface
 
 	/**
 	 * @ORM\Column(type="string")
-	 * @Assert\NotBlank()
 	 *
 	 * @Groups({"TimestampedWithUserEntity"})
 	 */
@@ -67,8 +62,6 @@ class User extends TimestampedEntity implements UserInterface
 
 	/**
 	 * @ORM\Column(type="string", unique=true)
-	 * @Assert\NotBlank()
-	 * @Assert\Email()
 	 */
 	private $email;
 
@@ -163,9 +156,9 @@ class User extends TimestampedEntity implements UserInterface
 
 
 	/**
-	 * @param string $insertion
+	 * @param string|null $insertion
 	 */
-	public function setInsertion(string $insertion): void
+	public function setInsertion(?string $insertion): void
 	{
 		$this->insertion = $insertion;
 	}
@@ -297,18 +290,18 @@ class User extends TimestampedEntity implements UserInterface
 
 
 	/**
-	 * @return ArrayCollection
+	 * @return DoctrineCollection
 	 */
-	public function getPushNotifications(): ArrayCollection
+	public function getPushNotifications(): DoctrineCollection
 	{
 		return $this->pushNotifications;
 	}
 
 
 	/**
-	 * @return ArrayCollection
+	 * @return DoctrineCollection
 	 */
-	public function getLogins(): ArrayCollection
+	public function getLogins(): DoctrineCollection
 	{
 		return $this->logins;
 	}
@@ -403,7 +396,7 @@ class User extends TimestampedEntity implements UserInterface
 	 */
 	public function getSalt(): ?string
 	{
-		//
+		return null;
 	}
 
 

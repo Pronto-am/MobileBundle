@@ -2,8 +2,8 @@
 
 namespace Pronto\MobileBundle\Repository;
 
-use Pronto\MobileBundle\Entity\Customer;
 use Doctrine\ORM\EntityRepository;
+use Pronto\MobileBundle\Entity\Customer;
 
 class UserRepository extends EntityRepository
 {
