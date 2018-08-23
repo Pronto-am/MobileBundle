@@ -89,7 +89,7 @@ class ResponseChunk
 	 * @param string $response JSON encoded response
 	 * @param array $tokens The tokens sent along with the request
 	 */
-	public function __construct($response, array $tokens)
+	public function __construct(string $response, array $tokens)
 	{
 		$this->response = json_decode($response, true);
 		$this->tokens = $tokens;
@@ -156,11 +156,11 @@ class ResponseChunk
 	/**
 	 * Check if the token needs to be updated
 	 *
-	 * @param $index
-	 * @param $deviceResults
+	 * @param string $index
+	 * @param array $deviceResults
 	 * @return bool
 	 */
-	private function tokenNeedsModification($index, $deviceResults): bool
+	private function tokenNeedsModification(string $index, array $deviceResults): bool
 	{
 		// Check if the we need to save the token as a to-be-modified token
 		if (isset($deviceResults['message_id'], $deviceResults['registration_id'])) {
@@ -179,11 +179,11 @@ class ResponseChunk
 	/**
 	 * Check if the token needs to be deleted
 	 *
-	 * @param $index
-	 * @param $deviceResults
+	 * @param string $index
+	 * @param array $deviceResults
 	 * @return bool
 	 */
-	private function tokenNeedsDeletion($index, $deviceResults): bool
+	private function tokenNeedsDeletion(string $index, array $deviceResults): bool
 	{
 		// Check if the we need to save the token as a to-be-modified token
 		if (isset($deviceResults['error']) && (
@@ -209,11 +209,11 @@ class ResponseChunk
 	/**
 	 * Check if the notification could not be delivered do to other reasons, for which we can retry sending the message
 	 *
-	 * @param $index
-	 * @param $deviceResults
+	 * @param string $index
+	 * @param array $deviceResults
 	 * @return bool
 	 */
-	private function needToRetry($index, $deviceResults): bool
+	private function needToRetry(string $index, array $deviceResults): bool
 	{
 		// Check if the we need to save the token as a to-be-modified token
 		if (isset($deviceResults['error']) && (
@@ -241,7 +241,7 @@ class ResponseChunk
 	 * @param $deviceResults
 	 * @return bool
 	 */
-	private function tokenLacksRegistration($deviceResults): bool
+	private function tokenLacksRegistration(array $deviceResults): bool
 	{
 		return isset($deviceResults['error']) && in_array(self::MISSING_REGISTRATION, $deviceResults);
 	}

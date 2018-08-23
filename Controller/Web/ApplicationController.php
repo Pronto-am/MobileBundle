@@ -10,6 +10,8 @@ use Pronto\MobileBundle\Request\ApplicationRequest;
 use Pronto\MobileBundle\Service\LanguagesLoader;
 use Pronto\MobileBundle\Utils\Doctrine\WhereClause;
 use Pronto\MobileBundle\Utils\PageHelper;
+use Pronto\MobileBundle\Utils\Responses\ErrorResponse;
+use Pronto\MobileBundle\Utils\Responses\SuccessResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -145,10 +147,12 @@ class ApplicationController extends BaseController
 			// Let the user change the application version
 			$request->getSession()->remove(Version::SESSION_IDENTIFIER);
 
-			return new JsonResponse(['error' => false, 'redirectUrl' => $this->generateUrl('pronto_mobile_select_application', [], UrlGeneratorInterface::ABSOLUTE_URL)]);
+			$response = new SuccessResponse(['redirectUrl' => $this->generateAbsoluteUrl('pronto_mobile_select_application')]);
+			return $response->create()->getJsonResponse();
 		}
 
-		return new JsonResponse(['error' => false, 'redirectUrl' => $this->generateUrl('pronto_mobile_applications', [], UrlGeneratorInterface::ABSOLUTE_URL)]);
+		$response = new SuccessResponse(['redirectUrl' => $this->generateAbsoluteUrl('pronto_mobile_applications')]);
+		return $response->create()->getJsonResponse();
 	}
 
 
@@ -206,13 +210,13 @@ class ApplicationController extends BaseController
 		$request->getSession()->remove('targetPath');
 
 		if ($id !== null) {
-			$response = new JsonResponse(['error' => false, 'url' => $this->generateUrl('pronto_mobile_homepage', [], UrlGeneratorInterface::ABSOLUTE_URL)]);
+			$response = new SuccessResponse(['url' => $this->generateAbsoluteUrl('pronto_mobile_homepage')]);
 
 			$request->getSession()->set(Version::SESSION_IDENTIFIER, $id);
 		} else {
-			$response = new JsonResponse(['error' => true, 'message' => 'No Id present']);
+			$response = new ErrorResponse([404, 'No Id present']);
 		}
 
-		return $response;
+		return $response->create()->getJsonResponse();
 	}
 }

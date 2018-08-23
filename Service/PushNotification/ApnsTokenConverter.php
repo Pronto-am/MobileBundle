@@ -25,7 +25,7 @@ class ApnsTokenConverter
 	 *
 	 * @param $bundle
 	 */
-	public function setBundle($bundle): void
+	public function setBundle(string $bundle): void
 	{
 		$this->bundle = $bundle;
 	}
@@ -66,7 +66,7 @@ class ApnsTokenConverter
 	 *
 	 * @param $serverKey
 	 */
-	public function setServerKey($serverKey): void
+	public function setServerKey(string $serverKey): void
 	{
 		$this->serverKey = $serverKey;
 	}
@@ -101,7 +101,7 @@ class ApnsTokenConverter
 			$response = $this->execute($chunk);
 
 			// If the response didn't contain an object, return false
-			if (is_bool($response) && !$response) {
+			if ($response === false) {
 				return false;
 			}
 
@@ -119,7 +119,7 @@ class ApnsTokenConverter
 	 * @param $chunk
 	 * @return mixed
 	 */
-	private function execute($chunk)
+	private function execute(array $chunk)
 	{
 		$client = new Client($this->serverKey);
 

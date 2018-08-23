@@ -51,9 +51,9 @@ class CustomerForm extends AbstractType
 				'required' => false
 			]);
 
-		$builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($options) {
-			/** @var CustomerRequest $customer */
-			$customer = $event->getData();
+		$builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+			/** @var CustomerRequest $customerRequest */
+			$customerRequest = $event->getData();
 			$form = $event->getForm();
 
 			/** @noinspection ExceptionsAnnotatingAndHandlingInspection */
@@ -62,21 +62,21 @@ class CustomerForm extends AbstractType
 					'attr'  => [
 						'class' => 'jscolor'
 					],
-					'data'  => $customer === null ? '2a9d8f' : $customer->primaryColor,
+					'data'  => $customerRequest === null ? '2a9d8f' : $customerRequest->primaryColor,
 					'label' => 'customer.primary_color'
 				])
 				->add('secondaryColor', null, [
 					'attr'  => [
 						'class' => 'jscolor'
 					],
-					'data'  => $customer === null ? 'ffa801' : $customer->secondaryColor,
+					'data'  => $customerRequest === null ? 'ffa801' : $customerRequest->secondaryColor,
 					'label' => 'customer.secondary_color'
 				])
 				->add('sidebarColor', null, [
 					'attr'  => [
 						'class' => 'jscolor'
 					],
-					'data'  => $customer === null ? '40474f' : $customer->sidebarColor,
+					'data'  => $customerRequest === null ? '40474f' : $customerRequest->sidebarColor,
 					'label' => 'customer.sidebar_color'
 				]);
 

@@ -6,6 +6,7 @@ use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\Application\Version;
 use Pronto\MobileBundle\Entity\Customer;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Translation\Translator;
 
 class BaseController extends Controller
@@ -58,6 +59,19 @@ class BaseController extends Controller
 			$type,
 			sprintf($message)
 		);
+	}
+
+
+	/**
+	 * Generate an absolute url
+	 *
+	 * @param string $route
+	 * @param array $parameters
+	 * @return string
+	 */
+	public function generateAbsoluteUrl(string $route, array $parameters = []): string
+	{
+		return $this->generateUrl($route, $parameters, UrlGeneratorInterface::ABSOLUTE_URL);
 	}
 
 

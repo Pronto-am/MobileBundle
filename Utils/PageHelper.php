@@ -64,7 +64,7 @@ class PageHelper
 	 * @param string $sortOrder
 	 * @param string $countField
 	 */
-	public function __construct(Request $request, EntityManager $entityManager, $entity, $perPage = 15, $sortField = 't.id', $sortOrder = 'ASC', $countField = 't.id')
+	public function __construct(Request $request, EntityManager $entityManager, string $entity, int $perPage = 15, string $sortField = 't.id', $sortOrder = 'ASC', $countField = 't.id')
 	{
 		$this->request = $request;
 		$this->perPage = $perPage;
@@ -104,7 +104,7 @@ class PageHelper
 	 * @param $label
 	 * @param $column
 	 */
-	public function createSortableLink($label, $column): void
+	public function createSortableLink(string $label, string $column): void
 	{
 		$active = $this->sortField === $column;
 
@@ -120,7 +120,7 @@ class PageHelper
 	 * @param $key
 	 * @return int
 	 */
-	public function getRowNumber($key): int
+	public function getRowNumber(int $key): int
 	{
 		return (($this->currentPage - 1) * $this->perPage) + $key + 1;
 	}
@@ -184,7 +184,7 @@ class PageHelper
 	 * @param QueryBuilder $query
 	 * @param bool $withoutSelect
 	 */
-	private function addClausesToQuery(&$query, $withoutSelect = false): void
+	private function addClausesToQuery(&$query, bool $withoutSelect = false): void
 	{
 		foreach ($this->clauses as $clause) {
 			if ($withoutSelect && ($clause instanceof SelectClause || $clause instanceof GroupClause)) {
@@ -311,7 +311,7 @@ class PageHelper
 	 * @param $pagination
 	 * @param $counter
 	 */
-	private function createSinglePageButton(&$pagination, $counter): void
+	private function createSinglePageButton(&$pagination, int $counter): void
 	{
 		if ($counter === $this->currentPage) {
 			$pagination .= '<li class="active"><a href="#!">' . $counter . '</a></li>';
@@ -353,7 +353,7 @@ class PageHelper
 	 * @param $page
 	 * @return string
 	 */
-	private function createPageLink($page): string
+	private function createPageLink(int $page): string
 	{
 		$queryString = str_replace('page=' . $this->currentPage, '', $this->request->getQueryString());
 

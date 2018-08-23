@@ -7,19 +7,24 @@ class SuccessResponse extends BaseResponse
 {
 	/**
 	 * SuccessResponse constructor.
+	 * @param array|null $data
 	 */
-	public function __construct()
+	public function __construct(array $data = null)
 	{
 		$this->setStatus(200);
+
+		if($data !== null) {
+			$this->setData($data);
+		}
 	}
 
 
 	/**
 	 * Create the response object
 	 *
-	 * @return void
+	 * @return self
 	 */
-	public function create(): void
+	public function create(): ResponseInterface
 	{
 		$response = [];
 
@@ -32,5 +37,7 @@ class SuccessResponse extends BaseResponse
 		}
 
 		$this->setContent($response);
+
+		return $this;
 	}
 }

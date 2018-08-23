@@ -53,7 +53,7 @@ class Sender
 	 * @param $firebaseServerKey
 	 * @return bool
 	 */
-	public function setServerKey($firebaseServerKey): bool
+	public function setServerKey(string $firebaseServerKey): bool
 	{
 		try {
 			$this->client = new Client($firebaseServerKey);
@@ -98,7 +98,7 @@ class Sender
 
 			$this->devices = array_merge($this->devices, $devices);
 
-			$messageGroups[] = new MessageGroup($this->notification, $this->googleServiceAccountLoader, $language['code'], $devices);
+			$messageGroups[] = new MessageGroup($this->notification, $this->googleServiceAccountLoader, $devices, $language['code']);
 		}
 
 		// Create another message group of left-over devices
@@ -106,7 +106,7 @@ class Sender
 
 		$this->devices = array_merge($this->devices, $devices);
 
-		$messageGroups[] = new MessageGroup($this->notification, $this->googleServiceAccountLoader, null, $devices);
+		$messageGroups[] = new MessageGroup($this->notification, $this->googleServiceAccountLoader, $devices);
 
 		$this->client->setMessageGroups($messageGroups);
 	}
@@ -241,12 +241,12 @@ class Sender
 	{
 		if (count($this->getTokensToDelete()) > 0) {
 			// Delete old tokens
-			$this->entityManager->getRepository('AppBundle:Device')->setDisabledByTokens($this->getTokensToDelete());
+			$this->entityManager->getRepository(Device::class)->setDisabledByTokens($this->getTokensToDelete());
 		}
 
 		// Update new tokens
 		foreach ($this->getTokensToModify() as $oldToken => $newToken) {
-			$this->entityManager->getRepository('AppBundle:Device')->updateToken($oldToken, $newToken);
+			$this->entityManager->getRepository(Device::class)->updateToken($oldToken, $newToken);
 		}
 	}
 

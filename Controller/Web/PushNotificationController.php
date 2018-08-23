@@ -21,6 +21,7 @@ use Pronto\MobileBundle\Utils\Doctrine\SelectClause;
 use Pronto\MobileBundle\Utils\Doctrine\WhereClause;
 use Pronto\MobileBundle\Utils\Doctrine\WhereNotNullClause;
 use Pronto\MobileBundle\Utils\PageHelper;
+use Pronto\MobileBundle\Utils\Responses\SuccessResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -305,6 +306,8 @@ class PushNotificationController extends BaseController implements ValidateCusto
 
 		$recipients = $this->getDoctrine()->getManager()->getRepository(PushNotification::class)->getRecipientCount($this->getApplication(), $segment, $test, $testDevices);
 
-		return new JsonResponse(['error' => false, 'recipients' => $recipients]);
+		$response = new SuccessResponse(['recipients' => $recipients]);
+
+		return $response->create()->getJsonResponse();
 	}
 }

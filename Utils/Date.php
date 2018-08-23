@@ -15,7 +15,7 @@ class Date
 	 * @param string $format
 	 * @return bool|DateTime
 	 */
-	public static function fromDateAndTime($date, $time, $format = 'd-m-Y H:i')
+	public static function fromDateAndTime(string $date, string $time, string $format = 'd-m-Y H:i')
 	{
 		return DateTime::createFromFormat($format, $date . ' ' . $time);
 	}

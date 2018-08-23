@@ -33,6 +33,11 @@ class HashPasswordListener
 	{
 		$entity = $args->getEntity();
 
+		// Only instances of app users and regular users need to be checked
+		if (!$entity instanceof User && !$entity instanceof AppUser) {
+			return;
+		}
+
 		$this->encodePassword($entity);
 	}
 
@@ -46,6 +51,11 @@ class HashPasswordListener
 	{
 		$entity = $args->getEntity();
 
+		// Only instances of app users and regular users need to be checked
+		if (!$entity instanceof User && !$entity instanceof AppUser) {
+			return;
+		}
+
 		$this->encodePassword($entity);
 
 		// To tell EventListener that the entity has been updated
@@ -58,24 +68,19 @@ class HashPasswordListener
 	/**
 	 * Encode the users' password
 	 *
-	 * @param User|AppUser|object $entity
+	 * @param User|AppUser|object $user
 	 */
-	private function encodePassword($entity): void
+	private function encodePassword($user): void
 	{
-		// Only instances of app users and regular users need to be checked
-		if (!$entity instanceof User && !$entity instanceof AppUser) {
-			return;
-		}
-
-		if (!$entity->getPlainPassword()) {
+		if (!$user->getPlainPassword()) {
 			return;
 		}
 
 		$encoded = $this->passwordEncoder->encodePassword(
-			$entity,
-			$entity->getPlainPassword()
+			$user,
+			$user->getPlainPassword()
 		);
 
-		$entity->setPassword($encoded);
+		$user->setPassword($encoded);
 	}
 }

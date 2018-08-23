@@ -69,9 +69,9 @@ class ErrorResponse extends BaseResponse
 	/**
 	 * Create the error message body
 	 *
-	 * @return void
+	 * @return self
 	 */
-	public function create(): void
+	public function create(): ResponseInterface
 	{
 		// Parse the entities name into the message if it's set
 		if ($this->entity !== null) {
@@ -94,5 +94,7 @@ class ErrorResponse extends BaseResponse
 		}
 
 		$this->setContent($content);
+
+		return $this;
 	}
 }

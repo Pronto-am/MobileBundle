@@ -14,7 +14,7 @@ class GroupClause implements Clause
 	 * GroupClause constructor.
 	 * @param $column
 	 */
-	public function __construct($column)
+	public function __construct(string $column)
 	{
 		$this->column = $column;
 	}

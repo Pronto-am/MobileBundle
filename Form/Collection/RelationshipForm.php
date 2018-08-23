@@ -38,7 +38,7 @@ class RelationshipForm extends AbstractType
 				],
 				'label'        => 'collection.relationship.type',
 				'choices'      => $options['types'],
-				'choice_label' => function (Collection\Relationship\Type $type, $key, $index) use ($options) {
+				'choice_label' => function (Collection\Relationship\Type $type, $key, $index) {
 					return ucfirst($type->getName());
 				},
 				'choice_value' => function (Collection\Relationship\Type $type = null) {
@@ -51,7 +51,7 @@ class RelationshipForm extends AbstractType
 				],
 				'label'        => 'collection.relationship.related_collection',
 				'choices'      => $options['collections'],
-				'choice_label' => function (Collection $collection, $key, $index) use ($options) {
+				'choice_label' => function (Collection $collection, $key, $index) {
 					return ucfirst($collection->getName());
 				},
 				'choice_value' => function (Collection $collection = null) {

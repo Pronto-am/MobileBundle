@@ -18,7 +18,7 @@ class WhereClause implements Clause
 	/**
 	 * WhereClause constructor.
 	 * @param string $field
-	 * @param $parameter
+	 * @param mixed $parameter
 	 * @param string $type
 	 */
 	public function __construct(string $field, $parameter, string $type = '=')

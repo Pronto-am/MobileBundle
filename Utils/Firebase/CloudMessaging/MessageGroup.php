@@ -33,10 +33,10 @@ class MessageGroup
 	 * MessageGroup constructor.
 	 * @param PushNotification $notification
 	 * @param GoogleServiceAccountLoader $googleServiceAccountLoader
-	 * @param null $language
 	 * @param array $devices
+	 * @param string|null $language
 	 */
-	public function __construct(PushNotification $notification, GoogleServiceAccountLoader $googleServiceAccountLoader, $language = null, array $devices)
+	public function __construct(PushNotification $notification, GoogleServiceAccountLoader $googleServiceAccountLoader, array $devices, string $language = null)
 	{
 		$this->notification = $notification;
 		$this->language = $language;

@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Class Type
  * @package Pronto\MobileBundle\Entity
  *
- * @ORM\Entity(repositoryClass="Pronto\MobileBundle\Repository\Collection\Property\TypeRepository")
+ * @ORM\Entity
  * @ORM\Table(name="collection_property_types")
  */
 class Type

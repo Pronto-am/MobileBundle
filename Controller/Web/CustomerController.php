@@ -6,6 +6,8 @@ use Pronto\MobileBundle\Controller\BaseController;
 use Pronto\MobileBundle\Entity\Customer;
 use Pronto\MobileBundle\Form\CustomerForm;
 use Pronto\MobileBundle\Request\CustomerRequest;
+use Pronto\MobileBundle\Utils\Responses\ErrorResponse;
+use Pronto\MobileBundle\Utils\Responses\SuccessResponse;
 use Pronto\MobileBundle\Utils\Str;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -46,14 +48,16 @@ class CustomerController extends BaseController
 		$id = $request->request->getInt('id');
 
 		if ($id !== null) {
-			$response = new JsonResponse(['error' => false, 'url' => $this->generateUrl('pronto_mobile_select_application', [], UrlGeneratorInterface::ABSOLUTE_URL)]);
+			$response = new SuccessResponse(['url' => $this->generateAbsoluteUrl('pronto_mobile_select_application')]);
 
 			$request->getSession()->set(Customer::SESSION_IDENTIFIER, $id);
 		} else {
-			$response = new JsonResponse(['error' => true, 'message' => 'No ID present']);
+			$response = new ErrorResponse([404, 'No ID present']);
 		}
 
-		return $response;
+		$response->create();
+
+		return $response->getJsonResponse();
 	}
 
 
@@ -106,7 +110,7 @@ class CustomerController extends BaseController
 		$uploadsFolder = $prontoMobile->getConfiguration('uploads_folder', 'uploads');
 
 		// The form requires an instance of File, so parse the filename to a File object
-		if (!empty($originalCustomer->getLogo())) {
+		if ($originalCustomer->getLogo() !== null) {
 			$originalCustomer->setLogo(new File(Str::removeSlashes($uploadsFolder, true, true) , '/customers/images/' . $originalCustomer->getLogo()));
 		}
 
@@ -163,6 +167,8 @@ class CustomerController extends BaseController
 			sprintf($translator->trans('account.removed'))
 		);
 
-		return new JsonResponse(['error' => false, 'redirectUrl' => $this->generateUrl('pronto_mobile_select_customer')]);
+		$response = new SuccessResponse(['redirectUrl' => $this->generateAbsoluteUrl('pronto_mobile_select_customer')]);
+
+		return $response->create()->getJsonResponse();
 	}
 }

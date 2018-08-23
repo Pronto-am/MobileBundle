@@ -10,11 +10,11 @@ class UserRepository extends EntityRepository
 	/**
 	 * Get the user by email and active state
 	 *
-	 * @param $email
+	 * @param string $email
 	 * @return mixed
 	 * @throws \Doctrine\ORM\NonUniqueResultException
 	 */
-	public function findActiveByEmail($email) {
+	public function findActiveByEmail(string $email) {
 		return $this->createQueryBuilder('user')
 			->andWhere('user.password IS NOT NULL')
 			->andWhere('user.activationToken IS NULL')

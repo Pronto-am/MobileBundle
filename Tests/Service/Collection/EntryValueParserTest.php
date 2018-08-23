@@ -37,21 +37,25 @@ class EntryValueParserTest extends TestCase
 	/**
 	 * Test parsing text
 	 */
-	public function testTextParser() {
+	public function testTextParser(): void
+	{
 		// Set up a list of users to return
 		$this->jsonTranslator->expects($this->once())->method('getTranslation')->willReturn('Translatable text');
-		$this->translator->expects($this->once())->method('trans')->willReturn('');
+		$this->translator->expects($this->never())->method('trans')->willReturn('');
 
 		/** @noinspection PhpParamsInspection */
 		$entryValueParser = new EntryValueParser($this->translator, $this->jsonTranslator);
 		$value = $entryValueParser->parse($this->applicationMock->getCollectionPropertyType(Type::TYPE_TEXT, true), ['en' => 'Translatable text']);
 
-		var_dump($value);
+		$this->assertEquals('Translatable text', $value);
 	}
 
 
-
-	private function createJsonTranslationService() {
+	/**
+	 * Create the json translation service
+	 */
+	private function createJsonTranslationService(): void
+	{
 		// Define the json translator service
 		$this->jsonTranslator = $this->getMockBuilder(JsonTranslator::class)
 			->setMethods(['getTranslation'])
@@ -60,7 +64,11 @@ class EntryValueParserTest extends TestCase
 	}
 
 
-	private function createTranslator() {
+	/**
+	 * Create the symfony translator
+	 */
+	private function createTranslator(): void
+	{
 		// Define the json translator service
 		$this->translator = $this->getMockBuilder(Translator::class)
 			->setMethods(['trans'])

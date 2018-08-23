@@ -43,10 +43,10 @@ class LanguagesLoader
 	/**
 	 * Get the language by code
 	 *
-	 * @param $code
+	 * @param string $code
 	 * @return mixed|null
 	 */
-	public function getByCode($code)
+	public function getByCode(string $code)
 	{
 		foreach ($this->languages as $language) {
 			if ($language->code === strtolower($code)) {

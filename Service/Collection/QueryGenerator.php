@@ -397,10 +397,10 @@ class QueryGenerator
 	/**
 	 * MariaDB JSON_UNQUOTE function
 	 *
-	 * @param $field
+	 * @param string $field
 	 * @return string
 	 */
-	private function jsonUnquote($field): string
+	private function jsonUnquote(string $field): string
 	{
 		return 'JSON_UNQUOTE(JSON_EXTRACT(entries.data, "$.' . $field . '"))';
 	}

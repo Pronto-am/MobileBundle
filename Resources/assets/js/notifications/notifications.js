@@ -288,7 +288,7 @@ $(document).ready(function () {
                     html += translations.segment + ': ' + $('#push_notification_form_segment option:selected').text() + '\n';
                 }
 
-                html += translations.deviceCount + ': ' + response.recipients + '\n';
+                html += translations.deviceCount + ': ' + response.data.recipients + '\n';
 
                 sweetalert.confirm(translations.confirmTitle, html, function () {
                     $('.loader-container:not(.page-loader-container)').fadeIn(200);

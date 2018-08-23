@@ -3,6 +3,7 @@
 namespace Pronto\MobileBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\PushNotification;
 
@@ -16,7 +17,7 @@ class DeviceRepository extends EntityRepository
 	 * @return mixed
 	 * @throws \Doctrine\ORM\NonUniqueResultException
 	 */
-	public function findRecipientsCountByApplication(Application $application, $isTest = false)
+	public function findRecipientsCountByApplication(Application $application, bool $isTest = false)
 	{
 		$query = $this->createQueryBuilder('devices')
 			->select('count(devices.id)')
@@ -39,7 +40,7 @@ class DeviceRepository extends EntityRepository
 	 * @param $isTest
 	 * @return mixed
 	 */
-	public function findRecipientsByApplication(Application $application, $isTest)
+	public function findRecipientsByApplication(Application $application, bool $isTest)
 	{
 		$query = $this->createQueryBuilder('devices')
 			->andWhere('devices.application = :application')
@@ -59,10 +60,10 @@ class DeviceRepository extends EntityRepository
 	 *
 	 * @param PushNotification $notification
 	 * @param string $language
-	 * @param $isTest
+	 * @param bool $isTest
 	 * @return mixed
 	 */
-	public function findNotificationRecipientsByLanguage(PushNotification $notification, $language, $isTest)
+	public function findNotificationRecipientsByLanguage(PushNotification $notification, string $language, bool $isTest)
 	{
 		$query = $this->createQueryBuilder('devices')
 			->select('devices.firebaseToken, devices.id')
@@ -95,7 +96,7 @@ class DeviceRepository extends EntityRepository
 	 * @param $isTest
 	 * @return mixed
 	 */
-	public function findNotificationRecipientsByExcludeLanguages(PushNotification $notification, array $excludeLanguages, $isTest)
+	public function findNotificationRecipientsByExcludeLanguages(PushNotification $notification, array $excludeLanguages, bool $isTest)
 	{
 		$query = $this->createQueryBuilder('devices')
 			->select('devices.firebaseToken, devices.id')
@@ -142,7 +143,7 @@ class DeviceRepository extends EntityRepository
 	 * @param array $tokens
 	 * @return \Doctrine\ORM\QueryBuilder
 	 */
-	public function setDisabledByTokens(array $tokens)
+	public function setDisabledByTokens(array $tokens): QueryBuilder
 	{
 		return $this->createQueryBuilder('devices')->update()
 			->set('devices.tokenState', 0)
@@ -160,7 +161,7 @@ class DeviceRepository extends EntityRepository
 	 * @param $newToken
 	 * @return \Doctrine\ORM\QueryBuilder
 	 */
-	public function updateToken($oldToken, $newToken)
+	public function updateToken($oldToken, $newToken): QueryBuilder
 	{
 		return $this->createQueryBuilder('devices')->update()
 			->set('devices.firebaseToken', ':newToken')
@@ -192,12 +193,12 @@ class DeviceRepository extends EntityRepository
 	/**
 	 * Update a token
 	 *
-	 * @param $applicationId
-	 * @param $apnsToken
-	 * @param $firebaseToken
+	 * @param int $applicationId
+	 * @param string $apnsToken
+	 * @param string $firebaseToken
 	 * @return \Doctrine\ORM\QueryBuilder
 	 */
-	public function addFirebaseToken($applicationId, $apnsToken, $firebaseToken)
+	public function addFirebaseToken(int $applicationId, string $apnsToken, string $firebaseToken): QueryBuilder
 	{
 		return $this->createQueryBuilder('devices')->update()
 			->set('devices.firebaseToken', ':firebaseToken')
