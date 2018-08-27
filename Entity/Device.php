@@ -23,8 +23,8 @@ class Device implements ApiEntityInterface
 
 
 	// Custom error messages
-	public const MISSING_APNS_OR_FIREBASE_TOKEN = [422, 'Either the firebaseToken or the apnsToken should be provided'];
-	public const DEVICE_ALREADY_REGISTERED = [422, 'This device is already registered'];
+	public const DEVICE_ALREADY_REGISTERED = [422, 22, 'This device is already registered'];
+	public const MISSING_APNS_OR_FIREBASE_TOKEN = [422, 23, 'Either the firebaseToken or the apnsToken should be provided'];
 
 
 	/**

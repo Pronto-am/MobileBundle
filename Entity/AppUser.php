@@ -23,9 +23,9 @@ class AppUser extends TimestampedEntity implements UserInterface, ApiEntityInter
 {
 	use ApiEntityTrait;
 
-	public const USER_ALREADY_REGISTERED = [409, 'This user is already registered'];
-	public const USER_NOT_ACTIVATED = [400, 'The users\' account hasn\'t been activated yet'];
-	public const EMAIL_ADDRESS_ALREADY_EXISTS = [409, 'An account with the provided email address already exists'];
+	public const USER_ALREADY_REGISTERED = [409, 1, 'This user is already registered'];
+	public const USER_NOT_ACTIVATED = [400, 2, 'The users\' account hasn\'t been activated yet'];
+	public const EMAIL_ADDRESS_ALREADY_EXISTS = [409, 3, 'An account with the provided email address already exists'];
 
 
 	/**

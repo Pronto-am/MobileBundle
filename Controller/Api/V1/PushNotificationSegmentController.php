@@ -6,6 +6,7 @@ use Pronto\MobileBundle\Controller\Api\BaseApiController;
 use Pronto\MobileBundle\Entity\Device;
 use Pronto\MobileBundle\Entity\Device\DeviceSegment;
 use Pronto\MobileBundle\Entity\PushNotification\Segment;
+use Pronto\MobileBundle\Utils\Responses\ErrorResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 class PushNotificationSegmentController extends BaseApiController
@@ -123,12 +124,11 @@ class PushNotificationSegmentController extends BaseApiController
 		// Validate the request body
 		$this->validateRequestContent($request, ['device_identifier', 'segments']);
 
-
 		$content = json_decode($request->getContent());
 
 		// Check if the segments property is an array
 		if (!is_array($content->segments)) {
-			$this->invalidParametersResponse(Segment::INVALID_SEGMENT_PARAMETER);
+			$this->invalidParametersResponse(Segment::INVALID_SEGMENT_PARAMETER, Segment::class);
 		}
 
 		$entityManager = $this->getDoctrine()->getManager();

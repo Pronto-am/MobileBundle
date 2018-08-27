@@ -93,8 +93,8 @@ class EntryParserTest extends TestCase
 				'insertion'  => null,
 				'last_name'  => 'Roovers',
 				'full_name'  => 'Thomas Roovers',
-				'created_at' => '2018-08-12T12:32:43+00:00',
-				'updated_at' => '2018-08-12T14:32:43+00:00'
+				'created_at' => '2018-08-12T12:32:43+02:00',
+				'updated_at' => '2018-08-12T14:32:43+02:00'
 			],
 			'updated_by' => [
 				'id'         => 1,
@@ -102,8 +102,8 @@ class EntryParserTest extends TestCase
 				'insertion'  => null,
 				'last_name'  => 'Roovers',
 				'full_name'  => 'Thomas Roovers',
-				'created_at' => '2018-08-12T12:32:43+00:00',
-				'updated_at' => '2018-08-12T14:32:43+00:00'
+				'created_at' => '2018-08-12T12:32:43+02:00',
+				'updated_at' => '2018-08-12T14:32:43+02:00'
 			],
 			'text'       => [
 				'en' => 'E-sites'
@@ -168,7 +168,7 @@ class EntryParserTest extends TestCase
 			'created_by' => null,
 			'updated_by' => null,
 			'visited'    => '14-08-2018',
-			'visited_at' => '2018-08-14T15:00:00+00:00'
+			'visited_at' => '2018-08-14T15:00:00+02:00'
 		];
 
 		$this->assertEquals([], array_diff(array_keys($entry), array_keys($entryShouldBe)));

@@ -22,7 +22,7 @@ class Segment implements ApiEntityInterface
 
 
 	// Custom entity error messages
-	public const INVALID_SEGMENT_PARAMETER = 'Segments has to be a list with the id and whether the device is subscribed or not';
+	public const INVALID_SEGMENT_PARAMETER = [422, 22, 'Segments has to be a list with the id and whether the device is subscribed or not'];
 
 
 	/**

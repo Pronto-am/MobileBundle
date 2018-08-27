@@ -116,7 +116,7 @@ class AppUserController extends BaseApiController
 		]);
 
 		if ($user !== null) {
-			$this->customErrorResponse(AppUser::USER_ALREADY_REGISTERED);
+			$this->customErrorResponse(AppUser::USER_ALREADY_REGISTERED, AppUser::class);
 		}
 
 		$user = new AppUser();
@@ -515,7 +515,7 @@ class AppUserController extends BaseApiController
 			]);
 
 			if (count($existingUsers) > 0) {
-				$this->customErrorResponse(AppUser::EMAIL_ADDRESS_ALREADY_EXISTS);
+				$this->customErrorResponse(AppUser::EMAIL_ADDRESS_ALREADY_EXISTS, AppUser::class);
 			}
 		}
 

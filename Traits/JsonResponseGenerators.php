@@ -66,16 +66,17 @@ trait JsonResponseGenerators
 	 * 500 - Custom error
 	 *
 	 * @param array $error
+	 * @param string $entity
 	 * @param null $data
 	 * @return void
 	 * @throws ApiException
 	 */
-	public function customErrorResponse(array $error, $data = null): void
+	public function customErrorResponse(array $error, string $entity = '', $data = null): void
 	{
-		$data = is_string($data) ? json_decode($data) : $data;
+		$data = is_string($data) ? json_decode($data, true) : $data;
 
 		$response = new ErrorResponse($error);
-		$response->setData($data)->create();
+		$response->forEntity($entity)->setData($data)->create();
 
 		throw new ApiException($response);
 	}
@@ -133,16 +134,17 @@ trait JsonResponseGenerators
 	 * 422 - Query parameters missing
 	 *
 	 * @param array|string $message
+	 * @param string $entity
 	 * @return void
 	 * @throws ApiException
 	 */
-	public function invalidParametersResponse($message): void
+	public function invalidParametersResponse($message, string $entity = ''): void
 	{
 		// The provided parameter may be string or array
 		$error = is_array($message) ? $message : [422, $message];
 
 		$response = new ErrorResponse($error);
-		$response->create();
+		$response->forEntity($entity)->create();
 
 		throw new ApiException($response);
 	}
