@@ -16,7 +16,7 @@ use Ramsey\Uuid\Uuid;
  * @package Pronto\MobileBundle\Entity
  *
  * @ORM\Entity(repositoryClass="Pronto\MobileBundle\Repository\PushNotificationRepository")
- * @ORM\Table(name="push_notifications")
+ * @ORM\Table(name="push_notifications", indexes={@ORM\Index(name="being_processed", columns={"being_processed"})})
  * @ORM\HasLifecycleCallbacks
  */
 class PushNotification implements ApiEntityInterface

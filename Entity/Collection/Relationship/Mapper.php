@@ -14,7 +14,7 @@ use Ramsey\Uuid\Uuid;
  * @package Pronto\MobileBundle\Entity
  *
  * @ORM\Entity(repositoryClass="Pronto\MobileBundle\Repository\Collection\Relationship\MapperRepository")
- * @ORM\Table(name="collection_relationship_mappers")
+ * @ORM\Table(name="collection_relationship_mappers", indexes={@ORM\Index(name="entry_left_id", columns={"entry_left_id"})})
  * @ORM\HasLifecycleCallbacks
  */
 class Mapper extends TimestampedEntity

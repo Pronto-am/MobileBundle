@@ -14,7 +14,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @package Pronto\MobileBundle\Entity
  *
  * @ORM\Entity(repositoryClass="Pronto\MobileBundle\Repository\DeviceRepository")
- * @ORM\Table(name="devices")
+ * @ORM\Table(name="devices", indexes={@ORM\Index(name="state_and_notifications", columns={"token_state", "push_notifications"})})
  * @ORM\HasLifecycleCallbacks
  */
 class Device implements ApiEntityInterface

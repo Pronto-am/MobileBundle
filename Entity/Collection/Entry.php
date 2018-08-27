@@ -16,7 +16,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @package Pronto\MobileBundle\Entity
  *
  * @ORM\Entity(repositoryClass="Pronto\MobileBundle\Repository\Collection\EntryRepository")
- * @ORM\Table(name="collection_entries")
+ * @ORM\Table(name="collection_entries", indexes={@ORM\Index(name="active_entries_by_collection", columns={"collection_id", "active"})})
  * @ORM\HasLifecycleCallbacks
  */
 class Entry extends TimestampedWithUserEntity implements ApiEntityInterface
