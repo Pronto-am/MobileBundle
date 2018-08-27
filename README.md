@@ -1,5 +1,15 @@
 # ProntoMobileBundle [![Build Status](https://travis-ci.com/Pronto-am/MobileBundle.svg?branch=master)](https://travis-ci.com/Pronto-am/MobileBundle)
 
+Table of contents
+=================
+
+1. [Installation](#installation)
+2. [Configuration](#configuration)
+3. [API Docs](#api-docs)
+4. [Installation](#installation)
+5. [Installation](#installation)
+
+
 Installation
 ============
 
@@ -117,7 +127,8 @@ Click on the settings icon and choose "Project settings". Next, click on the tab
 For the MobileBundle to connect to your Firebase project, you need to **rename** this file to: `google-service-account.json` and place it in the root of your project.
 
 
-### MobileBundle configuration
+MobileBundle configuration
+==========================
 
 The MobileBundle configuration is available in the `config/packages/pronto_mobile.yaml` file. At the moment, there are not a lot of options here.
 
@@ -151,4 +162,43 @@ crontab -e
 *    * * * * php /path/to/project/bin firebase:notifications:send   // every minute
 */15 * * * * php /path/to/project/bin firebase:database:logs        // every 15 minutes
 */15 * * * * php /path/to/project/bin firebase:tokens:convert       // every 15 minutes
+```
+
+API Docs
+========
+
+The MobileBundle uses [apidocjs](http://apidocjs.com) to generate API docs. The docs are located inside the `public/apidoc` folder.
+
+### OAuth2
+
+The API docs don't list the routes for OAuth. The Android and Mobile sdk of the MobileBundle both use OAuth to connect to the API. If you're not familiar with OAuth, I suggest you visit [https://www.oauth.com](https://www.oauth.com) to get yourself up to date.
+
+The routes for requesting an access token is: `https://yourdomain.app/oauth/v2/token`. You can request an access token by using the client credentials, or using the username and password combination of an app user.
+
+#### Request access token: Client Credentials 
+Documentation:[https://www.oauth.com/oauth2-servers/access-tokens/client-credentials/](https://www.oauth.com/oauth2-servers/access-tokens/client-credentials/)
+
+```
+[POST] https://yourdomain.app/oauth/v2/token
+ 
+{
+	"grant_type": "client_credentials",
+	"client_id": "1_66e8vp2mt2sccosk4w0ogswogsgww4wsokcw4wsc80w4s00woc",
+	"client_secret": "5s6e0r58qn8k0wggk808ogss4g08kgs0w8wgo84cc4s84sw4ck"
+}
+```
+
+#### Request access token: Username and password 
+Documentation:[https://www.oauth.com/oauth2-servers/access-tokens/password-grant/](https://www.oauth.com/oauth2-servers/access-tokens/client-credentials/)
+
+```
+[POST] https://yourdomain.app/oauth/v2/token
+ 
+{
+	"grant_type": "password",
+	"username": "user@example.com",
+	"password": "1234luggage",
+	"client_id": "1_66e8vp2mt2sccosk4w0ogswogsgww4wsokcw4wsc80w4s00woc",
+	"client_secret": "5s6e0r58qn8k0wggk808ogss4g08kgs0w8wgo84cc4s84sw4ck"
+}
 ```
