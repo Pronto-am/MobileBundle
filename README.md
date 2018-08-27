@@ -4,10 +4,8 @@ Table of contents
 =================
 
 1. [Installation](#installation)
-2. [Configuration](#configuration)
+2. [Configuration](#mobilebundle-configuration)
 3. [API Docs](#api-docs)
-4. [Installation](#installation)
-5. [Installation](#installation)
 
 
 Installation
