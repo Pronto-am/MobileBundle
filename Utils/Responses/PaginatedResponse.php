@@ -34,9 +34,9 @@ class PaginatedResponse extends BaseResponse
 	/**
 	 * Create the response object
 	 *
-	 * @return void
+	 * @return self
 	 */
-	public function create(): void
+	public function create(): ResponseInterface
 	{
 		$response = [];
 
@@ -47,5 +47,7 @@ class PaginatedResponse extends BaseResponse
 		$response['pagination'] = $this->pagination;
 
 		$this->setContent($response);
+
+		return $this;
 	}
 }

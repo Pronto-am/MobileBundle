@@ -25,6 +25,9 @@ class EntryParserTest extends TestCase
 	/** @var ApplicationMock $applicationMock */
 	private $applicationMock;
 
+	/** @var array $dates */
+	private $dates = [];
+
 
 	/**
 	 * Set up the collection
@@ -36,6 +39,15 @@ class EntryParserTest extends TestCase
 		$this->createEntityManager();
 
 		$this->applicationMock = new ApplicationMock();
+
+		$this->dates = [
+			'created_at' => (new DateTime('2018-08-14 11:22:44'))->format(DateTime::ATOM),
+			'updated_at' => (new DateTime('2018-08-14 11:22:44'))->format(DateTime::ATOM),
+			'user'       => [
+				'created_at' => (new DateTime('2018-08-12 12:32:43'))->format(DateTime::ATOM),
+				'updated_at' => (new DateTime('2018-08-12 14:32:43'))->format(DateTime::ATOM),
+			]
+		];
 	}
 
 
@@ -85,16 +97,16 @@ class EntryParserTest extends TestCase
 		// Results should be:
 		$entryShouldBe = [
 			'id'         => '99cc16d8-9fa3-11e8-a7e3-080027623c19',
-			'created_at' => '2018-08-14T11:22:44+00:00',
-			'updated_at' => '2018-08-14T11:22:44+00:00',
+			'created_at' => $this->dates['created_at'],
+			'updated_at' => $this->dates['updated_at'],
 			'created_by' => [
 				'id'         => 1,
 				'first_name' => 'Thomas',
 				'insertion'  => null,
 				'last_name'  => 'Roovers',
 				'full_name'  => 'Thomas Roovers',
-				'created_at' => '2018-08-12T12:32:43+02:00',
-				'updated_at' => '2018-08-12T14:32:43+02:00'
+				'created_at' => $this->dates['user']['created_at'],
+				'updated_at' => $this->dates['user']['updated_at']
 			],
 			'updated_by' => [
 				'id'         => 1,
@@ -102,8 +114,8 @@ class EntryParserTest extends TestCase
 				'insertion'  => null,
 				'last_name'  => 'Roovers',
 				'full_name'  => 'Thomas Roovers',
-				'created_at' => '2018-08-12T12:32:43+02:00',
-				'updated_at' => '2018-08-12T14:32:43+02:00'
+				'created_at' => $this->dates['user']['created_at'],
+				'updated_at' => $this->dates['user']['updated_at']
 			],
 			'text'       => [
 				'en' => 'E-sites'
@@ -163,12 +175,12 @@ class EntryParserTest extends TestCase
 		// Results should be:
 		$entryShouldBe = [
 			'id'         => '99cc16d8-9fa3-11e8-a7e3-080027623c19',
-			'created_at' => '2018-08-14T11:22:44+00:00',
-			'updated_at' => '2018-08-14T11:22:44+00:00',
+			'created_at' => $this->dates['created_at'],
+			'updated_at' => $this->dates['updated_at'],
 			'created_by' => null,
 			'updated_by' => null,
 			'visited'    => '14-08-2018',
-			'visited_at' => '2018-08-14T15:00:00+02:00'
+			'visited_at' => (new DateTime('2018-08-14 15:00:00'))->format(DateTime::ATOM)
 		];
 
 		$this->assertEquals([], array_diff(array_keys($entry), array_keys($entryShouldBe)));
@@ -206,8 +218,8 @@ class EntryParserTest extends TestCase
 		// Results should be:
 		$entryShouldBe = [
 			'id'         => '99cc16d8-9fa3-11e8-a7e3-080027623c19',
-			'created_at' => '2018-08-14T11:22:44+00:00',
-			'updated_at' => '2018-08-14T11:22:44+00:00',
+			'created_at' => $this->dates['created_at'],
+			'updated_at' => $this->dates['updated_at'],
 			'created_by' => null,
 			'updated_by' => null,
 			'select'     => '1'
@@ -252,8 +264,8 @@ class EntryParserTest extends TestCase
 		// Results should be:
 		$entryShouldBe = [
 			'id'            => '99cc16d8-9fa3-11e8-a7e3-080027623c19',
-			'created_at'    => '2018-08-14T11:22:44+00:00',
-			'updated_at'    => '2018-08-14T11:22:44+00:00',
+			'created_at'    => $this->dates['created_at'],
+			'updated_at'    => $this->dates['updated_at'],
 			'created_by'    => null,
 			'updated_by'    => null,
 			'boolean_true'  => true,
@@ -294,8 +306,8 @@ class EntryParserTest extends TestCase
 		// Results should be:
 		$entryShouldBe = [
 			'id'              => '99cc16d8-9fa3-11e8-a7e3-080027623c19',
-			'created_at'      => '2018-08-14T11:22:44+00:00',
-			'updated_at'      => '2018-08-14T11:22:44+00:00',
+			'created_at'      => $this->dates['created_at'],
+			'updated_at'      => $this->dates['updated_at'],
 			'created_by'      => null,
 			'updated_by'      => null,
 			'number'          => 1.234567890,
@@ -342,8 +354,8 @@ class EntryParserTest extends TestCase
 		// Results should be:
 		$entryShouldBe = [
 			'id'          => '99cc16d8-9fa3-11e8-a7e3-080027623c19',
-			'created_at'  => '2018-08-14T11:22:44+00:00',
-			'updated_at'  => '2018-08-14T11:22:44+00:00',
+			'created_at'  => $this->dates['created_at'],
+			'updated_at'  => $this->dates['updated_at'],
 			'created_by'  => null,
 			'updated_by'  => null,
 			'json'        => [
@@ -397,8 +409,8 @@ class EntryParserTest extends TestCase
 		// Results should be:
 		$entryShouldBe = [
 			'id'         => '99cc16d8-9fa3-11e8-a7e3-080027623c19',
-			'created_at' => '2018-08-14T11:22:44+00:00',
-			'updated_at' => '2018-08-14T11:22:44+00:00',
+			'created_at' => $this->dates['created_at'],
+			'updated_at' => $this->dates['updated_at'],
 			'created_by' => null,
 			'updated_by' => null,
 			'file'       => [
