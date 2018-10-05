@@ -24,21 +24,21 @@
     "league/flysystem-sftp": "^1.0",
     "php-http/guzzle6-adapter": "^1.1",
     "symfony/swiftmailer-bundle": "^3.2",
-    "symfony/translation": "^4.1",
+    "symfony/translation": "^3.4|^4.1",
     "symfony/orm-pack": "^1.0",
-    "symfony/form": "^4.1",
+    "symfony/form": "^3.4|^4.1",
     "friendsofsymfony/oauth-server-bundle": "^1.6.1",
-    "symfony/twig-bundle": "^4.1",
-    "symfony/templating": "^4.1",
-    "symfony/validator": "^4.1",
-    "symfony/serializer": "^4.1",
+    "symfony/twig-bundle": "^3.4|^4.1",
+    "symfony/templating": "^3.4|^4.1",
+    "symfony/validator": "^3.4|^4.1",
+    "symfony/serializer": "^3.4|^4.1",
     "doctrine/doctrine-fixtures-bundle": "^3.0",
-    "symfony/proxy-manager-bridge": "^4.1",
-    "symfony/expression-language": "^4.1"
+    "symfony/proxy-manager-bridge": "^3.4|^4.1",
+    "symfony/expression-language": "^3.4|^4.1"
   },
   "require-dev": {
     "nelmio/alice": "3.4.1",
-    "symfony/phpunit-bridge": "^4.1"
+    "symfony/phpunit-bridge": "^3.4|^4.1"
   },
   "autoload": {
     "psr-0": {
