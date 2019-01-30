@@ -3,36 +3,46 @@
 namespace Pronto\MobileBundle\EventListener;
 
 
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Event\LifecycleEventArgs;
 use Pronto\MobileBundle\Entity\Application;
-use Pronto\MobileBundle\Entity\Application\ApplicationPlugin;
 use Pronto\MobileBundle\Entity\Application\Version;
 use Pronto\MobileBundle\Entity\Plugin;
 use Pronto\MobileBundle\Service\Cache;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Event\LifecycleEventArgs;
+use Service\PluginInitializer;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Translation\TranslatorInterface;
 
 class ApplicationVersionListener
 {
 
-	/** @var TokenStorageInterface */
+	/**
+	 * @var TokenStorageInterface
+	 */
 	private $tokenStorage;
 
-	/** @var \Symfony\Component\HttpFoundation\Request */
+	/**
+	 * @var \Symfony\Component\HttpFoundation\Request
+	 */
 	private $request;
+
+	/**
+	 * @var PluginInitializer $initializer
+	 */
+	private $initializer;
 
 
 	/**
 	 * ApplicationVersionListener constructor.
 	 * @param RequestStack $requestStack
 	 * @param TokenStorageInterface $tokenStorage
+	 * @param PluginInitializer $initializer
 	 */
-	public function __construct(RequestStack $requestStack, TokenStorageInterface $tokenStorage)
+	public function __construct(RequestStack $requestStack, TokenStorageInterface $tokenStorage, PluginInitializer $initializer)
 	{
 		$this->tokenStorage = $tokenStorage;
 		$this->request = $requestStack->getCurrentRequest();
+		$this->initializer = $initializer;
 	}
 
 
@@ -55,15 +65,16 @@ class ApplicationVersionListener
 
 
 	/**
-	 * @param Application $entity
+	 * @param Application $application
 	 * @param EntityManager $entityManager
 	 * @throws \Doctrine\ORM\ORMException
+	 * @throws \Doctrine\ORM\OptimisticLockException
 	 */
-	private function initializeFirstVersion(Application $entity, EntityManager $entityManager): void
+	private function initializeFirstVersion(Application $application, EntityManager $entityManager): void
 	{
 		$version = new Version();
 		$version->setName('V1');
-		$version->setApplication($entity);
+		$version->setApplication($application);
 
 		$entityManager->persist($version);
 		$entityManager->flush();
@@ -73,46 +84,14 @@ class ApplicationVersionListener
 
 		/** @var Plugin $plugin */
 		foreach ($plugins as $plugin) {
-			$applicationPlugin = new ApplicationPlugin($version->getApplication(), $plugin);
-
-			$defaultConfig = $plugin->getDefaultConfig();
-
-			$config = [];
-
-			// Create plugin config, with just key and value
-			foreach ($defaultConfig as $key => $setting) {
-				if (isset($setting['value']) && preg_match('/[{]{1}[a-zA-z]+[}]{1}/', $setting['value']) > 0) {
-					$config[$key] = $setting['value'];
-
-					// Replace all placeholders
-					foreach ($setting['placeholders'] as $identifier => $getter) {
-						$value = '';
-
-						// Check if the entity has the placeholder generation method
-						if (method_exists($entity, $getter)) {
-							$value = $entity->{$getter}();
-						} elseif (method_exists($this, $getter)) {
-							// The method could also exist in this listener
-							$value = $this->{$getter}();
-						}
-
-						$config[$key] = str_replace('{' . $identifier . '}', $value, $config[$key]);
-					}
-				} else {
-					$config[$key] = $setting['value'] ?? '';
-				}
-			}
-
-			$applicationPlugin->setConfig($config);
-
-			$entityManager->persist($applicationPlugin);
+			$this->initializer->initialize($application, $plugin);
 		}
 
 		$entityManager->flush();
 
 		$token = $this->tokenStorage->getToken();
 
-		if ($token !== null && $entityManager->getRepository(Application::class)->count(['customer' => $entity->getCustomer()]) === 1) {
+		if ($token !== null && $entityManager->getRepository(Application::class)->count(['customer' => $application->getCustomer()]) === 1) {
 			$this->request->getSession()->set(Version::SESSION_IDENTIFIER, $version->getId());
 		}
 	}

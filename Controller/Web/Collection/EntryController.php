@@ -2,9 +2,11 @@
 
 namespace Pronto\MobileBundle\Controller\Web\Collection;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Pronto\MobileBundle\Controller\BaseController;
 use Pronto\MobileBundle\Entity\Collection;
 use Pronto\MobileBundle\Entity\Plugin;
+use Pronto\MobileBundle\Service\ProntoMobile;
 use Pronto\MobileBundle\Utils\Collection\EntryParser;
 use Pronto\MobileBundle\EventSubscriber\ValidateApplicationSelectionInterface;
 use Pronto\MobileBundle\EventSubscriber\ValidateCustomerSelectionInterface;
@@ -31,14 +33,12 @@ class EntryController extends BaseController implements ValidatePluginStateInter
 	/**
 	 * Show a list of collections
 	 *
-	 * @param Request $request
+	 * @param EntityManagerInterface $entityManager
 	 * @param $identifier
 	 * @return \Symfony\Component\HttpFoundation\Response
 	 */
-	public function indexAction(Request $request, $identifier)
+	public function indexAction(EntityManagerInterface $entityManager, $identifier)
 	{
-		$entityManager = $this->getDoctrine()->getManager();
-
 		/** @var Collection $collection */
 		$collection = $entityManager->getRepository(Collection::class)->findOneBy([
 			'identifier'         => $identifier,
@@ -81,19 +81,14 @@ class EntryController extends BaseController implements ValidatePluginStateInter
 	/**
 	 * Edit a collection entry
 	 *
-	 * @param Request $request
+	 * @param EntryValueParser $entryValueParser
+	 * @param EntityManagerInterface $entityManager
 	 * @param $identifier
 	 * @param Collection\Entry|null $entry
 	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-	 * @throws \Doctrine\DBAL\DBALException
 	 */
-	public function editAction(Request $request, $identifier, Collection\Entry $entry = null)
+	public function editAction(EntryValueParser $entryValueParser, EntityManagerInterface $entityManager, $identifier, Collection\Entry $entry = null)
 	{
-		/** @var EntryValueParser $entryValueParser */
-		$entryValueParser = $this->get('pronto_mobile.collection.entry_parser');
-
-		$entityManager = $this->getDoctrine()->getManager();
-
 		/** @var Collection $collection */
 		$collection = $entityManager->getRepository(Collection::class)->findOneBy([
 			'identifier'         => $identifier,
@@ -160,14 +155,13 @@ class EntryController extends BaseController implements ValidatePluginStateInter
 	 * Save the entry
 	 *
 	 * @param Request $request
+	 * @param EntityManagerInterface $entityManager
 	 * @param $identifier
 	 * @param Collection\Entry|null $entry
 	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
 	 */
-	public function saveAction(Request $request, $identifier, Collection\Entry $entry = null)
+	public function saveAction(Request $request, EntityManagerInterface $entityManager, $identifier, Collection\Entry $entry = null)
 	{
-		$entityManager = $this->getDoctrine()->getManager();
-
 		/** @var Collection $collection */
 		$collection = $entityManager->getRepository(Collection::class)->findOneBy([
 			'identifier'         => $identifier,
@@ -220,18 +214,16 @@ class EntryController extends BaseController implements ValidatePluginStateInter
 	 * Delete one or multiple properties
 	 *
 	 * @param Request $request
+	 * @param EntityManagerInterface $entityManager
+	 * @param ProntoMobile $prontoMobile
 	 * @param $identifier
 	 * @param $id
 	 * @return JsonResponse
 	 */
-	public function deleteFileAction(Request $request, $identifier, $id)
+	public function deleteFileAction(Request $request, EntityManagerInterface $entityManager, ProntoMobile $prontoMobile, $identifier, $id)
 	{
 		$filename = $request->request->get('filename');
 		$property = $request->request->get('property');
-
-		$entityManager = $this->getDoctrine()->getManager();
-
-		$prontoMobile = $this->get('pronto_mobile.global.app');
 
 		/** @var Collection $collection */
 		$collection = $entityManager->getRepository(Collection::class)->findOneBy([
@@ -278,15 +270,13 @@ class EntryController extends BaseController implements ValidatePluginStateInter
 	 * Delete one or multiple entries
 	 *
 	 * @param Request $request
+	 * @param EntityManagerInterface $entityManager
+	 * @param ProntoMobile $prontoMobile
 	 * @param $identifier
 	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
 	 */
-	public function deleteAction(Request $request, $identifier)
+	public function deleteAction(Request $request, EntityManagerInterface $entityManager, ProntoMobile $prontoMobile, $identifier)
 	{
-		$entityManager = $this->getDoctrine()->getManager();
-
-		$prontoMobile = $this->get('pronto_mobile.global.app');
-
 		$collection = $entityManager->getRepository(Collection::class)->findOneBy([
 			'identifier'         => $identifier,
 			'applicationVersion' => $prontoMobile->getApplicationVersion()

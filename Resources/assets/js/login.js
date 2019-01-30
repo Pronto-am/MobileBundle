@@ -17,10 +17,10 @@ $(document).ready(function () {
                 'id': id
             },
             success: function (data) {
+                console.log(data)
+
                 if(!data.error) {
                     window.location = data.url;
-                } else {
-
                 }
             }
         });

@@ -2,6 +2,7 @@
 
 namespace Pronto\MobileBundle\Controller\Web\Collection;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Pronto\MobileBundle\Controller\BaseController;
 use Pronto\MobileBundle\Entity\Collection;
 use Pronto\MobileBundle\Entity\Collection\Property;
@@ -46,15 +47,13 @@ class PropertyController extends BaseController implements ValidatePluginStateIn
 	/**
 	 * Edit a property
 	 *
-	 * @param Request $request
+	 * @param EntityManagerInterface $entityManager
 	 * @param $identifier
 	 * @param Property|null $property
 	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
 	 */
-	public function editAction(Request $request, $identifier, Property $property = null)
+	public function editAction(EntityManagerInterface $entityManager, $identifier, Property $property = null)
 	{
-		$entityManager = $this->getDoctrine()->getManager();
-
 		$types = $entityManager->getRepository(Type::class)->findAllOrdered();
 
 		// Get a list of collections for the related entity list
@@ -86,14 +85,13 @@ class PropertyController extends BaseController implements ValidatePluginStateIn
 	 * Save a collection property
 	 *
 	 * @param Request $request
+	 * @param EntityManagerInterface $entityManager
 	 * @param $identifier
 	 * @param Property $property
 	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
 	 */
-	public function saveAction(Request $request, $identifier, Property $property = null)
+	public function saveAction(Request $request, EntityManagerInterface $entityManager, $identifier, Property $property = null)
 	{
-		$entityManager = $this->getDoctrine()->getManager();
-
 		$body = $request->request->all();
 
 		// Get the form data
@@ -196,13 +194,12 @@ class PropertyController extends BaseController implements ValidatePluginStateIn
 	 * Delete one or multiple properties
 	 *
 	 * @param Request $request
+	 * @param EntityManagerInterface $entityManager
 	 * @param $identifier
 	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
 	 */
-	public function deleteAction(Request $request, $identifier)
+	public function deleteAction(Request $request, EntityManagerInterface $entityManager, $identifier)
 	{
-		$entityManager = $this->getDoctrine()->getManager();
-
 		$collection = $entityManager->getRepository(Collection::class)->findOneBy([
 			'identifier'         => $identifier,
 			'applicationVersion' => $this->getApplicationVersion()
@@ -239,13 +236,12 @@ class PropertyController extends BaseController implements ValidatePluginStateIn
 	 * Update the ordering of properties
 	 *
 	 * @param Request $request
+	 * @param EntityManagerInterface $entityManager
 	 * @return JsonResponse
 	 */
-	public function orderAction(Request $request): JsonResponse
+	public function orderAction(Request $request, EntityManagerInterface $entityManager): JsonResponse
 	{
 		$properties = $request->request->get('property');
-
-		$entityManager = $this->getDoctrine()->getManager();
 
 		foreach ($properties as $key => $id) {
 			/** @var Property $property */
@@ -265,13 +261,12 @@ class PropertyController extends BaseController implements ValidatePluginStateIn
 	 * Change the entry title of the collection
 	 *
 	 * @param Request $request
+	 * @param EntityManagerInterface $entityManager
 	 * @return JsonResponse
 	 */
-	public function entryTitleAction(Request $request): JsonResponse
+	public function entryTitleAction(Request $request, EntityManagerInterface $entityManager): JsonResponse
 	{
 		$id = $request->request->get('property_id');
-
-		$entityManager = $this->getDoctrine()->getManager();
 
 		/** @var Property $property */
 		$newProperty = $entityManager->getRepository(Property::class)->find($id);

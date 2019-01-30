@@ -52,17 +52,17 @@ class CollectionController extends BaseApiController
 	 */
 
 	/**
-	 * @param Request $request
+	 * @param Retriever $retriever
 	 * @param $version
 	 * @param $identifier
 	 * @return \Symfony\Component\HttpFoundation\JsonResponse
 	 * @throws \Pronto\MobileBundle\Exceptions\ApiException
 	 * @throws \Doctrine\DBAL\DBALException
 	 */
-	public function getEntriesAction(Request $request, $version, $identifier)
+	public function getEntriesAction(Retriever $retriever, $version, $identifier)
 	{
 		// Validate the authorization
-		$this->validateAuthorization($request);
+		$this->validateAuthorization();
 
 		// Get the collection
 		$collection = $this->getCollection($version, $identifier);
@@ -72,11 +72,9 @@ class CollectionController extends BaseApiController
 			$this->objectNotFoundResponse(Collection::class);
 		}
 
-		/** @var Retriever $collectionRetriever */
-		$collectionRetriever = $this->get('pronto_mobile.collection.retriever');
-		$collectionRetriever->setCollection($collection);
+		$retriever->setCollection($collection);
 
-		return $this->paginatedResponse($collectionRetriever->getEntries(), $collectionRetriever->getPaginationInfo());
+		return $this->paginatedResponse($retriever->getEntries(), $retriever->getPaginationInfo());
 	}
 
 
@@ -104,18 +102,18 @@ class CollectionController extends BaseApiController
 	 */
 
 	/**
-	 * @param Request $request
+	 * @param Retriever $retriever
 	 * @param $version
 	 * @param $identifier
 	 * @param $id
 	 * @return \Symfony\Component\HttpFoundation\JsonResponse
-	 * @throws \Pronto\MobileBundle\Exceptions\ApiException
 	 * @throws \Doctrine\DBAL\DBALException
+	 * @throws \Pronto\MobileBundle\Exceptions\ApiException
 	 */
-	public function getEntryAction(Request $request, $version, $identifier, $id)
+	public function getEntryAction(Retriever $retriever, $version, $identifier, $id)
 	{
 		// Validate the authorization
-		$this->validateAuthorization($request);
+		$this->validateAuthorization();
 
 		// Get the collection
 		$collection = $this->getCollection($version, $identifier);
@@ -125,11 +123,9 @@ class CollectionController extends BaseApiController
 			$this->objectNotFoundResponse(Collection::class);
 		}
 
-		/** @var Retriever $collectionRetriever */
-		$collectionRetriever = $this->get('pronto_mobile.collection.retriever');
-		$collectionRetriever->setCollection($collection);
+		$retriever->setCollection($collection);
 
-		$entry = $collectionRetriever->getEntry($id);
+		$entry = $retriever->getEntry($id);
 
 		if ($entry === null) {
 			$this->objectNotFoundResponse(Entry::class);
@@ -151,10 +147,8 @@ class CollectionController extends BaseApiController
 	{
 		$entityManager = $this->getDoctrine()->getManager();
 
-		$prontoMobile = $this->get('pronto_mobile.global.app');
-
 		/** @var Application $application */
-		$application = $prontoMobile->getApplication();
+		$application = $this->prontoMobile->getApplication();
 
 		try {
 			// Try to find the right version inside the list of application versions

@@ -2,6 +2,7 @@
 
 namespace Pronto\MobileBundle\Controller\Web;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Pronto\MobileBundle\Controller\BaseController;
 use Pronto\MobileBundle\Entity\Application\ApplicationPlugin;
 use Pronto\MobileBundle\Entity\Plugin;
@@ -16,13 +17,11 @@ class PluginController extends BaseController implements ValidateApplicationSele
 	/**
 	 * Show a list of CMS users
 	 *
+	 * @param EntityManagerInterface $entityManager
 	 * @return \Symfony\Component\HttpFoundation\Response
-	 * @throws \LogicException
 	 */
-	public function indexAction()
+	public function indexAction(EntityManagerInterface $entityManager)
 	{
-		$entityManager = $this->getDoctrine()->getManager();
-
 		$plugins = $entityManager->getRepository(ApplicationPlugin::class)->findAllByApplication($this->getApplication());
 
 		return $this->render('@ProntoMobile/plugins/index.html.twig',
@@ -36,12 +35,11 @@ class PluginController extends BaseController implements ValidateApplicationSele
 	 * Edit a plugin
 	 *
 	 * @param Plugin $plugin
+	 * @param EntityManagerInterface $entityManager
 	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
 	 */
-	public function editAction(Plugin $plugin)
+	public function editAction(Plugin $plugin, EntityManagerInterface $entityManager)
 	{
-		$entityManager = $this->getDoctrine()->getManager();
-
 		$applicationPlugin = $entityManager->getRepository(ApplicationPlugin::class)->findOneBy([
 			'plugin'      => $plugin,
 			'application' => $this->getApplication()
@@ -61,15 +59,14 @@ class PluginController extends BaseController implements ValidateApplicationSele
 	 * Save a plugin
 	 *
 	 * @param Request $request
+	 * @param EntityManagerInterface $entityManager
 	 * @param Plugin $plugin
 	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
 	 */
-	public function saveAction(Request $request, Plugin $plugin)
+	public function saveAction(Request $request, EntityManagerInterface $entityManager, Plugin $plugin)
 	{
-		$em = $this->getDoctrine()->getManager();
-
 		/** @var ApplicationPlugin $applicationPlugin */
-		$applicationPlugin = $em->getRepository(ApplicationPlugin::class)->findOneBy([
+		$applicationPlugin = $entityManager->getRepository(ApplicationPlugin::class)->findOneBy([
 			'plugin'      => $plugin,
 			'application' => $this->getApplication()
 		]);
@@ -102,8 +99,8 @@ class PluginController extends BaseController implements ValidateApplicationSele
 		// Save the config
 		$applicationPlugin->setConfig($config);
 
-		$em->persist($applicationPlugin);
-		$em->flush();
+		$entityManager->persist($applicationPlugin);
+		$entityManager->flush();
 
 		$this->addDataSavedFlash();
 

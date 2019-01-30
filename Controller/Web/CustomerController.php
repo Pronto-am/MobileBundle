@@ -2,15 +2,18 @@
 
 namespace Pronto\MobileBundle\Controller\Web;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Pronto\MobileBundle\Controller\BaseController;
 use Pronto\MobileBundle\Entity\Customer;
 use Pronto\MobileBundle\Form\CustomerForm;
+use Pronto\MobileBundle\Service\ProntoMobile;
 use Pronto\MobileBundle\Utils\Str;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class CustomerController extends BaseController
 {
@@ -18,12 +21,11 @@ class CustomerController extends BaseController
 	 * Let the user select a customer from the list
 	 *
 	 * @param Request $request
+	 * @param EntityManagerInterface $entityManager
 	 * @return Response
 	 */
-	public function selectCustomerAction(Request $request)
+	public function selectCustomerAction(Request $request, EntityManagerInterface $entityManager)
 	{
-		$entityManager = $this->getDoctrine()->getManager();
-
 		$customers = $entityManager->getRepository(Customer::class)->findBy([], ['companyName' => 'asc']);
 
 		if (count($customers) === 1) {
@@ -66,9 +68,10 @@ class CustomerController extends BaseController
 	 * Add a new account
 	 *
 	 * @param Request $request
+	 * @param EntityManagerInterface $entityManager
 	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
 	 */
-	public function addAction(Request $request)
+	public function addAction(Request $request, EntityManagerInterface $entityManager)
 	{
 		$form = $this->createForm(CustomerForm::class);
 
@@ -79,7 +82,6 @@ class CustomerController extends BaseController
 		if ($form->isSubmitted() && $form->isValid()) {
 			$customer = $form->getData();
 
-			$entityManager = $this->getDoctrine()->getManager();
 			$entityManager->persist($customer);
 			$entityManager->flush();
 
@@ -98,14 +100,15 @@ class CustomerController extends BaseController
 	 * Edit a customers' account
 	 *
 	 * @param Request $request
+	 * @param ProntoMobile $prontoMobile
+	 * @param EntityManagerInterface $entityManager
 	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
 	 */
-	public function editAction(Request $request)
+	public function editAction(Request $request, ProntoMobile $prontoMobile, EntityManagerInterface $entityManager)
 	{
 		/** @var Customer $originalCustomer */
 		$originalCustomer = $this->getCustomer();
 
-		$prontoMobile = $this->get('pronto_mobile.global.app');
 		$uploadsFolder = $prontoMobile->getConfiguration('uploads_folder', 'uploads');
 
 		// The form requires an instance of File, so parse the filename to a File object
@@ -126,7 +129,6 @@ class CustomerController extends BaseController
 				$customer->setLogo($file->getFileName());
 			}
 
-			$entityManager = $this->getDoctrine()->getManager();
 			$entityManager->persist($customer);
 			$entityManager->flush();
 
@@ -145,13 +147,12 @@ class CustomerController extends BaseController
 	 * Delete a customers' account
 	 *
 	 * @param Request $request
+	 * @param EntityManagerInterface $entityManager
+	 * @param TranslatorInterface $translator
 	 * @return JsonResponse
 	 */
-	public function deleteAction(Request $request)
+	public function deleteAction(Request $request, EntityManagerInterface $entityManager, TranslatorInterface $translator)
 	{
-		$translator = $this->get('translator');
-
-		$entityManager = $this->getDoctrine()->getManager();
 		$customer = $entityManager->getRepository(Customer::class)->findOneBy(['id' => $request->request->get('id')]);
 
 		$entityManager->remove($customer);

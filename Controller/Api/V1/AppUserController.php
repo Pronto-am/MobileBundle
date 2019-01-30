@@ -2,6 +2,7 @@
 
 namespace Pronto\MobileBundle\Controller\Api\V1;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Pronto\MobileBundle\Controller\Api\BaseApiController;
 use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\AppUser;
@@ -14,6 +15,7 @@ use Swift_Message;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class AppUserController extends BaseApiController
 {
@@ -26,7 +28,6 @@ class AppUserController extends BaseApiController
 	{
 		return Plugin::APP_USERS;
 	}
-
 
 	/**
 	 * API-docs: Register a new user
@@ -83,30 +84,26 @@ class AppUserController extends BaseApiController
 
 	/**
 	 * @param Request $request
+	 * @param EntityManagerInterface $entityManager
 	 * @return \Symfony\Component\HttpFoundation\JsonResponse
 	 * @throws \Doctrine\ORM\NoResultException
 	 * @throws \Doctrine\ORM\NonUniqueResultException
 	 * @throws \Pronto\MobileBundle\Exceptions\ApiException
 	 */
-	public function registerAction(Request $request)
+	public function registerAction(Request $request, EntityManagerInterface $entityManager)
 	{
 		// Validate the authorization
-		$this->validateAuthorization($request, $this->getPluginIdentifier());
+		$this->validateAuthorization($this->getPluginIdentifier());
 
 		// Validate the body
 		$this->validateRequestContent($request, ['first_name', 'last_name', 'email', 'password']);
 
-		// Get the main ProntoMobile service
-		$prontoMobile = $this->get('pronto_mobile.global.app');
-
-		$configuration = $prontoMobile->getPluginConfiguration(Plugin::APP_USERS, $prontoMobile->getApplication());
+		$configuration = $this->prontoMobile->getPluginConfiguration(Plugin::APP_USERS, $this->prontoMobile->getApplication());
 
 		// Check if registration is enabled
 		if (!$configuration[Plugin::APP_USERS_REGISTRATION_ENABLED]) {
 			$this->notAuthorizedResponse();
 		}
-
-		$entityManager = $this->getDoctrine()->getManager();
 
 		// Retrieve the content from the request
 		$content = json_decode($request->getContent());
@@ -114,7 +111,7 @@ class AppUserController extends BaseApiController
 		/** @var AppUser $user */
 		$user = $entityManager->getRepository(AppUser::class)->findOneBy([
 			'email'       => $content->email,
-			'application' => $prontoMobile->getApplication()
+			'application' => $this->prontoMobile->getApplication()
 		]);
 
 		if ($user !== null) {
@@ -122,7 +119,7 @@ class AppUserController extends BaseApiController
 		}
 
 		$user = new AppUser();
-		$user->setApplication($prontoMobile->getApplication());
+		$user->setApplication($this->prontoMobile->getApplication());
 
 		$user->setFirstName($content->first_name);
 		$user->setLastName($content->last_name);
@@ -143,9 +140,7 @@ class AppUserController extends BaseApiController
 		$entityManager->persist($user);
 		$entityManager->flush();
 
-		$serializer = $this->get('pronto_mobile.global.json_serializer');
-
-		return $this->successResponse($serializer->serialize($user, [new DateTimeNormalizer()], []));
+		return $this->successResponse($this->serializer->serialize($user, [new DateTimeNormalizer()]));
 	}
 
 
@@ -171,16 +166,14 @@ class AppUserController extends BaseApiController
 	 */
 
 	/**
-	 * @param Request $request
+	 * @param EntityManagerInterface $entityManager
 	 * @param $userIdentifier
 	 * @return \Symfony\Component\HttpFoundation\JsonResponse
 	 * @throws \Pronto\MobileBundle\Exceptions\ApiException
 	 */
-	public function deregisterAction(Request $request, $userIdentifier)
+	public function deregisterAction(EntityManagerInterface $entityManager, $userIdentifier)
 	{
-		$this->validateAuthorization($request, $this->getPluginIdentifier());
-
-		$entityManager = $this->getDoctrine()->getManager();
+		$this->validateAuthorization($this->getPluginIdentifier());
 
 		/** @var AppUser $user */
 		$user = $entityManager->getRepository(AppUser::class)->find($userIdentifier);
@@ -226,24 +219,22 @@ class AppUserController extends BaseApiController
 
 	/**
 	 * @param Request $request
+	 * @param Swift_Mailer $mailer
+	 * @param EntityManagerInterface $entityManager
+	 * @param TranslatorInterface $translator
 	 * @return \Symfony\Component\HttpFoundation\JsonResponse
 	 * @throws \Pronto\MobileBundle\Exceptions\ApiException
 	 */
-	public function requestPasswordResetLinkAction(Request $request)
+	public function requestPasswordResetLinkAction(Request $request, Swift_Mailer $mailer, EntityManagerInterface $entityManager, TranslatorInterface $translator)
 	{
 		// Validate the authorization header
-		$this->validateAuthorization($request, $this->getPluginIdentifier());
+		$this->validateAuthorization($this->getPluginIdentifier());
 
 		// Validate the body
 		$this->validateRequestContent($request, ['email']);
 
-		$entityManager = $this->getDoctrine()->getManager();
-
-		// Get the main app's service
-		$prontoMobile = $this->get('pronto_mobile.global.app');
-
 		/** @var Application $application */
-		$application = $prontoMobile->getApplication();
+		$application = $this->prontoMobile->getApplication();
 
 		$content = json_decode($request->getContent());
 
@@ -267,10 +258,8 @@ class AppUserController extends BaseApiController
 		// Lowercase and strip spaces from the company name
 		$companyEmail = strtolower(str_replace(' ', '', $application->getCustomer()->getCompanyName()));
 
-		$translator = $this->get('translator');
-
 		// Get the domain name of the CMS
-		$domain = $prontoMobile->getConfiguration('domain', 'pronto.am');
+		$domain = $this->prontoMobile->getConfiguration('domain', 'pronto.am');
 
 		// Build the message with the password reset link
 		$message = (new Swift_Message($application->getName() . ' | ' . $translator->trans('authentication.reset_password')))
@@ -292,8 +281,6 @@ class AppUserController extends BaseApiController
 				'text/html'
 			);
 
-		/** @var Swift_Mailer $mailer */
-		$mailer = $this->get('swiftmailer.mailer.abstract');
 		$mailer->send($message);
 
 		return $this->successResponse(null, 'The user has received a password reset link');
@@ -304,13 +291,13 @@ class AppUserController extends BaseApiController
 	 * Show the reset password form
 	 *
 	 * @param Request $request
+	 * @param EntityManagerInterface $entityManager
+	 * @param TranslatorInterface $translator
 	 * @param $token
 	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
 	 */
-	public function resetPasswordAction(Request $request, $token)
+	public function resetPasswordAction(Request $request, EntityManagerInterface $entityManager, TranslatorInterface $translator, $token)
 	{
-		$entityManager = $this->getDoctrine()->getManager();
-
 		/** @var PasswordReset $passwordReset */
 		$passwordReset = $entityManager->getRepository(PasswordReset::class)->findOneBy([
 			'token' => $token
@@ -332,8 +319,6 @@ class AppUserController extends BaseApiController
 			$entityManager->remove($passwordReset);
 			$entityManager->flush();
 
-			$translator = $this->get('translator');
-
 			$this->addFlash('alert-danger', $translator->trans('user.password_reset_link_expired'));
 			return $this->redirectToRoute('pronto_mobile_login');
 		}
@@ -351,22 +336,17 @@ class AppUserController extends BaseApiController
 
 			// Save the users' new password
 			$entityManager->persist($user);
-
-			// Delete the password reset object
 			$entityManager->remove($passwordReset);
-
 			$entityManager->flush();
 
 			$resetting = false;
 		}
 
-		return $this->render(
-			'@ProntoMobile/authentication/app/password-reset.html.twig',
-			[
-				'form'      => $form->createView(),
-				'resetting' => $resetting ?? true,
-				'customer'  => $customer
-			]);
+		return $this->render('@ProntoMobile/authentication/app/password-reset.html.twig', [
+			'form'      => $form->createView(),
+			'resetting' => $resetting ?? true,
+			'customer'  => $customer
+		]);
 	}
 
 
@@ -401,14 +381,13 @@ class AppUserController extends BaseApiController
 	/**
 	 * Get the profile off a user
 	 *
-	 * @param Request $request
 	 * @return \Symfony\Component\HttpFoundation\JsonResponse
 	 * @throws \Pronto\MobileBundle\Exceptions\ApiException
 	 */
-	public function getProfileAction(Request $request)
+	public function getProfileAction()
 	{
 		// Validate the authorization
-		$this->validateAuthorization($request, $this->getPluginIdentifier());
+		$this->validateAuthorization($this->getPluginIdentifier());
 
 		$user = $this->getUser();
 
@@ -416,10 +395,7 @@ class AppUserController extends BaseApiController
 			$this->notAuthorizedResponse();
 		}
 
-		// Get the serializer
-		$serializer = $this->get('pronto_mobile.global.json_serializer');
-
-		return $this->successResponse($serializer->serialize($user, [new DateTimeNormalizer()], []));
+		return $this->successResponse($this->serializer->serialize($user, [new DateTimeNormalizer()]));
 	}
 
 
@@ -484,18 +460,17 @@ class AppUserController extends BaseApiController
 	 * Update the users' profile
 	 *
 	 * @param Request $request
+	 * @param EntityManagerInterface $entityManager
 	 * @return \Symfony\Component\HttpFoundation\JsonResponse
 	 * @throws \Pronto\MobileBundle\Exceptions\ApiException
 	 */
-	public function updateProfileAction(Request $request)
+	public function updateProfileAction(Request $request, EntityManagerInterface $entityManager)
 	{
 		// Validate the body
 		$this->validateRequestContent($request, ['first_name', 'last_name', 'email']);
 
 		// Validate the authorization
-		$this->validateAuthorization($request, $this->getPluginIdentifier());
-
-		$entityManager = $this->getDoctrine()->getManager();
+		$this->validateAuthorization($this->getPluginIdentifier());
 
 		// Retrieve the content from the request
 		$content = json_decode($request->getContent());
@@ -507,14 +482,11 @@ class AppUserController extends BaseApiController
 			$this->notAuthorizedResponse();
 		}
 
-		// Get the main app's service
-		$prontoMobile = $this->get('pronto_mobile.global.app');
-
 		// Check if the new email address already exists
 		if ($user->getEmail() !== $content->email) {
 			$existingUsers = $entityManager->getRepository(AppUser::class)->findBy([
 				'email'       => $content->email,
-				'application' => $prontoMobile->getApplication()
+				'application' => $this->prontoMobile->getApplication()
 			]);
 
 			if (count($existingUsers) > 0) {
@@ -540,9 +512,6 @@ class AppUserController extends BaseApiController
 		$entityManager->persist($user);
 		$entityManager->flush();
 
-		// Get the serializer
-		$serializer = $this->get('pronto_mobile.global.json_serializer');
-
-		return $this->successResponse($serializer->serialize($user, [new DateTimeNormalizer()], []));
+		return $this->successResponse($this->serializer->serialize($user, [new DateTimeNormalizer()]));
 	}
 }

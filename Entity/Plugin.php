@@ -19,6 +19,7 @@ class Plugin
 	public const COLLECTIONS = 'collections';
 	public const APP_USERS = 'app_users';
 	public const PUSH_NOTIFICATIONS = 'notifications';
+	public const TRANSLATIONS = 'translations';
 
 	// Config settings
 	public const PUSH_NOTIFICATIONS_FIREBASE_TOKEN = 'firebaseAccessToken';

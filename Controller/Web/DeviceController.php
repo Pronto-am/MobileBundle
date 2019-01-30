@@ -2,6 +2,7 @@
 
 namespace Pronto\MobileBundle\Controller\Web;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Pronto\MobileBundle\Controller\BaseController;
 use Pronto\MobileBundle\Entity\Device;
 use Pronto\MobileBundle\Entity\Device\DeviceSegment;
@@ -21,12 +22,11 @@ class DeviceController extends BaseController implements ValidateCustomerSelecti
 	 * Show a list of CMS users
 	 *
 	 * @param Request $request
+	 * @param EntityManagerInterface $entityManager
 	 * @return \Symfony\Component\HttpFoundation\Response
 	 */
-	public function indexAction(Request $request)
+	public function indexAction(Request $request, EntityManagerInterface $entityManager)
 	{
-		$entityManager = $this->getDoctrine()->getManager();
-
 		$pageHelper = new PageHelper($request, $entityManager, Device::class, 15, 't.lastLogin');
 		$pageHelper->addClause(new WhereClause('t.application', $this->getApplication()));
 		$pageHelper->addClause(new WhereClause('t.tokenState', true));
@@ -42,13 +42,12 @@ class DeviceController extends BaseController implements ValidateCustomerSelecti
 	 * Show the details of a device
 	 *
 	 * @param Request $request
+	 * @param EntityManagerInterface $entityManager
 	 * @param $identifier
 	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
 	 */
-	public function detailsAction(Request $request, $identifier)
+	public function detailsAction(Request $request, EntityManagerInterface $entityManager, $identifier)
 	{
-		$entityManager = $this->getDoctrine()->getManager();
-
 		/** @var Device $device */
 		$device = $entityManager->getRepository(Device::class)->findOneBy([
 			'id'          => $identifier,
@@ -96,12 +95,11 @@ class DeviceController extends BaseController implements ValidateCustomerSelecti
 	 * Delete one or more devices
 	 *
 	 * @param Request $request
+	 * @param EntityManagerInterface $entityManager
 	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
 	 */
-	public function deleteAction(Request $request)
+	public function deleteAction(Request $request, EntityManagerInterface $entityManager)
 	{
-		$entityManager = $this->getDoctrine()->getManager();
-
 		$devices = $entityManager->getRepository(Device::class)->findBy([
 			'id'          => $request->get('devices'),
 			'application' => $this->getApplication()

@@ -2,6 +2,7 @@
 
 namespace Pronto\MobileBundle\Controller\Web\PushNotification;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Pronto\MobileBundle\Controller\BaseController;
 use Pronto\MobileBundle\Entity\Plugin;
 use Pronto\MobileBundle\Entity\PushNotification;
@@ -30,15 +31,14 @@ class RecipientController extends BaseController implements ValidateCustomerSele
 	 * Show the successful recipients of a notification
 	 *
 	 * @param Request $request
+	 * @param EntityManagerInterface $entityManager
 	 * @param $identifier
 	 * @param $sent
 	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
 	 */
-	public function indexAction(Request $request, $identifier, $sent)
+	public function indexAction(Request $request, EntityManagerInterface $entityManager, $identifier, $sent)
 	{
 		$application = $this->getApplication();
-
-		$entityManager = $this->getDoctrine()->getManager();
 
 		$notification = $entityManager->getRepository(PushNotification::class)->find($identifier);
 

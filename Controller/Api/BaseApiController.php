@@ -6,6 +6,8 @@ use Pronto\MobileBundle\Entity\AccessToken;
 use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\Application\ApplicationPlugin;
 use Pronto\MobileBundle\Entity\Plugin;
+use Pronto\MobileBundle\Service\JsonSerializer;
+use Pronto\MobileBundle\Service\ProntoMobile;
 use Pronto\MobileBundle\Service\RequestBodyValidator;
 use Pronto\MobileBundle\Traits\JsonResponseGenerators;
 use Pronto\MobileBundle\Utils\Responses\ErrorResponse;
@@ -15,9 +17,49 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 
 class BaseApiController extends Controller
 {
-
 	use JsonResponseGenerators;
 
+	/**
+	 * @var ProntoMobile $prontoMobile
+	 */
+	protected $prontoMobile;
+
+	/**
+	 * @var RequestBodyValidator $requestValidator
+	 */
+	protected $requestValidator;
+
+	/**
+	 * @var JsonSerializer $serializer
+	 */
+	protected $serializer;
+
+	/**
+	 * @required
+	 * @param ProntoMobile $prontoMobile
+	 */
+	public function setProntoMobile(ProntoMobile $prontoMobile): void
+	{
+		$this->prontoMobile = $prontoMobile;
+	}
+
+	/**
+	 * @required
+	 * @param RequestBodyValidator $requestValidator
+	 */
+	public function setRequestBodyValidator(RequestBodyValidator $requestValidator): void
+	{
+		$this->requestValidator = $requestValidator;
+	}
+
+	/**
+	 * @required
+	 * @param JsonSerializer $serializer
+	 */
+	public function setJsonSerializer(JsonSerializer $serializer): void
+	{
+		$this->serializer = $serializer;
+	}
 
 	/**
 	 * API-docs: Basic authorization header block
@@ -115,12 +157,9 @@ class BaseApiController extends Controller
 	 */
 	public function validateRequestContent(Request $request, array $required = [])
 	{
-		/** @var RequestBodyValidator $requestValidator */
-		$requestValidator = $this->get('pronto_mobile.global.request_body_validator');
-
 		// Validate the required parameters
-		if (!$requestValidator->isValid($request, $required)) {
-			$this->invalidParametersResponse($requestValidator->getMessage());
+		if (!$this->requestValidator->isValid($request, $required)) {
+			$this->invalidParametersResponse($this->requestValidator->getMessage());
 		}
 
 		return true;
@@ -165,12 +204,11 @@ class BaseApiController extends Controller
 	 */
 
 	/**
-	 * @param Request $request
 	 * @param string|null $pluginIdentifier
 	 * @return void
 	 * @throws \Pronto\MobileBundle\Exceptions\ApiException
 	 */
-	public function validateAuthorization(Request $request, string $pluginIdentifier = null): void
+	public function validateAuthorization(string $pluginIdentifier = null): void
 	{
 		if (!$this->isGranted('IS_AUTHENTICATED_FULLY')) {
 			$this->accessDeniedResponse(ErrorResponse::NO_AUTHORIZATION_HEADER);
@@ -200,8 +238,7 @@ class BaseApiController extends Controller
 		}
 
 		// Save the application for later use
-		$prontoMobile = $this->get('pronto_mobile.global.app');
-		$prontoMobile->setApplication($application);
+		$this->prontoMobile->setApplication($application);
 	}
 
 

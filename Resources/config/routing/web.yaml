@@ -352,6 +352,33 @@ devices_details:
         _controller: ProntoMobileBundle:Web\Device:details
 
 
+#### TRANSLATIONS ####
+
+translations:
+    path: /translations
+    defaults:
+        _controller: ProntoMobileBundle:Web\Translation:index
+
+translations_edit:
+    path: /translations/edit/{id}
+    defaults:
+        _controller: ProntoMobileBundle:Web\Translation:edit
+        id: null
+    condition: "context.getMethod() in ['GET']"
+
+translations_save:
+    path: /translations/edit/{id}
+    defaults:
+        _controller: ProntoMobileBundle:Web\Translation:save
+        id: null
+    condition: "context.getMethod() in ['POST']"
+
+translations_delete:
+    path: /translations/delete
+    defaults:
+        _controller: ProntoMobileBundle:Web\Translation:delete
+
+
 #### PLUGINS ####
 
 plugins:

@@ -2,6 +2,7 @@
 
 namespace Pronto\MobileBundle\Controller\Web;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Pronto\MobileBundle\Controller\BaseController;
 use Pronto\MobileBundle\Entity\Application\ApplicationPlugin;
 use Pronto\MobileBundle\Entity\Device;
@@ -10,6 +11,8 @@ use Pronto\MobileBundle\Entity\PushNotification;
 use Pronto\MobileBundle\Entity\PushNotification\Recipient;
 use Pronto\MobileBundle\Entity\PushNotification\Segment;
 use Pronto\MobileBundle\Form\PushNotificationForm;
+use Pronto\MobileBundle\Service\JsonTranslator;
+use Pronto\MobileBundle\Service\ProntoMobile;
 use Pronto\MobileBundle\Utils\Date;
 use Pronto\MobileBundle\Utils\Doctrine\GroupClause;
 use Pronto\MobileBundle\Utils\Doctrine\LeftJoinClause;
@@ -41,12 +44,11 @@ class PushNotificationController extends BaseController implements ValidateCusto
 	 * Show a list of sent notifications
 	 *
 	 * @param Request $request
+	 * @param EntityManagerInterface $entityManager
 	 * @return \Symfony\Component\HttpFoundation\Response
 	 */
-	public function indexAction(Request $request)
+	public function indexAction(Request $request, EntityManagerInterface $entityManager)
 	{
-		$entityManager = $this->getDoctrine()->getManager();
-
 		$application = $this->getApplication();
 
 		$pageHelper = new PageHelper($request, $entityManager, PushNotification::class, 15, 't.sent', 'DESC');
@@ -62,7 +64,7 @@ class PushNotificationController extends BaseController implements ValidateCusto
 		$pageHelper->addClause(new WhereNotNullClause('t.sent'));
 		$pageHelper->addClause(new GroupClause('t.id'));
 
-		$scheduledNotifications = $this->getDoctrine()->getRepository(PushNotification::class)->findBy([
+		$scheduledNotifications = $entityManager->getRepository(PushNotification::class)->findBy([
 			'sent'        => null,
 			'application' => $application
 		]);
@@ -78,15 +80,16 @@ class PushNotificationController extends BaseController implements ValidateCusto
 	/**
 	 * Create a new push notification
 	 *
+	 * @param ProntoMobile $prontoMobile
+	 * @param JsonTranslator $jsonTranslator
+	 * @param EntityManagerInterface $entityManager
 	 * @param null $identifier
 	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
 	 * @throws \Doctrine\ORM\NoResultException
 	 * @throws \Doctrine\ORM\NonUniqueResultException
 	 */
-	public function editAction($identifier = null)
+	public function editAction(ProntoMobile $prontoMobile, JsonTranslator $jsonTranslator, EntityManagerInterface $entityManager, $identifier = null)
 	{
-		$entityManager = $this->getDoctrine()->getManager();
-
 		$notification = null;
 
 		if ($identifier !== null) {
@@ -112,15 +115,13 @@ class PushNotificationController extends BaseController implements ValidateCusto
 
 		$form = $this->createForm(PushNotificationForm::class, $notification, [
 			'segments'        => $segments,
-			'json_translator' => $this->get('pronto_mobile.global.json_translator'),
+			'json_translator' => $jsonTranslator,
 			'entityManager'   => $entityManager
 		]);
 
 		if (count($segments) === 0) {
 			$form->remove('segment');
 		}
-
-		$prontoMobile = $this->get('pronto_mobile.global.app');
 
 		$config = $prontoMobile->getPluginConfiguration(Plugin::PUSH_NOTIFICATIONS);
 
@@ -137,14 +138,14 @@ class PushNotificationController extends BaseController implements ValidateCusto
 	 * Save the push notification
 	 *
 	 * @param Request $request
+	 * @param EntityManagerInterface $entityManager
 	 * @param UserInterface $user
 	 * @param null $identifier
 	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+	 * @throws \Doctrine\ORM\ORMException
 	 */
-	public function saveAction(Request $request, UserInterface $user, $identifier = null)
+	public function saveAction(Request $request, EntityManagerInterface $entityManager, UserInterface $user, $identifier = null)
 	{
-		$entityManager = $this->getDoctrine()->getManager();
-
 		$notification = null;
 
 		if ($identifier !== null) {
@@ -230,15 +231,12 @@ class PushNotificationController extends BaseController implements ValidateCusto
 	/**
 	 * Show the details of a push notification
 	 *
+	 * @param EntityManagerInterface $entityManager
 	 * @param $identifier
 	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-	 * @throws \Doctrine\ORM\NoResultException
-	 * @throws \Doctrine\ORM\NonUniqueResultException
 	 */
-	public function detailsAction($identifier)
+	public function detailsAction(EntityManagerInterface $entityManager, $identifier)
 	{
-		$entityManager = $this->getDoctrine()->getManager();
-
 		$notification = $entityManager->getRepository(PushNotification::class)->find($identifier);
 
 		if ($notification === null || $notification->getApplication()->getId() !== $this->getApplication()->getId()) {
@@ -291,16 +289,16 @@ class PushNotificationController extends BaseController implements ValidateCusto
 	 * Get the recipient count of the notification
 	 *
 	 * @param Request $request
+	 * @param EntityManagerInterface $entityManager
 	 * @return JsonResponse
-	 * @throws \Doctrine\DBAL\DBALException
 	 */
-	public function recipientsAction(Request $request): JsonResponse
+	public function recipientsAction(Request $request, EntityManagerInterface $entityManager): JsonResponse
 	{
 		$test = $request->request->getBoolean('test');
 		$segment = $request->request->getInt('segment');
 		$testDevices = $request->request->get('testDevices', []);
 
-		$recipients = $this->getDoctrine()->getManager()->getRepository(PushNotification::class)->getRecipientCount($this->getApplication(), $segment, $test, $testDevices);
+		$recipients = $entityManager->getRepository(PushNotification::class)->getRecipientCount($this->getApplication(), $segment, $test, $testDevices);
 
 		return new JsonResponse(['error' => false, 'recipients' => $recipients]);
 	}

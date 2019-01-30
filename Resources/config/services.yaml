@@ -7,189 +7,50 @@ services:
     # default configuration for services in *this* file
     _defaults:
         # automatically injects dependencies in your services
-        autowire: false
+        autowire: true
         # automatically registers your services as commands, event subscribers, etc.
-        autoconfigure: false
+        autoconfigure: true
         # this means you cannot fetch services directly from the container via $container->get()
         # if you need to do this, you can override this setting on individual services
         public: false
 
-
-    #### ALIASES ####
-    pronto_mobile.entity_manager: '@doctrine.orm.entity_manager'
-
+    Pronto\MobileBundle\:
+        resource: '../../{Command,Controller,DataFixtures,EventListener,EventSubscriber,Provider,Repository,Security,Service}'
 
     #### TWIG EXTENSIONS ####
-    pronto_mobile.twig.asset_versioning:
-        class: Pronto\MobileBundle\Twig\AssetVersioning
-        public: true
+    Pronto\MobileBundle\Twig\AssetVersioning:
         tags: ['twig.extension']
-        arguments: ['@kernel']
-
-    #### PRONTO MOBILE GLOBAL SERVICES ####
-    pronto_mobile.collection.entry_value_parser:
-        class: Pronto\MobileBundle\Service\Collection\EntryValueParser
-        public: true
-        arguments: ['@translator.default', '@pronto_mobile.global.json_translator']
-
-    pronto_mobile.collection.entry_parser:
-        class: Pronto\MobileBundle\Service\Collection\EntryParser
-        public: true
-        arguments: ['@pronto_mobile.entity_manager']
-
-    pronto_mobile.collection.query_generator:
-        class: Pronto\MobileBundle\Service\Collection\QueryGenerator
-        public: true
-        arguments: ['@pronto_mobile.entity_manager', '@request_stack']
-
-    pronto_mobile.collection.retriever:
-        class: Pronto\MobileBundle\Service\Collection\Retriever
-        public: true
-        arguments: ['@pronto_mobile.collection.query_generator', '@pronto_mobile.entity_manager', '@pronto_mobile.collection.entry_parser']
-
-    pronto_mobile.global.file_uploader:
-        public: true
-        class: Pronto\MobileBundle\Service\FileUploader
-
-    pronto_mobile.global.font_awesome_loader:
-        public: true
-        class: Pronto\MobileBundle\Service\FontAwesomeLoader
-
-    pronto_mobile.global.languages_loader:
-        class: Pronto\MobileBundle\Service\LanguagesLoader
-        public: true
-        arguments: ['@file_locator']
-
-    pronto_mobile.global.json_translator:
-        class: Pronto\MobileBundle\Service\JsonTranslator
-        public: true
-        arguments: ['@request_stack', '@pronto_mobile.entity_manager']
-
-    pronto_mobile.global.json_serializer:
-        class: Pronto\MobileBundle\Service\JsonSerializer
-        public: true
-
-    pronto_mobile.global.app:
-        class: Pronto\MobileBundle\Service\ProntoMobile
-        public: true
-        arguments: ['@request_stack', '@pronto_mobile.entity_manager']
-
-    pronto_mobile.push_notification.sender:
-        class: Pronto\MobileBundle\Service\PushNotification\Sender
-        public: true
-        arguments: ['@pronto_mobile.entity_manager', '@pronto_mobile.push_notification.google_service_account_loader']
-
-    pronto_mobile.push_notification.apns_token_converter:
-        class: Pronto\MobileBundle\Service\PushNotification\ApnsTokenConverter
-        public: true
-
-    pronto_mobile.push_notification.google_service_account_loader:
-        class: Pronto\MobileBundle\Service\PushNotification\GoogleServiceAccountLoader
-        public: true
-        arguments: ['@file_locator']
-
-    pronto_mobile.global.request_body_validator:
-        class: Pronto\MobileBundle\Service\RequestBodyValidator
-        public: true
-
-
-    #### PRONTO MOBILE SECURITY SERVICES ####
-    pronto_mobile.security.app_user_provider:
-        class: Pronto\MobileBundle\Provider\AppUserProvider
-        public: true
-        arguments: ['@pronto_mobile.entity_manager']
-
-    pronto_mobile.security.login_form_authenticator:
-        class: Pronto\MobileBundle\Security\LoginFormAuthenticator
-        public: true
-        arguments: ['@Symfony\Component\Form\FormFactoryInterface', '@pronto_mobile.entity_manager', '@router', '@Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface', '@security.authorization_checker']
 
 
     #### PRONTO MOBILE DOCTRINE EVENT LISTENERS ####
-    pronto_mobile.doctrine.hash_password_listener:
-        class: Pronto\MobileBundle\EventListener\HashPasswordListener
+    Pronto\MobileBundle\EventListener\HashPasswordListener:
         tags:
             - { name: doctrine.event_listener, event: prePersist }
             - { name: doctrine.event_listener, event: preUpdate }
-        arguments: ['@Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface']
 
-    pronto_mobile.listener.entity.customer:
-        class: Pronto\MobileBundle\EventListener\CustomerListener
+    Pronto\MobileBundle\EventListener\CustomerListener:
         tags:
             - { name: doctrine.event_listener, event: prePersist }
             - { name: doctrine.event_listener, event: postPersist }
             - { name: doctrine.event_listener, event: preUpdate }
             - { name: doctrine.event_listener, event: postLoad }
-        arguments: ['@pronto_mobile.global.file_uploader', '@pronto_mobile.global.app', '@translator.default']
 
-    pronto_mobile.listener.entity.notification:
-        class: Pronto\MobileBundle\EventListener\NotificationListener
+    Pronto\MobileBundle\EventListener\NotificationListener:
         tags:
             - { name: doctrine.event_listener, event: prePersist }
             - { name: doctrine.event_listener, event: preUpdate }
-        arguments: ['@logger', '@pronto_mobile.push_notification.google_service_account_loader']
 
-    pronto_mobile.listener.entity.access_token:
-        class: Pronto\MobileBundle\EventListener\AccessTokenListener
+    Pronto\MobileBundle\EventListener\AccessTokenListener:
         tags:
             - { name: doctrine.event_listener, event: postPersist }
 
-    pronto_mobile.listener.entity.application_version:
-        class: Pronto\MobileBundle\EventListener\ApplicationVersionListener
+    Pronto\MobileBundle\EventListener\ApplicationVersionListener:
         tags:
             - { name: doctrine.event_listener, event: postPersist }
-        arguments: ['@request_stack', '@security.token_storage']
 
-
-    #### PRONTO MOBILE SUBSCRIBERS ####
-    pronto_mobile.subscriber.api_exception:
-        class: Pronto\MobileBundle\EventSubscriber\ApiExceptionSubscriber
+    Pronto\MobileBundle\EventListener\PluginListener:
         tags:
-            - { name: kernel.event_subscriber }
-
-    pronto_mobile.subscriber.redirect_when_authenticated:
-        class: Pronto\MobileBundle\EventSubscriber\RedirectWhenAuthenticatedSubscriber
-        tags:
-            - { name: kernel.event_subscriber }
-        arguments: ['@security.authorization_checker', '@router']
-
-    pronto_mobile.subscriber.vaidate_application_selection:
-        class: Pronto\MobileBundle\EventSubscriber\ValidateApplicationSelectionSubscriber
-        tags:
-            - { name: kernel.event_subscriber }
-        arguments: ['@router', '@pronto_mobile.global.app', '@pronto_mobile.entity_manager']
-
-    pronto_mobile.subscriber.vaidate_customer_selection:
-        class: Pronto\MobileBundle\EventSubscriber\ValidateCustomerSelectionSubscriber
-        tags:
-            - { name: kernel.event_subscriber }
-        arguments: ['@router', '@pronto_mobile.global.app', '@pronto_mobile.entity_manager']
-
-    pronto_mobile.subscriber.vaidate_plugin_state:
-        class: Pronto\MobileBundle\EventSubscriber\ValidatePluginStateSubscriber
-        tags:
-            - { name: kernel.event_subscriber }
-        arguments: ['@router', '@pronto_mobile.global.app']
-
-
-    #### PRONTO COMMANDS ####
-    Pronto\MobileBundle\Command\Firebase\ConvertApnsTokensCommand:
-        public: true
-        arguments: ['@pronto_mobile.entity_manager', '@pronto_mobile.global.app', '@pronto_mobile.push_notification.apns_token_converter', 'ConvertApnsTokensCommand']
-        tags:
-            - {name: console.command}
-
-    Pronto\MobileBundle\Command\Firebase\RetrieveLogsCommand:
-        public: true
-        arguments: ['@pronto_mobile.entity_manager', '@pronto_mobile.push_notification.google_service_account_loader', '@pronto_mobile.global.app', 'RetrieveLogsCommand']
-        tags:
-            - {name: console.command}
-
-    Pronto\MobileBundle\Command\Firebase\SendPushNotificationsCommand:
-        public: true
-        arguments: ['@pronto_mobile.entity_manager', '@pronto_mobile.global.app', '@pronto_mobile.push_notification.sender', 'SendPushNotificationsCommand']
-        tags:
-            - {name: console.command}
+            - { name: doctrine.event_listener, event: postPersist }
 
 
     #### PRONTO MOBILE DATA FIXTURES ####

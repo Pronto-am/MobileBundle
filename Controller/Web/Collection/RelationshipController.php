@@ -2,6 +2,7 @@
 
 namespace Pronto\MobileBundle\Controller\Web\Collection;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Pronto\MobileBundle\Controller\BaseController;
 use Pronto\MobileBundle\Entity\Collection;
 use Pronto\MobileBundle\Entity\Plugin;
@@ -9,6 +10,7 @@ use Pronto\MobileBundle\Form\Collection\RelationshipForm;
 use Pronto\MobileBundle\EventSubscriber\ValidateApplicationSelectionInterface;
 use Pronto\MobileBundle\EventSubscriber\ValidateCustomerSelectionInterface;
 use Pronto\MobileBundle\EventSubscriber\ValidatePluginStateInterface;
+use Pronto\MobileBundle\Service\ProntoMobile;
 use Symfony\Component\HttpFoundation\Request;
 
 class RelationshipController extends BaseController implements ValidatePluginStateInterface, ValidateApplicationSelectionInterface, ValidateCustomerSelectionInterface
@@ -42,14 +44,13 @@ class RelationshipController extends BaseController implements ValidatePluginSta
 	 * Edit a collections relationship
 	 *
 	 * @param Request $request
+	 * @param EntityManagerInterface $entityManager
 	 * @param $identifier
 	 * @param Collection\Relationship|null $relationship
 	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
 	 */
-	public function editAction(Request $request, $identifier, Collection\Relationship $relationship = null)
+	public function editAction(Request $request, EntityManagerInterface $entityManager, $identifier, Collection\Relationship $relationship = null)
 	{
-		$entityManager = $this->getDoctrine()->getManager();
-
 		/** @var Collection $collection */
 		$collection = $entityManager->getRepository(Collection::class)->findOneBy([
 			'identifier'         => $identifier,
@@ -101,15 +102,13 @@ class RelationshipController extends BaseController implements ValidatePluginSta
 	/**
 	 * Save the relationship
 	 *
-	 * @param Request $request
+	 * @param EntityManagerInterface $entityManager
 	 * @param $identifier
 	 * @param Collection\Relationship|null $relationship
 	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
 	 */
-	public function saveAction(Request $request, $identifier, Collection\Relationship $relationship = null)
+	public function saveAction(EntityManagerInterface $entityManager, $identifier, Collection\Relationship $relationship = null)
 	{
-		$entityManager = $this->getDoctrine()->getManager();
-
 		/** @var Collection $collection */
 		$collection = $entityManager->getRepository(Collection::class)->findOneBy([
 			'identifier'         => $identifier,
@@ -140,15 +139,13 @@ class RelationshipController extends BaseController implements ValidatePluginSta
 	 * Delete one or multiple relationships
 	 *
 	 * @param Request $request
+	 * @param EntityManagerInterface $entityManager
+	 * @param ProntoMobile $prontoMobile
 	 * @param $identifier
 	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
 	 */
-	public function deleteAction(Request $request, $identifier)
+	public function deleteAction(Request $request, EntityManagerInterface $entityManager, ProntoMobile $prontoMobile, $identifier)
 	{
-		$entityManager = $this->getDoctrine()->getManager();
-
-		$prontoMobile = $this->get('pronto_mobile.global.app');
-
 		$collection = $entityManager->getRepository(Collection::class)->findOneBy([
 			'identifier'         => $identifier,
 			'applicationVersion' => $prontoMobile->getApplicationVersion()
@@ -180,16 +177,13 @@ class RelationshipController extends BaseController implements ValidatePluginSta
 	/**
 	 * Edit the relation of an entry
 	 *
-	 * @param Request $request
+	 * @param EntityManagerInterface $entityManager
 	 * @param Collection\Entry $entry
 	 * @param Collection\Relationship $relationship
 	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-	 * @throws \Doctrine\DBAL\DBALException
 	 */
-	public function editRelationshipsAction(Request $request, Collection\Entry $entry, Collection\Relationship $relationship)
+	public function editRelationshipsAction(EntityManagerInterface $entityManager, Collection\Entry $entry, Collection\Relationship $relationship)
 	{
-		$entityManager = $this->getDoctrine()->getManager();
-
 		if ($relationship->getCollection()->getName() !== $entry->getCollection()->getName()) {
 			return $this->redirectToRoute('pronto_mobile_collections');
 		}
@@ -221,14 +215,14 @@ class RelationshipController extends BaseController implements ValidatePluginSta
 	 * Edit the relation of an entry
 	 *
 	 * @param Request $request
+	 * @param EntityManagerInterface $entityManager
 	 * @param Collection\Entry $entry
 	 * @param Collection\Relationship $relationship
 	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+	 * @throws \Doctrine\ORM\ORMException
 	 */
-	public function saveRelationshipsAction(Request $request, Collection\Entry $entry, Collection\Relationship $relationship)
+	public function saveRelationshipsAction(Request $request, EntityManagerInterface $entityManager, Collection\Entry $entry, Collection\Relationship $relationship)
 	{
-		$entityManager = $this->getDoctrine()->getManager();
-
 		// Delete the old relationships
 		$mappers = $entityManager->getRepository(Collection\Relationship\Mapper::class)->findBy([
 			'entryLeft'         => $entry,

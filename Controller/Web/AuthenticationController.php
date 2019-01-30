@@ -2,37 +2,38 @@
 
 namespace Pronto\MobileBundle\Controller\Web;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Pronto\MobileBundle\Controller\BaseController;
 use Pronto\MobileBundle\Entity\Customer;
 use Pronto\MobileBundle\Entity\PasswordReset;
 use Pronto\MobileBundle\Entity\User;
+use Pronto\MobileBundle\EventSubscriber\RedirectWhenAuthenticatedInterface;
 use Pronto\MobileBundle\Form\LoginForm;
 use Pronto\MobileBundle\Form\ResetPasswordEmailForm;
 use Pronto\MobileBundle\Form\ResetPasswordForm;
-use Pronto\MobileBundle\EventSubscriber\RedirectWhenAuthenticatedInterface;
+use Pronto\MobileBundle\Service\ProntoMobile;
 use RuntimeException;
-use Symfony\Bundle\FrameworkBundle\Translation\Translator;
-use Symfony\Component\HttpFoundation\Response;
 use Swift_Mailer;
 use Swift_Message;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class AuthenticationController extends BaseController implements RedirectWhenAuthenticatedInterface
 {
 	/**
 	 * Show the login form
 	 *
+	 * @param AuthenticationUtils $authenticationUtils
 	 * @return Response
 	 */
-	public function loginAction(): Response
+	public function loginAction(AuthenticationUtils $authenticationUtils): Response
 	{
-		$authenticationUtils = $this->get('security.authentication_utils');
-
 		// get the login error if there is one
 		$error = $authenticationUtils->getLastAuthenticationError();
 
@@ -94,19 +95,20 @@ class AuthenticationController extends BaseController implements RedirectWhenAut
 	 * Show the reset password form
 	 *
 	 * @param Request $request
+	 * @param EntityManagerInterface $entityManager
+	 * @param AuthenticationUtils $authenticationUtils
+	 * @param Swift_Mailer $mailer
+	 * @param TranslatorInterface $translator
+	 * @param ProntoMobile $prontoMobile
 	 * @return Response
 	 */
-	public function resetPasswordFormAction(Request $request): Response
+	public function resetPasswordFormAction(Request $request,
+											EntityManagerInterface $entityManager,
+											AuthenticationUtils $authenticationUtils,
+											Swift_Mailer $mailer,
+											TranslatorInterface $translator,
+											ProntoMobile $prontoMobile): Response
 	{
-		/** @var Swift_Mailer $mailer */
-		$mailer = $this->get('swiftmailer.mailer.default');
-
-		/** @var Translator $translator */
-		$translator = $this->get('translator');
-
-		/** @var AuthenticationUtils $authenticationUtils */
-		$authenticationUtils = $this->get('security.authentication_utils');
-
 		// get the login error if there is one
 		$error = $authenticationUtils->getLastAuthenticationError();
 
@@ -122,13 +124,9 @@ class AuthenticationController extends BaseController implements RedirectWhenAut
 		if ($form->isSubmitted() && $form->isValid()) {
 			$data = $form->getData();
 
-			// Get the user according to the email address
-			$entityManager = $this->getDoctrine()->getManager();
-
 			/** @var User $user */
 			$user = $entityManager->getRepository(User::class)->findOneBy(['email' => $data['email']]);
 
-			$prontoMobile = $this->get('pronto_mobile.global.app');
 			$domain = $prontoMobile->getConfiguration('domain', 'pronto.am');
 
 			if ($user !== null) {
@@ -178,15 +176,13 @@ class AuthenticationController extends BaseController implements RedirectWhenAut
 	 * Show the reset password form
 	 *
 	 * @param Request $request
+	 * @param EntityManagerInterface $entityManager
+	 * @param TranslatorInterface $translator
 	 * @param $token
 	 * @return Response
 	 */
-	public function resetPasswordAction(Request $request, $token): Response
+	public function resetPasswordAction(Request $request, EntityManagerInterface $entityManager, TranslatorInterface $translator, $token): Response
 	{
-		$translator = $this->get('translator');
-
-		$entityManager = $this->getDoctrine()->getManager();
-
 		/** @var PasswordReset $passwordReset */
 		$passwordReset = $entityManager->getRepository(PasswordReset::class)->findOneBy([
 			'token' => $token
@@ -233,7 +229,7 @@ class AuthenticationController extends BaseController implements RedirectWhenAut
 			$this->get('security.token_storage')->setToken($token);
 			$this->get('session')->set('_security_main', serialize($token));
 
-			if($user->getCustomer() !== null) {
+			if ($user->getCustomer() !== null) {
 				// Set the customer in the cache
 				$request->getSession()->set(Customer::SESSION_IDENTIFIER, $user->getCustomer()->getId());
 
@@ -243,11 +239,10 @@ class AuthenticationController extends BaseController implements RedirectWhenAut
 			return $this->redirectToRoute('pronto_mobile_select_customer');
 		}
 
-		return $this->render('@ProntoMobile/authentication/password-reset.html.twig',
-			[
-				'form'      => $form->createView(),
-				'resetting' => true
-			]);
+		return $this->render('@ProntoMobile/authentication/password-reset.html.twig', [
+			'form'      => $form->createView(),
+			'resetting' => true
+		]);
 	}
 
 
@@ -255,13 +250,12 @@ class AuthenticationController extends BaseController implements RedirectWhenAut
 	 * Show the create password form
 	 *
 	 * @param Request $request
+	 * @param EntityManagerInterface $entityManager
 	 * @param $token
 	 * @return Response
 	 */
-	public function createPasswordAction(Request $request, $token): Response
+	public function createPasswordAction(Request $request, EntityManagerInterface $entityManager, $token): Response
 	{
-		$entityManager = $this->getDoctrine()->getManager();
-
 		/** @var User $user */
 		$user = $entityManager->getRepository(User::class)->findOneBy([
 			'activationToken' => $token
@@ -290,7 +284,7 @@ class AuthenticationController extends BaseController implements RedirectWhenAut
 			$this->get('security.token_storage')->setToken($token);
 			$this->get('session')->set('_security_main', serialize($token));
 
-			if($user->getCustomer() !== null) {
+			if ($user->getCustomer() !== null) {
 				// Set the customer in the cache
 				$request->getSession()->set(Customer::SESSION_IDENTIFIER, $user->getCustomer()->getId());
 

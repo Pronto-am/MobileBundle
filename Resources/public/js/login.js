@@ -1,1 +1,110 @@
-!function(t){var n={};function o(e){if(n[e])return n[e].exports;var c=n[e]={i:e,l:!1,exports:{}};return t[e].call(c.exports,c,c.exports,o),c.l=!0,c.exports}o.m=t,o.c=n,o.d=function(t,n,e){o.o(t,n)||Object.defineProperty(t,n,{configurable:!1,enumerable:!0,get:e})},o.n=function(t){var n=t&&t.__esModule?function(){return t.default}:function(){return t};return o.d(n,"a",n),n},o.o=function(t,n){return Object.prototype.hasOwnProperty.call(t,n)},o.p="/",o(o.s=3)}({3:function(t,n,o){t.exports=o("IJDD")},IJDD:function(t,n){$(document).ready(function(){$(".activate-loader").click(function(){$(".loader-container").fadeIn(200)}),$(".collection-customers .collection-item, .collection-applications .collection-item").click(function(){var t=$(this).data("id"),n=$(this).closest(".collection").hasClass("collection-customers")?"/admin/customers":"/admin/applications";$.ajax({url:n,type:"POST",dataType:"json",data:{id:t},success:function(t){t.error||(window.location=t.url)}})})})}});
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, {
+/******/ 				configurable: false,
+/******/ 				enumerable: true,
+/******/ 				get: getter
+/******/ 			});
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "/";
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = 3);
+/******/ })
+/************************************************************************/
+/******/ ({
+
+/***/ "./Resources/assets/js/login.js":
+/***/ (function(module, exports) {
+
+$(document).ready(function () {
+    $('.activate-loader').click(function () {
+        $('.loader-container').fadeIn(200);
+    });
+
+    $('.collection-customers .collection-item, .collection-applications .collection-item').click(function () {
+        var id = $(this).data('id');
+
+        var url = $(this).closest('.collection').hasClass('collection-customers') ? '/admin/customers' : '/admin/applications';
+
+        // Make the ajax call to select the customer
+        $.ajax({
+            url: url,
+            type: "POST",
+            dataType: "json",
+            data: {
+                'id': id
+            },
+            success: function success(data) {
+                console.log(data);
+
+                if (!data.error) {
+                    window.location = data.url;
+                }
+            }
+        });
+    });
+});
+
+/***/ }),
+
+/***/ 3:
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__("./Resources/assets/js/login.js");
+
+
+/***/ })
+
+/******/ });

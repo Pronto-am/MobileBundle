@@ -1,0 +1,51 @@
+{% extends '@ProntoMobile/base.html.twig' %}
+
+{% block body %}
+
+    {% include '@ProntoMobile/components/toolbar.html.twig' with {pageTitle: 'translations'|trans|capitalize, newObjectUrl: 'pronto_mobile_translations_edit', 'delete': pageHelper.getList()|length > 0} %}
+
+    {% if pageHelper.getList()|length > 0 %}
+        <div class="card">
+            <div class="card-content">
+                <form action="{{ path('pronto_mobile_translations_delete') }}" method="POST">
+                    <table class="table striped bordered highlight responsive-table">
+                        <thead>
+                        <tr>
+                            <th width="60" class="has-checkbox">
+                                <input type="checkbox" id="checkAll">
+                                <label for="checkAll"></label>
+                            </th>
+                            <th width="50">#</th>
+                            <th>{{ pageHelper.createSortableLink('translations.key'|trans|capitalize, 't.key') }}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for key, translation in pageHelper.getList() %}
+                            <tr>
+                                <td class="has-checkbox">
+                                    <input type="checkbox" id="translationsCheckbox{{ user.id }}" name="translations[]" value="{{ translation.id }}">
+                                    <label for="translationsCheckbox{{ user.id }}"></label>
+                                </td>
+                                <td>
+                                    {{ pageHelper.getRowNumber(key) }}
+                                </td>
+                                <td>
+                                    <a href="{{ path('pronto_mobile_translations_edit', {'id': translation.id}) }}" class="regular">
+                                        {{ translation.key }}
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+        </div>
+
+        {% include '@ProntoMobile/components/pagination.html.twig' with {pageHelper: pageHelper} %}
+    {% else %}
+        {% include '@ProntoMobile/components/alert.html.twig' with {type: 'info', collection: 'translations'} %}
+    {% endif %}
+
+    {% include '@ProntoMobile/components/confirm.html.twig' with {postUrl: path('pronto_mobile_translations_delete')} %}
+{% endblock %}

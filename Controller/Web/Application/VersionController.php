@@ -2,6 +2,7 @@
 
 namespace Pronto\MobileBundle\Controller\Web\Application;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Pronto\MobileBundle\Controller\BaseController;
 use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\Application\Version;
@@ -17,14 +18,13 @@ class VersionController extends BaseController
 	 * Edit a new or existing application version
 	 *
 	 * @param Request $request
+	 * @param EntityManagerInterface $entityManager
 	 * @param null $id
 	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
 	 */
-	public function editAction(Request $request, $id = null)
+	public function editAction(Request $request, EntityManagerInterface $entityManager, $id = null)
 	{
 		$application = $this->getApplication();
-
-		$entityManager = $this->getDoctrine()->getManager();
 
 		$applicationVersion = $id !== null ? $entityManager->getRepository(Version::class)->find($id) : null;
 
@@ -56,14 +56,12 @@ class VersionController extends BaseController
 	 * Delete an application version
 	 *
 	 * @param Request $request
+	 * @param EntityManagerInterface $entityManager
 	 * @return JsonResponse
-	 * @throws \Psr\Cache\InvalidArgumentException
 	 */
-	public function deleteAction(Request $request)
+	public function deleteAction(Request $request, EntityManagerInterface $entityManager)
 	{
 		$id = $request->request->get('id');
-
-		$entityManager = $this->getDoctrine()->getManager();
 
 		$version = $entityManager->getRepository(Version::class)->findOneBy([
 			'id'          => $id,

@@ -2,6 +2,7 @@
 
 namespace Pronto\MobileBundle\Controller\Web;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Pronto\MobileBundle\Controller\BaseController;
 use Pronto\MobileBundle\Entity\Collection;
 use Pronto\MobileBundle\Entity\Plugin;
@@ -9,6 +10,7 @@ use Pronto\MobileBundle\Form\CollectionForm;
 use Pronto\MobileBundle\EventSubscriber\ValidateApplicationSelectionInterface;
 use Pronto\MobileBundle\EventSubscriber\ValidateCustomerSelectionInterface;
 use Pronto\MobileBundle\EventSubscriber\ValidatePluginStateInterface;
+use Pronto\MobileBundle\Service\FontAwesomeLoader;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -30,13 +32,11 @@ class CollectionController extends BaseController implements ValidatePluginState
 	/**
 	 * Show a list of collections
 	 *
+	 * @param EntityManagerInterface $entityManager
 	 * @return \Symfony\Component\HttpFoundation\Response
-	 * @throws \LogicException
 	 */
-	public function indexAction()
+	public function indexAction(EntityManagerInterface $entityManager)
 	{
-		$entityManager = $this->getDoctrine()->getManager();
-
 		$collections = $entityManager->getRepository(Collection::class)->findBy([
 			'applicationVersion' => $this->getApplicationVersion()
 		], ['name' => 'ASC']);
@@ -52,10 +52,12 @@ class CollectionController extends BaseController implements ValidatePluginState
 	 * Edit a collection
 	 *
 	 * @param Request $request
+	 * @param FontAwesomeLoader $fontAwesomeLoader
+	 * @param EntityManagerInterface $entityManager
 	 * @param Collection $collection
 	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
 	 */
-	public function editAction(Request $request, Collection $collection = null)
+	public function editAction(Request $request, FontAwesomeLoader $fontAwesomeLoader, EntityManagerInterface $entityManager, Collection $collection = null)
 	{
 		if(!$this->isGranted('ROLE_SUPER_ADMIN')) {
 			$this->addNoPermissionFlash();
@@ -73,7 +75,7 @@ class CollectionController extends BaseController implements ValidatePluginState
 		$originalIdentifier = $collection !== null ? $collection->getIdentifier() : '';
 
 		$form = $this->createForm(CollectionForm::class, $collection, [
-			'fontAwesome' => $this->get('pronto_mobile.global.font_awesome_loader')
+			'fontAwesome' => $fontAwesomeLoader
 		]);
 
 		$form->handleRequest($request);
@@ -88,7 +90,6 @@ class CollectionController extends BaseController implements ValidatePluginState
 				$collection->setIdentifier($originalIdentifier);
 			}
 
-			$entityManager = $this->getDoctrine()->getManager();
 			$entityManager->persist($collection);
 			$entityManager->flush();
 
@@ -108,14 +109,12 @@ class CollectionController extends BaseController implements ValidatePluginState
 	 * Delete a collection
 	 *
 	 * @param Request $request
+	 * @param EntityManagerInterface $entityManager
 	 * @return JsonResponse
-	 * @throws \Psr\Cache\InvalidArgumentException
 	 */
-	public function deleteAction(Request $request)
+	public function deleteAction(Request $request, EntityManagerInterface $entityManager)
 	{
 		$id = $request->request->get('id');
-
-		$entityManager = $this->getDoctrine()->getManager();
 
 		/** @var Collection $collection */
 		$collection = $entityManager->getRepository(Collection::class)->find($id);

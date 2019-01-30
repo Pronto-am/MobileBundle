@@ -2,6 +2,7 @@
 
 namespace Pronto\MobileBundle\Controller\Api\V1;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Pronto\MobileBundle\Controller\Api\BaseApiController;
 use Pronto\MobileBundle\Entity\Device;
 use Pronto\MobileBundle\Entity\Device\DeviceSegment;
@@ -43,17 +44,14 @@ class PushNotificationSegmentController extends BaseApiController
 	 */
 
 	/**
-	 * @param Request $request
+	 * @param EntityManagerInterface $entityManager
 	 * @param $deviceIdentifier
 	 * @return \Symfony\Component\HttpFoundation\JsonResponse
 	 * @throws \Pronto\MobileBundle\Exceptions\ApiException
-	 * @throws \Doctrine\DBAL\DBALException
 	 */
-	public function subscribedAction(Request $request, $deviceIdentifier)
+	public function subscribedAction(EntityManagerInterface $entityManager, $deviceIdentifier)
 	{
-		$this->validateAuthorization($request);
-
-		$entityManager = $this->getDoctrine()->getManager();
+		$this->validateAuthorization();
 
 		// Get the device by it's id
 		$device = $entityManager->getRepository(Device::class)->find($deviceIdentifier);
@@ -111,14 +109,16 @@ class PushNotificationSegmentController extends BaseApiController
 	 * @apiUse AuthorizationErrors
 	 */
 
-	/** @param Request $request
+	/**
+	 * @param Request $request
+	 * @param EntityManagerInterface $entityManager
 	 * @return \Symfony\Component\HttpFoundation\JsonResponse
 	 * @throws \Pronto\MobileBundle\Exceptions\ApiException
 	 */
-	public function updateAction(Request $request)
+	public function updateAction(Request $request, EntityManagerInterface $entityManager)
 	{
 		// Validate the authorization
-		$this->validateAuthorization($request);
+		$this->validateAuthorization();
 
 		// Validate the request body
 		$this->validateRequestContent($request, ['device_identifier', 'segments']);
@@ -130,8 +130,6 @@ class PushNotificationSegmentController extends BaseApiController
 		if (!is_array($content->segments)) {
 			$this->invalidParametersResponse(Segment::INVALID_SEGMENT_PARAMETER);
 		}
-
-		$entityManager = $this->getDoctrine()->getManager();
 
 		/** @var Device $device */
 		$device = $entityManager->getRepository(Device::class)->find($content->device_identifier);

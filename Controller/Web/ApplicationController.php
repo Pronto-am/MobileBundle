@@ -2,11 +2,13 @@
 
 namespace Pronto\MobileBundle\Controller\Web;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Pronto\MobileBundle\Controller\BaseController;
 use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\Application\Version;
 use Pronto\MobileBundle\Form\ApplicationForm;
 use Pronto\MobileBundle\Service\LanguagesLoader;
+use Pronto\MobileBundle\Service\ProntoMobile;
 use Pronto\MobileBundle\Utils\Doctrine\WhereClause;
 use Pronto\MobileBundle\Utils\PageHelper;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -20,12 +22,11 @@ class ApplicationController extends BaseController
 	 * Show a list of applications
 	 *
 	 * @param Request $request
+	 * @param EntityManagerInterface $entityManager
 	 * @return \Symfony\Component\HttpFoundation\Response
 	 */
-	public function indexAction(Request $request)
+	public function indexAction(Request $request, EntityManagerInterface $entityManager)
 	{
-		$entityManager = $this->getDoctrine()->getManager();
-
 		$pageHelper = new PageHelper($request, $entityManager, Application::class, 15, 't.name');
 		$pageHelper->addClause(new WhereClause('t.customer', $this->getCustomer()));
 
@@ -40,14 +41,13 @@ class ApplicationController extends BaseController
 	 * Edit an applications' details
 	 *
 	 * @param Request $request
+	 * @param LanguagesLoader $languagesLoader
+	 * @param EntityManagerInterface $entityManager
 	 * @param Application|null $application
 	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
 	 */
-	public function editAction(Request $request, Application $application = null)
+	public function editAction(Request $request, LanguagesLoader $languagesLoader, EntityManagerInterface $entityManager, Application $application = null)
 	{
-		/** @var LanguagesLoader $languages */
-		$languages = $this->get('pronto_mobile.global.languages_loader');
-
 		$customer = $this->getCustomer();
 
 		// The user is not allowed to edit applications belonging to other customers
@@ -56,7 +56,7 @@ class ApplicationController extends BaseController
 		}
 
 		$form = $this->createForm(ApplicationForm::class, $application, [
-			'languages' => $languages,
+			'languages' => $languagesLoader,
 			'locale'    => $request->getLocale()
 		]);
 
@@ -92,7 +92,6 @@ class ApplicationController extends BaseController
 
 			$application->setAvailableLanguages(array_values($availableLanguages));
 
-			$entityManager = $this->getDoctrine()->getManager();
 			$entityManager->persist($application);
 			$entityManager->flush();
 
@@ -112,14 +111,14 @@ class ApplicationController extends BaseController
 	 * Delete an application
 	 *
 	 * @param Request $request
+	 * @param EntityManagerInterface $entityManager
+	 * @param ProntoMobile $prontoMobile
 	 * @return JsonResponse
-	 * @throws \Psr\Cache\InvalidArgumentException
 	 */
-	public function deleteAction(Request $request)
+	public function deleteAction(Request $request, EntityManagerInterface $entityManager, ProntoMobile $prontoMobile)
 	{
 		$id = $request->request->getInt('id');
 
-		$entityManager = $this->getDoctrine()->getManager();
 		$application = $entityManager->getRepository(Application::class)->find($id);
 
 		// The user is not allowed to delete applications belonging to other customers
@@ -135,8 +134,6 @@ class ApplicationController extends BaseController
 		$entityManager->flush();
 
 		$this->addDataRemovedFlash();
-
-		$prontoMobile = $this->get('pronto_mobile.global.app');
 
 		// Check if the current item is the selected item
 		if ($prontoMobile->getApplication()->getId() === null) {
@@ -154,12 +151,11 @@ class ApplicationController extends BaseController
 	 * Let the user select an application from the list
 	 *
 	 * @param Request $request
+	 * @param EntityManagerInterface $entityManager
 	 * @return \Symfony\Component\HttpFoundation\Response
 	 */
-	public function selectApplicationAction(Request $request)
+	public function selectApplicationAction(Request $request, EntityManagerInterface $entityManager)
 	{
-		$entityManager = $this->getDoctrine()->getManager();
-
 		$applications = $entityManager->getRepository(Application::class)->findByCustomer($this->getCustomer());
 
 		// Get the target path the user intended to visit

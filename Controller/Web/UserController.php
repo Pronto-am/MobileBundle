@@ -2,11 +2,13 @@
 
 namespace Pronto\MobileBundle\Controller\Web;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Pronto\MobileBundle\Controller\BaseController;
 use Pronto\MobileBundle\Entity\User;
 use Pronto\MobileBundle\Form\PasswordForm;
 use Pronto\MobileBundle\Form\ProfileForm;
 use Pronto\MobileBundle\Form\UserForm;
+use Pronto\MobileBundle\Service\ProntoMobile;
 use Pronto\MobileBundle\Utils\Doctrine\WhereClause;
 use Pronto\MobileBundle\Utils\PageHelper;
 use Pronto\MobileBundle\EventSubscriber\ValidateCustomerSelectionInterface;
@@ -15,6 +17,7 @@ use Swift_Message;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class UserController extends BaseController implements ValidateCustomerSelectionInterface
 {
@@ -22,12 +25,11 @@ class UserController extends BaseController implements ValidateCustomerSelection
 	 * Show a list of CMS users
 	 *
 	 * @param Request $request
+	 * @param EntityManagerInterface $entityManager
 	 * @return \Symfony\Component\HttpFoundation\Response
 	 */
-	public function indexAction(Request $request)
+	public function indexAction(Request $request, EntityManagerInterface $entityManager)
 	{
-		$entityManager = $this->getDoctrine()->getManager();
-
 		$pageHelper = new PageHelper($request, $entityManager, User::class, 15, 't.lastName');
 		$pageHelper->addClause(new WhereClause('t.customer', $this->getCustomer()));
 
@@ -42,18 +44,17 @@ class UserController extends BaseController implements ValidateCustomerSelection
 	 * Update the users' profile
 	 *
 	 * @param Request $request
+	 * @param EntityManagerInterface $entityManager
 	 * @param UserInterface $user
 	 * @return \Symfony\Component\HttpFoundation\Response
 	 */
-	public function profileAction(Request $request, UserInterface $user)
+	public function profileAction(Request $request, EntityManagerInterface $entityManager, UserInterface $user)
 	{
 		$profileForm = $this->createForm(ProfileForm::class, $user);
 
 		$passwordForm = $this->createForm(PasswordForm::class);
 
 		if('POST' === $request->getMethod()) {
-			$entityManager = $this->getDoctrine()->getManager();
-
 			if($request->request->has('profile_form')) {
 				$profileForm->handleRequest($request);
 
@@ -99,16 +100,20 @@ class UserController extends BaseController implements ValidateCustomerSelection
 	 * Add or edit a user
 	 *
 	 * @param Request $request
+	 * @param EntityManagerInterface $entityManager
+	 * @param ProntoMobile $prontoMobile
+	 * @param TranslatorInterface $translator
+	 * @param Swift_Mailer $mailer
 	 * @param User|null $user
 	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
 	 */
-	public function editAction(Request $request, User $user = null)
+	public function editAction(Request $request,
+							   EntityManagerInterface $entityManager,
+							   ProntoMobile $prontoMobile,
+							   TranslatorInterface $translator,
+							   Swift_Mailer $mailer,
+							   User $user = null)
 	{
-		/** @var Swift_Mailer $mailer */
-		$mailer = $this->get('swiftmailer.mailer.default');
-
-		$translator = $this->get('translator');
-
 		$customer = $this->getCustomer();
 
 		// The user is not allowed to edit users belonging to other customers
@@ -121,8 +126,6 @@ class UserController extends BaseController implements ValidateCustomerSelection
 		$form->handleRequest($request);
 
 		if ($form->isSubmitted() && $form->isValid()) {
-			$entityManager = $this->getDoctrine()->getManager();
-
 			/** @var User $user */
 			$user = $form->getData();
 
@@ -140,7 +143,6 @@ class UserController extends BaseController implements ValidateCustomerSelection
 			$entityManager->persist($user);
 			$entityManager->flush();
 
-			$prontoMobile = $this->get('pronto_mobile.global.app');
 			$domain = $prontoMobile->getConfiguration('domain', 'pronto.am');
 
 			if ($new) {
@@ -181,12 +183,11 @@ class UserController extends BaseController implements ValidateCustomerSelection
 	 * Delete one or more users
 	 *
 	 * @param Request $request
+	 * @param EntityManagerInterface $entityManager
 	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
 	 */
-	public function deleteAction(Request $request)
+	public function deleteAction(Request $request, EntityManagerInterface $entityManager)
 	{
-		$entityManager = $this->getDoctrine()->getManager();
-
 		// Find users by id and the current customer
 		$users = $entityManager->getRepository(User::class)->findBy([
 			'id'       => $request->get('users'),

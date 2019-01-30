@@ -2,6 +2,7 @@
 
 namespace Pronto\MobileBundle\Controller\Api\V1;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Pronto\MobileBundle\Controller\Api\BaseApiController;
 use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\AppUser;
@@ -82,14 +83,14 @@ class DeviceController extends BaseApiController
 
 	/**
 	 * @param Request $request
-	 * @param JsonSerializer $serializer
+	 * @param EntityManagerInterface $entityManager
 	 * @return \Symfony\Component\HttpFoundation\JsonResponse
 	 * @throws \Pronto\MobileBundle\Exceptions\ApiException
 	 */
-	public function registerAction(Request $request, JsonSerializer $serializer)
+	public function registerAction(Request $request, EntityManagerInterface $entityManager)
 	{
 		// Validate the authorization
-		$this->validateAuthorization($request);
+		$this->validateAuthorization();
 
 		// Validate the body
 		$this->validateRequestContent($request, ['name', 'model', 'manufacturer', 'platform', 'os_version', 'app_version', 'language']);
@@ -102,13 +103,8 @@ class DeviceController extends BaseApiController
 			$this->invalidParametersResponse(Device::MISSING_APNS_OR_FIREBASE_TOKEN);
 		}
 
-		// Get the main app's service
-		$prontoMobile = $this->get('pronto_mobile.global.app');
-
 		/** @var Application $application */
-		$application = $prontoMobile->getApplication();
-
-		$entityManager = $this->getDoctrine()->getManager();
+		$application = $this->prontoMobile->getApplication();
 
 		if (isset($content->firebase_token) && !empty($content->firebase_token)) {
 			/** @var Device $device */
@@ -126,7 +122,7 @@ class DeviceController extends BaseApiController
 
 		if ($device !== null) {
 			if ($device->getTokenState()) {
-				$this->customErrorResponse(Device::DEVICE_ALREADY_REGISTERED, $serializer->serialize($device, [new DateTimeNormalizer()]));
+				$this->customErrorResponse(Device::DEVICE_ALREADY_REGISTERED, $this->serializer->serialize($device, [new DateTimeNormalizer()]));
 			} else {
 
 				// If the token state was false, re-register the device and return it
@@ -148,12 +144,12 @@ class DeviceController extends BaseApiController
 				$entityManager->persist($device);
 				$entityManager->flush();
 
-				return $this->successResponse($serializer->serialize($device, [new DateTimeNormalizer()]), 'The devices\' registration is refreshed');
+				return $this->successResponse($this->serializer->serialize($device, [new DateTimeNormalizer()]), 'The devices\' registration is refreshed');
 			}
 		}
 
 		$device = new Device();
-		$device->setApplication($prontoMobile->getApplication());
+		$device->setApplication($this->prontoMobile->getApplication());
 
 		if (strtolower($content->platform) === 'ios') {
 			$device->setApnsToken($content->apns_token);
@@ -190,7 +186,7 @@ class DeviceController extends BaseApiController
 		$entityManager->persist($device);
 		$entityManager->flush();
 
-		return $this->successResponse($serializer->serialize($device, [new DateTimeNormalizer()]));
+		return $this->successResponse($this->serializer->serialize($device, [new DateTimeNormalizer()]));
 	}
 
 
@@ -216,16 +212,14 @@ class DeviceController extends BaseApiController
 	 */
 
 	/**
-	 * @param Request $request
+	 * @param EntityManagerInterface $entityManager
 	 * @param $deviceIdentifier
 	 * @return \Symfony\Component\HttpFoundation\JsonResponse
 	 * @throws \Pronto\MobileBundle\Exceptions\ApiException
 	 */
-	public function deregisterAction(Request $request, $deviceIdentifier)
+	public function deregisterAction(EntityManagerInterface $entityManager, $deviceIdentifier)
 	{
-		$this->validateAuthorization($request);
-
-		$entityManager = $this->getDoctrine()->getManager();
+		$this->validateAuthorization();
 
 		/** @var Device $device */
 		$device = $entityManager->getRepository(Device::class)->find($deviceIdentifier);

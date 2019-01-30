@@ -5,20 +5,40 @@ namespace Pronto\MobileBundle\Controller;
 use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\Application\Version;
 use Pronto\MobileBundle\Entity\Customer;
+use Pronto\MobileBundle\Service\ProntoMobile;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Translation\Translator;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class BaseController extends Controller
 {
+	/**
+	 * @var ProntoMobile $prontoMobile
+	 */
+	private $prontoMobile;
+
+	/**
+	 * @var TranslatorInterface $translator
+	 */
+	private $translator;
+
+	/**
+	 * BaseController constructor.
+	 * @param TranslatorInterface $translator
+	 * @param ProntoMobile $prontoMobile
+	 */
+	public function __construct(TranslatorInterface $translator, ProntoMobile $prontoMobile)
+	{
+		$this->prontoMobile = $prontoMobile;
+		$this->translator = $translator;
+	}
+
 	/**
 	 * Add the data saved flash
 	 */
 	public function addDataSavedFlash(): void
 	{
-		/** @var Translator $translator */
-		$translator = $this->get('translator');
-
-		$this->addFlashWithMessage($translator->trans('alert.success.data_saved'));
+		$this->addFlashWithMessage($this->translator->trans('alert.success.data_saved'));
 	}
 
 
@@ -27,10 +47,7 @@ class BaseController extends Controller
 	 */
 	public function addDataRemovedFlash(): void
 	{
-		/** @var Translator $translator */
-		$translator = $this->get('translator');
-
-		$this->addFlashWithMessage($translator->trans('alert.success.data_removed'));
+		$this->addFlashWithMessage($this->translator->trans('alert.success.data_removed'));
 	}
 
 
@@ -39,10 +56,7 @@ class BaseController extends Controller
 	 */
 	public function addNoPermissionFlash(): void
 	{
-		/** @var Translator $translator */
-		$translator = $this->get('translator');
-
-		$this->addFlashWithMessage($translator->trans('alert.warning.no_permission'), 'danger');
+		$this->addFlashWithMessage($this->translator->trans('alert.warning.no_permission'), 'danger');
 	}
 
 
@@ -68,7 +82,7 @@ class BaseController extends Controller
 	 */
 	public function getCustomer(): ?Customer
 	{
-		return $this->get('pronto_mobile.global.app')->getCustomer();
+		return $this->prontoMobile->getCustomer();
 	}
 
 
@@ -79,7 +93,7 @@ class BaseController extends Controller
 	 */
 	public function getApplicationVersion(): ?Version
 	{
-		return $this->get('pronto_mobile.global.app')->getApplicationVersion();
+		return $this->prontoMobile->getApplicationVersion();
 	}
 
 
@@ -90,6 +104,6 @@ class BaseController extends Controller
 	 */
 	public function getApplication(): ?Application
 	{
-		return $this->get('pronto_mobile.global.app')->getApplication();
+		return $this->prontoMobile->getApplication();
 	}
 }

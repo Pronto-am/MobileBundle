@@ -2,18 +2,19 @@
 
 namespace Pronto\MobileBundle\Controller\Web\PushNotification;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Pronto\MobileBundle\Controller\BaseController;
 use Pronto\MobileBundle\Entity\Device;
 use Pronto\MobileBundle\Entity\Plugin;
 use Pronto\MobileBundle\Entity\PushNotification\Segment;
+use Pronto\MobileBundle\EventSubscriber\ValidateApplicationSelectionInterface;
+use Pronto\MobileBundle\EventSubscriber\ValidateCustomerSelectionInterface;
+use Pronto\MobileBundle\EventSubscriber\ValidatePluginStateInterface;
 use Pronto\MobileBundle\Utils\Doctrine\GroupClause;
 use Pronto\MobileBundle\Utils\Doctrine\LeftJoinClause;
 use Pronto\MobileBundle\Utils\Doctrine\SelectClause;
 use Pronto\MobileBundle\Utils\Doctrine\WhereClause;
 use Pronto\MobileBundle\Utils\PageHelper;
-use Pronto\MobileBundle\EventSubscriber\ValidateApplicationSelectionInterface;
-use Pronto\MobileBundle\EventSubscriber\ValidateCustomerSelectionInterface;
-use Pronto\MobileBundle\EventSubscriber\ValidatePluginStateInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 class SegmentController extends BaseController implements ValidateCustomerSelectionInterface, ValidateApplicationSelectionInterface, ValidatePluginStateInterface
@@ -33,12 +34,11 @@ class SegmentController extends BaseController implements ValidateCustomerSelect
 	 * Show a list of notification segments
 	 *
 	 * @param Request $request
+	 * @param EntityManagerInterface $entityManager
 	 * @return \Symfony\Component\HttpFoundation\Response
 	 */
-	public function indexAction(Request $request)
+	public function indexAction(Request $request, EntityManagerInterface $entityManager)
 	{
-		$entityManager = $this->getDoctrine()->getManager();
-
 		$pageHelper = new PageHelper($request, $entityManager, Segment::class, 15);
 		$pageHelper->addClause(new SelectClause(['t.id', 't.name', 'COUNT(d.id) AS deviceCount']));
 		$pageHelper->addClause(new LeftJoinClause('t.deviceSegments', 's'));
@@ -46,10 +46,9 @@ class SegmentController extends BaseController implements ValidateCustomerSelect
 		$pageHelper->addClause(new WhereClause('t.application', $this->getApplication()));
 		$pageHelper->addClause(new GroupClause('t.id'));
 
-		return $this->render('@ProntoMobile/notifications/segments/index.html.twig',
-			[
-				'pageHelper' => $pageHelper
-			]);
+		return $this->render('@ProntoMobile/notifications/segments/index.html.twig', [
+			'pageHelper' => $pageHelper
+		]);
 	}
 
 
@@ -57,16 +56,15 @@ class SegmentController extends BaseController implements ValidateCustomerSelect
 	 * Edit and save a push notification segment
 	 *
 	 * @param Request $request
+	 * @param EntityManagerInterface $entityManager
 	 * @param Segment|null $segment
 	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
 	 */
-	public function editAction(Request $request, Segment $segment = null)
+	public function editAction(Request $request, EntityManagerInterface $entityManager, Segment $segment = null)
 	{
 		$pageHelper = null;
 
 		if ($segment !== null) {
-			$entityManager = $this->getDoctrine()->getManager();
-
 			$pageHelper = new PageHelper($request, $entityManager, Device::class, 15, 't.lastLogin');
 			$pageHelper->addClause(new LeftJoinClause('t.deviceSegments', 's'));
 			$pageHelper->addClause(new WhereClause('s.segment', $segment));
@@ -84,10 +82,11 @@ class SegmentController extends BaseController implements ValidateCustomerSelect
 	 * Save a plugin
 	 *
 	 * @param Request $request
+	 * @param EntityManagerInterface $entityManager
 	 * @param Segment $segment
 	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
 	 */
-	public function saveAction(Request $request, Segment $segment = null)
+	public function saveAction(Request $request, EntityManagerInterface $entityManager, Segment $segment = null)
 	{
 		// Create a new segment if it doesn't exist yet
 		if ($segment === null) {
@@ -111,8 +110,6 @@ class SegmentController extends BaseController implements ValidateCustomerSelect
 
 		$segment->setName($translations);
 
-		$entityManager = $this->getDoctrine()->getManager();
-
 		$entityManager->persist($segment);
 		$entityManager->flush();
 
@@ -126,18 +123,18 @@ class SegmentController extends BaseController implements ValidateCustomerSelect
 	 * Delete one or more segments
 	 *
 	 * @param Request $request
+	 * @param EntityManagerInterface $entityManager
 	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
 	 */
-	public function deleteAction(Request $request)
+	public function deleteAction(Request $request, EntityManagerInterface $entityManager)
 	{
-		$em = $this->getDoctrine()->getManager();
-		$segments = $em->getRepository(Segment::class)->findById($request->get('segments'));
+		$segments = $entityManager->getRepository(Segment::class)->findById($request->get('segments'));
 
 		foreach ($segments as $segment) {
-			$em->remove($segment);
+			$entityManager->remove($segment);
 		}
 
-		$em->flush();
+		$entityManager->flush();
 
 		$this->addDataRemovedFlash();
 
