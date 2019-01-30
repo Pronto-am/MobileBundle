@@ -15,6 +15,12 @@ services:
         public: false
 
 
+    # controllers are imported separately to make sure services can be injected
+    # as action arguments even if you don't extend any base controller class
+    Pronto\MobileBundle\Controller\:
+        resource: '../../Controller'
+        tags: ['controller.service_arguments']
+
     #### ALIASES ####
     pronto_mobile.entity_manager: '@doctrine.orm.entity_manager'
 
