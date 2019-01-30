@@ -1,6 +1,6 @@
 <?php
 
-namespace Esites\ApiBundle;
+namespace Pronto\MobileBundle;
 
 use Composer\Script\Event;
 use Symfony\Component\Yaml\Yaml;
