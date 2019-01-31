@@ -15,7 +15,7 @@ services:
         public: false
 
     Pronto\MobileBundle\:
-        resource: '../../{Command,Controller,DataFixtures,EventListener,EventSubscriber,Provider,Repository,Security,Service}'
+        resource: '../../{Command,Controller,DataFixtures,EventListener,EventSubscriber,Provider,Security,Service}'
 
     pronto_mobile.global.app:
         class: Pronto\MobileBundle\Service\ProntoMobile
