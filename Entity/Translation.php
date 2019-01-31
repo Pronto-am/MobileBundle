@@ -23,7 +23,7 @@ class Translation implements ApiEntityInterface
 	 * @var string $id
 	 *
 	 * @ORM\Id
-	 * @ORM\Column(type="string")
+	 * @ORM\Column(type="string", length=191)
 	 * @Groups({"Translation"})
 	 */
 	private $id;
