@@ -22,7 +22,7 @@ class PushNotificationSegmentController extends BaseApiController
 	 *
 	 * @apiParam {String} deviceIdentifier Identifier of the device
 	 *
-	 * @apiUse BasicAuthorizationHeader
+	 * @apiUse OAuthAuthorizationHeader
 	 *
 	 * @apiSuccessExample Success-Response:
 	 *     HTTP/1.1 200 OK
@@ -82,7 +82,7 @@ class PushNotificationSegmentController extends BaseApiController
 	 * @apiGroup NotificationSegments
 	 * @apiVersion 1.0.0
 	 *
-	 * @apiUse BasicAuthorizationHeader
+	 * @apiUse OAuthAuthorizationHeader
 	 *
 	 * @apiParam {String} language          Language of device.
 	 * @apiParam {Object} [extra_data]      Extra meta data.

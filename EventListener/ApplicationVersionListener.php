@@ -9,7 +9,7 @@ use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\Application\Version;
 use Pronto\MobileBundle\Entity\Plugin;
 use Pronto\MobileBundle\Service\Cache;
-use Service\PluginInitializer;
+use Pronto\MobileBundle\Service\PluginInitializer;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 

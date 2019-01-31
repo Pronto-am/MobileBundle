@@ -313,3 +313,11 @@ settings: instellingen
 setting: instelling
 setting.edit_account: Account bewerken
 setting.delete_account: Account verwijderen
+
+translations: vertalingen
+translation: vertaling
+translation.translate: Vertalen
+translation.fill: Vullen
+translation.identifier: Key
+translation.type: Type
+translation.import_partly_failed: De import is gedeeltelijk gefaald, controleer het bestand op inconsistenties

@@ -8,7 +8,7 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\Plugin;
 use Pronto\MobileBundle\Service\Cache;
-use Service\PluginInitializer;
+use Pronto\MobileBundle\Service\PluginInitializer;
 
 class PluginListener
 {

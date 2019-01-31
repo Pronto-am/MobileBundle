@@ -311,3 +311,11 @@ settings: settings
 setting: setting
 setting.edit_account: Edit account
 setting.delete_account: Delete account
+
+translations: translations
+translation: translation
+translation.translate: Translate
+translation.fill: Fill
+translation.identifier: Key
+translation.type: Type
+translation.import_partly_failed: The import has failed partiallly, check the file for inconsistencies

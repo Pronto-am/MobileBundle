@@ -8,10 +8,10 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 interface ResponseInterface
 {
 	/**
-	 * @param string $message
+	 * @param null|string $message
 	 * @return self
 	 */
-	public function setMessage(string $message): self;
+	public function setMessage(?string $message): self;
 
 
 	/**

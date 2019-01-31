@@ -12,7 +12,7 @@ use Pronto\MobileBundle\Traits\ApiEntityTrait;
  * @package Pronto\MobileBundle\Entity
  *
  * @ORM\Entity()
- * @ORM\Table(name="devices")
+ * @ORM\Table(name="translations")
  * @ORM\HasLifecycleCallbacks
  */
 class Translation implements ApiEntityInterface
@@ -29,7 +29,8 @@ class Translation implements ApiEntityInterface
 	private $id;
 
 	/**
-	 * @ORM\BelongsTo(targetEntity="Pronto\MobileBundle\Entity\TranslationKey", inversedBy="translations")
+	 * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\TranslationKey", inversedBy="translations")
+	 * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
 	 * @Groups({"Translation"})
 	 */
 	private $translationKey;
@@ -38,9 +39,17 @@ class Translation implements ApiEntityInterface
 	 * @var string $language
 	 *
 	 * @ORM\Column(type="string")
-	 * @Groups({"Translation"})
+	 * @Groups({"Translation", "TranslationKey"})
 	 */
 	private $language;
+
+	/**
+	 * @var string $text
+	 *
+	 * @ORM\Column(type="text")
+	 * @Groups({"Translation", "TranslationKey"})
+	 */
+	private $text;
 
 	/**
 	 * Triggered on pre persist
@@ -95,5 +104,23 @@ class Translation implements ApiEntityInterface
 	public function getLanguage(): string
 	{
 		return $this->language;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getText(): string
+	{
+		return $this->text;
+	}
+
+	/**
+	 * @param string $text
+	 * @return Translation
+	 */
+	public function setText(string $text): self
+	{
+		$this->text = $text;
+		return $this;
 	}
 }

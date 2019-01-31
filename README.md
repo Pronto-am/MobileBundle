@@ -13,46 +13,8 @@ This command requires you to have Composer installed globally, as explained
 in the [installation chapter](https://getcomposer.org/doc/00-intro.md)
 of the Composer documentation.
 
-### Step 2: Enable the Bundle
 
-Next, open the folder in your command console and install the MobileBundle:
-
-```console
-$ composer require pronto/mobilebundle
-```
-
-Applications which use Symfony Flex are done after this step. For those who don't, you have to add the Bundle manually to the `src/Kernel.php` file:
-
-
-### Step 3: Enable the Bundle
-
-Then, enable the bundle by adding it to the list of registered bundles
-in the `src/Kernel.php` file of your project:
-
-```php
-<?php
-// src/Kernel.php
- 
-// ...
- 
-class AppKernel extends Kernel
-{
-    public function registerBundles()
-    {
-        $bundles = array(
-            // ...
-            new Pronto\MobileBundle\ProntoMobileBundle(),
-        );
-
-        // ...
-    }
-
-    // ...
-}
-```
-
-
-### Step 4: Setup the database
+### Step 2: Setup the database
 
 Create the database schema:
 

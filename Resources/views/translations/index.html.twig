@@ -2,7 +2,18 @@
 
 {% block body %}
 
-    {% include '@ProntoMobile/components/toolbar.html.twig' with {pageTitle: 'translations'|trans|capitalize, newObjectUrl: 'pronto_mobile_translations_edit', 'delete': pageHelper.getList()|length > 0} %}
+    {% include '@ProntoMobile/components/toolbar.html.twig' with {
+        pageTitle: 'translations'|trans|capitalize,
+        newObjectUrl: 'pronto_mobile_translations_edit',
+        delete: pageHelper.getList()|length > 0,
+        customActions: [
+            {
+                path: path('pronto_mobile_translations_upload'),
+                color: 'blue-grey lighten-3',
+                icon: 'upload'
+            }
+        ]
+    } %}
 
     {% if pageHelper.getList()|length > 0 %}
         <div class="card">
@@ -16,7 +27,7 @@
                                 <label for="checkAll"></label>
                             </th>
                             <th width="50">#</th>
-                            <th>{{ pageHelper.createSortableLink('translations.key'|trans|capitalize, 't.key') }}</th>
+                            <th>{{ pageHelper.createSortableLink('translation.identifier'|trans|capitalize, 't.key') }}</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -31,7 +42,7 @@
                                 </td>
                                 <td>
                                     <a href="{{ path('pronto_mobile_translations_edit', {'id': translation.id}) }}" class="regular">
-                                        {{ translation.key }}
+                                        {{ translation.identifier }}
                                     </a>
                                 </td>
                             </tr>

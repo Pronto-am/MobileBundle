@@ -3,6 +3,7 @@
 namespace Pronto\MobileBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\PersistentCollection;
 use Pronto\MobileBundle\Traits\ApiEntityTrait;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -11,7 +12,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @package Pronto\MobileBundle\Entity
  *
  * @ORM\Entity()
- * @ORM\Table(name="devices")
+ * @ORM\Table(name="translation_keys")
  */
 class TranslationKey implements ApiEntityInterface
 {
@@ -21,46 +22,36 @@ class TranslationKey implements ApiEntityInterface
 	 * @ORM\Id
 	 * @ORM\GeneratedValue(strategy="AUTO")
 	 * @ORM\Column(type="integer")
-	 * @Groups({"TranslationKey"})
 	 */
 	private $id;
 
 	/**
 	 * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Application")
 	 * @ORM\JoinColumn(onDelete="CASCADE")
-	 * @Groups({"TranslationKey"})
 	 */
 	private $application;
 
 	/**
-	 * @var string $key
+	 * @var string $identifier
 	 *
 	 * @ORM\Column(type="string")
 	 * @Groups({"TranslationKey"})
 	 */
-	private $key;
+	private $identifier;
 
 	/**
-	 * @var int $type
+	 * @var string $type
 	 *
-	 * @ORM\Column(type="smallint")
+	 * @ORM\Column(type="string")
 	 * @Groups({"TranslationKey"})
 	 */
 	private $type;
 
 	/**
 	 * @ORM\OneToMany(targetEntity="Pronto\MobileBundle\Entity\Translation", mappedBy="translationKey")
+	 * @Groups({"TranslationKey"})
 	 */
 	private $translations;
-
-	/**
-	 * TranslationKey constructor.
-	 * @param string $key
-	 */
-	public function __construct(string $key)
-	{
-		$this->key = $key;
-	}
 
 	/**
 	 * @return int
@@ -91,43 +82,43 @@ class TranslationKey implements ApiEntityInterface
 	/**
 	 * @return string
 	 */
-	public function getKey(): string
+	public function getIdentifier(): string
 	{
-		return $this->key;
+		return $this->identifier;
 	}
 
 	/**
-	 * @param string $key
+	 * @param string $identifier
 	 * @return TranslationKey
 	 */
-	public function setKey(string $key): self
+	public function setIdentifier(string $identifier): self
 	{
-		$this->key = $key;
+		$this->identifier = $identifier;
 		return $this;
 	}
 
 	/**
-	 * @return int
+	 * @return string
 	 */
-	public function getType(): int
+	public function getType(): string
 	{
 		return $this->type;
 	}
 
 	/**
-	 * @param int $type
+	 * @param string $type
 	 * @return TranslationKey
 	 */
-	public function setType(int $type): TranslationKey
+	public function setType(string $type): TranslationKey
 	{
 		$this->type = $type;
 		return $this;
 	}
 
 	/**
-	 * @return array
+	 * @return PersistentCollection
 	 */
-	public function getTranslations(): array
+	public function getTranslations(): PersistentCollection
 	{
 		return $this->translations;
 	}

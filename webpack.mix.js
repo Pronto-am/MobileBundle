@@ -51,6 +51,8 @@ mix.js(js.src + 'app.js', js.dest)
     .js(js.src + 'collections/entries.js', js.dest + '/collections')
     .js(js.src + 'collections/relationships.js', js.dest + '/collections')
 
+    .js(js.src + 'translations/translations.js', js.dest + '/translations')
+
     .sass(css.src + 'login.scss', css.dest)
     .sass(css.src + 'app.scss', css.dest)
     .sass(css.src + 'error.scss', css.dest)

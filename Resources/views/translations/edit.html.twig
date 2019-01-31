@@ -5,13 +5,42 @@
 
     <div class="row card" id="details">
         <div class="card-content col s12">
-            {{ form_start(translationForm) }}
+            {{ form_start(form) }}
+
+            <div class="row">
+                <div class="col s8">
+                    {{ form_row(form.identifier) }}
+                </div>
+                <div class="col s4">
+                    {{ form_row(form.type) }}
+                </div>
+            </div>
 
             <div class="row">
                 <div class="col s12 m8">
-                    {{ form_row(translationForm.key) }}
+                    <h3><span>/</span> {{ 'translations'|trans|capitalize }}</h3>
                 </div>
             </div>
+
+            {% for key, language in applicationVersion.application.availableLanguages %}
+                <div class="row">
+                    <div class="col s12">
+                        <label for="translations_{{ key }}">{{ language.name }}</label>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col s8">
+                        <input type="text" id="translations_{{ key }}" name="translations[{{ language.code }}]" data-lang="{{ language.code }}" value="{{ translations[language.code] }}" />
+                    </div>
+
+                    {% if language.code != applicationVersion.application.defaultLanguage %}
+                        <div class="col s4">
+                            <a href="#" class="btn btn-secondary btn-translate">{{ 'translation.fill'|trans }}</a>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
 
             <div class="row">
                 <div class="col s12">
@@ -19,7 +48,14 @@
                 </div>
             </div>
 
-            {{ form_end(translationForm) }}
+            {{ form_end(form) }}
         </div>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="text/javascript" src="{{ mix('/js/translations/translations.js') }}"></script>
+
 {% endblock %}

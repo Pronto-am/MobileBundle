@@ -62,18 +62,6 @@ class BaseApiController extends Controller
 	}
 
 	/**
-	 * API-docs: Basic authorization header block
-	 *
-	 * @apiDefine BasicAuthorizationHeader
-	 *
-	 * @apiHeader {String} Authorization Pronto CMS Authorization token
-	 * @apiHeaderExample {json} Header-Example:
-	 *     {
-	 *       "Authorization": "Basic [token]"
-	 *     }
-	 */
-
-	/**
 	 * API-docs: Bearer authorization header block
 	 *
 	 * @apiDefine OAuthAuthorizationHeader

@@ -22,7 +22,7 @@ class DeviceController extends BaseApiController
 	 * @apiGroup Device
 	 * @apiVersion 1.0.0
 	 *
-	 * @apiUse BasicAuthorizationHeader
+	 * @apiUse OAuthAuthorizationHeader
 	 *
 	 * @apiParam {String} [firebase_token]  Firebase token for Android devices.
 	 * @apiParam {String} [apns_token]      APNS token for iOS devices.
@@ -199,7 +199,7 @@ class DeviceController extends BaseApiController
 	 * @apiVersion 1.0.0
 	 *
 	 * @apiParam {String} deviceIdentifier Identifier of the device
-	 * @apiUse BasicAuthorizationHeader
+	 * @apiUse OAuthAuthorizationHeader
 	 *
 	 * @apiSuccessExample Success-Response:
 	 *     HTTP/1.1 200 OK

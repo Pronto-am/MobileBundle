@@ -42,10 +42,10 @@ class BaseResponse implements ResponseInterface
 
 
 	/**
-	 * @param string $message
+	 * @param null|string $message
 	 * @return BaseResponse
 	 */
-	public function setMessage(string $message): ResponseInterface
+	public function setMessage(?string $message): ResponseInterface
 	{
 		$this->message = $message;
 

@@ -364,14 +364,13 @@ translations_edit:
     defaults:
         _controller: ProntoMobileBundle:Web\Translation:edit
         id: null
-    condition: "context.getMethod() in ['GET']"
+    condition: "context.getMethod() in ['GET', 'POST']"
 
-translations_save:
-    path: /translations/edit/{id}
+translations_upload:
+    path: /translations/upload
     defaults:
-        _controller: ProntoMobileBundle:Web\Translation:save
-        id: null
-    condition: "context.getMethod() in ['POST']"
+        _controller: ProntoMobileBundle:Web\Translation:upload
+    condition: "context.getMethod() in ['GET', 'POST']"
 
 translations_delete:
     path: /translations/delete

@@ -37,7 +37,7 @@ class AppUserController extends BaseApiController
 	 * @apiGroup AppUser
 	 * @apiVersion 1.0.0
 	 *
-	 * @apiUse BasicAuthorizationHeader
+	 * @apiUse OAuthAuthorizationHeader
 	 *
 	 * @apiParam {String} first_name        First name of the user.
 	 * @apiParam {String} last_name         Last name of the user.
@@ -153,7 +153,7 @@ class AppUserController extends BaseApiController
 	 * @apiVersion 1.0.0
 	 *
 	 * @apiParam {String} userIdentifier Identifier of the user
-	 * @apiUse BasicAuthorizationHeader
+	 * @apiUse OAuthAuthorizationHeader
 	 *
 	 * @apiSuccessExample Success-Response:
 	 *     HTTP/1.1 200 OK
@@ -198,7 +198,7 @@ class AppUserController extends BaseApiController
 	 * @apiGroup AppUser
 	 * @apiVersion 1.0.0
 	 *
-	 * @apiUse BasicAuthorizationHeader
+	 * @apiUse OAuthAuthorizationHeader
 	 *
 	 * @apiParam {String} email Email address of the user.
 	 *

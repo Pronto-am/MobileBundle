@@ -1,0 +1,35 @@
+{% extends '@ProntoMobile/base.html.twig' %}
+
+{% block body %}
+    {% include '@ProntoMobile/components/pageTitle.html.twig' with {entity: 'translation', exists: translation != null, backButton: path('pronto_mobile_translations')} %}
+
+    <div class="row card" id="details">
+        <div class="card-content col s12">
+            {{ form_start(form) }}
+
+            <div class="row">
+                <div class="col s12">
+                    {{ form_label(form.file) }}
+                    {{ form_errors(form.file) }}
+                    <div class="file-field input-field">
+                        <div class="btn">
+                            <span>{{ 'translations'|trans }}</span>
+                            {{ form_widget(form.file) }}
+                        </div>
+                        <div class="file-path-wrapper">
+                            <input class="file-path" type="text">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s12">
+                    <button type="submit" class="btn btn-primary" formnovalidate>{{ 'translation.upload'|trans }}</button>
+                </div>
+            </div>
+
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}

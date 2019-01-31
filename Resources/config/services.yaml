@@ -17,6 +17,10 @@ services:
     Pronto\MobileBundle\:
         resource: '../../{Command,Controller,DataFixtures,EventListener,EventSubscriber,Provider,Repository,Security,Service}'
 
+
+    pronto_mobile.global.app:
+        class: Pronto\MobileBundle\Service\ProntoMobile
+
     #### TWIG EXTENSIONS ####
     Pronto\MobileBundle\Twig\AssetVersioning:
         tags: ['twig.extension']

@@ -75,3 +75,12 @@ collection_entry:
     defaults:
         _controller: ProntoMobileBundle:Api\V1\Collection:getEntry
     condition: "context.getMethod() in ['GET']"
+
+
+#### TRANSLATIONS ####
+
+translations:
+    path: /translations
+    defaults:
+        _controller: ProntoMobileBundle:Api\V1\Translation:index
+    condition: "context.getMethod() in ['GET']"
