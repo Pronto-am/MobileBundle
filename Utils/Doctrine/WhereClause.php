@@ -18,7 +18,7 @@ class WhereClause implements Clause
 	/**
 	 * WhereClause constructor.
 	 * @param string $field
-	 * @param $parameter
+	 * @param mixed $parameter
 	 * @param string $type
 	 */
 	public function __construct(string $field, $parameter, string $type = '=')
@@ -32,9 +32,9 @@ class WhereClause implements Clause
 	 * Add the clause to the query
 	 *
 	 * @param \Doctrine\ORM\QueryBuilder $query
-	 * @return mixed|void
+	 * @return void
 	 */
-	public function addToQuery(&$query)
+	public function addToQuery(&$query): void
 	{
 		$field = explode('.', $this->field);
 		$parameter = end($field);

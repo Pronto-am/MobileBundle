@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 interface ResponseInterface
 {
 	/**
-	 * @param null|string $message
+	 * @param string|null $message
 	 * @return self
 	 */
 	public function setMessage(?string $message): self;
@@ -37,7 +37,7 @@ interface ResponseInterface
 	 * @param array|null $data
 	 * @return self
 	 */
-	public function setData($data): ResponseInterface;
+	public function setData(?array $data): ResponseInterface;
 
 
 	/**
@@ -48,8 +48,9 @@ interface ResponseInterface
 
 	/**
 	 * Create the final content object
+	 * @return self
 	 */
-	public function create(): void;
+	public function create(): self;
 
 
 	/**

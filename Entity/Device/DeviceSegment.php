@@ -2,9 +2,9 @@
 
 namespace Pronto\MobileBundle\Entity\Device;
 
+use Doctrine\ORM\Mapping as ORM;
 use Pronto\MobileBundle\Entity\Device;
 use Pronto\MobileBundle\Entity\PushNotification\Segment;
-use Doctrine\ORM\Mapping as ORM;
 
 
 /**
@@ -40,18 +40,18 @@ class DeviceSegment
 
 
 	/**
-	 * @return mixed
+	 * @return Segment
 	 */
-	public function getSegment()
+	public function getSegment(): Segment
 	{
 		return $this->segment;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return Device
 	 */
-	public function getDevice()
+	public function getDevice(): Device
 	{
 		return $this->device;
 	}

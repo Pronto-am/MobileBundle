@@ -2,8 +2,8 @@
 
 namespace Pronto\MobileBundle\Repository\Collection;
 
-use Pronto\MobileBundle\Entity\Collection;
 use Doctrine\ORM\EntityRepository;
+use Pronto\MobileBundle\Entity\Collection;
 
 class PropertyRepository extends EntityRepository
 {
@@ -14,7 +14,7 @@ class PropertyRepository extends EntityRepository
 	 * @param bool $translatable
 	 * @return mixed
 	 */
-    public function findAllByCollection(Collection $collection, $translatable = false) {
+    public function findAllByCollection(Collection $collection, bool $translatable = false) {
         return $this->createQueryBuilder('property')
 			->leftJoin('property.type', 'type')
             ->where('property.collection = :collection')

@@ -8,10 +8,13 @@ use Pronto\MobileBundle\Entity\Collection;
 use Pronto\MobileBundle\Entity\Collection\Property;
 use Pronto\MobileBundle\Entity\Collection\Property\Type;
 use Pronto\MobileBundle\Entity\Plugin;
-use Pronto\MobileBundle\Form\Collection\PropertyForm;
 use Pronto\MobileBundle\EventSubscriber\ValidateApplicationSelectionInterface;
 use Pronto\MobileBundle\EventSubscriber\ValidateCustomerSelectionInterface;
 use Pronto\MobileBundle\EventSubscriber\ValidatePluginStateInterface;
+use Pronto\MobileBundle\Form\Collection\PropertyForm;
+use Pronto\MobileBundle\Request\Collection\PropertyRequest;
+use Pronto\MobileBundle\Utils\Responses\ErrorResponse;
+use Pronto\MobileBundle\Utils\Responses\SuccessResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -54,14 +57,17 @@ class PropertyController extends BaseController implements ValidatePluginStateIn
 	 */
 	public function editAction(EntityManagerInterface $entityManager, $identifier, Property $property = null)
 	{
-		$types = $entityManager->getRepository(Type::class)->findAllOrdered();
+		$types = $entityManager->getRepository(Type::class)->findBy([], ['ordering']);
 
 		// Get a list of collections for the related entity list
 		$collections = $entityManager->getRepository(Collection::class)->findBy([
 			'applicationVersion' => $this->getApplicationVersion()
 		]);
 
-		$form = $this->createForm(PropertyForm::class, $property, [
+		// Create the form request from the entity
+		$propertyRequest = PropertyRequest::fromEntity($property);
+
+		$form = $this->createForm(PropertyForm::class, $propertyRequest, [
 			'types' => $types
 		]);
 
@@ -253,7 +259,8 @@ class PropertyController extends BaseController implements ValidatePluginStateIn
 
 		$entityManager->flush();
 
-		return new JsonResponse(['error' => false]);
+		$response = new SuccessResponse([]);
+		return $response->create()->getJsonResponse();
 	}
 
 
@@ -272,7 +279,8 @@ class PropertyController extends BaseController implements ValidatePluginStateIn
 		$newProperty = $entityManager->getRepository(Property::class)->find($id);
 
 		if ($newProperty === null) {
-			return new JsonResponse(['error' => true]);
+			$response = new ErrorResponse([404, 'Property not found']);
+			return $response->create()->getJsonResponse();
 		}
 
 		/** @var Collection $collection */
@@ -293,6 +301,7 @@ class PropertyController extends BaseController implements ValidatePluginStateIn
 
 		$this->addFlash('activeTab', 'properties');
 
-		return new JsonResponse(['error' => false, 'redirectUrl' => $this->generateUrl('pronto_mobile_collections_edit', ['identifier' => $collection->getIdentifier()], UrlGeneratorInterface::ABSOLUTE_URL)]);
+		$response = new SuccessResponse(['redirectUrl' => $this->generateAbsoluteUrl('pronto_mobile_collections_edit', ['identifier' => $collection->getIdentifier()])]);
+		return $response->create()->getJsonResponse();
 	}
 }

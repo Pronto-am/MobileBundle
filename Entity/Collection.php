@@ -3,11 +3,12 @@
 namespace Pronto\MobileBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection as DoctrineCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Pronto\MobileBundle\Entity\ApiEntityInterface;
+use Pronto\MobileBundle\Entity\Application\Version;
+use Pronto\MobileBundle\Traits\ApiEntityTrait;
 use Pronto\MobileBundle\Utils\ErrorResponse;
 use Symfony\Component\Validator\Constraints as Assert;
-use Pronto\MobileBundle\Traits\ApiEntityTrait;
 
 
 /**
@@ -85,36 +86,36 @@ class Collection extends TimestampedEntity implements ApiEntityInterface
 
 
     /**
-     * @return mixed
+     * @return int
      */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
 
     /**
-     * @return mixed
+     * @return Version
      */
-    public function getApplicationVersion()
+    public function getApplicationVersion(): Version
     {
         return $this->applicationVersion;
     }
 
 
     /**
-     * @param mixed $applicationVersion
+     * @param Version $applicationVersion
      */
-    public function setApplicationVersion($applicationVersion): void
+    public function setApplicationVersion(Version $applicationVersion): void
     {
         $this->applicationVersion = $applicationVersion;
     }
 
 
 	/**
-	 * @return mixed
+	 * @return string
 	 */
-	public function getName()
+	public function getName(): string
 	{
 		return $this->name;
 	}
@@ -123,52 +124,52 @@ class Collection extends TimestampedEntity implements ApiEntityInterface
 	/**
 	 * @param mixed $name
 	 */
-	public function setName($name): void
+	public function setName(string $name): void
 	{
 		$this->name = $name;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return string
 	 */
-	public function getIdentifier()
+	public function getIdentifier(): string
 	{
 		return $this->identifier;
 	}
 
 
 	/**
-	 * @param mixed $identifier
+	 * @param string $identifier
 	 */
-	public function setIdentifier($identifier): void
+	public function setIdentifier(string $identifier): void
 	{
 		$this->identifier = $identifier;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return string
 	 */
-	public function getIcon()
+	public function getIcon(): string
 	{
 		return $this->icon;
 	}
 
 
 	/**
-	 * @param mixed $icon
+	 * @param string $icon
 	 */
-	public function setIcon($icon): void
+	public function setIcon(string $icon): void
 	{
 		$this->icon = $icon;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return DoctrineCollection
 	 */
-	public function getProperties()
+	public function getProperties(): DoctrineCollection
 	{
 		return $this->properties;
 	}
@@ -177,27 +178,27 @@ class Collection extends TimestampedEntity implements ApiEntityInterface
 	/**
 	 * JUST FOR TESTING PURPOSES
 	 *
-	 * @param mixed $properties
+	 * @param ArrayCollection $properties
 	 */
-	public function setProperties($properties): void
+	public function setProperties(ArrayCollection $properties): void
 	{
 		$this->properties = $properties;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return DoctrineCollection
 	 */
-	public function getEntries()
+	public function getEntries(): DoctrineCollection
 	{
 		return $this->entries;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return DoctrineCollection
 	 */
-	public function getRelationships()
+	public function getRelationships(): DoctrineCollection
 	{
 		return $this->relationships;
 	}

@@ -42,7 +42,7 @@ class BaseResponse implements ResponseInterface
 
 
 	/**
-	 * @param null|string $message
+	 * @param string|null $message
 	 * @return BaseResponse
 	 */
 	public function setMessage(?string $message): ResponseInterface
@@ -66,7 +66,7 @@ class BaseResponse implements ResponseInterface
 	 * @param array|null $data
 	 * @return BaseResponse
 	 */
-	public function setData($data): ResponseInterface
+	public function setData(?array $data): ResponseInterface
 	{
 		$this->data = $data;
 
@@ -94,8 +94,9 @@ class BaseResponse implements ResponseInterface
 
 	/**
 	 * Create the final content object
+	 * @return self;
 	 */
-	public function create(): void
+	public function create(): ResponseInterface
 	{
 		$this->content = [];
 	}

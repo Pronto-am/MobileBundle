@@ -73,81 +73,81 @@ class Plugin
 
 
 	/**
-	 * @return mixed
+	 * @return int
 	 */
-	public function getId()
+	public function getId(): int
 	{
 		return $this->id;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return string
 	 */
-	public function getName()
+	public function getName(): string
 	{
 		return $this->name;
 	}
 
 
 	/**
-	 * @param mixed $name
+	 * @param string $name
 	 */
-	public function setName($name): void
+	public function setName(string $name): void
 	{
 		$this->name = $name;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return string
 	 */
-	public function getIdentifier()
+	public function getIdentifier(): string
 	{
 		return $this->identifier;
 	}
 
 
 	/**
-	 * @param mixed $identifier
+	 * @param string $identifier
 	 */
-	public function setIdentifier($identifier): void
+	public function setIdentifier(string $identifier): void
 	{
 		$this->identifier = $identifier;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return string
 	 */
-	public function getIcon()
+	public function getIcon(): string
 	{
 		return $this->icon;
 	}
 
 
 	/**
-	 * @param mixed $icon
+	 * @param string $icon
 	 */
-	public function setIcon($icon): void
+	public function setIcon(string $icon): void
 	{
 		$this->icon = $icon;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return array
 	 */
-	public function getDefaultConfig()
+	public function getDefaultConfig(): array
 	{
 		return $this->defaultConfig;
 	}
 
 
 	/**
-	 * @param mixed $defaultConfig
+	 * @param array $defaultConfig
 	 */
-	public function setDefaultConfig($defaultConfig): void
+	public function setDefaultConfig(array $defaultConfig): void
 	{
 		$this->defaultConfig = $defaultConfig;
 	}

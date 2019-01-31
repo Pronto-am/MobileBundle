@@ -2,8 +2,8 @@
 
 namespace Pronto\MobileBundle\Repository\Application;
 
-use Pronto\MobileBundle\Entity\Application;
 use Doctrine\ORM\EntityRepository;
+use Pronto\MobileBundle\Entity\Application;
 
 class PluginRepository extends EntityRepository
 {
@@ -26,12 +26,12 @@ class PluginRepository extends EntityRepository
 	 * Get an applications plugin by application and plugin identifier
 	 *
 	 * @param Application $application
-	 * @param $identifier
+	 * @param string $identifier
 	 * @return mixed
 	 * @throws \Doctrine\ORM\NoResultException
 	 * @throws \Doctrine\ORM\NonUniqueResultException
 	 */
-    public function findOneByApplicationAndIdentifier($application, $identifier) {
+    public function findOneByApplicationAndIdentifier(Application $application, string $identifier) {
 		return $this->createQueryBuilder('application_plugins')
 			->leftJoin('application_plugins.plugin', 'plugins')
 			->where('plugins.identifier = :identifier')

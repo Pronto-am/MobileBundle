@@ -3,7 +3,7 @@
 namespace Pronto\MobileBundle\Form;
 
 
-use Pronto\MobileBundle\Entity\Device;
+use Pronto\MobileBundle\Request\DeviceRequest;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -39,7 +39,7 @@ class DeviceForm extends AbstractType
 	public function configureOptions(OptionsResolver $resolver): void
 	{
 		$resolver->setDefaults([
-			'data_class' => Device::class
+			'data_class' => DeviceRequest::class
 		]);
 	}
 }

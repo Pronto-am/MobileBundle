@@ -3,7 +3,7 @@
 namespace Pronto\MobileBundle\Form\Application;
 
 
-use Pronto\MobileBundle\Entity\Application\Version;
+use Pronto\MobileBundle\Request\Application\VersionRequest;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -14,7 +14,7 @@ class VersionForm extends AbstractType
 	 * @param FormBuilderInterface $builder
 	 * @param array $options
 	 */
-	public function buildForm(FormBuilderInterface $builder, array $options)
+	public function buildForm(FormBuilderInterface $builder, array $options): void
 	{
 		$builder
 			->add('name', null, [
@@ -29,10 +29,10 @@ class VersionForm extends AbstractType
 	/**
 	 * @param OptionsResolver $resolver
 	 */
-	public function configureOptions(OptionsResolver $resolver)
+	public function configureOptions(OptionsResolver $resolver): void
 	{
 		$resolver->setDefaults([
-			'data_class' => Version::class
+			'data_class' => VersionRequest::class
 		]);
 	}
 }

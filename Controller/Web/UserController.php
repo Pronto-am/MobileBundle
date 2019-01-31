@@ -5,13 +5,15 @@ namespace Pronto\MobileBundle\Controller\Web;
 use Doctrine\ORM\EntityManagerInterface;
 use Pronto\MobileBundle\Controller\BaseController;
 use Pronto\MobileBundle\Entity\User;
+use Pronto\MobileBundle\EventSubscriber\ValidateCustomerSelectionInterface;
 use Pronto\MobileBundle\Form\PasswordForm;
 use Pronto\MobileBundle\Form\ProfileForm;
 use Pronto\MobileBundle\Form\UserForm;
+use Pronto\MobileBundle\Request\User\ProfileRequest;
+use Pronto\MobileBundle\Request\UserRequest;
 use Pronto\MobileBundle\Service\ProntoMobile;
 use Pronto\MobileBundle\Utils\Doctrine\WhereClause;
 use Pronto\MobileBundle\Utils\PageHelper;
-use Pronto\MobileBundle\EventSubscriber\ValidateCustomerSelectionInterface;
 use Swift_Mailer;
 use Swift_Message;
 use Symfony\Component\HttpFoundation\Request;
@@ -50,18 +52,21 @@ class UserController extends BaseController implements ValidateCustomerSelection
 	 */
 	public function profileAction(Request $request, EntityManagerInterface $entityManager, UserInterface $user)
 	{
-		$profileForm = $this->createForm(ProfileForm::class, $user);
+		$profileRequest = ProfileRequest::fromEntity($user);
+
+		$profileForm = $this->createForm(ProfileForm::class, $profileRequest);
 
 		$passwordForm = $this->createForm(PasswordForm::class);
 
-		if('POST' === $request->getMethod()) {
-			if($request->request->has('profile_form')) {
+		if ('POST' === $request->getMethod()) {
+			if ($request->request->has('profile_form')) {
 				$profileForm->handleRequest($request);
 
 				if ($profileForm->isSubmitted() && $profileForm->isValid()) {
 
-					/** @var User $user */
-					$user = $profileForm->getData();
+					/** @var ProfileRequest $profileRequest */
+					$profileRequest = $profileForm->getData();
+					$user = $profileRequest->toEntity($user);
 
 					$entityManager->persist($user);
 					$entityManager->flush();
@@ -121,13 +126,16 @@ class UserController extends BaseController implements ValidateCustomerSelection
 			return $this->redirectToRoute('pronto_mobile_users');
 		}
 
-		$form = $this->createForm(UserForm::class, $user);
+		$userRequest = UserRequest::fromEntity($user);
+
+		$form = $this->createForm(UserForm::class, $userRequest);
 
 		$form->handleRequest($request);
 
 		if ($form->isSubmitted() && $form->isValid()) {
-			/** @var User $user */
-			$user = $form->getData();
+			/** @var UserRequest $userRequest */
+			$userRequest = $form->getData();
+			$user = $userRequest->toEntity($user);
 
 			$user->setCustomer($customer);
 

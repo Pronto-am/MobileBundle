@@ -1,6 +1,4 @@
 {
-  "name": "Pronto-Mobile",
-  "version": "1.0.0",
   "description": "CMS for mobile solutions",
   "main": "index.js",
   "directories": {
@@ -36,5 +34,5 @@
     "Mobile"
   ],
   "author": "Thomas Roovers, E-sites",
-  "license": "ISC"
+  "license": "BSD-3-Clause"
 }

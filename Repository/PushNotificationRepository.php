@@ -2,9 +2,9 @@
 
 namespace Pronto\MobileBundle\Repository;
 
-use Pronto\MobileBundle\Entity\Application;
 use DateTime;
 use Doctrine\ORM\EntityRepository;
+use Pronto\MobileBundle\Entity\Application;
 
 class PushNotificationRepository extends EntityRepository
 {
@@ -64,7 +64,7 @@ class PushNotificationRepository extends EntityRepository
 		}
 
 		// If it's a test broadcast, filter test by users
-		if ($test && !empty($testDevices)) {
+		if ($test && is_array($testDevices) && !empty($testDevices)) {
 			$query .= ' AND devices.id IN (\'' . implode('\', \'', $testDevices) . '\')';
 		}
 

@@ -16,11 +16,9 @@ $(document).ready(function () {
             data: {
                 'id': id
             },
-            success: function (data) {
-                console.log(data)
-
-                if(!data.error) {
-                    window.location = data.url;
+            success: function (response) {
+                if(!response.error) {
+                    window.location = response.data.url;
                 }
             }
         });

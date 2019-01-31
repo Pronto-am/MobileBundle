@@ -2,6 +2,7 @@
 
 namespace Pronto\MobileBundle\Entity;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -32,36 +33,36 @@ abstract class TimestampedEntity
 
 
 	/**
-	 * @return mixed
+	 * @return DateTime
 	 */
-	public function getCreatedAt()
+	public function getCreatedAt(): DateTime
 	{
 		return $this->createdAt;
 	}
 
 
 	/**
-	 * @param mixed $createdAt
+	 * @param DateTime $createdAt
 	 */
-	public function setCreatedAt($createdAt): void
+	public function setCreatedAt(DateTime $createdAt): void
 	{
 		$this->createdAt = $createdAt;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return DateTime
 	 */
-	public function getUpdatedAt()
+	public function getUpdatedAt(): DateTime
 	{
 		return $this->updatedAt;
 	}
 
 
 	/**
-	 * @param mixed $updatedAt
+	 * @param DateTime $updatedAt
 	 */
-	public function setUpdatedAt($updatedAt): void
+	public function setUpdatedAt(DateTime $updatedAt): void
 	{
 		$this->updatedAt = $updatedAt;
 	}

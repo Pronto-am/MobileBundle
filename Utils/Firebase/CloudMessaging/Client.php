@@ -16,7 +16,7 @@ class Client extends BaseClient
 	 * @param string $serverKey FCM server key
 	 * @throws \InvalidArgumentException
 	 */
-	public function __construct($serverKey)
+	public function __construct(string $serverKey)
 	{
 		// Set the base url
 		$this->setBaseUrl('https://fcm.googleapis.com/fcm/send');

@@ -16,7 +16,7 @@ class FileUploader
 	 *
 	 * @param $targetDirectory
 	 */
-	public function setTargetDirectory($targetDirectory): void
+	public function setTargetDirectory(string $targetDirectory): void
 	{
 		$this->targetDirectory = $targetDirectory;
 	}

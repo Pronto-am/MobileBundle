@@ -7,11 +7,11 @@ use Pronto\MobileBundle\Controller\BaseController;
 use Pronto\MobileBundle\Entity\Plugin;
 use Pronto\MobileBundle\Entity\PushNotification;
 use Pronto\MobileBundle\Entity\PushNotification\Recipient;
-use Pronto\MobileBundle\Utils\Doctrine\WhereClause;
-use Pronto\MobileBundle\Utils\PageHelper;
 use Pronto\MobileBundle\EventSubscriber\ValidateApplicationSelectionInterface;
 use Pronto\MobileBundle\EventSubscriber\ValidateCustomerSelectionInterface;
 use Pronto\MobileBundle\EventSubscriber\ValidatePluginStateInterface;
+use Pronto\MobileBundle\Utils\Doctrine\WhereClause;
+use Pronto\MobileBundle\Utils\PageHelper;
 use Symfony\Component\HttpFoundation\Request;
 
 class RecipientController extends BaseController implements ValidateCustomerSelectionInterface, ValidateApplicationSelectionInterface, ValidatePluginStateInterface

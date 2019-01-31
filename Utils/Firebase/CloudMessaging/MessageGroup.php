@@ -3,12 +3,9 @@
 namespace Pronto\MobileBundle\Utils\Firebase\CloudMessaging;
 
 
-use Pronto\MobileBundle\Entity\PushNotification;
 use Exception;
-use Kreait\Firebase\Factory;
-use Kreait\Firebase\ServiceAccount;
+use Pronto\MobileBundle\Entity\PushNotification;
 use Pronto\MobileBundle\Service\PushNotification\GoogleServiceAccountLoader;
-use Symfony\Component\HttpKernel\Kernel;
 
 class MessageGroup
 {
@@ -36,10 +33,10 @@ class MessageGroup
 	 * MessageGroup constructor.
 	 * @param PushNotification $notification
 	 * @param GoogleServiceAccountLoader $googleServiceAccountLoader
-	 * @param null $language
 	 * @param array $devices
+	 * @param string|null $language
 	 */
-	public function __construct(PushNotification $notification, GoogleServiceAccountLoader $googleServiceAccountLoader, $language = null, array $devices)
+	public function __construct(PushNotification $notification, GoogleServiceAccountLoader $googleServiceAccountLoader, array $devices, string $language = null)
 	{
 		$this->notification = $notification;
 		$this->language = $language;
@@ -106,10 +103,10 @@ class MessageGroup
 	/**
 	 * Get the translation of a property
 	 *
-	 * @param $json
-	 * @return mixed
+	 * @param array $json
+	 * @return string
 	 */
-	private function getTranslation($json)
+	private function getTranslation(array $json): string
 	{
 		if ($this->language !== null && isset($json[$this->language]) && !empty($json[$this->language])) {
 			return $json[$this->language];

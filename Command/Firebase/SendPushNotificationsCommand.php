@@ -3,13 +3,13 @@
 namespace Pronto\MobileBundle\Command\Firebase;
 
 
+use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\Plugin;
 use Pronto\MobileBundle\Entity\PushNotification;
 use Pronto\MobileBundle\Service\ProntoMobile;
 use Pronto\MobileBundle\Service\PushNotification\Sender;
-use Doctrine\ORM\EntityManagerInterface;
-use Exception;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

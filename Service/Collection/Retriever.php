@@ -3,10 +3,10 @@
 namespace Pronto\MobileBundle\Service\Collection;
 
 
-use Doctrine\Common\Persistence\ObjectManager;
-use Pronto\MobileBundle\Entity\Collection;
-use Pronto\MobileBundle\Utils\Collect;
 use Doctrine\ORM\EntityManagerInterface;
+use Pronto\MobileBundle\Entity\Collection;
+use Pronto\MobileBundle\Repository\Collection\Relationship\MapperRepository;
+use Pronto\MobileBundle\Utils\Collect;
 
 class Retriever
 {
@@ -16,8 +16,8 @@ class Retriever
 	/** @var Collection $collection */
 	private $collection;
 
-	/** @var EntityManagerInterface $entityManager */
-	private $entityManager;
+	/** @var MapperRepository $mapperRepository */
+	private $mapperRepository;
 
 	/** @var EntryParser $entryParser */
 	private $entryParser;
@@ -32,13 +32,13 @@ class Retriever
 	/**
 	 * Retriever constructor.
 	 * @param QueryGenerator $queryGenerator
-	 * @param EntityManagerInterface $entityManager
+	 * @param MapperRepository $mapperRepository
 	 * @param EntryParser $entryParser
 	 */
-	public function __construct(QueryGenerator $queryGenerator, EntityManagerInterface $entityManager, EntryParser $entryParser)
+	public function __construct(QueryGenerator $queryGenerator, MapperRepository $mapperRepository, EntryParser $entryParser)
 	{
 		$this->queryGenerator = $queryGenerator;
-		$this->entityManager = $entityManager;
+		$this->mapperRepository = $mapperRepository;
 		$this->entryParser = $entryParser;
 	}
 
@@ -115,7 +115,6 @@ class Retriever
 				return $entry['id'];
 			}, $results);
 
-			$mapperRepository = $this->entityManager->getRepository(Collection\Relationship\Mapper::class);
 			$this->mappedRelationships = [];
 
 			/** @var Collection\Relationship $relationship */
@@ -132,7 +131,7 @@ class Retriever
 				$this->entryParser->setCollection($relatedCollection);
 
 				foreach ($entries as $entryId) {
-					$relatedEntries = $mapperRepository->getAllRelatedEntryIds($entryId, $relatedCollection);
+					$relatedEntries = $this->mapperRepository->getAllRelatedEntryIds($entryId, $relatedCollection);
 
 					// Get the keys from above result that aren't yet locally cached
 					$toRetrieve = array_diff($relatedEntries, array_keys($this->cachedEntries));

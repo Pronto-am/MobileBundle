@@ -2,12 +2,13 @@
 
 namespace Pronto\MobileBundle\Entity;
 
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection as DoctrineCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Pronto\MobileBundle\Entity\ApiEntityInterface;
 use FOS\OAuthServerBundle\Entity\Client;
-use Symfony\Component\Validator\Constraints as Assert;
 use Pronto\MobileBundle\Traits\ApiEntityTrait;
+use Symfony\Component\Validator\Constraints as Assert;
 
 
 /**
@@ -180,162 +181,162 @@ class Application extends Client implements ApiEntityInterface
 
 
 	/**
-	 * @return mixed
+	 * @return string|null
 	 */
-	public function getLabel()
+	public function getLabel(): ?string
 	{
 		return $this->label;
 	}
 
 
 	/**
-	 * @param mixed $label
+	 * @param string $label
 	 */
-	public function setLabel($label): void
+	public function setLabel(string $label): void
 	{
 		$this->label = $label;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return DoctrineCollection
 	 */
-	public function getApplicationVersions()
+	public function getApplicationVersions(): DoctrineCollection
 	{
 		return $this->applicationVersions;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return string
 	 */
-	public function getColor()
+	public function getColor(): string
 	{
 		return $this->color;
 	}
 
 
 	/**
-	 * @param mixed $color
+	 * @param string $color
 	 */
-	public function setColor($color): void
+	public function setColor(string $color): void
 	{
 		$this->color = $color;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return string|null
 	 */
-	public function getAndroidBundleIdentifier()
+	public function getAndroidBundleIdentifier(): ?string
 	{
 		return $this->androidBundleIdentifier;
 	}
 
 
 	/**
-	 * @param mixed $androidBundleIdentifier
+	 * @param string $androidBundleIdentifier
 	 */
-	public function setAndroidBundleIdentifier($androidBundleIdentifier): void
+	public function setAndroidBundleIdentifier(string $androidBundleIdentifier): void
 	{
 		$this->androidBundleIdentifier = $androidBundleIdentifier;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return string|null
 	 */
-	public function getIosBundleIdentifier()
+	public function getIosBundleIdentifier(): ?string
 	{
 		return $this->iosBundleIdentifier;
 	}
 
 
 	/**
-	 * @param mixed $iosBundleIdentifier
+	 * @param string $iosBundleIdentifier
 	 */
-	public function setIosBundleIdentifier($iosBundleIdentifier): void
+	public function setIosBundleIdentifier(string $iosBundleIdentifier): void
 	{
 		$this->iosBundleIdentifier = $iosBundleIdentifier;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return string
 	 */
-	public function getDefaultLanguage()
+	public function getDefaultLanguage(): string
 	{
 		return $this->defaultLanguage;
 	}
 
 
 	/**
-	 * @param mixed $defaultLanguage
+	 * @param string $defaultLanguage
 	 */
-	public function setDefaultLanguage($defaultLanguage): void
+	public function setDefaultLanguage(string $defaultLanguage): void
 	{
 		$this->defaultLanguage = $defaultLanguage;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return array
 	 */
-	public function getAvailableLanguages()
+	public function getAvailableLanguages(): array
 	{
 		return $this->availableLanguages;
 	}
 
 
 	/**
-	 * @param mixed $availableLanguages
+	 * @param array $availableLanguages
 	 */
-	public function setAvailableLanguages($availableLanguages): void
+	public function setAvailableLanguages(array $availableLanguages): void
 	{
 		$this->availableLanguages = $availableLanguages;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return DateTime
 	 */
-	public function getCreatedAt()
+	public function getCreatedAt(): DateTime
 	{
 		return $this->createdAt;
 	}
 
 
 	/**
-	 * @param mixed $createdAt
+	 * @param string $createdAt
 	 */
-	public function setCreatedAt($createdAt): void
+	public function setCreatedAt(string $createdAt): void
 	{
 		$this->createdAt = $createdAt;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return DateTime
 	 */
-	public function getUpdatedAt()
+	public function getUpdatedAt(): DateTime
 	{
 		return $this->updatedAt;
 	}
 
 
 	/**
-	 * @param mixed $updatedAt
+	 * @param string $updatedAt
 	 */
-	public function setUpdatedAt($updatedAt): void
+	public function setUpdatedAt(string $updatedAt): void
 	{
 		$this->updatedAt = $updatedAt;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return DoctrineCollection
 	 */
-	public function getApplicationPlugins()
+	public function getApplicationPlugins(): DoctrineCollection
 	{
 		return $this->applicationPlugins;
 	}

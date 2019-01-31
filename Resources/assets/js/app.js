@@ -85,10 +85,10 @@ $(document).ready(function () {
                 data: {
                     'id': id
                 },
-                success: function (data) {
-                    if(!data.error) {
-                        if(data.redirectUrl) {
-                            window.location = data.redirectUrl;
+                success: function (response) {
+                    if(!response.error) {
+                        if(response.data.redirectUrl) {
+                            window.location = response.data.redirectUrl;
                         } else {
                             window.location.reload();
                         }

@@ -2,12 +2,13 @@
 
 namespace Pronto\MobileBundle\Entity\Collection;
 
-use Pronto\MobileBundle\Entity\ApiEntityInterface;
-use Pronto\MobileBundle\Entity\TimestampedWithUserEntity;
 use Doctrine\ORM\Mapping as ORM;
+use Pronto\MobileBundle\Entity\ApiEntityInterface;
+use Pronto\MobileBundle\Entity\Collection;
+use Pronto\MobileBundle\Entity\TimestampedWithUserEntity;
+use Pronto\MobileBundle\Traits\ApiEntityTrait;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Serializer\Annotation\Groups;
-use Pronto\MobileBundle\Traits\ApiEntityTrait;
 
 
 /**
@@ -15,7 +16,7 @@ use Pronto\MobileBundle\Traits\ApiEntityTrait;
  * @package Pronto\MobileBundle\Entity
  *
  * @ORM\Entity(repositoryClass="Pronto\MobileBundle\Repository\Collection\EntryRepository")
- * @ORM\Table(name="collection_entries")
+ * @ORM\Table(name="collection_entries", indexes={@ORM\Index(name="active_entries_by_collection", columns={"collection_id", "active"})})
  * @ORM\HasLifecycleCallbacks
  */
 class Entry extends TimestampedWithUserEntity implements ApiEntityInterface
@@ -68,63 +69,63 @@ class Entry extends TimestampedWithUserEntity implements ApiEntityInterface
 
 
 	/**
-     * @return mixed
+     * @return string
      */
-    public function getId()
+    public function getId(): string
     {
         return $this->id;
     }
 
 
     /**
-     * @return mixed
+     * @return Collection
      */
-    public function getCollection()
+    public function getCollection(): Collection
     {
         return $this->collection;
     }
 
 
     /**
-     * @param mixed $collection
+     * @param Collection $collection
      */
-    public function setCollection($collection)
+    public function setCollection(Collection $collection)
     {
         $this->collection = $collection;
     }
 
 
     /**
-     * @return mixed
+     * @return array
      */
-    public function getData()
+    public function getData(): array
     {
         return $this->data;
     }
 
 
     /**
-     * @param mixed $data
+     * @param array $data
      */
-    public function setData($data)
+    public function setData(array $data)
     {
         $this->data = $data;
     }
 
 
 	/**
-	 * @return mixed
+	 * @return bool
 	 */
-	public function getActive()
+	public function getActive(): bool
 	{
 		return $this->active;
 	}
 
 
 	/**
-	 * @param mixed $active
+	 * @param bool $active
 	 */
-	public function setActive($active)
+	public function setActive(bool $active)
 	{
 		$this->active = $active;
 	}

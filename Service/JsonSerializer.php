@@ -38,7 +38,7 @@ class JsonSerializer
 	 * @param bool $snakeCasedProperties
 	 * @return bool|float|int|string
 	 */
-	public function serialize($entity, array $normalizers = [], array $groups = [], $snakeCasedProperties = true)
+	public function serialize($entity, array $normalizers = [], array $groups = [], bool $snakeCasedProperties = true)
 	{
 		// conversion of property names to snake_case instead of CamelCase
 		$objectNormalizer = $snakeCasedProperties ? new ObjectNormalizer($this->classMetadataFactory, new CamelCaseToSnakeCaseNameConverter()) : new ObjectNormalizer($this->classMetadataFactory);

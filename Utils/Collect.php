@@ -73,9 +73,9 @@ class Collect
 	 *
 	 * @param array $array
 	 * @param string $key
-	 * @return mixed
+	 * @return array
 	 */
-	public static function changeArrayKey(array $array, string $key)
+	public static function changeArrayKey(array $array, string $key): array
 	{
 		return array_reduce($array, function ($result, $object) use ($key) {
 			$key = \is_array($object) ? $object[$key] : $object->{'get' . ucfirst($key)}();

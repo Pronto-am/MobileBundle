@@ -3,10 +3,10 @@
 namespace Pronto\MobileBundle\Service\Collection;
 
 
+use Doctrine\DBAL\Driver\Statement;
+use Doctrine\ORM\EntityManagerInterface;
 use Pronto\MobileBundle\Entity\Collection;
 use Pronto\MobileBundle\Utils\Collect;
-use Doctrine\DBAL\Statement;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class QueryGenerator
@@ -200,8 +200,6 @@ class QueryGenerator
 
 		$parsedEntry = $statement->fetchAll();
 
-		var_dump($parsedEntry);die;
-
 		return $parsedEntry[0] ?? null;
 	}
 
@@ -261,10 +259,10 @@ class QueryGenerator
 	 *
 	 * @param string $query
 	 * @param array $parameters
-	 * @return \Doctrine\DBAL\Driver\Statement
+	 * @return Statement
 	 * @throws \Doctrine\DBAL\DBALException
 	 */
-	private function executeStatement(string $query, array $parameters): \Doctrine\DBAL\Driver\Statement
+	private function executeStatement(string $query, array $parameters): Statement
 	{
 		// Execute the query
 		$entityManager = $this->entityManager;
@@ -399,10 +397,10 @@ class QueryGenerator
 	/**
 	 * MariaDB JSON_UNQUOTE function
 	 *
-	 * @param $field
+	 * @param string $field
 	 * @return string
 	 */
-	private function jsonUnquote($field): string
+	private function jsonUnquote(string $field): string
 	{
 		return 'JSON_UNQUOTE(JSON_EXTRACT(entries.data, "$.' . $field . '"))';
 	}

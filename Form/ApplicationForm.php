@@ -3,15 +3,12 @@
 namespace Pronto\MobileBundle\Form;
 
 
-use Pronto\MobileBundle\Entity\Application;
+use Pronto\MobileBundle\Request\ApplicationRequest;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\DataMapperInterface;
-use Symfony\Component\Form\Exception;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ApplicationForm extends AbstractType
@@ -55,7 +52,7 @@ class ApplicationForm extends AbstractType
 			]);
 
 		$builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($options) {
-			/** @var Application $application */
+			/** @var ApplicationRequest $application */
 			$application = $event->getData();
 			$form = $event->getForm();
 
@@ -66,7 +63,7 @@ class ApplicationForm extends AbstractType
 					],
 					'mapped' => false,
 					'label'  => 'application.client_id',
-					'data'   => $application !== null ? $application->getId() . '_' . $application->getRandomId() : ''
+					'data'   => $application->clientId
 				])
 				->add('clientSecret', null, [
 					'attr'   => [
@@ -74,7 +71,7 @@ class ApplicationForm extends AbstractType
 					],
 					'mapped' => false,
 					'label'  => 'application.client_secret',
-					'data'   => $application !== null ? $application->getSecret() : ''
+					'data'   => $application->clientSecret
 				])
 				->add('defaultLanguage', ChoiceType::class, [
 					'attr'         => [
@@ -89,7 +86,7 @@ class ApplicationForm extends AbstractType
 					},
 					'choice_attr'  => function ($value, $key, $index) use ($application, $options) {
 						return [
-							'selected' => $application !== null && !empty($application->getDefaultLanguage()) ? $application->getDefaultLanguage() === $value->code : $value->code === $options['locale']
+							'selected' => $application !== null && !empty($application->defaultLanguage) ? $application->defaultLanguage === $value->code : $value->code === $options['locale']
 						];
 					},
 					'label'        => 'application.default_language',
@@ -106,7 +103,7 @@ class ApplicationForm extends AbstractType
 					},
 					'choice_attr'  => function ($value, $key, $index) use ($application, $options) {
 						return [
-							'selected' => $application !== null && !empty($application->getAvailableLanguages()) ? in_array((array)$value, $application->getAvailableLanguages()) : $value->code === $options['locale']
+							'selected' => $application !== null && !empty($application->availableLanguages) ? in_array((array)$value, $application->availableLanguages) : $value->code === $options['locale']
 						];
 					},
 					'label'        => 'application.available_languages',
@@ -122,7 +119,7 @@ class ApplicationForm extends AbstractType
 	public function configureOptions(OptionsResolver $resolver): void
 	{
 		$resolver->setDefaults([
-			'data_class' => Application::class
+			'data_class' => ApplicationRequest::class
 		]);
 
 		$resolver->setRequired([

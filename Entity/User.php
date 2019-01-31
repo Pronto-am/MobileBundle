@@ -2,12 +2,11 @@
 
 namespace Pronto\MobileBundle\Entity;
 
+use Doctrine\Common\Collections\Collection as DoctrineCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
-use Symfony\Component\Validator\Constraints as Assert;
 
 
 /**
@@ -16,7 +15,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Entity(repositoryClass="Pronto\MobileBundle\Repository\UserRepository")
  * @ORM\Table(name="users")
- * @UniqueEntity("email")
  * @ORM\HasLifecycleCallbacks
  */
 class User extends TimestampedEntity implements UserInterface
@@ -40,7 +38,6 @@ class User extends TimestampedEntity implements UserInterface
 
 	/**
 	 * @ORM\Column(type="string")
-	 * @Assert\NotBlank()
 	 *
 	 * @Groups({"TimestampedWithUserEntity"})
 	 */
@@ -57,7 +54,6 @@ class User extends TimestampedEntity implements UserInterface
 
 	/**
 	 * @ORM\Column(type="string")
-	 * @Assert\NotBlank()
 	 *
 	 * @Groups({"TimestampedWithUserEntity"})
 	 */
@@ -66,8 +62,6 @@ class User extends TimestampedEntity implements UserInterface
 
 	/**
 	 * @ORM\Column(type="string", unique=true)
-	 * @Assert\NotBlank()
-	 * @Assert\Email()
 	 */
 	private $email;
 
@@ -126,63 +120,63 @@ class User extends TimestampedEntity implements UserInterface
 
 
 	/**
-	 * @return mixed
+	 * @return int
 	 */
-	public function getId()
+	public function getId(): int
 	{
 		return $this->id;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return string
 	 */
-	public function getFirstName()
+	public function getFirstName(): string
 	{
 		return $this->firstName;
 	}
 
 
 	/**
-	 * @param mixed $firstName
+	 * @param string $firstName
 	 */
-	public function setFirstName($firstName): void
+	public function setFirstName(string $firstName): void
 	{
 		$this->firstName = $firstName;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return string|null
 	 */
-	public function getInsertion()
+	public function getInsertion(): ?string
 	{
 		return $this->insertion;
 	}
 
 
 	/**
-	 * @param mixed $insertion
+	 * @param string|null $insertion
 	 */
-	public function setInsertion($insertion): void
+	public function setInsertion(?string $insertion): void
 	{
 		$this->insertion = $insertion;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return string
 	 */
-	public function getLastName()
+	public function getLastName(): string
 	{
 		return $this->lastName;
 	}
 
 
 	/**
-	 * @param mixed $lastName
+	 * @param string $lastName
 	 */
-	public function setLastName($lastName): void
+	public function setLastName(string $lastName): void
 	{
 		$this->lastName = $lastName;
 	}
@@ -202,9 +196,9 @@ class User extends TimestampedEntity implements UserInterface
 
 
 	/**
-	 * @return mixed
+	 * @return string
 	 */
-	public function getEmail()
+	public function getEmail(): string
 	{
 		return $this->email;
 	}
@@ -213,37 +207,43 @@ class User extends TimestampedEntity implements UserInterface
 	/**
 	 * @param mixed $email
 	 */
-	public function setEmail($email): void
+	public function setEmail(string $email): void
 	{
 		$this->email = $email;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return string
 	 */
-	public function getPassword()
+	public function getPassword(): string
 	{
 		return $this->password;
 	}
 
 
 	/**
-	 * @param mixed $password
+	 * @param string $password
 	 */
-	public function setPassword($password): void
+	public function setPassword(string $password): void
 	{
 		$this->password = $password;
 	}
 
 
-	public function getPlainPassword()
+	/**
+	 * @return string
+	 */
+	public function getPlainPassword(): ?string
 	{
 		return $this->plainPassword;
 	}
 
 
-	public function setPlainPassword($plainPassword): void
+	/**
+	 * @param string $plainPassword
+	 */
+	public function setPlainPassword(string $plainPassword): void
 	{
 		$this->plainPassword = $plainPassword;
 
@@ -261,9 +261,9 @@ class User extends TimestampedEntity implements UserInterface
 
 
 	/**
-	 * @param mixed $customer
+	 * @param Customer $customer
 	 */
-	public function setCustomer($customer): void
+	public function setCustomer(Customer $customer): void
 	{
 		$this->customer = $customer;
 	}
@@ -281,27 +281,27 @@ class User extends TimestampedEntity implements UserInterface
 
 
 	/**
-	 * @param mixed $activationToken
+	 * @param string $activationToken
 	 */
-	public function setActivationToken($activationToken): void
+	public function setActivationToken(string $activationToken): void
 	{
 		$this->activationToken = $activationToken;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return DoctrineCollection
 	 */
-	public function getPushNotifications()
+	public function getPushNotifications(): DoctrineCollection
 	{
 		return $this->pushNotifications;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return DoctrineCollection
 	 */
-	public function getLogins()
+	public function getLogins(): DoctrineCollection
 	{
 		return $this->logins;
 	}
@@ -349,9 +349,9 @@ class User extends TimestampedEntity implements UserInterface
 	/**
 	 * Add a role to the user
 	 *
-	 * @param $role
+	 * @param string $role
 	 */
-	public function addRole($role): void
+	public function addRole(string $role): void
 	{
 		if (!in_array($role, $this->roles)) {
 			array_push($this->roles, $role);
@@ -362,9 +362,9 @@ class User extends TimestampedEntity implements UserInterface
 	/**
 	 * Remove a role from the user
 	 *
-	 * @param $role
+	 * @param string $role
 	 */
-	public function removeRole($role): void
+	public function removeRole(string $role): void
 	{
 		foreach ($this->roles as $key => $value) {
 			if ($role === $value) {
@@ -378,10 +378,10 @@ class User extends TimestampedEntity implements UserInterface
 	/**
 	 * Check if a user has a specific role
 	 *
-	 * @param $role
+	 * @param string $role
 	 * @return bool
 	 */
-	public function hasRole($role): bool
+	public function hasRole(string $role): bool
 	{
 		return in_array($role, $this->roles);
 	}
@@ -394,9 +394,9 @@ class User extends TimestampedEntity implements UserInterface
 	 *
 	 * @return string|null The salt
 	 */
-	public function getSalt()
+	public function getSalt(): ?string
 	{
-		//
+		return null;
 	}
 
 

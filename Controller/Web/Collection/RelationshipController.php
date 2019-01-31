@@ -6,10 +6,10 @@ use Doctrine\ORM\EntityManagerInterface;
 use Pronto\MobileBundle\Controller\BaseController;
 use Pronto\MobileBundle\Entity\Collection;
 use Pronto\MobileBundle\Entity\Plugin;
-use Pronto\MobileBundle\Form\Collection\RelationshipForm;
 use Pronto\MobileBundle\EventSubscriber\ValidateApplicationSelectionInterface;
 use Pronto\MobileBundle\EventSubscriber\ValidateCustomerSelectionInterface;
 use Pronto\MobileBundle\EventSubscriber\ValidatePluginStateInterface;
+use Pronto\MobileBundle\Form\Collection\RelationshipForm;
 use Pronto\MobileBundle\Service\ProntoMobile;
 use Symfony\Component\HttpFoundation\Request;
 

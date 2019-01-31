@@ -86,8 +86,6 @@ class AppUserController extends BaseApiController
 	 * @param Request $request
 	 * @param EntityManagerInterface $entityManager
 	 * @return \Symfony\Component\HttpFoundation\JsonResponse
-	 * @throws \Doctrine\ORM\NoResultException
-	 * @throws \Doctrine\ORM\NonUniqueResultException
 	 * @throws \Pronto\MobileBundle\Exceptions\ApiException
 	 */
 	public function registerAction(Request $request, EntityManagerInterface $entityManager)
@@ -115,7 +113,7 @@ class AppUserController extends BaseApiController
 		]);
 
 		if ($user !== null) {
-			$this->customErrorResponse(AppUser::USER_ALREADY_REGISTERED);
+			$this->customErrorResponse(AppUser::USER_ALREADY_REGISTERED, AppUser::class);
 		}
 
 		$user = new AppUser();
@@ -213,7 +211,6 @@ class AppUserController extends BaseApiController
 	 *       "message": "The user has received a password reset link"
 	 *     }
 	 *
-	 * @apiUse ObjectNotFound
 	 * @apiUse AuthorizationErrors
 	 */
 
@@ -246,7 +243,7 @@ class AppUserController extends BaseApiController
 
 		// Return a 404
 		if ($user === null) {
-			$this->objectNotFoundResponse(AppUser::class);
+			return $this->successResponse(null, 'If a user with the provided email address exists, he or she has received a password reset link');
 		}
 
 		// Create a new password reset token
@@ -283,7 +280,7 @@ class AppUserController extends BaseApiController
 
 		$mailer->send($message);
 
-		return $this->successResponse(null, 'The user has received a password reset link');
+		return $this->successResponse(null, 'If a user with the provided email address exists, he or she has received a password reset link');
 	}
 
 
@@ -490,7 +487,7 @@ class AppUserController extends BaseApiController
 			]);
 
 			if (count($existingUsers) > 0) {
-				$this->customErrorResponse(AppUser::EMAIL_ADDRESS_ALREADY_EXISTS);
+				$this->customErrorResponse(AppUser::EMAIL_ADDRESS_ALREADY_EXISTS, AppUser::class);
 			}
 		}
 

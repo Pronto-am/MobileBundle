@@ -21,9 +21,9 @@ class SelectClause implements Clause
 	 * Add the clause to the query
 	 *
 	 * @param \Doctrine\ORM\QueryBuilder $query
-	 * @return mixed|void
+	 * @return void
 	 */
-	public function addToQuery(&$query)
+	public function addToQuery(&$query): void
 	{
 		$query->select(implode(', ', $this->columns));
 	}

@@ -17,9 +17,9 @@ class Endpoint
 	 * Get an endpoint instance
 	 *
 	 * @param ClientInterface $client
-	 * @return mixed
+	 * @return self
 	 */
-	public static function getInstance(ClientInterface $client)
+	public static function getInstance(ClientInterface $client): self
 	{
 		$class = static::class;
 
@@ -49,7 +49,7 @@ class Endpoint
 	 * @param array $query
 	 * @return mixed|\Psr\Http\Message\ResponseInterface
 	 */
-	public function requestGet($endpoint, array $query = [])
+	public function requestGet(string $endpoint, array $query = [])
 	{
 		$this->client->addQueryParameter($query);
 
@@ -65,7 +65,7 @@ class Endpoint
 	 * @param array $query
 	 * @return mixed|\Psr\Http\Message\ResponseInterface
 	 */
-	public function requestPost($endpoint, array $body, array $query = [])
+	public function requestPost(string $endpoint, array $body, array $query = [])
 	{
 		$this->client->setBody($body);
 
@@ -82,7 +82,7 @@ class Endpoint
 	 * @param array $body
 	 * @return mixed|\Psr\Http\Message\ResponseInterface
 	 */
-	public function requestPut($endpoint, array $body)
+	public function requestPut(string $endpoint, array $body)
 	{
 		$this->client->setBody($body);
 
@@ -97,7 +97,7 @@ class Endpoint
 	 * @param array $body
 	 * @return mixed|\Psr\Http\Message\ResponseInterface
 	 */
-	public function requestDelete($endpoint, array $body = [])
+	public function requestDelete(string $endpoint, array $body = [])
 	{
 		if (!empty($body)) {
 			$this->client->setBody($body);
@@ -115,7 +115,7 @@ class Endpoint
 	 * @param array $query
 	 * @param array $body
 	 */
-	public function request(string $endpoint, string $method = 'GET', array $query = [], array $body = [])
+	public function request(string $endpoint, string $method = 'GET', array $query = [], array $body = []): void
 	{
 		// Provide parameters and body when they are set
 		if (!empty($query)) {

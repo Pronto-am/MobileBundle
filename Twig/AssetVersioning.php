@@ -3,10 +3,9 @@
 namespace Pronto\MobileBundle\Twig;
 
 
-use Symfony\Component\HttpKernel\Config\FileLocator;
+use Exception;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Twig\Extension\AbstractExtension;
-use Exception;
 use Twig\TwigFunction;
 use Twig_Function;
 
@@ -15,8 +14,6 @@ class AssetVersioning extends AbstractExtension
 	/** @var array $manifest */
 	private $manifest;
 
-	/** @var FileLocator $fileLocator */
-	private $fileLocator;
 
 	/**
 	 * AssetVersioning constructor.
@@ -29,7 +26,7 @@ class AssetVersioning extends AbstractExtension
 			$fileLocation = $kernel->getProjectDir() . '/public/bundles/prontomobile/mix-manifest.json';
 
 			$this->manifest = json_decode(file_get_contents($fileLocation), true);
-		} catch(Exception $exception) {
+		} catch (Exception $exception) {
 			$this->manifest = [];
 		}
 	}
@@ -52,7 +49,7 @@ class AssetVersioning extends AbstractExtension
 	 * @param $fileName
 	 * @return string
 	 */
-	public function getFile($fileName): string
+	public function getFile(string $fileName): string
 	{
 		return '/bundles/prontomobile' . ($this->manifest[$fileName] ?? $fileName);
 	}

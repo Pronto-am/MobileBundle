@@ -2,6 +2,8 @@
 
 namespace Pronto\MobileBundle\Service\PushNotification;
 
+use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\Device;
 use Pronto\MobileBundle\Entity\PushNotification;
@@ -9,10 +11,6 @@ use Pronto\MobileBundle\Entity\PushNotification\Recipient;
 use Pronto\MobileBundle\Utils\Firebase\CloudMessaging\Client;
 use Pronto\MobileBundle\Utils\Firebase\CloudMessaging\MessageGroup;
 use Pronto\MobileBundle\Utils\Firebase\CloudMessaging\Response;
-use Doctrine\ORM\EntityManagerInterface;
-use Exception;
-use Symfony\Component\HttpKernel\Kernel;
-use Symfony\Component\HttpKernel\KernelInterface;
 
 class Sender
 {
@@ -55,7 +53,7 @@ class Sender
 	 * @param $firebaseServerKey
 	 * @return bool
 	 */
-	public function setServerKey($firebaseServerKey): bool
+	public function setServerKey(string $firebaseServerKey): bool
 	{
 		try {
 			$this->client = new Client($firebaseServerKey);
@@ -100,7 +98,7 @@ class Sender
 
 			$this->devices = array_merge($this->devices, $devices);
 
-			$messageGroups[] = new MessageGroup($this->notification, $this->googleServiceAccountLoader, $language['code'], $devices);
+			$messageGroups[] = new MessageGroup($this->notification, $this->googleServiceAccountLoader, $devices, $language['code']);
 		}
 
 		// Create another message group of left-over devices
@@ -108,7 +106,7 @@ class Sender
 
 		$this->devices = array_merge($this->devices, $devices);
 
-		$messageGroups[] = new MessageGroup($this->notification, $this->googleServiceAccountLoader, null, $devices);
+		$messageGroups[] = new MessageGroup($this->notification, $this->googleServiceAccountLoader, $devices);
 
 		$this->client->setMessageGroups($messageGroups);
 	}
@@ -184,7 +182,7 @@ class Sender
 	public function getSuccessCount(): int
 	{
 		if ($this->response !== null) {
-			return $this->response->getSuccesCount();
+			return $this->response->getSuccessCount();
 		}
 
 		return 0;
@@ -243,12 +241,12 @@ class Sender
 	{
 		if (count($this->getTokensToDelete()) > 0) {
 			// Delete old tokens
-			$this->entityManager->getRepository('AppBundle:Device')->setDisabledByTokens($this->getTokensToDelete());
+			$this->entityManager->getRepository(Device::class)->setDisabledByTokens($this->getTokensToDelete());
 		}
 
 		// Update new tokens
 		foreach ($this->getTokensToModify() as $oldToken => $newToken) {
-			$this->entityManager->getRepository('AppBundle:Device')->updateToken($oldToken, $newToken);
+			$this->entityManager->getRepository(Device::class)->updateToken($oldToken, $newToken);
 		}
 	}
 

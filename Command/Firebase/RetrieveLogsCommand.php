@@ -3,13 +3,13 @@
 namespace Pronto\MobileBundle\Command\Firebase;
 
 
-use Pronto\MobileBundle\Entity\AppUser;
-use Pronto\MobileBundle\Entity\Device;
-use Pronto\MobileBundle\Entity\PushNotification\Recipient;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Kreait\Firebase\Factory;
+use Pronto\MobileBundle\Entity\AppUser;
+use Pronto\MobileBundle\Entity\Device;
+use Pronto\MobileBundle\Entity\PushNotification\Recipient;
 use Pronto\MobileBundle\Service\ProntoMobile;
 use Pronto\MobileBundle\Service\PushNotification\GoogleServiceAccountLoader;
 use Symfony\Component\Console\Command\Command;
@@ -23,6 +23,9 @@ class RetrieveLogsCommand extends Command
 	public const TYPE_SIGN_IN_USERS = 'sign_in_users';
 	public const TYPE_SIGN_IN_DEVICES = 'sign_in_devices';
 	public const TYPE_NOTIFICATION_OPENED = 'notification_opened';
+
+	// Decryption method for the table contents
+	public const DECRYPTION_METHOD = 'aes-256-cbc';
 
 
 	/** @var EntityManagerInterface $entityManager */
@@ -116,10 +119,9 @@ class RetrieveLogsCommand extends Command
 			try {
 				$configuration = $this->prontoMobile->getConfiguration('firebase');
 
-				$decryptionMethod = $configuration['storage_decryption_method'];
 				$decryptionPassword = $configuration['storage_decryption_password'];
 
-				$data = openssl_decrypt($value['data'], $decryptionMethod, $decryptionPassword, 0, $value['iv']);
+				$data = openssl_decrypt($value['data'], self::DECRYPTION_METHOD, $decryptionPassword, 0, $value['iv']);
 			} catch (Exception $exception) {
 				$output->writeln([
 					'Could not decrypt this data: ' . $value['data'],

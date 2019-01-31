@@ -2,8 +2,9 @@
 
 namespace Pronto\MobileBundle\Entity\AppUser;
 
-use Pronto\MobileBundle\Entity\AppUser;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use Pronto\MobileBundle\Entity\AppUser;
 use Ramsey\Uuid\Uuid;
 
 
@@ -61,27 +62,27 @@ class PasswordReset
 
 
 	/**
-	 * @return mixed
+	 * @return string
 	 */
-	public function getToken()
+	public function getToken(): string
 	{
 		return $this->token;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return AppUser
 	 */
-	public function getUser()
+	public function getUser(): AppUser
 	{
 		return $this->user;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return DateTime
 	 */
-	public function getCreatedAt()
+	public function getCreatedAt(): DateTime
 	{
 		return $this->createdAt;
 	}

@@ -2,8 +2,9 @@
 
 namespace Pronto\MobileBundle\Entity\Application;
 
-use Pronto\MobileBundle\Entity\Application;
+use Doctrine\Common\Collections\Collection as DoctrineCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Pronto\MobileBundle\Entity\Application;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
@@ -48,9 +49,9 @@ class Version
 
 
     /**
-     * @return mixed
+     * @return int
      */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
@@ -66,36 +67,36 @@ class Version
 
 
     /**
-     * @param mixed $application
+     * @param Application $application
      */
-    public function setApplication($application): void
+    public function setApplication(Application $application): void
 	{
         $this->application = $application;
     }
 
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getName(): string
+    public function getName(): ?string
 	{
         return $this->name;
     }
 
 
     /**
-     * @param mixed $name
+     * @param string $name
      */
-    public function setName($name): void
+    public function setName(string $name): void
 	{
         $this->name = $name;
     }
 
 
 	/**
-	 * @return mixed
+	 * @return DoctrineCollection
 	 */
-	public function getCollections()
+	public function getCollections(): DoctrineCollection
 	{
 		return $this->collections;
 	}

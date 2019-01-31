@@ -2,7 +2,6 @@
 
 namespace Pronto\MobileBundle\Entity\Collection\Relationship;
 
-use Pronto\MobileBundle\Entity\TimestampedEntity;
 use Doctrine\ORM\Mapping as ORM;
 
 
@@ -51,54 +50,54 @@ class Type
 
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
 
     /**
-     * @param mixed $name
+     * @param string $name
      */
-    public function setName($name): void
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
 
 
 	/**
-	 * @return mixed
+	 * @return bool
 	 */
-	public function hasMany()
+	public function hasMany(): bool
 	{
 		return $this->hasMany;
 	}
 
 
 	/**
-	 * @param mixed $hasMany
+	 * @param bool $hasMany
 	 */
-	public function setHasMany($hasMany): void
+	public function setHasMany(bool $hasMany): void
 	{
 		$this->hasMany = $hasMany;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return bool
 	 */
-	public function canBeEmpty()
+	public function canBeEmpty(): bool
 	{
 		return $this->canBeEmpty;
 	}
 
 
 	/**
-	 * @param mixed $canBeEmpty
+	 * @param bool $canBeEmpty
 	 */
-	public function setCanBeEmpty($canBeEmpty): void
+	public function setCanBeEmpty(bool $canBeEmpty): void
 	{
 		$this->canBeEmpty = $canBeEmpty;
 	}

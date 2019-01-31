@@ -4,6 +4,7 @@ namespace Pronto\MobileBundle\Entity\User;
 
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use Pronto\MobileBundle\Entity\User;
 use Ramsey\Uuid\Uuid;
 
 
@@ -111,62 +112,62 @@ class UserLogin
 
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getId()
+    public function getId(): string
     {
         return $this->id;
     }
 
 
 	/**
-	 * @return mixed
+	 * @return User
 	 */
-	public function getUser()
+	public function getUser(): User
 	{
 		return $this->user;
 	}
 
 
 	/**
-	 * @param mixed $user
+	 * @param User $user
 	 */
-	public function setUser($user): void
+	public function setUser(User $user): void
 	{
 		$this->user = $user;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return DateTime|null
 	 */
-	public function getDate()
+	public function getDate(): ?DateTime
 	{
 		return $this->date;
 	}
 
 
 	/**
-	 * @param mixed $date
+	 * @param string $date
 	 */
-	public function setDate($date): void
+	public function setDate(string $date): void
 	{
 		$this->date = $date;
 	}
 
 	/**
-	 * @return mixed
+	 * @return string|null
 	 */
-	public function getBrowserName()
+	public function getBrowserName(): ?string
 	{
 		return $this->browserName;
 	}
 
 
 	/**
-	 * @param mixed $browserName
+	 * @param string $browserName
 	 */
-	public function setBrowserName($browserName): void
+	public function setBrowserName(string $browserName): void
 	{
 		$this->browserName = $browserName;
 	}
@@ -175,33 +176,33 @@ class UserLogin
 	/**
 	 * @return mixed
 	 */
-	public function getPlatform()
+	public function getPlatform(): ?string
 	{
 		return $this->platform;
 	}
 
 
 	/**
-	 * @param mixed $platform
+	 * @param string $platform
 	 */
-	public function setPlatform($platform): void
+	public function setPlatform(string $platform): void
 	{
 		$this->platform = $platform;
 	}
 
 	/**
-	 * @return mixed
+	 * @return string
 	 */
-	public function getVersion()
+	public function getVersion(): ?string
 	{
 		return $this->version;
 	}
 
 
 	/**
-	 * @param mixed $version
+	 * @param string $version
 	 */
-	public function setVersion($version): void
+	public function setVersion(string $version): void
 	{
 		$this->version = $version;
 	}
@@ -210,122 +211,122 @@ class UserLogin
 	/**
 	 * @return mixed
 	 */
-	public function getAolVersion()
+	public function getAolVersion(): ?string
 	{
 		return $this->aolVersion;
 	}
 
 
 	/**
-	 * @param mixed $aolVersion
+	 * @param string $aolVersion
 	 */
-	public function setAolVersion($aolVersion): void
+	public function setAolVersion(string $aolVersion): void
 	{
 		$this->aolVersion = $aolVersion;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return bool
 	 */
-	public function isMobile()
+	public function isMobile(): bool
 	{
 		return $this->isMobile;
 	}
 
 
 	/**
-	 * @param mixed $isMobile
+	 * @param bool $isMobile
 	 */
-	public function setMobile($isMobile): void
+	public function setMobile(bool $isMobile): void
 	{
 		$this->isMobile = $isMobile;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return bool
 	 */
-	public function isTablet()
+	public function isTablet(): bool
 	{
 		return $this->isTablet;
 	}
 
 
 	/**
-	 * @param mixed $isTablet
+	 * @param bool $isTablet
 	 */
-	public function setTablet($isTablet): void
+	public function setTablet(bool $isTablet): void
 	{
 		$this->isTablet = $isTablet;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return bool
 	 */
-	public function isFacebook()
+	public function isFacebook(): bool
 	{
 		return $this->isFacebook;
 	}
 
 	/**
-	 * @param mixed $isFacebook
+	 * @param bool $isFacebook
 	 */
-	public function setFacebook($isFacebook): void
+	public function setFacebook(bool $isFacebook): void
 	{
 		$this->isFacebook = $isFacebook;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return bool
 	 */
-	public function isChromeFrame()
+	public function isChromeFrame(): bool
 	{
 		return $this->isChromeFrame;
 	}
 
 
 	/**
-	 * @param mixed $isChromeFrame
+	 * @param bool $isChromeFrame
 	 */
-	public function setChromeFrame($isChromeFrame): void
+	public function setChromeFrame(bool $isChromeFrame): void
 	{
 		$this->isChromeFrame = $isChromeFrame;
 	}
 
 	/**
-	 * @return mixed
+	 * @return bool
 	 */
-	public function isRobot()
+	public function isRobot(): bool
 	{
 		return $this->isRobot;
 	}
 
 
 	/**
-	 * @param mixed $isRobot
+	 * @param bool $isRobot
 	 */
-	public function setRobot($isRobot): void
+	public function setRobot(bool $isRobot): void
 	{
 		$this->isRobot = $isRobot;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return string|null
 	 */
-	public function getUserAgent()
+	public function getUserAgent(): ?string
 	{
 		return $this->userAgent;
 	}
 
 
 	/**
-	 * @param mixed $userAgent
+	 * @param string $userAgent
 	 */
-	public function setUserAgent($userAgent): void
+	public function setUserAgent(string $userAgent): void
 	{
 		$this->userAgent = $userAgent;
 	}

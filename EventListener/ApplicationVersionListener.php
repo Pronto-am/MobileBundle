@@ -31,6 +31,11 @@ class ApplicationVersionListener
 	 */
 	private $initializer;
 
+	/**
+	 * @var Application $application
+	 */
+	private $application;
+
 
 	/**
 	 * ApplicationVersionListener constructor.
@@ -60,21 +65,21 @@ class ApplicationVersionListener
 			return;
 		}
 
-		$this->initializeFirstVersion($entity, $args->getEntityManager());
+		$this->application = $entity;
+
+		$this->initializeFirstVersion($args->getEntityManager());
 	}
 
-
 	/**
-	 * @param Application $application
 	 * @param EntityManager $entityManager
 	 * @throws \Doctrine\ORM\ORMException
 	 * @throws \Doctrine\ORM\OptimisticLockException
 	 */
-	private function initializeFirstVersion(Application $application, EntityManager $entityManager): void
+	private function initializeFirstVersion(EntityManager $entityManager): void
 	{
 		$version = new Version();
 		$version->setName('V1');
-		$version->setApplication($application);
+		$version->setApplication($this->application);
 
 		$entityManager->persist($version);
 		$entityManager->flush();
@@ -84,14 +89,14 @@ class ApplicationVersionListener
 
 		/** @var Plugin $plugin */
 		foreach ($plugins as $plugin) {
-			$this->initializer->initialize($application, $plugin);
+			$this->initializer->initialize($this->application, $plugin);
 		}
 
 		$entityManager->flush();
 
 		$token = $this->tokenStorage->getToken();
 
-		if ($token !== null && $entityManager->getRepository(Application::class)->count(['customer' => $application->getCustomer()]) === 1) {
+		if ($token !== null && $entityManager->getRepository(Application::class)->count(['customer' => $this->application->getCustomer()]) === 1) {
 			$this->request->getSession()->set(Version::SESSION_IDENTIFIER, $version->getId());
 		}
 	}

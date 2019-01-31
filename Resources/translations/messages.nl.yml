@@ -289,10 +289,10 @@ device.app_version: App versie
 device.last_login: Laatst ingelogd
 device.language: Apparaat taal
 device.extra_data: Extra gegevens
-device.test_device: Test apparaat
 device.mark_as_test_device: Markeer dit apparaat als een test apparaat
 device.is_test_device: Test apparaat
 device.browser: Browser
+device.test_device: test apparaat
 device.test_devices: test apparaten
 
 plugin: plugin

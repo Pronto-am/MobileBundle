@@ -6,11 +6,12 @@ use Doctrine\ORM\EntityManagerInterface;
 use Pronto\MobileBundle\Controller\BaseController;
 use Pronto\MobileBundle\Entity\Collection;
 use Pronto\MobileBundle\Entity\Plugin;
-use Pronto\MobileBundle\Form\CollectionForm;
 use Pronto\MobileBundle\EventSubscriber\ValidateApplicationSelectionInterface;
 use Pronto\MobileBundle\EventSubscriber\ValidateCustomerSelectionInterface;
 use Pronto\MobileBundle\EventSubscriber\ValidatePluginStateInterface;
 use Pronto\MobileBundle\Service\FontAwesomeLoader;
+use Pronto\MobileBundle\Form\CollectionForm;
+use Pronto\MobileBundle\Request\CollectionRequest;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -74,14 +75,18 @@ class CollectionController extends BaseController implements ValidatePluginState
 
 		$originalIdentifier = $collection !== null ? $collection->getIdentifier() : '';
 
-		$form = $this->createForm(CollectionForm::class, $collection, [
+		$collectionRequest = CollectionRequest::fromEntity($collection);
+
+		$form = $this->createForm(CollectionForm::class, $collectionRequest, [
 			'fontAwesome' => $fontAwesomeLoader
 		]);
 
 		$form->handleRequest($request);
 
 		if ($form->isSubmitted() && $form->isValid()) {
-			$collection = $form->getData();
+			/** @var CollectionRequest $collectionRequest */
+			$collectionRequest = $form->getData();
+			$collection = $collectionRequest->toEntity($collection);
 
 			$collection->setApplicationVersion($applicationVersion);
 

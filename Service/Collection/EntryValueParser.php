@@ -5,7 +5,6 @@ namespace Pronto\MobileBundle\Service\Collection;
 
 use DateTime;
 use Pronto\MobileBundle\Entity\Collection\Property\Type;
-use Pronto\MobileBundle\Utils\Date;
 use Pronto\MobileBundle\Service\JsonTranslator;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -35,7 +34,7 @@ class EntryValueParser
 	 * Parse an entry property
 	 *
 	 * @param Type $type
-	 * @param $value
+	 * @param mixed $value
 	 * @return string
 	 */
 	public function parse(Type $type, $value): string
@@ -55,22 +54,22 @@ class EntryValueParser
 	/**
 	 * Return plain text
 	 *
-	 * @param $value
+	 * @param string $value
 	 * @return string
 	 */
-	public function parseText($value): string
+	public function parseText(?string $value): string
 	{
-		return $value;
+		return $value ?? '';
 	}
 
 
 	/**
 	 * Return date string
 	 *
-	 * @param $value
+	 * @param string $value
 	 * @return string
 	 */
-	public function parseDate($value): string
+	public function parseDate(string $value): string
 	{
 		$date = new DateTime($value);
 
@@ -81,10 +80,10 @@ class EntryValueParser
 	/**
 	 * Return date string
 	 *
-	 * @param $value
+	 * @param string $value
 	 * @return string
 	 */
-	public function parseDateTime($value): string
+	public function parseDateTime(string $value): string
 	{
 		$dateTime = new DateTime($value);
 
@@ -95,10 +94,10 @@ class EntryValueParser
 	/**
 	 * Parse a boolean
 	 *
-	 * @param $value
+	 * @param bool $value
 	 * @return string
 	 */
-	public function parseBoolean($value): string
+	public function parseBoolean(bool $value): string
 	{
 		return $this->translator->trans('attributeProperties.value_' . ($value ? 'true' : 'false'));
 	}

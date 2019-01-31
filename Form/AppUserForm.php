@@ -3,7 +3,7 @@
 namespace Pronto\MobileBundle\Form;
 
 
-use Pronto\MobileBundle\Entity\AppUser;
+use Pronto\MobileBundle\Request\AppUserRequest;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -39,7 +39,7 @@ class AppUserForm extends AbstractType
 	public function configureOptions(OptionsResolver $resolver): void
 	{
 		$resolver->setDefaults([
-			'data_class' => AppUser::class
+			'data_class' => AppUserRequest::class
 		]);
 	}
 }

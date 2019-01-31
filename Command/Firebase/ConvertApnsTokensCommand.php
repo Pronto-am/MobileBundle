@@ -3,13 +3,13 @@
 namespace Pronto\MobileBundle\Command\Firebase;
 
 
+use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\Device;
 use Pronto\MobileBundle\Entity\Plugin;
 use Pronto\MobileBundle\Service\ProntoMobile;
 use Pronto\MobileBundle\Service\PushNotification\ApnsTokenConverter;
-use Doctrine\ORM\EntityManagerInterface;
-use Exception;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -62,9 +62,6 @@ class ConvertApnsTokensCommand extends Command
 	 */
 	protected function execute(InputInterface $input, OutputInterface $output)
 	{
-		// Retrieve the tokens as GROUP_CONCAT, with application ID and bundle identifiers. This query has less impact than a repository query.
-		//$applications = $this->connection->query('SELECT a.id, a.ios_bundle_identifier, GROUP_CONCAT(d.apns_token) AS tokens FROM devices d LEFT JOIN applications a ON a.id = d.application_id WHERE firebase_token IS NULL OR firebase_token = \'\' GROUP BY d.application_id LIMIT 100')->fetchAll();
-
 		// Select the applications which contain empty firebase tokens
 		$applications = $this->entityManager->getRepository(Application::class)->getWithMissingFirebaseTokens();
 
@@ -106,7 +103,7 @@ class ConvertApnsTokensCommand extends Command
 			}
 
 			// Firebase encountered an error when converting apns tokens
-			if (is_bool($results) && $results === false) {
+			if ($results === false) {
 				$output->writeln([
 					'Could not convert tokens for this application. Check if the access key is correct and the ios bundle identifier is provided.',
 					''

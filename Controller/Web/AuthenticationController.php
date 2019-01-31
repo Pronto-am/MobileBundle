@@ -12,6 +12,8 @@ use Pronto\MobileBundle\Form\LoginForm;
 use Pronto\MobileBundle\Form\ResetPasswordEmailForm;
 use Pronto\MobileBundle\Form\ResetPasswordForm;
 use Pronto\MobileBundle\Service\ProntoMobile;
+use Pronto\MobileBundle\Utils\Responses\ErrorResponse;
+use Pronto\MobileBundle\Utils\Responses\SuccessResponse;
 use RuntimeException;
 use Swift_Mailer;
 use Swift_Message;
@@ -44,11 +46,10 @@ class AuthenticationController extends BaseController implements RedirectWhenAut
 			'email' => $lastUsername,
 		]);
 
-		return $this->render('@ProntoMobile/authentication/login.html.twig',
-			[
-				'form'  => $form->createView(),
-				'error' => $error,
-			]);
+		return $this->render('@ProntoMobile/authentication/login.html.twig', [
+			'form'  => $form->createView(),
+			'error' => $error,
+		]);
 	}
 
 
@@ -63,10 +64,9 @@ class AuthenticationController extends BaseController implements RedirectWhenAut
 
 		$customerUsers = $user->getCustomerUsers();
 
-		return $this->render('@ProntoMobile/customers/customers.html.twig',
-			[
-				'customerUsers' => $customerUsers
-			]);
+		return $this->render('@ProntoMobile/customers/customers.html.twig', [
+			'customerUsers' => $customerUsers
+		]);
 	}
 
 
@@ -81,10 +81,13 @@ class AuthenticationController extends BaseController implements RedirectWhenAut
 		$id = $request->request->get('id');
 
 		if ($id > 0) {
-			$response = new JsonResponse(['error' => false, 'url' => $targetPath = $this->generateUrl('pronto_mobile_homepage', [], UrlGeneratorInterface::ABSOLUTE_URL)]);
+			$response = new SuccessResponse(['url' => $targetPath = $this->generateAbsoluteUrl('pronto_mobile_homepage')]);
+			$response = $response->create()->getJsonResponse();
+
 			$response->headers->setCookie(new Cookie('customer', $id, time() + 60 * 60 * 24));
 		} else {
-			$response = new JsonResponse(['error' => true, 'message' => 'No Id present']);
+			$response = new ErrorResponse([404, 'No Id present']);
+			$response = $response->create()->getJsonResponse();
 		}
 
 		return $response;

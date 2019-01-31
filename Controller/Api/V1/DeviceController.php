@@ -100,7 +100,7 @@ class DeviceController extends BaseApiController
 
 		// Check if either the firebase or apns token is present
 		if ((!isset($content->firebase_token) || empty($content->firebase_token)) && (!isset($content->apns_token) || empty($content->apns_token))) {
-			$this->invalidParametersResponse(Device::MISSING_APNS_OR_FIREBASE_TOKEN);
+			$this->invalidParametersResponse(Device::MISSING_APNS_OR_FIREBASE_TOKEN, Device::class);
 		}
 
 		/** @var Application $application */
@@ -122,7 +122,7 @@ class DeviceController extends BaseApiController
 
 		if ($device !== null) {
 			if ($device->getTokenState()) {
-				$this->customErrorResponse(Device::DEVICE_ALREADY_REGISTERED, $this->serializer->serialize($device, [new DateTimeNormalizer()]));
+				$this->customErrorResponse(Device::DEVICE_ALREADY_REGISTERED, Device::class, $this->serializer->serialize($device, [new DateTimeNormalizer()]));
 			} else {
 
 				// If the token state was false, re-register the device and return it

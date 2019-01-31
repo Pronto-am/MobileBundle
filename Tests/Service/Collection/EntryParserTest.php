@@ -12,6 +12,7 @@ use Pronto\MobileBundle\Entity\Customer;
 use Pronto\MobileBundle\Entity\User;
 use Pronto\MobileBundle\Repository\UserRepository;
 use Pronto\MobileBundle\Service\Collection\EntryParser;
+use Pronto\MobileBundle\Tests\Mocks\ApplicationMock;
 
 class EntryParserTest extends TestCase
 {
@@ -20,6 +21,12 @@ class EntryParserTest extends TestCase
 
 	/** @var EntityManager $entityManager */
 	private $entityManager;
+
+	/** @var ApplicationMock $applicationMock */
+	private $applicationMock;
+
+	/** @var array $dates */
+	private $dates = [];
 
 
 	/**
@@ -30,6 +37,17 @@ class EntryParserTest extends TestCase
 		$this->createCollection();
 
 		$this->createEntityManager();
+
+		$this->applicationMock = new ApplicationMock();
+
+		$this->dates = [
+			'created_at' => (new DateTime('2018-08-14 11:22:44'))->format(DateTime::ATOM),
+			'updated_at' => (new DateTime('2018-08-14 11:22:44'))->format(DateTime::ATOM),
+			'user'       => [
+				'created_at' => (new DateTime('2018-08-12 12:32:43'))->format(DateTime::ATOM),
+				'updated_at' => (new DateTime('2018-08-12 14:32:43'))->format(DateTime::ATOM),
+			]
+		];
 	}
 
 
@@ -39,25 +57,25 @@ class EntryParserTest extends TestCase
 	public function testParseSingleEntryWithTranslatableProperty(): void
 	{
 		$propertyString = new Collection\Property();
-		$propertyString->setType($this->createPropertyTypeText());
+		$propertyString->setType($this->applicationMock->getCollectionPropertyType(Collection\Property\Type::TYPE_TEXT, true));
 		$propertyString->setIdentifier('text');
 		$propertyString->setName('Text');
 		$propertyString->setCollection($this->collection);
 
 		$propertyMultiline = new Collection\Property();
-		$propertyMultiline->setType($this->createPropertyTypeMultiline());
+		$propertyMultiline->setType($this->applicationMock->getCollectionPropertyType(Collection\Property\Type::TYPE_MULTILINE_TEXT, true));
 		$propertyMultiline->setIdentifier('multiline');
 		$propertyMultiline->setName('Multiline');
 		$propertyMultiline->setCollection($this->collection);
 
 		$propertyHtml = new Collection\Property();
-		$propertyHtml->setType($this->createPropertyTypeHtml());
+		$propertyHtml->setType($this->applicationMock->getCollectionPropertyType(Collection\Property\Type::TYPE_HTML_TEXT, true));
 		$propertyHtml->setIdentifier('html');
 		$propertyHtml->setName('Html');
 		$propertyHtml->setCollection($this->collection);
 
 		$propertyUrl = new Collection\Property();
-		$propertyUrl->setType($this->createPropertyTypeUrl());
+		$propertyUrl->setType($this->applicationMock->getCollectionPropertyType(Collection\Property\Type::TYPE_URL, true));
 		$propertyUrl->setIdentifier('url');
 		$propertyUrl->setName('Url');
 		$propertyUrl->setCollection($this->collection);
@@ -79,16 +97,16 @@ class EntryParserTest extends TestCase
 		// Results should be:
 		$entryShouldBe = [
 			'id'         => '99cc16d8-9fa3-11e8-a7e3-080027623c19',
-			'created_at' => '2018-08-14T11:22:44+00:00',
-			'updated_at' => '2018-08-14T11:22:44+00:00',
+			'created_at' => $this->dates['created_at'],
+			'updated_at' => $this->dates['updated_at'],
 			'created_by' => [
 				'id'         => 1,
 				'first_name' => 'Thomas',
 				'insertion'  => null,
 				'last_name'  => 'Roovers',
 				'full_name'  => 'Thomas Roovers',
-				'created_at' => '2018-08-12T12:32:43+00:00',
-				'updated_at' => '2018-08-12T14:32:43+00:00'
+				'created_at' => $this->dates['user']['created_at'],
+				'updated_at' => $this->dates['user']['updated_at']
 			],
 			'updated_by' => [
 				'id'         => 1,
@@ -96,8 +114,8 @@ class EntryParserTest extends TestCase
 				'insertion'  => null,
 				'last_name'  => 'Roovers',
 				'full_name'  => 'Thomas Roovers',
-				'created_at' => '2018-08-12T12:32:43+00:00',
-				'updated_at' => '2018-08-12T14:32:43+00:00'
+				'created_at' => $this->dates['user']['created_at'],
+				'updated_at' => $this->dates['user']['updated_at']
 			],
 			'text'       => [
 				'en' => 'E-sites'
@@ -129,13 +147,13 @@ class EntryParserTest extends TestCase
 	public function testParseSingleEntryWithDateProperty(): void
 	{
 		$propertyVisited = new Collection\Property();
-		$propertyVisited->setType($this->createPropertyTypeDate());
+		$propertyVisited->setType($this->applicationMock->getCollectionPropertyType(Collection\Property\Type::TYPE_DATE));
 		$propertyVisited->setIdentifier('visited');
 		$propertyVisited->setName('Visited');
 		$propertyVisited->setCollection($this->collection);
 
 		$propertyVisitedAt = new Collection\Property();
-		$propertyVisitedAt->setType($this->createPropertyTypeDateTime());
+		$propertyVisitedAt->setType($this->applicationMock->getCollectionPropertyType(Collection\Property\Type::TYPE_DATE_TIME));
 		$propertyVisitedAt->setIdentifier('visited_at');
 		$propertyVisitedAt->setName('Visited at');
 		$propertyVisitedAt->setCollection($this->collection);
@@ -157,12 +175,12 @@ class EntryParserTest extends TestCase
 		// Results should be:
 		$entryShouldBe = [
 			'id'         => '99cc16d8-9fa3-11e8-a7e3-080027623c19',
-			'created_at' => '2018-08-14T11:22:44+00:00',
-			'updated_at' => '2018-08-14T11:22:44+00:00',
+			'created_at' => $this->dates['created_at'],
+			'updated_at' => $this->dates['updated_at'],
 			'created_by' => null,
 			'updated_by' => null,
 			'visited'    => '14-08-2018',
-			'visited_at' => '2018-08-14T15:00:00+00:00'
+			'visited_at' => (new DateTime('2018-08-14 15:00:00'))->format(DateTime::ATOM)
 		];
 
 		$this->assertEquals([], array_diff(array_keys($entry), array_keys($entryShouldBe)));
@@ -179,7 +197,7 @@ class EntryParserTest extends TestCase
 	public function testParseSingleEntryWithSelectProperty(): void
 	{
 		$property = new Collection\Property();
-		$property->setType($this->createPropertyTypeSelect());
+		$property->setType($this->applicationMock->getCollectionPropertyType(Collection\Property\Type::TYPE_SELECT));
 		$property->setIdentifier('select');
 		$property->setName('Select');
 		$property->setCollection($this->collection);
@@ -200,8 +218,8 @@ class EntryParserTest extends TestCase
 		// Results should be:
 		$entryShouldBe = [
 			'id'         => '99cc16d8-9fa3-11e8-a7e3-080027623c19',
-			'created_at' => '2018-08-14T11:22:44+00:00',
-			'updated_at' => '2018-08-14T11:22:44+00:00',
+			'created_at' => $this->dates['created_at'],
+			'updated_at' => $this->dates['updated_at'],
 			'created_by' => null,
 			'updated_by' => null,
 			'select'     => '1'
@@ -218,13 +236,13 @@ class EntryParserTest extends TestCase
 	public function testParseSingleEntryWithBooleanProperty(): void
 	{
 		$propertyTrue = new Collection\Property();
-		$propertyTrue->setType($this->createPropertyTypeBoolean());
+		$propertyTrue->setType($this->applicationMock->getCollectionPropertyType(Collection\Property\Type::TYPE_BOOLEAN));
 		$propertyTrue->setIdentifier('boolean_true');
 		$propertyTrue->setName('Boolean true');
 		$propertyTrue->setCollection($this->collection);
 
 		$propertyFalse = new Collection\Property();
-		$propertyFalse->setType($this->createPropertyTypeBoolean());
+		$propertyFalse->setType($this->applicationMock->getCollectionPropertyType(Collection\Property\Type::TYPE_BOOLEAN));
 		$propertyFalse->setIdentifier('boolean_false');
 		$propertyFalse->setName('Boolean false');
 		$propertyFalse->setCollection($this->collection);
@@ -246,8 +264,8 @@ class EntryParserTest extends TestCase
 		// Results should be:
 		$entryShouldBe = [
 			'id'            => '99cc16d8-9fa3-11e8-a7e3-080027623c19',
-			'created_at'    => '2018-08-14T11:22:44+00:00',
-			'updated_at'    => '2018-08-14T11:22:44+00:00',
+			'created_at'    => $this->dates['created_at'],
+			'updated_at'    => $this->dates['updated_at'],
 			'created_by'    => null,
 			'updated_by'    => null,
 			'boolean_true'  => true,
@@ -266,7 +284,7 @@ class EntryParserTest extends TestCase
 	public function testParseSingleEntryWithNumberProperty(): void
 	{
 		$propertyNumber = new Collection\Property();
-		$propertyNumber->setType($this->createPropertyTypeNumber());
+		$propertyNumber->setType($this->applicationMock->getCollectionPropertyType(Collection\Property\Type::TYPE_NUMBER));
 		$propertyNumber->setIdentifier('number');
 		$propertyNumber->setName('Number');
 		$propertyNumber->setCollection($this->collection);
@@ -288,8 +306,8 @@ class EntryParserTest extends TestCase
 		// Results should be:
 		$entryShouldBe = [
 			'id'              => '99cc16d8-9fa3-11e8-a7e3-080027623c19',
-			'created_at'      => '2018-08-14T11:22:44+00:00',
-			'updated_at'      => '2018-08-14T11:22:44+00:00',
+			'created_at'      => $this->dates['created_at'],
+			'updated_at'      => $this->dates['updated_at'],
 			'created_by'      => null,
 			'updated_by'      => null,
 			'number'          => 1.234567890,
@@ -308,13 +326,13 @@ class EntryParserTest extends TestCase
 	public function testParseSingleEntryWithJsonProperty(): void
 	{
 		$propertyJson = new Collection\Property();
-		$propertyJson->setType($this->createPropertyTypeJson());
+		$propertyJson->setType($this->applicationMock->getCollectionPropertyType(Collection\Property\Type::TYPE_JSON));
 		$propertyJson->setIdentifier('json');
 		$propertyJson->setName('Json');
 		$propertyJson->setCollection($this->collection);
 
 		$propertyCoordinates = new Collection\Property();
-		$propertyCoordinates->setType($this->createPropertyTypeCoordinates());
+		$propertyCoordinates->setType($this->applicationMock->getCollectionPropertyType(Collection\Property\Type::TYPE_COORDINATES));
 		$propertyCoordinates->setIdentifier('coordinates');
 		$propertyCoordinates->setName('Coordinates');
 		$propertyCoordinates->setCollection($this->collection);
@@ -336,8 +354,8 @@ class EntryParserTest extends TestCase
 		// Results should be:
 		$entryShouldBe = [
 			'id'          => '99cc16d8-9fa3-11e8-a7e3-080027623c19',
-			'created_at'  => '2018-08-14T11:22:44+00:00',
-			'updated_at'  => '2018-08-14T11:22:44+00:00',
+			'created_at'  => $this->dates['created_at'],
+			'updated_at'  => $this->dates['updated_at'],
 			'created_by'  => null,
 			'updated_by'  => null,
 			'json'        => [
@@ -370,7 +388,7 @@ class EntryParserTest extends TestCase
 	public function testParseSingleEntryWithFileProperty(): void
 	{
 		$propertyNumber = new Collection\Property();
-		$propertyNumber->setType($this->createPropertyTypeFile());
+		$propertyNumber->setType($this->applicationMock->getCollectionPropertyType(Collection\Property\Type::TYPE_FILE));
 		$propertyNumber->setIdentifier('file');
 		$propertyNumber->setName('File');
 		$propertyNumber->setCollection($this->collection);
@@ -391,8 +409,8 @@ class EntryParserTest extends TestCase
 		// Results should be:
 		$entryShouldBe = [
 			'id'         => '99cc16d8-9fa3-11e8-a7e3-080027623c19',
-			'created_at' => '2018-08-14T11:22:44+00:00',
-			'updated_at' => '2018-08-14T11:22:44+00:00',
+			'created_at' => $this->dates['created_at'],
+			'updated_at' => $this->dates['updated_at'],
 			'created_by' => null,
 			'updated_by' => null,
 			'file'       => [
@@ -474,201 +492,5 @@ class EntryParserTest extends TestCase
 			->getMockForAbstractClass();
 
 		$this->entityManager->expects($this->once())->method('getRepository')->with(User::class)->willReturn($userRepository);
-	}
-
-
-	/**
-	 * Create a property of type text
-	 *
-	 * @return Collection\Property\Type
-	 */
-	private function createPropertyTypeText(): Collection\Property\Type
-	{
-		$type = new Collection\Property\Type();
-		$type->setType('text');
-		$type->setTranslatable(true);
-		$type->setOrdering(1);
-		$type->setJsonListviewCompatible(true);
-
-		return $type;
-	}
-
-
-	/**
-	 * Create a property of type multiline text
-	 *
-	 * @return Collection\Property\Type
-	 */
-	private function createPropertyTypeMultiline(): Collection\Property\Type
-	{
-		$type = new Collection\Property\Type();
-		$type->setType('multilineText');
-		$type->setTranslatable(true);
-		$type->setOrdering(1);
-		$type->setJsonListviewCompatible(true);
-
-		return $type;
-	}
-
-
-	/**
-	 * Create a property of type html
-	 *
-	 * @return Collection\Property\Type
-	 */
-	private function createPropertyTypeHtml(): Collection\Property\Type
-	{
-		$type = new Collection\Property\Type();
-		$type->setType('htmlText');
-		$type->setTranslatable(true);
-		$type->setOrdering(1);
-		$type->setJsonListviewCompatible(true);
-
-		return $type;
-	}
-
-
-	/**
-	 * Create a property of type url
-	 *
-	 * @return Collection\Property\Type
-	 */
-	private function createPropertyTypeUrl(): Collection\Property\Type
-	{
-		$type = new Collection\Property\Type();
-		$type->setType('url');
-		$type->setTranslatable(true);
-		$type->setOrdering(1);
-		$type->setJsonListviewCompatible(true);
-
-		return $type;
-	}
-
-
-	/**
-	 * Create a property of type date
-	 *
-	 * @return Collection\Property\Type
-	 */
-	private function createPropertyTypeDate(): Collection\Property\Type
-	{
-		$type = new Collection\Property\Type();
-		$type->setType('date');
-		$type->setOrdering(1);
-		$type->setJsonListviewCompatible(true);
-
-		return $type;
-	}
-
-
-	/**
-	 * Create a property of type date
-	 *
-	 * @return Collection\Property\Type
-	 */
-	private function createPropertyTypeDateTime(): Collection\Property\Type
-	{
-		$type = new Collection\Property\Type();
-		$type->setType('dateTime');
-		$type->setOrdering(1);
-		$type->setJsonListviewCompatible(true);
-
-		return $type;
-	}
-
-
-	/**
-	 * Create a property of type select
-	 *
-	 * @return Collection\Property\Type
-	 */
-	private function createPropertyTypeSelect(): Collection\Property\Type
-	{
-		$type = new Collection\Property\Type();
-		$type->setType('select');
-		$type->setOrdering(1);
-		$type->setJsonListviewCompatible(true);
-
-		return $type;
-	}
-
-
-	/**
-	 * Create a property of type boolean
-	 *
-	 * @return Collection\Property\Type
-	 */
-	private function createPropertyTypeBoolean(): Collection\Property\Type
-	{
-		$type = new Collection\Property\Type();
-		$type->setType('boolean');
-		$type->setOrdering(1);
-		$type->setJsonListviewCompatible(true);
-
-		return $type;
-	}
-
-
-	/**
-	 * Create a property of type number
-	 *
-	 * @return Collection\Property\Type
-	 */
-	private function createPropertyTypeNumber(): Collection\Property\Type
-	{
-		$type = new Collection\Property\Type();
-		$type->setType('number');
-		$type->setOrdering(1);
-		$type->setJsonListviewCompatible(true);
-
-		return $type;
-	}
-
-
-	/**
-	 * Create a property of type json
-	 *
-	 * @return Collection\Property\Type
-	 */
-	private function createPropertyTypeJson(): Collection\Property\Type
-	{
-		$type = new Collection\Property\Type();
-		$type->setType('json');
-		$type->setOrdering(1);
-		$type->setJsonListviewCompatible(true);
-
-		return $type;
-	}
-
-
-	/**
-	 * Create a property of type coordinates
-	 *
-	 * @return Collection\Property\Type
-	 */
-	private function createPropertyTypeCoordinates(): Collection\Property\Type
-	{
-		$type = new Collection\Property\Type();
-		$type->setType('coordinates');
-		$type->setOrdering(1);
-		$type->setJsonListviewCompatible(true);
-
-		return $type;
-	}
-
-
-	/**
-	 * Create a property of type file
-	 *
-	 * @return Collection\Property\Type
-	 */
-	private function createPropertyTypeFile(): Collection\Property\Type
-	{
-		$type = new Collection\Property\Type();
-		$type->setType('file');
-		$type->setOrdering(1);
-		$type->setJsonListviewCompatible(true);
-
-		return $type;
 	}
 }

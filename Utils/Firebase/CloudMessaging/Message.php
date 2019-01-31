@@ -33,7 +33,7 @@ class Message
 	 *
 	 * @param $title
 	 */
-	public function setTitle($title): void
+	public function setTitle(string $title): void
 	{
 		$this->fields['notification']['title'] = $title;
 	}
@@ -44,7 +44,7 @@ class Message
 	 *
 	 * @param $content
 	 */
-	public function setContent($content): void
+	public function setContent(string $content): void
 	{
 		$this->fields['notification']['body'] = $content ?? '';
 	}
@@ -56,7 +56,7 @@ class Message
 	 * @param string $key
 	 * @param string $value
 	 */
-	public function addData($key, $value): void
+	public function addData(string $key, string $value): void
 	{
 		if(!isset($this->fields['data'])) {
 			$this->fields['data'] = [];
@@ -86,7 +86,7 @@ class Message
 	 *
 	 * @param string $key The Collapse Key
 	 */
-	public function setCollapseKey($key): void
+	public function setCollapseKey(string $key): void
 	{
 		$this->fields['collapse_key'] = $key;
 	}
@@ -109,7 +109,7 @@ class Message
 	 *
 	 * @param string $priority Message Priority
 	 */
-	public function setPriority($priority): void
+	public function setPriority(string $priority): void
 	{
 		$this->fields['priority'] = $priority;
 	}
@@ -124,7 +124,7 @@ class Message
 	 *
 	 * @param int $time Time to live
 	 */
-	public function setTimeToLive($time): void
+	public function setTimeToLive(int $time): void
 	{
 		$this->fields['time_to_live'] = $time;
 	}
@@ -136,7 +136,7 @@ class Message
 	 *
 	 * @param string $packageName Restricted package name
 	 */
-	public function setRestrictedPackageName($packageName): void
+	public function setRestrictedPackageName(string $packageName): void
 	{
 		$this->fields['restricted_package_name'] = $packageName;
 	}
@@ -148,7 +148,7 @@ class Message
 	 *
 	 * @param bool $dryRun Dry Run ?
 	 */
-	public function setDryRun($dryRun = true): void
+	public function setDryRun(bool $dryRun = true): void
 	{
 		$this->fields['dry_run'] = $dryRun;
 	}

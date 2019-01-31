@@ -3,8 +3,8 @@
 namespace Pronto\MobileBundle\Service;
 
 
-use Pronto\MobileBundle\Entity\Application\Version;
 use Doctrine\ORM\EntityManagerInterface;
+use Pronto\MobileBundle\Entity\Application\Version;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -39,10 +39,10 @@ class JsonTranslator
 	/**
 	 * Get the language to use
 	 *
-	 * @param $json
+	 * @param array $json
 	 * @return mixed
 	 */
-	public function getLanguage($json)
+	public function getLanguage(array $json)
 	{
 		$language = $this->request->getLocale();
 
@@ -61,7 +61,7 @@ class JsonTranslator
 	/**
 	 * Get the translation of a json object
 	 *
-	 * @param $json
+	 * @param mixed $json
 	 * @param null $language
 	 * @return mixed
 	 */

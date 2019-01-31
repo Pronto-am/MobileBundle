@@ -12,6 +12,8 @@ use Pronto\MobileBundle\EventSubscriber\ValidateApplicationSelectionInterface;
 use Pronto\MobileBundle\EventSubscriber\ValidateCustomerSelectionInterface;
 use Pronto\MobileBundle\EventSubscriber\ValidatePluginStateInterface;
 use Pronto\MobileBundle\Service\Collection\EntryValueParser;
+use Pronto\MobileBundle\Utils\Responses\ErrorResponse;
+use Pronto\MobileBundle\Utils\Responses\SuccessResponse;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -236,7 +238,8 @@ class EntryController extends BaseController implements ValidatePluginStateInter
 
 		// Redirect when the collection doesn't exist
 		if ($collection === null || $entry === null) {
-			$response = new JsonResponse(['error' => true, 'message' => 'Not authorized to perform this request']);
+			$response = new ErrorResponse([403, 'Not authorized to perform this request']);
+			return $response->create()->getJsonResponse();
 		}
 
 		$data = $entry->getData();
@@ -262,7 +265,8 @@ class EntryController extends BaseController implements ValidatePluginStateInter
 		$entityManager->persist($entry);
 		$entityManager->flush();
 
-		return $response ?? new JsonResponse(['error' => false]);
+		$response = new SuccessResponse([]);
+		return $response->create()->getJsonResponse();
 	}
 
 

@@ -3,17 +3,11 @@
 namespace Pronto\MobileBundle\Form;
 
 
-use Pronto\MobileBundle\Entity\User;
-use Doctrine\DBAL\Types\StringType;
+use Pronto\MobileBundle\Request\User\ProfileRequest;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Security\Core\Validator\Constraints\UserPassword;
-use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 class ProfileForm extends AbstractType
@@ -58,5 +52,15 @@ class ProfileForm extends AbstractType
 				],
 				'label'       => 'user.email'
 			]);
+	}
+
+	/**
+	 * @param OptionsResolver $resolver
+	 */
+	public function configureOptions(OptionsResolver $resolver): void
+	{
+		$resolver->setDefaults([
+			'data_class' => ProfileRequest::class
+		]);
 	}
 }

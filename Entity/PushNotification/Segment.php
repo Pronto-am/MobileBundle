@@ -4,8 +4,9 @@ namespace Pronto\MobileBundle\Entity\PushNotification;
 
 use Doctrine\ORM\Mapping as ORM;
 use Pronto\MobileBundle\Entity\ApiEntityInterface;
-use Symfony\Component\Validator\Constraints as Assert;
+use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Traits\ApiEntityTrait;
+use Symfony\Component\Validator\Constraints as Assert;
 
 
 /**
@@ -21,7 +22,7 @@ class Segment implements ApiEntityInterface
 
 
 	// Custom entity error messages
-	public const INVALID_SEGMENT_PARAMETER = 'Segments has to be a list with the id and whether the device is subscribed or not';
+	public const INVALID_SEGMENT_PARAMETER = [422, 22, 'Segments has to be a list with the id and whether the device is subscribed or not'];
 
 
 	/**
@@ -53,54 +54,54 @@ class Segment implements ApiEntityInterface
 
 
 	/**
-	 * @return mixed
+	 * @return int
 	 */
-	public function getId()
+	public function getId(): int
 	{
 		return $this->id;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return Application
 	 */
-	public function getApplication()
+	public function getApplication(): Application
 	{
 		return $this->application;
 	}
 
 
 	/**
-	 * @param mixed $application
+	 * @param Application $application
 	 */
-	public function setApplication($application): void
+	public function setApplication(Application $application): void
 	{
 		$this->application = $application;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return array
 	 */
-	public function getName()
+	public function getName(): array
 	{
 		return $this->name;
 	}
 
 
 	/**
-	 * @param mixed $name
+	 * @param array $name
 	 */
-	public function setName($name): void
+	public function setName(array $name): void
 	{
 		$this->name = $name;
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return array
 	 */
-	public function getDeviceSegments()
+	public function getDeviceSegments(): array
 	{
 		return $this->deviceSegments;
 	}
