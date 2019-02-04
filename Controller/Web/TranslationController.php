@@ -161,7 +161,7 @@ class TranslationController extends BaseController implements ValidateCustomerSe
 		if ($request->request->get('platform') === 'android') {
 			$translationKey->setAndroid($request->request->get('active'));
 		} elseif ($request->request->get('platform') === 'ios') {
-			$translationKey->setAndroid($request->request->get('active'));
+			$translationKey->setIos($request->request->get('active'));
 		}
 
 		$entityManager->persist($translationKey);
