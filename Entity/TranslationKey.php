@@ -48,6 +48,22 @@ class TranslationKey implements ApiEntityInterface
 	private $type;
 
 	/**
+	 * @var boolean $android
+	 *
+	 * @ORM\Column(type="boolean")
+	 * @Groups({"TranslationKey"})
+	 */
+	private $android;
+
+	/**
+	 * @var boolean $ios
+	 *
+	 * @ORM\Column(type="boolean")
+	 * @Groups({"TranslationKey"})
+	 */
+	private $ios;
+
+	/**
 	 * @ORM\OneToMany(targetEntity="Pronto\MobileBundle\Entity\Translation", mappedBy="translationKey")
 	 * @Groups({"TranslationKey"})
 	 */
@@ -112,6 +128,42 @@ class TranslationKey implements ApiEntityInterface
 	public function setType(string $type): TranslationKey
 	{
 		$this->type = $type;
+		return $this;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isAndroid(): bool
+	{
+		return $this->android;
+	}
+
+	/**
+	 * @param bool $android
+	 * @return TranslationKey
+	 */
+	public function setAndroid(bool $android): TranslationKey
+	{
+		$this->android = $android;
+		return $this;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isIos(): bool
+	{
+		return $this->ios;
+	}
+
+	/**
+	 * @param bool $ios
+	 * @return TranslationKey
+	 */
+	public function setIos(bool $ios): TranslationKey
+	{
+		$this->ios = $ios;
 		return $this;
 	}
 

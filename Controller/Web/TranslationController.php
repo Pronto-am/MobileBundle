@@ -17,7 +17,9 @@ use Pronto\MobileBundle\Form\TranslationForm;
 use Pronto\MobileBundle\Service\Translation\Importer;
 use Pronto\MobileBundle\Utils\Doctrine\WhereClause;
 use Pronto\MobileBundle\Utils\PageHelper;
+use Pronto\MobileBundle\Utils\Responses\ErrorResponse;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -113,6 +115,63 @@ class TranslationController extends BaseController implements ValidateCustomerSe
 
 	/**
 	 * @param Request $request
+	 * @param EntityManagerInterface $entityManager
+	 * @return ErrorResponse|JsonResponse
+	 */
+	public function saveInlineAction(Request $request, EntityManagerInterface $entityManager)
+	{
+		$translationKey = $entityManager->getRepository(TranslationKey::class)->find($request->request->get('translation_key_id'));
+
+		if ($translationKey === null) {
+			return new ErrorResponse([404, 'Invalid translation key']);
+		}
+
+		$translation = $entityManager->getRepository(Translation::class)->findOneBy([
+			'translationKey' => $translationKey,
+			'language'       => $request->request->get('language')
+		]);
+
+		if ($translation === null) {
+			$translation = new Translation();
+			$translation->setLanguage($request->request->get('language'))->setTranslationKey($translationKey);
+		}
+
+		$translation->setText($request->request->get('text'));
+
+		$entityManager->persist($translation);
+		$entityManager->flush();
+
+		return new JsonResponse();
+	}
+
+	/**
+	 * @param Request $request
+	 * @param EntityManagerInterface $entityManager
+	 * @return ErrorResponse|JsonResponse
+	 */
+	public function togglePlatformAction(Request $request, EntityManagerInterface $entityManager)
+	{
+		/** @var TranslationKey $translationKey */
+		$translationKey = $entityManager->getRepository(TranslationKey::class)->find($request->request->get('translation_key_id'));
+
+		if ($translationKey === null) {
+			return new ErrorResponse([404, 'Invalid translation key']);
+		}
+
+		if ($request->request->get('platform') === 'android') {
+			$translationKey->setAndroid($request->request->get('active'));
+		} elseif ($request->request->get('platform') === 'ios') {
+			$translationKey->setAndroid($request->request->get('active'));
+		}
+
+		$entityManager->persist($translationKey);
+		$entityManager->flush();
+
+		return new JsonResponse();
+	}
+
+	/**
+	 * @param Request $request
 	 * @param Importer $importer
 	 * @param TranslatorInterface $translator
 	 * @return Response
@@ -129,7 +188,7 @@ class TranslationController extends BaseController implements ValidateCustomerSe
 			$file = $uploadData->file;
 
 			// Import the data
-			if($importer->import($file)) {
+			if ($importer->import($file)) {
 				$this->addDataSavedFlash();
 			} else {
 				$this->addFlash('danger', $translator->trans('translation.import_partly_failed'));

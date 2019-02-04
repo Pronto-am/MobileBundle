@@ -20,6 +20,16 @@ class TranslationData extends BaseData
 	public $type;
 
 	/**
+	 * @var boolean $android
+	 */
+	public $android;
+
+	/**
+	 * @var boolean $ios
+	 */
+	public $ios;
+
+	/**
 	 * @var array $translations
 	 */
 	public $translations;
@@ -29,6 +39,11 @@ class TranslationData extends BaseData
 	 */
 	public static function getFillable(): array
 	{
-		return ['identifier', 'type'];
+		return [
+			'identifier',
+			'type',
+			'android' => 'isAndroid',
+			'ios'     => 'isIos'
+		];
 	}
 }

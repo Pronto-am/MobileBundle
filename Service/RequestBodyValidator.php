@@ -7,10 +7,10 @@ use Symfony\Component\HttpFoundation\Request;
 
 class RequestBodyValidator
 {
-
-	/** @var array Missing */
+	/**
+	 * @var array Missing
+	 */
 	private $missing = [];
-
 
 	/**
 	 * Validate the existence of the required keys in the JSON body
@@ -30,7 +30,6 @@ class RequestBodyValidator
 
 		return empty($this->missing);
 	}
-
 
 	/**
 	 * Get the validation message

@@ -1,0 +1,16 @@
+table tr td a.regular {
+  margin-right: 10px;
+}
+
+table tr td a.platform {
+  color: #cccccc;
+}
+
+table tr td a.platform.active i.fa-android {
+  color: #A3C439;
+}
+
+table tr td a.platform.active i.fa-apple {
+  color: #666666;
+}
+

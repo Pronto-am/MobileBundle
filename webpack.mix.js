@@ -62,6 +62,8 @@ mix.js(js.src + 'app.js', js.dest)
 
     .sass(css.src + '/collections/collections.scss', css.dest + '/collections')
 
+    .sass(css.src + '/translations/translations.scss', css.dest + '/translations')
+
     .copy(img.src + '/logo-login.png', img.dest)
     .copy(img.src + '/logo-sidemenu.png', img.dest)
     .copy(img.src + '/favicon.ico', img.dest)

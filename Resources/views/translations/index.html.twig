@@ -1,5 +1,11 @@
 {% extends '@ProntoMobile/base.html.twig' %}
 
+{% block stylesheets %}
+    {{ parent() }}
+
+    <link rel="stylesheet" type="text/css" href="{{ mix('/css/translations/translations.css') }}"/>
+{% endblock %}
+
 {% block body %}
 
     {% include '@ProntoMobile/components/toolbar.html.twig' with {
@@ -27,23 +33,36 @@
                                 <label for="checkAll"></label>
                             </th>
                             <th width="50">#</th>
-                            <th>{{ pageHelper.createSortableLink('translation.identifier'|trans|capitalize, 't.key') }}</th>
+                            <th>{{ pageHelper.createSortableLink('translation.identifier'|trans|capitalize, 't.identifier') }}</th>
+                            <th>Vertalingen</th>
                         </tr>
                         </thead>
                         <tbody>
-                        {% for key, translation in pageHelper.getList() %}
-                            <tr>
-                                <td class="has-checkbox">
-                                    <input type="checkbox" id="translationsCheckbox{{ user.id }}" name="translations[]" value="{{ translation.id }}">
-                                    <label for="translationsCheckbox{{ user.id }}"></label>
+                        {% for key, translationKey in pageHelper.getList() %}
+                            <tr data-translation-key-id="{{ translationKey.id }}">
+                                <td class="has-checkbox" valign="top">
+                                    <input type="checkbox" id="translationsCheckbox{{ translationKey.id }}" name="translations[]" value="{{ translationKey.id }}">
+                                    <label for="translationsCheckbox{{ translationKey.id }}"></label>
                                 </td>
-                                <td>
+                                <td valign="top">
                                     {{ pageHelper.getRowNumber(key) }}
                                 </td>
-                                <td>
-                                    <a href="{{ path('pronto_mobile_translations_edit', {'id': translation.id}) }}" class="regular">
-                                        {{ translation.identifier }}
+                                <td valign="top">
+                                    <a href="{{ path('pronto_mobile_translations_edit', {'id': translationKey.id}) }}" class="regular">
+                                        {{ translationKey.identifier }}
                                     </a>
+
+                                    <a href="#!" class="platform {{ translationKey.android ? 'active' : '' }}"><i class="fa fa-android"></i></a>
+                                    <a href="#!" class="platform {{ translationKey.ios ? 'active' : '' }}"><i class="fa fa-apple"></i></a>
+                                </td>
+                                <td>
+                                    {% for translation in translationKey.translations %}
+                                        <div class="inline-field">
+                                            <span>{{ translation.language }}</span>
+                                            <input type="text" class="toggle-field" data-translation-key-id="{{ translationKey.id }}" name="{{ translation.language }}" value="{{ translation.text }}">
+                                            <span><a href="#!" class="btn"><i class="fa fa-check"></i></a></span>
+                                        </div>
+                                    {% endfor %}
                                 </td>
                             </tr>
                         {% endfor %}
@@ -59,4 +78,11 @@
     {% endif %}
 
     {% include '@ProntoMobile/components/confirm.html.twig' with {postUrl: path('pronto_mobile_translations_delete')} %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="text/javascript" src="{{ mix('/js/translations/translations.js') }}"></script>
+
 {% endblock %}

@@ -359,6 +359,18 @@ translations:
     defaults:
         _controller: ProntoMobileBundle:Web\Translation:index
 
+translations_inline:
+    path: /translations/inline
+    defaults:
+        _controller: ProntoMobileBundle:Web\Translation:saveInline
+    condition: "context.getMethod() in ['POST']"
+
+translations_platform:
+    path: /translations/platform
+    defaults:
+        _controller: ProntoMobileBundle:Web\Translation:togglePlatform
+    condition: "context.getMethod() in ['POST']"
+
 translations_edit:
     path: /translations/edit/{id}
     defaults:

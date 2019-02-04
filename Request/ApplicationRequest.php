@@ -86,7 +86,7 @@ class ApplicationRequest extends Request
 	 */
 	public function toEntity($entity = null): Application
 	{
-		$entity = parent::toEntityByProperties($this, [
+		$entity = $this->toEntityByProperties($this, [
 			'name',
 			'label',
 			'color',

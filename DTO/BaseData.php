@@ -22,8 +22,13 @@ abstract class BaseData
 
 		$data = new static();
 
-		foreach(static::getFillable() as $fillable) {
-			$data->{$fillable} = $entity->{'get' . ucfirst($fillable)}();
+		foreach(static::getFillable() as $field => $method) {
+			if(is_numeric($field)) {
+				$field = $method;
+				$method = 'get' . ucfirst($field);
+			}
+
+			$data->{$field} = $entity->{$method}();
 		}
 
 		return $data;
@@ -35,8 +40,14 @@ abstract class BaseData
 	 */
 	public function toEntity($entity)
 	{
-		foreach(static::getFillable() as $fillable) {
-			$entity->{'set' . ucfirst($fillable)}($this->{$fillable});
+		foreach(static::getFillable() as $field => $method) {
+			if(is_numeric($field)) {
+				$field = $method;
+			}
+
+			$method = 'set' . ucfirst($field);
+
+			$entity->{$method}($this->{$field});
 		}
 
 		return $entity;

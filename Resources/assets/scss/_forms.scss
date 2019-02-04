@@ -34,6 +34,7 @@ form {
       border-radius: 5px !important;
       padding: 5px !important;
       box-sizing: border-box !important;
+      //transition: background-color 0.2s ease, border-color 0.2s ease;
 
       &:not(.jscolor) {
         background-color: #f7f9fa !important;
@@ -46,6 +47,16 @@ form {
 
       &.invalid {
         box-shadow: 0 1px 0 0 #F44336 !important;
+      }
+
+      &.toggle-field:not(:focus):not(.invalid) {
+        border: 1px solid transparent !important;
+        background-color: transparent !important;
+
+        &:hover {
+          border: 1px solid #DCDFE1 !important;
+          background-color: #DCDFE1 !important;
+        }
       }
     }
   }

@@ -12211,6 +12211,17 @@ table tr td.has-checkbox input[type="checkbox"]:checked + label:before {
   top: -2px;
 }
 
+table tr th[valign="top"],
+table tr td[valign="top"] {
+  line-height: 40px;
+  vertical-align: top;
+}
+
+table tr th[valign="top"].has-checkbox label:before,
+table tr td[valign="top"].has-checkbox label:before {
+  top: 9px;
+}
+
 table tr th i.fa-check,
 table tr td i.fa-check {
   color: #2a9d8f;
@@ -12260,6 +12271,81 @@ table tr td .bar-statistics span.no-devices {
   background-color: rgba(238, 238, 238, 0.8);
   border: 1px solid #eeeeee;
   width: calc(100% - 2px);
+}
+
+table tr th .inline-field,
+table tr td .inline-field {
+  position: relative;
+  display: block;
+  height: 40px;
+}
+
+table tr th .inline-field:not(:last-child),
+table tr td .inline-field:not(:last-child) {
+  margin-bottom: 10px;
+}
+
+table tr th .inline-field span,
+table tr td .inline-field span {
+  position: relative;
+  float: left;
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+table tr th .inline-field span:last-of-type,
+table tr td .inline-field span:last-of-type {
+  position: absolute;
+  right: 0;
+  top: 0;
+  text-align: right;
+  padding: 8px 8px 8px 0;
+  line-height: normal;
+}
+
+table tr th .inline-field span:last-of-type .btn,
+table tr th .inline-field span:last-of-type .btn-large,
+table tr td .inline-field span:last-of-type .btn,
+table tr td .inline-field span:last-of-type .btn-large {
+  opacity: 0;
+  background-color: #039be5;
+  color: #ffffff;
+  height: 24px;
+  width: 24px;
+  text-align: center;
+  line-height: 24px;
+  padding: 0 !important;
+  border-radius: 12px;
+  -webkit-transition: opacity 0.2s ease;
+  transition: opacity 0.2s ease;
+}
+
+table tr th .inline-field span:last-of-type .btn .fa,
+table tr th .inline-field span:last-of-type .btn-large .fa,
+table tr td .inline-field span:last-of-type .btn .fa,
+table tr td .inline-field span:last-of-type .btn-large .fa {
+  color: #ffffff;
+  display: inline;
+  font-size: 14px;
+}
+
+table tr th .inline-field input,
+table tr td .inline-field input {
+  position: relative;
+  float: left;
+  height: 40px !important;
+  width: calc(100% - 40px) !important;
+  margin: 0 !important;
+}
+
+table tr th .inline-field.focused span:last-of-type .btn,
+table tr th .inline-field.focused span:last-of-type .btn-large,
+table tr td .inline-field.focused span:last-of-type .btn,
+table tr td .inline-field.focused span:last-of-type .btn-large {
+  opacity: 1;
 }
 
 form {
@@ -12343,6 +12429,28 @@ form input[type=email]:not(.browser-default).invalid,
 form textarea.materialize-textarea:not(.browser-default).invalid {
   -webkit-box-shadow: 0 1px 0 0 #F44336 !important;
           box-shadow: 0 1px 0 0 #F44336 !important;
+}
+
+form input[type=text]:not(.browser-default).toggle-field:not(:focus):not(.invalid),
+form input[type=number]:not(.browser-default).toggle-field:not(:focus):not(.invalid),
+form input[type=search]:not(.browser-default).toggle-field:not(:focus):not(.invalid),
+form input[type=url]:not(.browser-default).toggle-field:not(:focus):not(.invalid),
+form input[type=password]:not(.browser-default).toggle-field:not(:focus):not(.invalid),
+form input[type=email]:not(.browser-default).toggle-field:not(:focus):not(.invalid),
+form textarea.materialize-textarea:not(.browser-default).toggle-field:not(:focus):not(.invalid) {
+  border: 1px solid transparent !important;
+  background-color: transparent !important;
+}
+
+form input[type=text]:not(.browser-default).toggle-field:not(:focus):not(.invalid):hover,
+form input[type=number]:not(.browser-default).toggle-field:not(:focus):not(.invalid):hover,
+form input[type=search]:not(.browser-default).toggle-field:not(:focus):not(.invalid):hover,
+form input[type=url]:not(.browser-default).toggle-field:not(:focus):not(.invalid):hover,
+form input[type=password]:not(.browser-default).toggle-field:not(:focus):not(.invalid):hover,
+form input[type=email]:not(.browser-default).toggle-field:not(:focus):not(.invalid):hover,
+form textarea.materialize-textarea:not(.browser-default).toggle-field:not(:focus):not(.invalid):hover {
+  border: 1px solid #DCDFE1 !important;
+  background-color: #DCDFE1 !important;
 }
 
 form .select-wrapper span.caret {
