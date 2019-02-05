@@ -37,7 +37,7 @@ class Scripts
 				'domain'         => 'pronto.am',
 				'uploads_folder' => 'uploads',
 				'firebase'       => [
-					'storage_decryption_password' => 'thisshouldbechanged'
+					'storage_decryption_password' => 'ThisTokenIsNotSoSecret'
 				]
 			]
 		];
@@ -94,7 +94,7 @@ class Scripts
 		$twig = [
 			'twig' => [
 				'globals' => [
-					'pronto_mobile' => '@pronto_mobile.global.app'
+					'pronto_mobile' => '@Pronto\MobileBundle\Service\ProntoMobile'
 				]
 			]
 		];
@@ -112,8 +112,10 @@ class Scripts
 		$security = Yaml::parse(file_get_contents($fileName));
 		$security['security']['providers'] = [
 			'cms_users' => [
-				'entity'   => 'Pronto\MobileBundle\Entity\User',
-				'property' => 'email'
+				'entity' => [
+					'class'    => 'Pronto\MobileBundle\Entity\User',
+					'property' => 'email'
+				]
 			],
 			'app_users' => [
 				'id' => 'pronto_mobile.security.app_user_provider'

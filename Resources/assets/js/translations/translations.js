@@ -2,18 +2,14 @@ $('a.btn-translate').click(function (e) {
     e.preventDefault();
 
     const defaultValue = $('#translations_0').val();
-    const fieldToFill = $(this).closest('.row').find('input[id^="translations_"]');
+    const fieldToFill = $(this).closest('.row').find('textarea[id^="translations_"]');
     const from = $('#translations_0').data('lang');
     const to = fieldToFill.data('lang');
 
     $(this).addClass('disabled');
     $(fieldToFill).prop('disabled', true);
 
-    $.getJSON('https://translate.yandex.net/api/v1.5/tr.json/translate', {
-        key: 'trnsl.1.1.20190131T085112Z.66ef20c1cb0c5e71.8172f269bcb719c15c75f1a6d0560192b1174ee1',
-        lang: from + '-' + to,
-        text: defaultValue
-    }, function (response) {
+    translate(from, to, defaultValue, function (response) {
         if (response.text && response.text.length > 0) {
             fieldToFill.val(response.text[0]);
         }
@@ -34,7 +30,7 @@ $('#translations_0').keyup(function () {
 $(document).ready(function () {
     $('#translations_0').trigger('keyup');
 
-    const toggleField = $('.inline-field input.toggle-field');
+    const toggleField = $('.inline-field textarea.toggle-field');
 
     toggleField.focus(function () {
         const field = $(this).closest('.inline-field');
@@ -47,8 +43,9 @@ $(document).ready(function () {
     });
 
     toggleField.on('keypress', function(e) {
-        if(e.which === 13) {
-            const field = $(this).closest('.inline-field').find('input');
+        // Use the enter key to save the translation
+        if(e.which === 13 && !e.shiftKey) {
+            const field = $(this).closest('.inline-field').find('textarea');
 
             updateTranslation(field);
 
@@ -65,12 +62,28 @@ $(document).ready(function () {
     $('.inline-field').find('.btn').click(function (e) {
         e.preventDefault();
 
-        const field = $(this).closest('.inline-field').find('input');
+        const field = $(this).closest('.inline-field').find('textarea');
 
-        updateTranslation(field);
+        const fieldToTranslate = $(this).closest('td').find('.inline-field:first-child textarea');
+        const fieldToFill = $(this).closest('.inline-field').find('textarea');
+        const from = fieldToTranslate.attr('name');
+        const to = fieldToFill.attr('name');
+
+        translate(from, to, fieldToTranslate.val(), function (response) {
+            if (response.text && response.text.length > 0) {
+                fieldToFill.val(response.text[0]);
+
+                // Save the translation in our database
+                updateTranslation(field);
+            }
+        });
     });
 });
 
+/**
+ * Update the translation
+ * @param field
+ */
 function updateTranslation(field) {
     $.ajax({
         url: '/admin/translations/inline',
@@ -89,6 +102,10 @@ function updateTranslation(field) {
     });
 }
 
+/**
+ * Toggle the platform
+ * @param icon
+ */
 function updatePlatform(icon) {
     const link = icon.parent();
 
@@ -111,6 +128,21 @@ function updatePlatform(icon) {
             }
         }
     });
+}
+
+/**
+ * Translate the text for the default language to the requested language
+ * @param from
+ * @param to
+ * @param text
+ * @param callback
+ */
+function translate(from, to, text, callback) {
+    $.getJSON('https://translate.yandex.net/api/v1.5/tr.json/translate', {
+        key: 'trnsl.1.1.20190131T085112Z.66ef20c1cb0c5e71.8172f269bcb719c15c75f1a6d0560192b1174ee1',
+        lang: from + '-' + to,
+        text: text
+    }, callback);
 }
 
 

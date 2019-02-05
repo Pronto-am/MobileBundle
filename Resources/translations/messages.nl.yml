@@ -317,6 +317,7 @@ setting.delete_account: Account verwijderen
 translations: vertalingen
 translation: vertaling
 translation.translate: Vertalen
+translation.upload: Upload
 translation.fill: Vullen
 translation.identifier: Key
 translation.type: Type

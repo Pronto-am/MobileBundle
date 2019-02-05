@@ -44,9 +44,9 @@ class Translation implements ApiEntityInterface
 	private $language;
 
 	/**
-	 * @var string $text
+	 * @var null|string $text
 	 *
-	 * @ORM\Column(type="text")
+	 * @ORM\Column(type="text", nullable=true)
 	 * @Groups({"Translation", "TranslationKey"})
 	 */
 	private $text;
@@ -107,18 +107,18 @@ class Translation implements ApiEntityInterface
 	}
 
 	/**
-	 * @return string
+	 * @return string|null
 	 */
-	public function getText(): string
+	public function getText(): ?string
 	{
 		return $this->text;
 	}
 
 	/**
-	 * @param string $text
+	 * @param null|string $text
 	 * @return Translation
 	 */
-	public function setText(string $text): self
+	public function setText(?string $text): self
 	{
 		$this->text = $text;
 		return $this;

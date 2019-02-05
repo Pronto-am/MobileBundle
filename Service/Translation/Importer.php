@@ -51,7 +51,7 @@ class Importer
 	 * @param File $file
 	 * @return bool
 	 */
-	public function import(File $file): boolean
+	public function import(File $file): bool
 	{
 		$contents = file_get_contents($file->getRealPath());
 
@@ -61,7 +61,7 @@ class Importer
 			} else {
 				$this->fromJson($contents);
 			}
-		} catch(Exception $exception) {
+		} catch (Exception $exception) {
 			return false;
 		}
 
@@ -89,11 +89,8 @@ class Importer
 			$translationKey = $this->saveTranslationKey($key);
 			$this->entityManager->flush();
 
-			foreach ($key['translations'] as $translated) {
-				// The application needs to have this language enabled
-				if (!in_array($translated['language'], $availableLanguages, true)) {
-					continue;
-				}
+			foreach ($availableLanguages as $language) {
+				$translated = $this->filterTranslationsByLanguage($key['translations'], $language);
 
 				$this->saveTranslation($translationKey, $translated);
 			}
@@ -134,11 +131,8 @@ class Importer
 				$translations = $key['translations'];
 			}
 
-			foreach ($translations as $translated) {
-				// The application needs to have this language enabled
-				if (!in_array($translated['language'], $availableLanguages, true)) {
-					continue;
-				}
+			foreach ($availableLanguages as $language) {
+				$translated = $this->filterTranslationsByLanguage($translations, $language);
 
 				$this->saveTranslation($translationKey, $translated);
 			}
@@ -160,6 +154,8 @@ class Importer
 
 		$translationKey->setIdentifier($key['identifier']);
 		$translationKey->setType($key['type']);
+		$translationKey->setAndroid($key['android'] ?? true);
+		$translationKey->setIos($key['ios'] ?? true);
 		$translationKey->setApplication($this->application);
 
 		$this->entityManager->persist($translationKey);
@@ -186,5 +182,28 @@ class Importer
 		$this->entityManager->persist($translation);
 
 		return $translation;
+	}
+
+	/**
+	 * @param array $translations
+	 * @param string $language
+	 * @return array
+	 */
+	private function filterTranslationsByLanguage(array $translations, string $language): array
+	{
+		$translated = array_filter($translations, function ($translation) use ($language) {
+			return $translation['language'] === $language;
+		});
+
+		if (empty($translated)) {
+			$translated = [
+				'language' => $language,
+				'text'     => null
+			];
+		} else {
+			$translated = $translated[0];
+		}
+
+		return $translated;
 	}
 }

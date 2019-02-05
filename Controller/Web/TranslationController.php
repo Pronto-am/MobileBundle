@@ -62,6 +62,12 @@ class TranslationController extends BaseController implements ValidateCustomerSe
 	{
 		$data = TranslationData::fromEntity($key);
 
+		// Default value of Android and iOS checkboxes
+		if ($key === null) {
+			$data->android = true;
+			$data->ios = true;
+		}
+
 		$form = $this->createForm(TranslationForm::class, $data);
 		$form->handleRequest($request);
 
@@ -159,9 +165,9 @@ class TranslationController extends BaseController implements ValidateCustomerSe
 		}
 
 		if ($request->request->get('platform') === 'android') {
-			$translationKey->setAndroid($request->request->get('active'));
+			$translationKey->setAndroid($request->request->getBoolean('active'));
 		} elseif ($request->request->get('platform') === 'ios') {
-			$translationKey->setIos($request->request->get('active'));
+			$translationKey->setIos($request->request->getBoolean('active'));
 		}
 
 		$entityManager->persist($translationKey);

@@ -316,6 +316,7 @@ setting.delete_account: Delete account
 translations: translations
 translation: translation
 translation.translate: Translate
+translation.upload: Upload
 translation.fill: Fill
 translation.identifier: Key
 translation.type: Type

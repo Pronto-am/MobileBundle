@@ -40,7 +40,7 @@
 
                 <div class="row">
                     <div class="col s8">
-                        <input type="text" id="translations_{{ key }}" name="translations[{{ language.code }}]" data-lang="{{ language.code }}" value="{{ translations[language.code] }}" />
+                        <textarea name="translations[{{ language.code }}]" class="materialize-textarea" data-lang="{{ language.code }}" id="translations_{{ key }}">{{ translations[language.code] }}</textarea>
                     </div>
 
                     {% if language.code != applicationVersion.application.defaultLanguage %}

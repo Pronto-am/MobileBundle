@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Pronto\MobileBundle\Controller\Api\BaseApiController;
 use Pronto\MobileBundle\Entity\TranslationKey;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 class TranslationController extends BaseApiController
 {
@@ -37,20 +38,32 @@ class TranslationController extends BaseApiController
 	 */
 
 	/**
+	 * @param Request $request
 	 * @param EntityManagerInterface $entityManager
 	 * @return \Symfony\Component\HttpFoundation\JsonResponse
 	 * @throws \Pronto\MobileBundle\Exceptions\ApiException
 	 */
-	public function indexAction(EntityManagerInterface $entityManager): JsonResponse
+	public function indexAction(Request $request, EntityManagerInterface $entityManager): JsonResponse
 	{
 		// Validate the authorization
 		$this->validateAuthorization();
 
 		$application = $this->prontoMobile->getApplication();
 
-		$translations = $entityManager->getRepository(TranslationKey::class)->findBy([
-			'application' => $application
-		], [
+		$filters = [
+			'application' => $application,
+		];
+
+		// Filter by platform when provided
+		if ($request->query->has('platform')) {
+			$platform = strtolower($request->query->get('platform'));
+
+			if (in_array($platform, ['android', 'ios'], true)) {
+				$filters[$platform] = true;
+			}
+		}
+
+		$translations = $entityManager->getRepository(TranslationKey::class)->findBy($filters, [
 			'identifier' => 'asc'
 		]);
 

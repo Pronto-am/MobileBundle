@@ -59,8 +59,12 @@
                                     {% for translation in translationKey.translations %}
                                         <div class="inline-field">
                                             <span>{{ translation.language }}</span>
-                                            <input type="text" class="toggle-field" data-translation-key-id="{{ translationKey.id }}" name="{{ translation.language }}" value="{{ translation.text }}">
-                                            <span><a href="#!" class="btn"><i class="fa fa-check"></i></a></span>
+
+                                            <textarea class="toggle-field materialize-textarea" data-translation-key-id="{{ translationKey.id }}" name="{{ translation.language }}">{{ translation.text }}</textarea>
+
+                                            {% if loop.first == false %}
+                                                <span><a href="#!" class="btn btn-primary"><i class="fa fa-language"></i></a></span>
+                                            {% endif %}
                                         </div>
                                     {% endfor %}
                                 </td>
