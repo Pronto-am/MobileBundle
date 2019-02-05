@@ -37,6 +37,8 @@ matrix:
           # Dev-master is allowed to fail.
         - env: STABILITY="dev"
 
+before_script: phpenv config-add phpconfig.travis.ini
+
 before_install:
     - if [[ $COVERAGE != true ]]; then phpenv config-rm xdebug.ini || true; fi
     - if ! [ -z "$STABILITY" ]; then composer config minimum-stability ${STABILITY}; fi;
