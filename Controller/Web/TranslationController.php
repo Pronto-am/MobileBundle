@@ -14,6 +14,7 @@ use Pronto\MobileBundle\EventSubscriber\ValidateCustomerSelectionInterface;
 use Pronto\MobileBundle\EventSubscriber\ValidatePluginStateInterface;
 use Pronto\MobileBundle\Form\Translation\UploadForm;
 use Pronto\MobileBundle\Form\TranslationForm;
+use Pronto\MobileBundle\Service\LanguagesLoader;
 use Pronto\MobileBundle\Service\Translation\Importer;
 use Pronto\MobileBundle\Utils\Doctrine\WhereClause;
 use Pronto\MobileBundle\Utils\PageHelper;
@@ -186,7 +187,9 @@ class TranslationController extends BaseController implements ValidateCustomerSe
 	{
 		$uploadData = new UploadData();
 
-		$form = $this->createForm(UploadForm::class, $uploadData);
+		$form = $this->createForm(UploadForm::class, $uploadData, [
+			'application' => $this->getApplication()
+		]);
 		$form->handleRequest($request);
 
 		if ($form->isSubmitted() && $form->isValid()) {
@@ -194,7 +197,7 @@ class TranslationController extends BaseController implements ValidateCustomerSe
 			$file = $uploadData->file;
 
 			// Import the data
-			if ($importer->import($file)) {
+			if ($importer->import($file, $uploadData)) {
 				$this->addDataSavedFlash();
 			} else {
 				$this->addFlash('danger', $translator->trans('translation.import_partly_failed'));

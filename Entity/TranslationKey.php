@@ -14,7 +14,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ORM\Entity()
  * @ORM\Table(name="translation_keys")
  */
-class TranslationKey implements ApiEntityInterface
+class TranslationKey extends TimestampedEntity implements ApiEntityInterface
 {
 	use ApiEntityTrait;
 
@@ -38,6 +38,14 @@ class TranslationKey implements ApiEntityInterface
 	 * @Groups({"TranslationKey"})
 	 */
 	private $identifier;
+
+	/**
+	 * @var string|null $description
+	 *
+	 * @ORM\Column(type="string", nullable=true)
+	 * @Groups({"TranslationKey"})
+	 */
+	private $description;
 
 	/**
 	 * @var string $type
@@ -110,6 +118,24 @@ class TranslationKey implements ApiEntityInterface
 	public function setIdentifier(string $identifier): self
 	{
 		$this->identifier = $identifier;
+		return $this;
+	}
+
+	/**
+	 * @return string|null
+	 */
+	public function getDescription(): ?string
+	{
+		return $this->description;
+	}
+
+	/**
+	 * @param string|null $description
+	 * @return TranslationKey
+	 */
+	public function setDescription(?string $description): TranslationKey
+	{
+		$this->description = $description;
 		return $this;
 	}
 

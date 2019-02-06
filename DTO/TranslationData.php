@@ -14,6 +14,12 @@ class TranslationData extends BaseData
 	public $identifier;
 
 	/**
+	 * @var string $description
+	 * @Assert\NotBlank()
+	 */
+	public $description;
+
+	/**
 	 * @var string $type
 	 * @Assert\NotBlank()
 	 */
@@ -41,6 +47,7 @@ class TranslationData extends BaseData
 	{
 		return [
 			'identifier',
+			'description',
 			'type',
 			'android' => 'isAndroid',
 			'ios'     => 'isIos'

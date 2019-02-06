@@ -5,6 +5,7 @@ namespace Pronto\MobileBundle\Service\Translation;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use Pronto\MobileBundle\DTO\Translation\UploadData;
 use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\Translation;
 use Pronto\MobileBundle\Entity\TranslationKey;
@@ -17,6 +18,11 @@ class Importer
 	 * @var EntityManagerInterface $entityManager
 	 */
 	private $entityManager;
+
+	/**
+	 * @var array $availableLanguages
+	 */
+	private $availableLanguages;
 
 	/**
 	 * @var Application $application
@@ -42,6 +48,11 @@ class Importer
 	{
 		$this->entityManager = $entityManager;
 		$this->application = $prontoMobile->getApplication();
+		$this->availableLanguages = array_reduce($prontoMobile->getApplication()->getAvailableLanguages(), function ($result, $language) {
+			$result[] = $language['code'];
+
+			return $result;
+		}, []);
 
 		$this->translationKeyRepository = $this->entityManager->getRepository(TranslationKey::class);
 		$this->translationRepository = $this->entityManager->getRepository(Translation::class);
@@ -49,23 +60,88 @@ class Importer
 
 	/**
 	 * @param File $file
+	 * @param UploadData $data
 	 * @return bool
 	 */
-	public function import(File $file): bool
+	public function import(File $file, UploadData $data): bool
 	{
 		$contents = file_get_contents($file->getRealPath());
 
 		try {
-			if ($file->getMimeType() === 'text/xml') {
-				$this->fromXml($contents);
-			} else {
+			if ($this->isXml($contents)) {
+				$this->fromXml($contents, $data->language, $data->type, $data->android, $data->ios);
+			} else if ($this->isJson($contents)) {
 				$this->fromJson($contents);
+			} else {
+				// Try to parse the file as a .strings file
+				$this->fromPlainText($file, $data->language, $data->type, $data->android, $data->ios);
 			}
 		} catch (Exception $exception) {
 			return false;
 		}
 
 		return true;
+	}
+
+	/**
+	 * @param string $contents
+	 * @param string $language
+	 * @param string $type
+	 * @param bool $android
+	 * @param bool $ios
+	 */
+	private function fromXml(string $contents, string $language, string $type = 'app', bool $android = true, bool $ios = true): void
+	{
+		$parser = xml_parser_create();
+		xml_parse_into_struct($parser, $contents, $values, $index);
+		xml_parser_free($parser);
+
+		foreach ($values as $translation) {
+			if ($translation['type'] !== 'complete') {
+				continue;
+			}
+
+			$translationKey = $this->saveTranslationKey($translation['attributes']['NAME'], $type, $android, $ios);
+			$this->entityManager->flush();
+
+			$this->saveTranslation($translationKey, $language, $translation['value']);
+
+			$this->entityManager->flush();
+		}
+	}
+
+	/**
+	 * @param File $file
+	 * @param string $language
+	 * @param string $type
+	 * @param bool $android
+	 * @param bool $ios
+	 */
+	private function fromPlainText(File $file, string $language, string $type = 'app', bool $android = true, bool $ios = true): void
+	{
+		$handle = $file->openFile();
+
+		if ($handle) {
+
+			// Loop through the lines of the file
+			while (($line = $handle->fgets()) !== false) {
+				// The line must match: "<string>" = "<string>";
+				preg_match('/(["])([a-zA-Z.-]+)(["]\s+[=]+\s+["])(.*)(["][;]?)/', $line, $matches);
+
+				// With above regex, a valid key value pair exists of five keys
+				if (count($matches) === 6) {
+					$translationKey = $this->saveTranslationKey($matches[2], $type, $android, $ios);
+					$this->entityManager->flush();
+
+					$this->saveTranslation($translationKey, $language, $matches[4]);
+				}
+
+				// Stop at the end of the file
+				if ($handle->eof()) {
+					break;
+				}
+			}
+		}
 	}
 
 	/**
@@ -79,20 +155,14 @@ class Importer
 			return;
 		}
 
-		$availableLanguages = array_reduce($this->application->getAvailableLanguages(), function ($result, $language) {
-			$result[] = $language['code'];
-
-			return $result;
-		}, []);
-
 		foreach ($translations as $key) {
-			$translationKey = $this->saveTranslationKey($key);
+			$translationKey = $this->saveTranslationKey($key['identifier'], $key['type'], $key['android'] ?? true, $key['ios'] ?? true);
 			$this->entityManager->flush();
 
-			foreach ($availableLanguages as $language) {
+			foreach ($this->availableLanguages as $language) {
 				$translated = $this->filterTranslationsByLanguage($key['translations'], $language);
 
-				$this->saveTranslation($translationKey, $translated);
+				$this->saveTranslation($translationKey, $translated['language'], $translated['text']);
 			}
 
 			$this->entityManager->flush();
@@ -100,84 +170,53 @@ class Importer
 	}
 
 	/**
-	 * @param string $contents
-	 */
-	private function fromXml(string $contents): void
-	{
-		$availableLanguages = array_reduce($this->application->getAvailableLanguages(), function ($result, $language) {
-			$result[] = $language['code'];
-
-			return $result;
-		}, []);
-
-		$translations = simplexml_load_string($contents);
-		$translations = json_decode(json_encode($translations), true);
-
-		$translations = $translations['translationKey'];
-
-		// Wrap it inside an array when it's one element
-		if (isset($translations['identifier'], $translations['type'], $translations['translations'])) {
-			$translations = [$translations];
-		}
-
-		foreach ($translations as $key) {
-			$translationKey = $this->saveTranslationKey($key);
-			$this->entityManager->flush();
-
-			$translations = $key['translations']['translation'];
-
-			// It's a single item, so go up one level
-			if (isset($translations['language'], $translations['text'])) {
-				$translations = $key['translations'];
-			}
-
-			foreach ($availableLanguages as $language) {
-				$translated = $this->filterTranslationsByLanguage($translations, $language);
-
-				$this->saveTranslation($translationKey, $translated);
-			}
-
-			$this->entityManager->flush();
-		}
-	}
-
-	/**
-	 * @param array $key
+	 * @param string $identifier
+	 * @param string $type
+	 * @param bool $android
+	 * @param bool $ios
 	 * @return TranslationKey
 	 */
-	private function saveTranslationKey(array $key): TranslationKey
+	private function saveTranslationKey(string $identifier, string $type, bool $android = true, bool $ios = true): TranslationKey
 	{
 		$translationKey = $this->translationKeyRepository->findOneBy([
-				'identifier'  => $key['identifier'],
+				'identifier'  => $identifier,
 				'application' => $this->application
 			]) ?? new TranslationKey();
 
-		$translationKey->setIdentifier($key['identifier']);
-		$translationKey->setType($key['type']);
-		$translationKey->setAndroid($key['android'] ?? true);
-		$translationKey->setIos($key['ios'] ?? true);
+		$translationKey->setIdentifier($identifier);
+		$translationKey->setType($type);
+		$translationKey->setAndroid($android);
+		$translationKey->setIos($ios ?? true);
 		$translationKey->setApplication($this->application);
 
 		$this->entityManager->persist($translationKey);
+
+		// Initialize translations when the key is new
+		if ($translationKey->getId() === null) {
+			foreach($this->availableLanguages as $language) {
+				$this->saveTranslation($translationKey, $language);
+			}
+		}
 
 		return $translationKey;
 	}
 
 	/**
 	 * @param TranslationKey $key
-	 * @param array $translated
+	 * @param string $language
+	 * @param null|string $text
 	 * @return Translation
 	 */
-	private function saveTranslation(TranslationKey $key, array $translated): Translation
+	private function saveTranslation(TranslationKey $key, string $language, string $text = null): Translation
 	{
 		$translation = $this->translationRepository->findOneBy([
 				'translationKey' => $key,
-				'language'       => $translated['language']
+				'language'       => $language
 			]) ?? new Translation();
 
 		$translation->setTranslationKey($key);
-		$translation->setText($translated['text']);
-		$translation->setLanguage($translated['language']);
+		$translation->setText($text);
+		$translation->setLanguage($language);
 
 		$this->entityManager->persist($translation);
 
@@ -205,5 +244,31 @@ class Importer
 		}
 
 		return $translated;
+	}
+
+	/**
+	 * @param string $string
+	 * @return bool
+	 */
+	private function isJson(string $string): bool
+	{
+		json_decode($string);
+
+		return json_last_error() === JSON_ERROR_NONE;
+	}
+
+	/**
+	 * @param string $string
+	 * @return bool
+	 */
+	private function isXml(string $string): bool
+	{
+		try {
+			simplexml_load_string($string);
+
+			return true;
+		} catch (Exception $exception) {
+			return false;
+		}
 	}
 }

@@ -318,7 +318,9 @@ translations: vertalingen
 translation: vertaling
 translation.translate: Vertalen
 translation.upload: Upload
+translation.upload_new: Upload nieuwe vertalingen
 translation.fill: Vullen
 translation.identifier: Key
+translation.description: Omschrijving
 translation.type: Type
 translation.import_partly_failed: De import is gedeeltelijk gefaald, controleer het bestand op inconsistenties
