@@ -317,7 +317,9 @@ translations: translations
 translation: translation
 translation.translate: Translate
 translation.upload: Upload
+translation.upload_new: Upload new translations
 translation.fill: Fill
 translation.identifier: Key
+translation.description: Description
 translation.type: Type
 translation.import_partly_failed: The import has failed partiallly, check the file for inconsistencies

@@ -24,6 +24,11 @@ class TranslationForm extends AbstractType
 				'class' => 'validate'
 			],
 			'label' => 'translation.identifier'
+		])->add('description', TextType::class, [
+			'attr'  => [
+				'class' => 'validate'
+			],
+			'label' => 'translation.description'
 		])->add('type', ChoiceType::class, [
 			'attr'    => [
 				'class' => 'validate'

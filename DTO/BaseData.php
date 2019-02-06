@@ -16,14 +16,14 @@ abstract class BaseData
 	 */
 	public static function fromEntity($entity)
 	{
-		if($entity === null) {
+		if ($entity === null) {
 			return new static();
 		}
 
 		$data = new static();
 
-		foreach(static::getFillable() as $field => $method) {
-			if(is_numeric($field)) {
+		foreach (static::getFillable() as $field => $method) {
+			if (is_numeric($field)) {
 				$field = $method;
 				$method = 'get' . ucfirst($field);
 			}
@@ -40,14 +40,19 @@ abstract class BaseData
 	 */
 	public function toEntity($entity)
 	{
-		foreach(static::getFillable() as $field => $method) {
-			if(is_numeric($field)) {
+		foreach (static::getFillable() as $field => $method) {
+			if (is_numeric($field)) {
 				$field = $method;
 			}
 
-			$method = 'set' . ucfirst($field);
+			$setter = 'set' . ucfirst($field);
+			$getter = 'get' . ucfirst($field);
 
-			$entity->{$method}($this->{$field});
+			if (method_exists($this, $getter)) {
+				$entity->{$setter}($this->{$getter}());
+			} else {
+				$entity->{$setter}($this->{$field});
+			}
 		}
 
 		return $entity;

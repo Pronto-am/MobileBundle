@@ -33,7 +33,7 @@
                                 <label for="checkAll"></label>
                             </th>
                             <th width="50">#</th>
-                            <th>{{ pageHelper.createSortableLink('translation.identifier'|trans|capitalize, 't.identifier') }}</th>
+                            <th width="250">{{ pageHelper.createSortableLink('translation.identifier'|trans|capitalize, 't.identifier') }}</th>
                             <th>Vertalingen</th>
                         </tr>
                         </thead>
@@ -48,12 +48,18 @@
                                     {{ pageHelper.getRowNumber(key) }}
                                 </td>
                                 <td valign="top">
-                                    <a href="{{ path('pronto_mobile_translations_edit', {'id': translationKey.id}) }}" class="regular">
-                                        {{ translationKey.identifier }}
-                                    </a>
+                                    <div>
+                                        <a href="{{ path('pronto_mobile_translations_edit', {'id': translationKey.id}) }}" class="regular">
+                                            {{ translationKey.identifier }}
+                                        </a>
 
-                                    <a href="#!" class="platform {{ translationKey.android ? 'active' : '' }}"><i class="fa fa-android"></i></a>
-                                    <a href="#!" class="platform {{ translationKey.ios ? 'active' : '' }}"><i class="fa fa-apple"></i></a>
+                                        <a href="#!" class="platform {{ translationKey.android ? 'active' : '' }}"><i class="fa fa-android"></i></a>
+                                        <a href="#!" class="platform {{ translationKey.ios ? 'active' : '' }}"><i class="fa fa-apple"></i></a>
+                                    </div>
+
+                                    <div>
+                                        {{ translationKey.description }}
+                                    </div>
                                 </td>
                                 <td>
                                     {% for translation in translationKey.translations %}
