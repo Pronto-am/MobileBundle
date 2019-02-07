@@ -324,3 +324,6 @@ translation.identifier: Key
 translation.description: Omschrijving
 translation.type: Type
 translation.import_partly_failed: De import is gedeeltelijk gefaald, controleer het bestand op inconsistenties
+
+app_versions: app versies
+app_version: app versie

@@ -56,6 +56,22 @@ class PluginFixtures extends Fixture
 		]);
 
 		$manager->persist($pushNotifications);
+
+		$translations = new Plugin();
+		$translations->setName('Translations');
+		$translations->setIdentifier('translations');
+		$translations->setIcon('fa-language');
+		$translations->setDefaultConfig([]);
+
+		$manager->persist($translations);
+
+		$translations = new Plugin();
+		$translations->setName('App versions');
+		$translations->setIdentifier('app_versions');
+		$translations->setIcon('fa-code-fork');
+		$translations->setDefaultConfig([]);
+
+		$manager->persist($translations);
 		$manager->flush();
 	}
 }

@@ -98,7 +98,7 @@ pronto_mobile:
     uploads_folder: 'uploads'
 
     firebase:
-        storage_decryption_password: 'thisshouldbechanged'
+        storage_decryption_password: 'ThisValueIsNotSoSecret'
 ```
 
 ##### Domain name

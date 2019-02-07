@@ -323,3 +323,6 @@ translation.identifier: Key
 translation.description: Description
 translation.type: Type
 translation.import_partly_failed: The import has failed partiallly, check the file for inconsistencies
+
+app_versions: app versions
+app_version: app version

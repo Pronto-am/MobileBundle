@@ -82,6 +82,10 @@
                     <li><a href="{{ path('pronto_mobile_translations') }}" {% if pronto_mobile.activeModule == 'translations' %}class="active"{% endif %}><span><i class="fa fa-language fa-lg" aria-hidden="true"></i></span><span>{{ 'translations'|trans|capitalize }}</span></a></li>
                 {% endif %}
 
+                {% if pronto_mobile.pluginIsActive('app_versions') %}
+                    <li><a href="{{ path('pronto_mobile_app_versions') }}" {% if pronto_mobile.activeModule == 'app_versions' %}class="active"{% endif %}><span><i class="fa fa-code-fork fa-lg" aria-hidden="true"></i></span><span>{{ 'app_versions'|trans|capitalize }}</span></a></li>
+                {% endif %}
+
                 {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN') %}
                     <li><a href="{{ path('pronto_mobile_users') }}" {% if pronto_mobile.activeModule == 'users' %}class="active"{% endif %}><span><i class="fa fa-users" aria-hidden="true"></i></span><span>{{ 'cms_users'|trans }}</span></a></li>
                 {% endif %}

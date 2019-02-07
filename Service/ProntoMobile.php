@@ -12,26 +12,39 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class ProntoMobile
 {
-
-	/** @var Request $request*/
+	/**
+	 * @var Request $request
+	 */
 	private $request;
 
-	/** @var string $activeModule */
+	/**
+	 * @var string $activeModule
+	 */
 	private $activeModule;
 
-	/** @var EntityManagerInterface $entityManager */
+	/**
+	 * @var EntityManagerInterface $entityManager
+	 */
 	private $entityManager;
 
-	/** @var Application\Version $applicationVersion */
+	/**
+	 * @var Application\Version $applicationVersion
+	 */
 	private $applicationVersion;
 
-	/** @var Application $application */
+	/**
+	 * @var Application $application
+	 */
 	private $application;
 
-	/** @var Customer $customer */
+	/**
+	 * @var Customer $customer
+	 */
 	private $customer;
 
-	/** @var array $configuration */
+	/**
+	 * @var array $configuration
+	 */
 	private $configuration;
 
 
@@ -49,7 +62,6 @@ class ProntoMobile
 		$this->initialize();
 	}
 
-
 	/**
 	 * Initialize the Pronto Mobile service with it's properties
 	 */
@@ -57,7 +69,6 @@ class ProntoMobile
 	{
 		$this->setActiveModule();
 	}
-
 
 	/**
 	 * Set the active module
@@ -85,7 +96,6 @@ class ProntoMobile
 		}
 	}
 
-
 	/**
 	 * Get the active module
 	 *
@@ -95,7 +105,6 @@ class ProntoMobile
 	{
 		return $this->activeModule;
 	}
-
 
 	/**
 	 * @param Application\Version $applicationVersion
@@ -108,7 +117,6 @@ class ProntoMobile
 		$this->setApplication($applicationVersion->getApplication());
 	}
 
-
 	/**
 	 * @return Application\Version|null
 	 */
@@ -116,7 +124,6 @@ class ProntoMobile
 	{
 		return $this->applicationVersion;
 	}
-
 
 	/**
 	 * @param Application $application
@@ -126,7 +133,6 @@ class ProntoMobile
 		$this->application = $application;
 	}
 
-
 	/**
 	 * @return Application|null
 	 */
@@ -134,7 +140,6 @@ class ProntoMobile
 	{
 		return $this->application;
 	}
-
 
 	/**
 	 * @param Customer $customer
@@ -144,7 +149,6 @@ class ProntoMobile
 		$this->customer = $customer;
 	}
 
-
 	/**
 	 * @return Customer|null
 	 */
@@ -152,7 +156,6 @@ class ProntoMobile
 	{
 		return $this->customer;
 	}
-
 
 	/**
 	 * Check if a plugin is active
@@ -177,15 +180,12 @@ class ProntoMobile
 		return !empty($plugins);
 	}
 
-
 	/**
 	 * Get the plugin configuration
 	 *
 	 * @param $plugin
 	 * @param Application|int|null $application
 	 * @return array
-	 * @throws \Doctrine\ORM\NoResultException
-	 * @throws \Doctrine\ORM\NonUniqueResultException
 	 */
 	public function getPluginConfiguration($plugin, $application = null): array
 	{
@@ -197,7 +197,6 @@ class ProntoMobile
 		return $plugin->getConfig();
 	}
 
-
 	/**
 	 * Set the bundle configuration
 	 *
@@ -207,7 +206,6 @@ class ProntoMobile
 	{
 		$this->configuration = $config;
 	}
-
 
 	/**
 	 * Get the configuration of the bundle
@@ -219,7 +217,7 @@ class ProntoMobile
 	public function getConfiguration($node = null, $default = null)
 	{
 		// Return a specific node if it exists
-		if($node !== null) {
+		if ($node !== null) {
 			return $this->configuration[$node] ?? $default;
 		}
 

@@ -143,9 +143,13 @@ class TranslationController extends BaseController implements ValidateCustomerSe
 			$translation->setLanguage($request->request->get('language'))->setTranslationKey($translationKey);
 		}
 
+		// Convert <br> tags to \n
 		$text = str_replace([
 			'<br>', '<br/>', '<br />'
 		], '\n', $request->request->get('text'));
+
+		// Remove HTMl tags
+		$text = preg_replace('/<[^>]+>/', '', $text);
 
 		$translation->setText($text);
 

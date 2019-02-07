@@ -27,17 +27,24 @@ class RetrieveLogsCommand extends Command
 	// Decryption method for the table contents
 	public const DECRYPTION_METHOD = 'aes-256-cbc';
 
-
-	/** @var EntityManagerInterface $entityManager */
+	/**
+	 * @var EntityManagerInterface $entityManager
+	 */
 	private $entityManager;
 
-	/** @var GoogleServiceAccountLoader $googleServiceAccountLoader */
+	/**
+	 * @var GoogleServiceAccountLoader $googleServiceAccountLoader
+	 */
 	private $googleServiceAccountLoader;
 
-	/** @var ProntoMobile $prontoMobile */
+	/**
+	 * @var ProntoMobile $prontoMobile
+	 */
 	private $prontoMobile;
 
-	/** @var OutputInterface $output */
+	/**
+	 * @var OutputInterface $output
+	 */
 	private $output;
 
 
@@ -118,7 +125,6 @@ class RetrieveLogsCommand extends Command
 			// Try to decrypt the data
 			try {
 				$configuration = $this->prontoMobile->getConfiguration('firebase');
-
 				$decryptionPassword = $configuration['storage_decryption_password'];
 
 				$data = openssl_decrypt($value['data'], self::DECRYPTION_METHOD, $decryptionPassword, 0, $value['iv']);
