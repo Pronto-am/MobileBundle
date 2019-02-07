@@ -4,21 +4,20 @@ namespace Pronto\MobileBundle\Controller\Web;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Pronto\MobileBundle\Controller\BaseController;
+use Pronto\MobileBundle\DTO\CollectionDTO;
 use Pronto\MobileBundle\Entity\Collection;
 use Pronto\MobileBundle\Entity\Plugin;
 use Pronto\MobileBundle\EventSubscriber\ValidateApplicationSelectionInterface;
 use Pronto\MobileBundle\EventSubscriber\ValidateCustomerSelectionInterface;
 use Pronto\MobileBundle\EventSubscriber\ValidatePluginStateInterface;
-use Pronto\MobileBundle\Service\FontAwesomeLoader;
 use Pronto\MobileBundle\Form\CollectionForm;
-use Pronto\MobileBundle\Request\CollectionRequest;
+use Pronto\MobileBundle\Service\FontAwesomeLoader;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class CollectionController extends BaseController implements ValidatePluginStateInterface, ValidateApplicationSelectionInterface, ValidateCustomerSelectionInterface
 {
-
 	/**
 	 * Check if the plugin is active
 	 *
@@ -28,7 +27,6 @@ class CollectionController extends BaseController implements ValidatePluginState
 	{
 		return Plugin::COLLECTIONS;
 	}
-
 
 	/**
 	 * Show a list of collections
@@ -48,7 +46,6 @@ class CollectionController extends BaseController implements ValidatePluginState
 			]);
 	}
 
-
 	/**
 	 * Edit a collection
 	 *
@@ -60,7 +57,7 @@ class CollectionController extends BaseController implements ValidatePluginState
 	 */
 	public function editAction(Request $request, FontAwesomeLoader $fontAwesomeLoader, EntityManagerInterface $entityManager, Collection $collection = null)
 	{
-		if(!$this->isGranted('ROLE_SUPER_ADMIN')) {
+		if (!$this->isGranted('ROLE_SUPER_ADMIN')) {
 			$this->addNoPermissionFlash();
 
 			return $this->redirectToRoute('pronto_mobile_collections');
@@ -75,18 +72,19 @@ class CollectionController extends BaseController implements ValidatePluginState
 
 		$originalIdentifier = $collection !== null ? $collection->getIdentifier() : '';
 
-		$collectionRequest = CollectionRequest::fromEntity($collection);
+		$collectionDTO = CollectionDTO::fromEntity($collection);
 
-		$form = $this->createForm(CollectionForm::class, $collectionRequest, [
+		$form = $this->createForm(CollectionForm::class, $collectionDTO, [
 			'fontAwesome' => $fontAwesomeLoader
 		]);
 
 		$form->handleRequest($request);
 
 		if ($form->isSubmitted() && $form->isValid()) {
-			/** @var CollectionRequest $collectionRequest */
-			$collectionRequest = $form->getData();
-			$collection = $collectionRequest->toEntity($collection);
+			$collectionDTO = $form->getData();
+
+			/** @var Collection $collection */
+			$collection = $collectionDTO->toEntity($collection);
 
 			$collection->setApplicationVersion($applicationVersion);
 

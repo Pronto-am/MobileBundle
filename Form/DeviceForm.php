@@ -3,7 +3,7 @@
 namespace Pronto\MobileBundle\Form;
 
 
-use Pronto\MobileBundle\Request\DeviceRequest;
+use Pronto\MobileBundle\DTO\DeviceDTO;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -29,17 +29,14 @@ class DeviceForm extends AbstractType
 			]);
 	}
 
-
 	/**
-	 *
-	 *
 	 * @param OptionsResolver $resolver
 	 * @throws \Symfony\Component\OptionsResolver\Exception\AccessException
 	 */
 	public function configureOptions(OptionsResolver $resolver): void
 	{
 		$resolver->setDefaults([
-			'data_class' => DeviceRequest::class
+			'data_class' => DeviceDTO::class
 		]);
 	}
 }

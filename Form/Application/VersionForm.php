@@ -3,7 +3,7 @@
 namespace Pronto\MobileBundle\Form\Application;
 
 
-use Pronto\MobileBundle\Request\Application\VersionRequest;
+use Pronto\MobileBundle\DTO\Application\VersionDTO;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -32,7 +32,7 @@ class VersionForm extends AbstractType
 	public function configureOptions(OptionsResolver $resolver): void
 	{
 		$resolver->setDefaults([
-			'data_class' => VersionRequest::class
+			'data_class' => VersionDTO::class
 		]);
 	}
 }

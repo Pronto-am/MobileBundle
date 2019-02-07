@@ -4,13 +4,13 @@ namespace Pronto\MobileBundle\Controller\Web;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Pronto\MobileBundle\Controller\BaseController;
+use Pronto\MobileBundle\DTO\User\ProfileDTO;
+use Pronto\MobileBundle\DTO\UserDTO;
 use Pronto\MobileBundle\Entity\User;
 use Pronto\MobileBundle\EventSubscriber\ValidateCustomerSelectionInterface;
 use Pronto\MobileBundle\Form\PasswordForm;
 use Pronto\MobileBundle\Form\ProfileForm;
 use Pronto\MobileBundle\Form\UserForm;
-use Pronto\MobileBundle\Request\User\ProfileRequest;
-use Pronto\MobileBundle\Request\UserRequest;
 use Pronto\MobileBundle\Service\ProntoMobile;
 use Pronto\MobileBundle\Utils\Doctrine\WhereClause;
 use Pronto\MobileBundle\Utils\PageHelper;
@@ -52,9 +52,8 @@ class UserController extends BaseController implements ValidateCustomerSelection
 	 */
 	public function profileAction(Request $request, EntityManagerInterface $entityManager, UserInterface $user)
 	{
-		$profileRequest = ProfileRequest::fromEntity($user);
-
-		$profileForm = $this->createForm(ProfileForm::class, $profileRequest);
+		$profileDTO = ProfileDTO::fromEntity($user);
+		$profileForm = $this->createForm(ProfileForm::class, $profileDTO);
 
 		$passwordForm = $this->createForm(PasswordForm::class);
 
@@ -63,10 +62,8 @@ class UserController extends BaseController implements ValidateCustomerSelection
 				$profileForm->handleRequest($request);
 
 				if ($profileForm->isSubmitted() && $profileForm->isValid()) {
-
-					/** @var ProfileRequest $profileRequest */
-					$profileRequest = $profileForm->getData();
-					$user = $profileRequest->toEntity($user);
+					$profileDTO = $profileForm->getData();
+					$user = $profileDTO->toEntity($user);
 
 					$entityManager->persist($user);
 					$entityManager->flush();
@@ -80,7 +77,6 @@ class UserController extends BaseController implements ValidateCustomerSelection
 
 				if ($passwordForm->isSubmitted() && $passwordForm->isValid()) {
 					$data = $passwordForm->getData();
-
 					$user->setPlainPassword($data['password']);
 
 					$entityManager->persist($user);
@@ -126,16 +122,15 @@ class UserController extends BaseController implements ValidateCustomerSelection
 			return $this->redirectToRoute('pronto_mobile_users');
 		}
 
-		$userRequest = UserRequest::fromEntity($user);
-
-		$form = $this->createForm(UserForm::class, $userRequest);
-
+		$userDTO = UserDTO::fromEntity($user);
+		$form = $this->createForm(UserForm::class, $userDTO);
 		$form->handleRequest($request);
 
 		if ($form->isSubmitted() && $form->isValid()) {
-			/** @var UserRequest $userRequest */
-			$userRequest = $form->getData();
-			$user = $userRequest->toEntity($user);
+			$userDTO = $form->getData();
+
+			/** @var User $user */
+			$user = $userDTO->toEntity($user);
 
 			$user->setCustomer($customer);
 
@@ -159,18 +154,13 @@ class UserController extends BaseController implements ValidateCustomerSelection
 					->setFrom('noreply@' . $domain)
 					->setTo($user->getEmail())
 					->setBody(
-						$this->renderView(
-							'@ProntoMobile/mails/registration.html.twig',
-							[
-								'user'   => $user,
-								'action' => [
-									'url'  => $this->generateUrl('pronto_mobile_create_password', ['token' => $user->getActivationToken()], UrlGeneratorInterface::ABSOLUTE_URL),
-									'text' => $translator->trans('authentication.create_password')
-								]
+						$this->renderView('@ProntoMobile/mails/registration.html.twig', [
+							'user'   => $user,
+							'action' => [
+								'url'  => $this->generateUrl('pronto_mobile_create_password', ['token' => $user->getActivationToken()], UrlGeneratorInterface::ABSOLUTE_URL),
+								'text' => $translator->trans('authentication.create_password')
 							]
-						),
-						'text/html'
-					);
+						]), 'text/html');
 
 				$mailer->send($message);
 			}

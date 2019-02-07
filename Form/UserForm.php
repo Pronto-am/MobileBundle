@@ -3,7 +3,7 @@
 namespace Pronto\MobileBundle\Form;
 
 
-use Pronto\MobileBundle\Request\UserRequest;
+use Pronto\MobileBundle\DTO\UserDTO;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -61,7 +61,7 @@ class UserForm extends AbstractType
 	public function configureOptions(OptionsResolver $resolver): void
 	{
 		$resolver->setDefaults([
-			'data_class' => UserRequest::class
+			'data_class' => UserDTO::class
 		]);
 	}
 }

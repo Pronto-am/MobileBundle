@@ -4,6 +4,7 @@ namespace Pronto\MobileBundle\Controller\Web;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Pronto\MobileBundle\Controller\BaseController;
+use Pronto\MobileBundle\DTO\AppUserDTO;
 use Pronto\MobileBundle\Entity\AppUser;
 use Pronto\MobileBundle\Entity\Device;
 use Pronto\MobileBundle\Entity\Plugin;
@@ -11,7 +12,6 @@ use Pronto\MobileBundle\EventSubscriber\ValidateApplicationSelectionInterface;
 use Pronto\MobileBundle\EventSubscriber\ValidateCustomerSelectionInterface;
 use Pronto\MobileBundle\EventSubscriber\ValidatePluginStateInterface;
 use Pronto\MobileBundle\Form\AppUserForm;
-use Pronto\MobileBundle\Request\AppUserRequest;
 use Pronto\MobileBundle\Utils\Doctrine\WhereClause;
 use Pronto\MobileBundle\Utils\PageHelper;
 use Symfony\Component\HttpFoundation\Request;
@@ -74,16 +74,15 @@ class AppUserController extends BaseController implements ValidateCustomerSelect
 		$pageHelper = new PageHelper($request, $entityManager, Device::class, 15, 't.lastLogin', 'DESC');
 		$pageHelper->addClause(new WhereClause('t.appUser', $user));
 
-		$userRequest = AppUserRequest::fromEntity($user);
+		$userDTO = AppUserDTO::fromEntity($user);
 
-		$form = $this->createForm(AppUserForm::class, $userRequest);
+		$form = $this->createForm(AppUserForm::class, $userDTO);
 
 		$form->handleRequest($request);
 
 		if ($form->isSubmitted() && $form->isValid()) {
-			/** @var AppUserRequest $userRequest */
-			$userRequest = $form->getData();
-			$user = $userRequest->toEntity($user);
+			$userDTO = $form->getData();
+			$user = $userDTO->toEntity($user);
 
 			$entityManager->persist($user);
 			$entityManager->flush();

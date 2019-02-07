@@ -4,6 +4,7 @@ namespace Pronto\MobileBundle\Controller\Web\Collection;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Pronto\MobileBundle\Controller\BaseController;
+use Pronto\MobileBundle\DTO\Collection\PropertyDTO;
 use Pronto\MobileBundle\Entity\Collection;
 use Pronto\MobileBundle\Entity\Collection\Property;
 use Pronto\MobileBundle\Entity\Collection\Property\Type;
@@ -12,16 +13,13 @@ use Pronto\MobileBundle\EventSubscriber\ValidateApplicationSelectionInterface;
 use Pronto\MobileBundle\EventSubscriber\ValidateCustomerSelectionInterface;
 use Pronto\MobileBundle\EventSubscriber\ValidatePluginStateInterface;
 use Pronto\MobileBundle\Form\Collection\PropertyForm;
-use Pronto\MobileBundle\Request\Collection\PropertyRequest;
 use Pronto\MobileBundle\Utils\Responses\ErrorResponse;
 use Pronto\MobileBundle\Utils\Responses\SuccessResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class PropertyController extends BaseController implements ValidatePluginStateInterface, ValidateApplicationSelectionInterface, ValidateCustomerSelectionInterface
 {
-
 	/**
 	 * Check if the plugin is active
 	 *
@@ -65,15 +63,13 @@ class PropertyController extends BaseController implements ValidatePluginStateIn
 		]);
 
 		// Create the form request from the entity
-		$propertyRequest = PropertyRequest::fromEntity($property);
-
-		$form = $this->createForm(PropertyForm::class, $propertyRequest, [
+		$propertyDTO = PropertyDTO::fromEntity($property);
+		$form = $this->createForm(PropertyForm::class, $propertyDTO, [
 			'types' => $types
 		]);
 
 		/** @var Collection $collection */
 		$collection = $property !== null ? $property->getCollection() : null;
-
 		$editable = $collection !== null ? count($collection->getEntries()) === 0 : true;
 
 		return $this->render('@ProntoMobile/collections/properties/edit.html.twig', [
@@ -122,9 +118,7 @@ class PropertyController extends BaseController implements ValidatePluginStateIn
 			return $this->redirectToRoute('pronto_mobile_collection_properties', ['identifier' => $identifier]);
 		}
 
-		$config = [];
-
-		$select = [];
+		$config = $select = [];
 
 		foreach ($body as $field => $value) {
 			$field = explode('-', $field);

@@ -4,9 +4,9 @@ namespace Pronto\MobileBundle\Controller\Web;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Pronto\MobileBundle\Controller\BaseController;
+use Pronto\MobileBundle\DTO\CustomerDTO;
 use Pronto\MobileBundle\Entity\Customer;
 use Pronto\MobileBundle\Form\CustomerForm;
-use Pronto\MobileBundle\Request\CustomerRequest;
 use Pronto\MobileBundle\Service\ProntoMobile;
 use Pronto\MobileBundle\Utils\Responses\ErrorResponse;
 use Pronto\MobileBundle\Utils\Responses\SuccessResponse;
@@ -22,11 +22,10 @@ class CustomerController extends BaseController
 	/**
 	 * Let the user select a customer from the list
 	 *
-	 * @param Request $request
 	 * @param EntityManagerInterface $entityManager
 	 * @return Response
 	 */
-	public function selectCustomerAction(Request $request, EntityManagerInterface $entityManager)
+	public function selectCustomerAction(EntityManagerInterface $entityManager)
 	{
 		$customers = $entityManager->getRepository(Customer::class)->findBy([], ['companyName' => 'asc']);
 
@@ -74,13 +73,12 @@ class CustomerController extends BaseController
 		$form = $this->createForm(CustomerForm::class);
 
 		$form->remove('logo');
-
 		$form->handleRequest($request);
 
 		if ($form->isSubmitted() && $form->isValid()) {
-			/** @var CustomerRequest $customerRequest */
-			$customerRequest = $form->getData();
-			$customer = $customerRequest->toEntity();
+			/** @var CustomerDTO $customerDTO */
+			$customerDTO = $form->getData();
+			$customer = $customerDTO->toEntity(new Customer());
 
 			$entityManager->persist($customer);
 			$entityManager->flush();
@@ -118,16 +116,17 @@ class CustomerController extends BaseController
 
 		$file = $originalCustomer->getLogo();
 
-		$customerRequest = CustomerRequest::fromEntity($originalCustomer);
+		$customerDTO = CustomerDTO::fromEntity($originalCustomer);
 
-		$form = $this->createForm(CustomerForm::class, $customerRequest);
+		$form = $this->createForm(CustomerForm::class, $customerDTO);
 
 		$form->handleRequest($request);
 
 		if ($form->isSubmitted() && $form->isValid()) {
-			/** @var CustomerRequest $customerRequest */
-			$customerRequest = $form->getData();
-			$customer = $customerRequest->toEntity($originalCustomer);
+			$customerDTO = $form->getData();
+
+			/** @var Customer $customer */
+			$customer = $customerDTO->toEntity($originalCustomer);
 
 			if ($file !== null && $customer->getLogo() === null) {
 				$customer->setLogo($file->getFileName());

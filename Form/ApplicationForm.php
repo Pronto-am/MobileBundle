@@ -3,7 +3,7 @@
 namespace Pronto\MobileBundle\Form;
 
 
-use Pronto\MobileBundle\Request\ApplicationRequest;
+use Pronto\MobileBundle\DTO\ApplicationDTO;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -52,7 +52,7 @@ class ApplicationForm extends AbstractType
 			]);
 
 		$builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($options) {
-			/** @var ApplicationRequest $application */
+			/** @var ApplicationDTO $application */
 			$application = $event->getData();
 			$form = $event->getForm();
 
@@ -119,7 +119,7 @@ class ApplicationForm extends AbstractType
 	public function configureOptions(OptionsResolver $resolver): void
 	{
 		$resolver->setDefaults([
-			'data_class' => ApplicationRequest::class
+			'data_class' => ApplicationDTO::class
 		]);
 
 		$resolver->setRequired([

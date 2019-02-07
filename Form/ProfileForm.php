@@ -3,7 +3,7 @@
 namespace Pronto\MobileBundle\Form;
 
 
-use Pronto\MobileBundle\Request\User\ProfileRequest;
+use Pronto\MobileBundle\DTO\User\ProfileDTO;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -60,7 +60,7 @@ class ProfileForm extends AbstractType
 	public function configureOptions(OptionsResolver $resolver): void
 	{
 		$resolver->setDefaults([
-			'data_class' => ProfileRequest::class
+			'data_class' => ProfileDTO::class
 		]);
 	}
 }

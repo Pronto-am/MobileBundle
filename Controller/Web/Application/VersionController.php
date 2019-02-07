@@ -4,19 +4,17 @@ namespace Pronto\MobileBundle\Controller\Web\Application;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Pronto\MobileBundle\Controller\BaseController;
+use Pronto\MobileBundle\DTO\Application\VersionDTO;
 use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\Application\Version;
 use Pronto\MobileBundle\Form\Application\VersionForm;
-use Pronto\MobileBundle\Request\Application\VersionRequest;
 use Pronto\MobileBundle\Utils\Responses\ErrorResponse;
 use Pronto\MobileBundle\Utils\Responses\SuccessResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class VersionController extends BaseController
 {
-
 	/**
 	 * Edit a new or existing application version
 	 *
@@ -31,16 +29,16 @@ class VersionController extends BaseController
 
 		$applicationVersion = $id !== null ? $entityManager->getRepository(Version::class)->find($id) : null;
 
-		$versionRequest = VersionRequest::fromEntity($applicationVersion);
-
-		$form = $this->createForm(VersionForm::class, $versionRequest);
+		$versionDTO = VersionDTO::fromEntity($applicationVersion);
+		$form = $this->createForm(VersionForm::class, $versionDTO);
 
 		$form->handleRequest($request);
 
 		if ($form->isSubmitted() && $form->isValid()) {
-			/** @var VersionRequest $versionRequest */
-			$versionRequest = $form->getData();
-			$applicationVersion = $versionRequest->toEntity($applicationVersion);
+			$versionDTO = $form->getData();
+
+			/** @var Version $applicationVersion */
+			$applicationVersion = $versionDTO->toEntity($applicationVersion);
 
 			$applicationVersion->setApplication($application);
 

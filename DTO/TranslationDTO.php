@@ -5,7 +5,7 @@ namespace Pronto\MobileBundle\DTO;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-class TranslationData extends BaseData
+class TranslationDTO extends BaseDTO
 {
 	/**
 	 * @var string $identifier

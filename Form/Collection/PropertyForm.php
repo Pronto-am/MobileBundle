@@ -3,8 +3,8 @@
 namespace Pronto\MobileBundle\Form\Collection;
 
 
+use Pronto\MobileBundle\DTO\Collection\PropertyDTO;
 use Pronto\MobileBundle\Entity\Collection\Property\Type;
-use Pronto\MobileBundle\Request\Collection\PropertyRequest;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -55,19 +55,19 @@ class PropertyForm extends AbstractType
 				},
 			])
 			->add('includeInListView', CheckboxType::class, [
-				'label' => 'collection.property.include_in_table_list_view',
+				'label'      => 'collection.property.include_in_table_list_view',
 				'label_attr' => [
 					'class' => 'no-asterisk'
 				]
 			])
 			->add('includeInJsonListView', CheckboxType::class, [
-				'label' => 'collection.property.include_in_json_list_view',
+				'label'      => 'collection.property.include_in_json_list_view',
 				'label_attr' => [
 					'class' => 'no-asterisk'
 				]
 			])
 			->add('required', CheckboxType::class, [
-				'label' => 'collection.property.required',
+				'label'      => 'collection.property.required',
 				'label_attr' => [
 					'class' => 'no-asterisk'
 				]
@@ -80,7 +80,7 @@ class PropertyForm extends AbstractType
 	public function configureOptions(OptionsResolver $resolver): void
 	{
 		$resolver->setDefaults([
-			'data_class' => PropertyRequest::class
+			'data_class' => PropertyDTO::class
 		]);
 
 		$resolver->setRequired(['types']);

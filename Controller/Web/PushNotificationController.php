@@ -4,6 +4,7 @@ namespace Pronto\MobileBundle\Controller\Web;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Pronto\MobileBundle\Controller\BaseController;
+use Pronto\MobileBundle\DTO\PushNotificationDTO;
 use Pronto\MobileBundle\Entity\Application\ApplicationPlugin;
 use Pronto\MobileBundle\Entity\Device;
 use Pronto\MobileBundle\Entity\Plugin;
@@ -16,7 +17,6 @@ use Pronto\MobileBundle\EventSubscriber\ValidatePluginStateInterface;
 use Pronto\MobileBundle\Form\PushNotificationForm;
 use Pronto\MobileBundle\Service\JsonTranslator;
 use Pronto\MobileBundle\Service\ProntoMobile;
-use Pronto\MobileBundle\Request\PushNotificationRequest;
 use Pronto\MobileBundle\Utils\Date;
 use Pronto\MobileBundle\Utils\Doctrine\GroupClause;
 use Pronto\MobileBundle\Utils\Doctrine\LeftJoinClause;
@@ -115,9 +115,9 @@ class PushNotificationController extends BaseController implements ValidateCusto
 
 		$segments = $entityManager->getRepository(Segment::class)->findBy(['application' => $this->getApplication()]);
 
-		$notificationRequest = PushNotificationRequest::fromEntity($notification);
+		$notificationDTO = PushNotificationDTO::fromEntity($notification);
 
-		$form = $this->createForm(PushNotificationForm::class, $notificationRequest, [
+		$form = $this->createForm(PushNotificationForm::class, $notificationDTO, [
 			'segments'        => $segments,
 			'json_translator' => $jsonTranslator,
 			'entityManager'   => $entityManager

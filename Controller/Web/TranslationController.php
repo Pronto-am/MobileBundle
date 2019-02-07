@@ -4,8 +4,8 @@ namespace Pronto\MobileBundle\Controller\Web;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Pronto\MobileBundle\Controller\BaseController;
-use Pronto\MobileBundle\DTO\Translation\UploadData;
-use Pronto\MobileBundle\DTO\TranslationData;
+use Pronto\MobileBundle\DTO\Translation\UploadDTO;
+use Pronto\MobileBundle\DTO\TranslationDTO;
 use Pronto\MobileBundle\Entity\Plugin;
 use Pronto\MobileBundle\Entity\Translation;
 use Pronto\MobileBundle\Entity\TranslationKey;
@@ -61,7 +61,7 @@ class TranslationController extends BaseController implements ValidateCustomerSe
 	 */
 	public function editAction(Request $request, EntityManagerInterface $entityManager, TranslationKey $key = null)
 	{
-		$data = TranslationData::fromEntity($key);
+		$data = TranslationDTO::fromEntity($key);
 
 		// Default value of Android and iOS checkboxes
 		if ($key === null) {
@@ -189,7 +189,7 @@ class TranslationController extends BaseController implements ValidateCustomerSe
 	 */
 	public function uploadAction(Request $request, Importer $importer, TranslatorInterface $translator): Response
 	{
-		$uploadData = new UploadData();
+		$uploadData = new UploadDTO();
 
 		$form = $this->createForm(UploadForm::class, $uploadData, [
 			'application' => $this->getApplication()

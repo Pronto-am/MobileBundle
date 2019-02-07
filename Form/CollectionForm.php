@@ -3,7 +3,7 @@
 namespace Pronto\MobileBundle\Form;
 
 
-use Pronto\MobileBundle\Request\CollectionRequest;
+use Pronto\MobileBundle\DTO\CollectionDTO;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -51,7 +51,7 @@ class CollectionForm extends AbstractType
 	public function configureOptions(OptionsResolver $resolver): void
 	{
 		$resolver->setDefaults([
-			'data_class' => CollectionRequest::class
+			'data_class' => CollectionDTO::class
 		]);
 
 		$resolver->setRequired('fontAwesome');

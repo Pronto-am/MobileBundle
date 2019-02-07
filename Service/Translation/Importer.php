@@ -5,7 +5,7 @@ namespace Pronto\MobileBundle\Service\Translation;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
-use Pronto\MobileBundle\DTO\Translation\UploadData;
+use Pronto\MobileBundle\DTO\Translation\UploadDTO;
 use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\Translation;
 use Pronto\MobileBundle\Entity\TranslationKey;
@@ -60,10 +60,10 @@ class Importer
 
 	/**
 	 * @param File $file
-	 * @param UploadData $data
+	 * @param UploadDTO $data
 	 * @return bool
 	 */
-	public function import(File $file, UploadData $data): bool
+	public function import(File $file, UploadDTO $data): bool
 	{
 		$contents = file_get_contents($file->getRealPath());
 

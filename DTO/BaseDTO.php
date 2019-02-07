@@ -3,7 +3,7 @@
 namespace Pronto\MobileBundle\DTO;
 
 
-abstract class BaseData
+abstract class BaseDTO
 {
 	/**
 	 * @return array

@@ -12,7 +12,6 @@ use League\Flysystem\FileNotFoundException;
 use Pronto\MobileBundle\Entity\Application\ApplicationPlugin;
 use Pronto\MobileBundle\Entity\Plugin;
 use Pronto\MobileBundle\Entity\PushNotification;
-use Pronto\MobileBundle\Request\PushNotificationRequest;
 use Pronto\MobileBundle\Service\PushNotification\GoogleServiceAccountLoader;
 use Psr\Log\LoggerInterface;
 
@@ -34,57 +33,48 @@ class NotificationListener
 	 * @param GoogleServiceAccountLoader $googleServiceAccountLoader
 	 */
 	public function __construct(LoggerInterface $logger, GoogleServiceAccountLoader $googleServiceAccountLoader)
-    {
-    	$this->googleServiceAccountLoader = $googleServiceAccountLoader;
-    	$this->logger = $logger;
-    }
-
+	{
+		$this->googleServiceAccountLoader = $googleServiceAccountLoader;
+		$this->logger = $logger;
+	}
 
 	/**
 	 * Pre persist event
 	 *
 	 * @param LifecycleEventArgs $args
-	 * @throws \Doctrine\ORM\NoResultException
-	 * @throws \Doctrine\ORM\NonUniqueResultException
 	 */
-    public function prePersist(LifecycleEventArgs $args): void
-	{
-    	$this->entityManager = $args->getEntityManager();
-
-        $entity = $args->getEntity();
-
-		$this->handleFile($entity);
-    }
-
-
-	/**
-	 * Pre update event
-	 *
-	 * @param LifecycleEventArgs $args
-	 * @throws \Doctrine\ORM\NoResultException
-	 * @throws \Doctrine\ORM\NonUniqueResultException
-	 */
-    public function preUpdate(LifecycleEventArgs $args): void
+	public function prePersist(LifecycleEventArgs $args): void
 	{
 		$this->entityManager = $args->getEntityManager();
 
 		$entity = $args->getEntity();
 
-        $this->handleFile($entity);
-    }
+		$this->handleFile($entity);
+	}
 
+	/**
+	 * Pre update event
+	 *
+	 * @param LifecycleEventArgs $args
+	 */
+	public function preUpdate(LifecycleEventArgs $args): void
+	{
+		$this->entityManager = $args->getEntityManager();
+
+		$entity = $args->getEntity();
+
+		$this->handleFile($entity);
+	}
 
 	/**
 	 * Upload or update the HTML click action file
 	 *
 	 * @param $entity
-	 * @throws \Doctrine\ORM\NoResultException
-	 * @throws \Doctrine\ORM\NonUniqueResultException
 	 */
-    private function handleFile($entity): void
+	private function handleFile($entity): void
 	{
 		// The entity must be a push notification with HTML webview
-		if(!$entity instanceof PushNotification || ($entity instanceof PushNotification && $entity->getClickAction() !== 2)) {
+		if (!$entity instanceof PushNotification || ($entity instanceof PushNotification && $entity->getClickAction() !== 2)) {
 			return;
 		}
 
@@ -98,9 +88,7 @@ class NotificationListener
 		$factory = new Factory();
 
 		$firebase = $factory->withServiceAccount($serviceAccount)->create();
-
 		$filesystem = $firebase->getStorage()->getFilesystem();
-
 		$application = $entity->getApplication();
 
 		/** @var ApplicationPlugin $plugin */
@@ -109,11 +97,11 @@ class NotificationListener
 
 		$clickActionHtml = $entity->getClickActionHtml();
 
-		foreach($clickActionHtml as $language => $content) {
+		foreach ($clickActionHtml as $language => $content) {
 			$path = 'notifications/' . $entity->getId() . '/' . $language . '/' . $entity->getId() . '.html';
 
 			// Use the default language HTML when the provided language is empty
-			if(empty($content)) {
+			if (empty($content)) {
 				$content = $clickActionHtml[$application->getDefaultLanguage()];
 			}
 
@@ -121,10 +109,10 @@ class NotificationListener
 			$html = str_replace('{{ CONTENT }}', $content, $html);
 
 			// Update if it exists, or create a new file
-			if(!$filesystem->has($path)) {
+			if (!$filesystem->has($path)) {
 				try {
 					$filesystem->write($path, $html);
-				} catch(FileExistsException $exception) {
+				} catch (FileExistsException $exception) {
 					// File already exists
 				}
 			} else {

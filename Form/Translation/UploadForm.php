@@ -3,7 +3,7 @@
 namespace Pronto\MobileBundle\Form\Translation;
 
 
-use Pronto\MobileBundle\DTO\Translation\UploadData;
+use Pronto\MobileBundle\DTO\Translation\UploadDTO;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -49,7 +49,7 @@ class UploadForm extends AbstractType
 	public function configureOptions(OptionsResolver $resolver): void
 	{
 		$resolver->setDefaults([
-			'data_class' => UploadData::class
+			'data_class' => UploadDTO::class
 		]);
 
 		$resolver->setRequired([

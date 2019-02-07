@@ -5,7 +5,7 @@ namespace Pronto\MobileBundle\DTO\Translation;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-class UploadData
+class UploadDTO
 {
 	/**
 	 * @Assert\NotBlank(message="A file of type .json, .xml or .strings should be provided")

@@ -4,10 +4,10 @@ namespace Pronto\MobileBundle\Controller\Web;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Pronto\MobileBundle\Controller\BaseController;
+use Pronto\MobileBundle\DTO\ApplicationDTO;
 use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\Application\Version;
 use Pronto\MobileBundle\Form\ApplicationForm;
-use Pronto\MobileBundle\Request\ApplicationRequest;
 use Pronto\MobileBundle\Service\LanguagesLoader;
 use Pronto\MobileBundle\Service\ProntoMobile;
 use Pronto\MobileBundle\Utils\Doctrine\WhereClause;
@@ -58,9 +58,11 @@ class ApplicationController extends BaseController
 			return $this->redirectToRoute('pronto_mobile_applications');
 		}
 
-		$applicationRequest = ApplicationRequest::fromEntity($application);
+		$applicationData = ApplicationDTO::fromEntity($application);
+		$applicationData->clientId = $application->getId() . '_' . $application->getRandomId();
+		$applicationData->clientSecret = $application->getSecret();
 
-		$form = $this->createForm(ApplicationForm::class, $applicationRequest, [
+		$form = $this->createForm(ApplicationForm::class, $applicationData, [
 			'languages' => $languagesLoader,
 			'locale'    => $request->getLocale()
 		]);
@@ -73,9 +75,8 @@ class ApplicationController extends BaseController
 		$form->handleRequest($request);
 
 		if ($form->isSubmitted() && $form->isValid()) {
-			/** @var ApplicationRequest $applicationRequest */
-			$applicationRequest = $form->getData();
-			$application = $applicationRequest->toEntity($application);
+			$data = $form->getData();
+			$application = $data->toEntity($application);
 
 			$application->setCustomer($customer);
 
