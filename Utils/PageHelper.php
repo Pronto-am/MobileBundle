@@ -11,47 +11,76 @@ use Pronto\MobileBundle\Utils\Doctrine\GroupClause;
 use Pronto\MobileBundle\Utils\Doctrine\SelectClause;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * Class PageHelper
+ * @package Pronto\MobileBundle\Utils
+ */
 class PageHelper
 {
-	/** @var Request $request */
+	/**
+	 * @var Request $request
+	 */
 	private $request;
 
-	/** @var \Doctrine\ORM\EntityRepository $repository */
+	/**
+	 * @var \Doctrine\ORM\EntityRepository $repository
+	 */
 	private $repository;
 
-	/** @var array Clauses */
+	/**
+	 * @var array $clauses
+	 */
 	private $clauses = [];
 
-	/** @var string The field to sort by */
+	/**
+	 * @var string $sortField
+	 */
 	private $sortField;
 
-	/** @var string The direction to sort in */
+	/**
+	 * @var string $sortOrder
+	 */
 	private $sortOrder;
 
-	/** @var int Items per page */
+	/**
+	 * @var int $perPage
+	 */
 	private $perPage;
 
-	/** @var int The offset of the results */
+	/**
+	 * @var int $offset
+	 */
 	private $offset;
 
-	/** @var int The current page */
+	/**
+	 * @var int $currentPage
+	 */
 	private $currentPage;
 
-	/** @var int The number of total pages */
+	/**
+	 * @var int $totalPages
+	 */
 	private $totalPages;
 
-	/** @var int The total number of records */
+	/**
+	 * @var int $totalRecords
+	 */
 	private $totalRecords;
 
-	/** @var mixed Locally cached list of results */
+	/**
+	 * @var mixed $list
+	 */
 	private $list;
 
-	/** @var null|string $query */
+	/**
+	 * @var null|string $query
+	 */
 	private $query;
 
-	/** @var string */
+	/**
+	 * @var string $countField
+	 */
 	private $countField;
-
 
 	/**
 	 * PageHelper constructor.
@@ -75,14 +104,12 @@ class PageHelper
 		$this->repository = $entityManager->getRepository($entity);
 	}
 
-
 	/**
 	 * Set the current page and total number of pages
 	 */
 	private function setCurrentPage(): void
 	{
 		$this->currentPage = $this->request->get('page', 1);
-
 		$this->totalPages = ceil($this->totalRecords / $this->perPage);
 
 		if (($this->currentPage * $this->perPage) > $this->totalRecords) {
@@ -96,7 +123,6 @@ class PageHelper
 			$this->offset = 0;
 		}
 	}
-
 
 	/**
 	 * Create a url to sort a table by the column
@@ -113,7 +139,6 @@ class PageHelper
 		echo '<a href="' . $url . '" class="column-sortable ' . ($active ? 'column-active' : '') . '">' . $label . ' <i class="fa fa-caret-' . ($active ? ($this->sortOrder === 'asc' ? 'up' : 'down') : 'up') . '" aria-hidden="true"></i></a>';
 	}
 
-
 	/**
 	 * Get the row number of the current record
 	 *
@@ -125,7 +150,6 @@ class PageHelper
 		return (($this->currentPage - 1) * $this->perPage) + $key + 1;
 	}
 
-
 	/**
 	 * @return string
 	 */
@@ -134,7 +158,6 @@ class PageHelper
 		return $this->sortField;
 	}
 
-
 	/**
 	 * @return string
 	 */
@@ -142,7 +165,6 @@ class PageHelper
 	{
 		return $this->sortOrder;
 	}
-
 
 	/**
 	 * Get the total number of records
@@ -166,7 +188,6 @@ class PageHelper
 		}
 	}
 
-
 	/**
 	 * Add a clause to the query
 	 *
@@ -176,7 +197,6 @@ class PageHelper
 	{
 		$this->clauses[] = $clause;
 	}
-
 
 	/**
 	 * Add all clauses to the query
@@ -195,7 +215,6 @@ class PageHelper
 		}
 	}
 
-
 	/**
 	 * Generate the base query for one or more results
 	 *
@@ -211,7 +230,6 @@ class PageHelper
 
 		return $query;
 	}
-
 
 	/**
 	 * Get a list of results
@@ -238,7 +256,6 @@ class PageHelper
 
 		return $this->list;
 	}
-
 
 	/**
 	 * Create the pagination links
@@ -304,7 +321,6 @@ class PageHelper
 		return $pagination;
 	}
 
-
 	/**
 	 * Create a single page button
 	 *
@@ -320,7 +336,6 @@ class PageHelper
 		}
 	}
 
-
 	/**
 	 * Add the starting pages with ellipsis
 	 *
@@ -333,7 +348,6 @@ class PageHelper
 		$pagination .= '<li class="disabled"><a href="#!">...</a></li>';
 	}
 
-
 	/**
 	 * Add the ending pages with ellipsis
 	 *
@@ -345,7 +359,6 @@ class PageHelper
 		$pagination .= '<li class="waves-effect"><a href="' . $this->createPageLink($this->totalPages - 1) . '">' . ($this->totalPages - 1) . '</a></li>';
 		$pagination .= '<li class="waves-effect"><a href="' . $this->createPageLink($this->totalPages) . '">' . $this->totalPages . '</a></li>';
 	}
-
 
 	/**
 	 * Generate the url with the query parameters

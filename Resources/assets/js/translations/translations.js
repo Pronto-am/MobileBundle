@@ -1,8 +1,8 @@
 $('a.btn-translate').click(function (e) {
     e.preventDefault();
 
-    const defaultValue = $('#translations_0').val();
-    const fieldToFill = $(this).closest('.row').find('textarea[id^="translations_"]');
+    const defaultValue = $('#translations_0').html();
+    const fieldToFill = $(this).closest('.row').find('div[contenteditable][id^="translations_"]');
     const from = $('#translations_0').data('lang');
     const to = fieldToFill.data('lang');
 
@@ -11,7 +11,7 @@ $('a.btn-translate').click(function (e) {
 
     translate(from, to, defaultValue, function (response) {
         if (response.text && response.text.length > 0) {
-            fieldToFill.val(response.text[0]);
+            fieldToFill.html(response.text[0]);
         }
     });
 
@@ -30,7 +30,7 @@ $('#translations_0').keyup(function () {
 $(document).ready(function () {
     $('#translations_0').trigger('keyup');
 
-    const toggleField = $('.inline-field textarea.toggle-field');
+    const toggleField = $('.inline-field div[contenteditable].toggle-field');
 
     toggleField.focus(function () {
         const field = $(this).closest('.inline-field');
@@ -45,7 +45,7 @@ $(document).ready(function () {
     toggleField.on('keypress', function(e) {
         // Use the enter key to save the translation
         if(e.which === 13 && !e.shiftKey) {
-            const field = $(this).closest('.inline-field').find('textarea');
+            const field = $(this).closest('.inline-field').find('div[contenteditable]');
 
             updateTranslation(field);
 
@@ -62,16 +62,16 @@ $(document).ready(function () {
     $('.inline-field').find('.btn').click(function (e) {
         e.preventDefault();
 
-        const field = $(this).closest('.inline-field').find('textarea');
+        const field = $(this).closest('.inline-field').find('div[contenteditable]');
 
-        const fieldToTranslate = $(this).closest('td').find('.inline-field:first-child textarea');
-        const fieldToFill = $(this).closest('.inline-field').find('textarea');
-        const from = fieldToTranslate.attr('name');
-        const to = fieldToFill.attr('name');
+        const fieldToTranslate = $(this).closest('td').find('.inline-field:first-child div[contenteditable]');
+        const fieldToFill = $(this).closest('.inline-field').find('div[contenteditable]');
+        const from = fieldToTranslate.data('lang');
+        const to = fieldToFill.data('lang');
 
-        translate(from, to, fieldToTranslate.val(), function (response) {
+        translate(from, to, fieldToTranslate.html(), function (response) {
             if (response.text && response.text.length > 0) {
-                fieldToFill.val(response.text[0]);
+                fieldToFill.html(response.text[0]);
 
                 // Save the translation in our database
                 updateTranslation(field);
@@ -91,8 +91,8 @@ function updateTranslation(field) {
         dataType: 'json',
         data: {
             translation_key_id: field.data('translation-key-id'),
-            language: field.attr('name'),
-            text: field.val()
+            language: field.data('lang'),
+            text: field.html()
         },
         success: function (response) {
             if(response.error) {
