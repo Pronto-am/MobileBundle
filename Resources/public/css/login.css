@@ -12314,7 +12314,8 @@ form input[type=search]:not(.browser-default),
 form input[type=url]:not(.browser-default),
 form input[type=password]:not(.browser-default),
 form input[type=email]:not(.browser-default),
-form textarea.materialize-textarea:not(.browser-default) {
+form textarea.materialize-textarea:not(.browser-default),
+form div[contenteditable]:not(.browser-default) {
   -webkit-box-shadow: none !important;
           box-shadow: none !important;
   border: 1px solid #dae3e7 !important;
@@ -12322,6 +12323,8 @@ form textarea.materialize-textarea:not(.browser-default) {
   padding: 5px !important;
   -webkit-box-sizing: border-box !important;
           box-sizing: border-box !important;
+  -webkit-transition: background-color 0.2s ease, border-color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 
 form input[type=text]:not(.browser-default):not(.jscolor),
@@ -12330,7 +12333,8 @@ form input[type=search]:not(.browser-default):not(.jscolor),
 form input[type=url]:not(.browser-default):not(.jscolor),
 form input[type=password]:not(.browser-default):not(.jscolor),
 form input[type=email]:not(.browser-default):not(.jscolor),
-form textarea.materialize-textarea:not(.browser-default):not(.jscolor) {
+form textarea.materialize-textarea:not(.browser-default):not(.jscolor),
+form div[contenteditable]:not(.browser-default):not(.jscolor) {
   background-color: #f7f9fa !important;
 }
 
@@ -12340,9 +12344,11 @@ form input[type=search]:not(.browser-default):focus,
 form input[type=url]:not(.browser-default):focus,
 form input[type=password]:not(.browser-default):focus,
 form input[type=email]:not(.browser-default):focus,
-form textarea.materialize-textarea:not(.browser-default):focus {
+form textarea.materialize-textarea:not(.browser-default):focus,
+form div[contenteditable]:not(.browser-default):focus {
   background-color: #edf2f4 !important;
   border: 1px solid #c3d2d8 !important;
+  outline: none;
 }
 
 form input[type=text]:not(.browser-default).invalid,
@@ -12351,7 +12357,8 @@ form input[type=search]:not(.browser-default).invalid,
 form input[type=url]:not(.browser-default).invalid,
 form input[type=password]:not(.browser-default).invalid,
 form input[type=email]:not(.browser-default).invalid,
-form textarea.materialize-textarea:not(.browser-default).invalid {
+form textarea.materialize-textarea:not(.browser-default).invalid,
+form div[contenteditable]:not(.browser-default).invalid {
   -webkit-box-shadow: 0 1px 0 0 #F44336 !important;
           box-shadow: 0 1px 0 0 #F44336 !important;
 }
@@ -12362,7 +12369,8 @@ form input[type=search]:not(.browser-default).toggle-field:not(:focus):not(.inva
 form input[type=url]:not(.browser-default).toggle-field:not(:focus):not(.invalid),
 form input[type=password]:not(.browser-default).toggle-field:not(:focus):not(.invalid),
 form input[type=email]:not(.browser-default).toggle-field:not(:focus):not(.invalid),
-form textarea.materialize-textarea:not(.browser-default).toggle-field:not(:focus):not(.invalid) {
+form textarea.materialize-textarea:not(.browser-default).toggle-field:not(:focus):not(.invalid),
+form div[contenteditable]:not(.browser-default).toggle-field:not(:focus):not(.invalid) {
   border: 1px solid transparent !important;
   background-color: transparent !important;
 }
@@ -12373,7 +12381,8 @@ form input[type=search]:not(.browser-default).toggle-field:not(:focus):not(.inva
 form input[type=url]:not(.browser-default).toggle-field:not(:focus):not(.invalid):hover,
 form input[type=password]:not(.browser-default).toggle-field:not(:focus):not(.invalid):hover,
 form input[type=email]:not(.browser-default).toggle-field:not(:focus):not(.invalid):hover,
-form textarea.materialize-textarea:not(.browser-default).toggle-field:not(:focus):not(.invalid):hover {
+form textarea.materialize-textarea:not(.browser-default).toggle-field:not(:focus):not(.invalid):hover,
+form div[contenteditable]:not(.browser-default).toggle-field:not(:focus):not(.invalid):hover {
   border: 1px solid #DCDFE1 !important;
   background-color: #DCDFE1 !important;
 }

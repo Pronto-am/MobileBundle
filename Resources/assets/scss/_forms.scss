@@ -27,14 +27,14 @@ form {
     background-color: $checkbox-checked-color;
   }
 
-  input[type=text], input[type=number], input[type=search], input[type=url], input[type=password], input[type=email], textarea.materialize-textarea {
+  input[type=text], input[type=number], input[type=search], input[type=url], input[type=password], input[type=email], textarea.materialize-textarea, div[contenteditable] {
     &:not(.browser-default) {
       box-shadow: none !important;
       border: 1px solid #dae3e7 !important;
       border-radius: 5px !important;
       padding: 5px !important;
       box-sizing: border-box !important;
-      //transition: background-color 0.2s ease, border-color 0.2s ease;
+      transition: background-color 0.2s ease, border-color 0.2s ease;
 
       &:not(.jscolor) {
         background-color: #f7f9fa !important;
@@ -43,6 +43,7 @@ form {
       &:focus {
         background-color: #edf2f4 !important;
         border: 1px solid #c3d2d8 !important;
+        outline: none;
       }
 
       &.invalid {

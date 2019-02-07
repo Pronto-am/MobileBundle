@@ -32,8 +32,7 @@
                                 <input type="checkbox" id="checkAll">
                                 <label for="checkAll"></label>
                             </th>
-                            <th width="50">#</th>
-                            <th width="250">{{ pageHelper.createSortableLink('translation.identifier'|trans|capitalize, 't.identifier') }}</th>
+                            <th width="275">{{ pageHelper.createSortableLink('translation.identifier'|trans|capitalize, 't.identifier') }}</th>
                             <th>Vertalingen</th>
                         </tr>
                         </thead>
@@ -43,9 +42,6 @@
                                 <td class="has-checkbox" valign="top">
                                     <input type="checkbox" id="translationsCheckbox{{ translationKey.id }}" name="translations[]" value="{{ translationKey.id }}">
                                     <label for="translationsCheckbox{{ translationKey.id }}"></label>
-                                </td>
-                                <td valign="top">
-                                    {{ pageHelper.getRowNumber(key) }}
                                 </td>
                                 <td valign="top">
                                     <div>
@@ -66,7 +62,9 @@
                                         <div class="inline-field">
                                             <span>{{ translation.language }}</span>
 
-                                            <textarea class="toggle-field materialize-textarea" data-translation-key-id="{{ translationKey.id }}" name="{{ translation.language }}">{{ translation.text }}</textarea>
+                                            {% set text = translation.text|replace({"\\n": "<br>"}) %}
+
+                                            <div contenteditable class="toggle-field" data-translation-key-id="{{ translationKey.id }}" data-lang="{{ translation.language }}">{{ text|raw }}</div>
 
                                             {% if loop.first == false %}
                                                 <span><a href="#!" class="btn btn-primary"><i class="fa fa-language"></i></a></span>

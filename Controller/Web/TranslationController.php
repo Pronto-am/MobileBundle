@@ -143,7 +143,11 @@ class TranslationController extends BaseController implements ValidateCustomerSe
 			$translation->setLanguage($request->request->get('language'))->setTranslationKey($translationKey);
 		}
 
-		$translation->setText($request->request->get('text'));
+		$text = str_replace([
+			'<br>', '<br/>', '<br />'
+		], '\n', $request->request->get('text'));
+
+		$translation->setText($text);
 
 		$entityManager->persist($translation);
 		$entityManager->flush();
