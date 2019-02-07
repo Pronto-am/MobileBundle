@@ -45,7 +45,6 @@
             "Pronto\\MobileBundle\\": ""
         }
     },
-    "target-dir": "Pronto/MobileBundle",
     "minimum-stability": "dev",
     "prefer-stable": true
 }
