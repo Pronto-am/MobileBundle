@@ -18,6 +18,7 @@ class Plugin
 	// Plugin names
 	public const COLLECTIONS = 'collections';
 	public const APP_USERS = 'app_users';
+	public const APP_VERSIONS = 'app_versions';
 	public const PUSH_NOTIFICATIONS = 'notifications';
 	public const TRANSLATIONS = 'translations';
 

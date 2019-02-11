@@ -39,7 +39,15 @@ class TranslationForm extends AbstractType
 				'App- & Playstore' => 'store'
 			],
 			'label'   => 'translation.type'
-		])->add('android', CheckboxType::class)->add('ios', CheckboxType::class);
+		])->add('android', CheckboxType::class, [
+			'label_attr' => [
+				'class' => 'no-asterisk'
+			]
+		])->add('ios', CheckboxType::class, [
+			'label_attr' => [
+				'class' => 'no-asterisk'
+			]
+		]);
 	}
 
 	/**

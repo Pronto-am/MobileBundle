@@ -326,3 +326,11 @@ translation.import_partly_failed: The import has failed partiallly, check the fi
 
 app_versions: app versions
 app_version: app version
+app_version.version: Version
+app_version.platform: Platform
+app_version.release_date: Release date
+app_version.description: Description
+app_version.description_label: "Description (%lang%)"
+app_version.required: Version is required
+app_version.file: File
+app_version.url: Url

@@ -75,11 +75,11 @@ table {
           }
         }
 
-        div[contenteditable] {
+        textarea {
           position: relative;
           float: left;
           min-height: 40px !important;
-          width: calc(100% - 40px) !important;
+          width: calc(100% - 52px) !important;
           margin: 0 !important;
         }
 

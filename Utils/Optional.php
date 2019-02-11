@@ -59,4 +59,16 @@ class Optional
 
 		return false;
 	}
+
+	/**
+	 * @param $name
+	 * @param $arguments
+	 * @return null
+	 */
+	public function __call($name, $arguments)
+	{
+		if (is_object($this->value)) {
+			return $this->value->{$name}($arguments) ?? null;
+		}
+	}
 }

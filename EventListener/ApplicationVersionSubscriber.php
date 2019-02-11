@@ -3,8 +3,10 @@
 namespace Pronto\MobileBundle\EventListener;
 
 
+use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\Events;
 use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\Application\Version;
 use Pronto\MobileBundle\Entity\Plugin;
@@ -13,9 +15,8 @@ use Pronto\MobileBundle\Service\PluginInitializer;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class ApplicationVersionListener
+class ApplicationVersionSubscriber implements EventSubscriber
 {
-
 	/**
 	 * @var TokenStorageInterface
 	 */
@@ -36,9 +37,8 @@ class ApplicationVersionListener
 	 */
 	private $application;
 
-
 	/**
-	 * ApplicationVersionListener constructor.
+	 * ApplicationVersionSubscriber constructor.
 	 * @param RequestStack $requestStack
 	 * @param TokenStorageInterface $tokenStorage
 	 * @param PluginInitializer $initializer
@@ -50,6 +50,15 @@ class ApplicationVersionListener
 		$this->initializer = $initializer;
 	}
 
+	/**
+	 * Returns an array of events this subscriber wants to listen to.
+	 *
+	 * @return string[]
+	 */
+	public function getSubscribedEvents(): array
+	{
+		return [Events::postPersist];
+	}
 
 	/**
 	 * Handle the post persist event of an application object

@@ -3,8 +3,10 @@
 namespace Pronto\MobileBundle\EventListener;
 
 
+use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\Events;
 use Exception;
 use Kreait\Firebase\Factory;
 use League\Flysystem\FileExistsException;
@@ -15,27 +17,45 @@ use Pronto\MobileBundle\Entity\PushNotification;
 use Pronto\MobileBundle\Service\PushNotification\GoogleServiceAccountLoader;
 use Psr\Log\LoggerInterface;
 
-class NotificationListener
+class NotificationSubscriber implements EventSubscriber
 {
-	/** @var GoogleServiceAccountLoader $googleServiceAccountLoader */
+	/**
+	 * @var GoogleServiceAccountLoader $googleServiceAccountLoader
+	 */
 	private $googleServiceAccountLoader;
 
-	/** @var EntityManagerInterface $entityManager */
+	/**
+	 * @var EntityManagerInterface $entityManager
+	 */
 	private $entityManager;
 
-	/** @var LoggerInterface $logger */
+	/**
+	 * @var LoggerInterface $logger
+	 */
 	private $logger;
 
 
 	/**
-	 * NotificationListener constructor.
+	 * NotificationSubscriber constructor.
 	 * @param LoggerInterface $logger
+	 * @param EntityManagerInterface $entityManager
 	 * @param GoogleServiceAccountLoader $googleServiceAccountLoader
 	 */
-	public function __construct(LoggerInterface $logger, GoogleServiceAccountLoader $googleServiceAccountLoader)
+	public function __construct(LoggerInterface $logger, EntityManagerInterface $entityManager, GoogleServiceAccountLoader $googleServiceAccountLoader)
 	{
 		$this->googleServiceAccountLoader = $googleServiceAccountLoader;
+		$this->entityManager = $entityManager;
 		$this->logger = $logger;
+	}
+
+	/**
+	 * Returns an array of events this subscriber wants to listen to.
+	 *
+	 * @return string[]
+	 */
+	public function getSubscribedEvents(): array
+	{
+		return [Events::prePersist, Events::preUpdate];
 	}
 
 	/**
@@ -45,8 +65,6 @@ class NotificationListener
 	 */
 	public function prePersist(LifecycleEventArgs $args): void
 	{
-		$this->entityManager = $args->getEntityManager();
-
 		$entity = $args->getEntity();
 
 		$this->handleFile($entity);
@@ -59,8 +77,6 @@ class NotificationListener
 	 */
 	public function preUpdate(LifecycleEventArgs $args): void
 	{
-		$this->entityManager = $args->getEntityManager();
-
 		$entity = $args->getEntity();
 
 		$this->handleFile($entity);

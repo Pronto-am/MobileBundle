@@ -97,7 +97,6 @@ class Customer
 	 */
 	private $logo;
 
-
 	/**
 	 * Customer constructor.
 	 */
@@ -105,7 +104,6 @@ class Customer
     {
         $this->applications = new ArrayCollection();
     }
-
 
     /**
      * @return int
@@ -115,7 +113,6 @@ class Customer
         return $this->id;
     }
 
-
     /**
      * @return string|null
      */
@@ -123,7 +120,6 @@ class Customer
     {
         return $this->companyName;
     }
-
 
     /**
      * @param string $companyName
@@ -133,7 +129,6 @@ class Customer
         $this->companyName = $companyName;
     }
 
-
     /**
      * @return string
      */
@@ -142,15 +137,13 @@ class Customer
         return $this->contactPerson;
     }
 
-
     /**
      * @param string $contactPerson
      */
     public function setContactPerson(string $contactPerson): void
-    {
-        $this->contactPerson = $contactPerson;
-    }
-
+	{
+		$this->contactPerson = $contactPerson;
+	}
 
     /**
      * @return string
@@ -160,7 +153,6 @@ class Customer
         return $this->phoneNumber;
     }
 
-
     /**
      * @param string $phoneNumber
      */
@@ -168,7 +160,6 @@ class Customer
     {
         $this->phoneNumber = $phoneNumber;
     }
-
 
     /**
      * @return string
@@ -178,7 +169,6 @@ class Customer
         return $this->email;
     }
 
-
     /**
      * @param string $email
      */
@@ -186,7 +176,6 @@ class Customer
     {
         $this->email = $email;
     }
-
 
 	/**
 	 * @return string
@@ -205,7 +194,6 @@ class Customer
 		$this->primaryColor = $primaryColor;
 	}
 
-
 	/**
 	 * @return string
 	 */
@@ -213,7 +201,6 @@ class Customer
 	{
 		return $this->secondaryColor;
 	}
-
 
 	/**
 	 * @param string $secondaryColor
@@ -223,7 +210,6 @@ class Customer
 		$this->secondaryColor = $secondaryColor;
 	}
 
-
 	/**
 	 * @return string
 	 */
@@ -231,7 +217,6 @@ class Customer
 	{
 		return $this->sidebarColor;
 	}
-
 	
 	/**
 	 * @param string $sidebarColor
@@ -241,7 +226,6 @@ class Customer
 		$this->sidebarColor = $sidebarColor;
 	}
 
-
 	/**
 	 * @return string|null
 	 */
@@ -250,7 +234,6 @@ class Customer
 		return $this->logo;
 	}
 
-
 	/**
 	 * @param string $logo
 	 */
@@ -258,7 +241,6 @@ class Customer
 	{
 		$this->logo = $logo;
 	}
-
 
 	/**
 	 * @return DoctrineCollection

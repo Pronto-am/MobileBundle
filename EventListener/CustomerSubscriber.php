@@ -3,52 +3,64 @@
 namespace Pronto\MobileBundle\EventListener;
 
 
+use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\Events;
 use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\Customer;
-use Pronto\MobileBundle\Service\FileUploader;
+use Pronto\MobileBundle\Service\FileManager;
 use Pronto\MobileBundle\Service\ProntoMobile;
-use Pronto\MobileBundle\Utils\Str;
-use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Translation\TranslatorInterface;
 
-class CustomerListener
+class CustomerSubscriber implements EventSubscriber
 {
+	/**
+	 * @var FileManager $fileManager
+	 */
+	private $fileManager;
 
-	/** @var FileUploader $fileUploader */
-	private $fileUploader;
-
-	/** @var string $directory */
+	/**
+	 * @var string $directory
+	 */
 	private $directory;
 
-	/** @var ProntoMobile $prontoMobile */
+	/**
+	 * @var ProntoMobile $prontoMobile
+	 */
 	private $prontoMobile;
 
-	/** @var TranslatorInterface $translator */
+	/**
+	 * @var TranslatorInterface $translator
+	 */
 	private $translator;
 
 
 	/**
-	 * CustomerListener constructor.
-	 * @param FileUploader $fileUploader
+	 * CustomerSubscriber constructor.
+	 * @param FileManager $fileManager
 	 * @param ProntoMobile $prontoMobile
 	 * @param TranslatorInterface $translator
 	 */
-	public function __construct(FileUploader $fileUploader, ProntoMobile $prontoMobile, TranslatorInterface $translator)
+	public function __construct(FileManager $fileManager, ProntoMobile $prontoMobile, TranslatorInterface $translator)
 	{
 		$this->prontoMobile = $prontoMobile;
-
-		$uploadsFolder = $this->prontoMobile->getConfiguration('uploads_folder', 'uploads');
-
-		$this->directory = Str::removeSlashes($uploadsFolder, true, true) . '/customers/images';
-
-		$this->fileUploader = $fileUploader;
+		$this->directory = '/customers/images';
+		$this->fileManager = $fileManager;
 		$this->translator = $translator;
 	}
 
+	/**
+	 * Returns an array of events this subscriber wants to listen to.
+	 *
+	 * @return string[]
+	 */
+	public function getSubscribedEvents(): array
+	{
+		return [Events::prePersist, Events::postPersist, Events::preUpdate, Events::postLoad, Events::postRemove];
+	}
 
 	/**
 	 * Pre persist event
@@ -62,7 +74,6 @@ class CustomerListener
 		$this->uploadFile($entity);
 	}
 
-
 	/**
 	 * Pre update event
 	 *
@@ -74,7 +85,6 @@ class CustomerListener
 
 		$this->uploadFile($entity);
 	}
-
 
 	/**
 	 * Handle the post persist event of a customer object
@@ -94,7 +104,6 @@ class CustomerListener
 		$this->initializeAccount($entity, $args->getEntityManager());
 	}
 
-
 	/**
 	 * Post load event, to use the file object inside Twig templates
 	 *
@@ -110,17 +119,24 @@ class CustomerListener
 
 		if ($fileName = $entity->getLogo()) {
 			// Check if the logo exists
-			try {
-				$file = new File($this->directory . '/' . $fileName);
-			} catch (FileNotFoundException $exception) {
-				$file = null;
-			}
+			$file = $this->fileManager->get($this->directory . '/' . $fileName);
 
 			// Get the path name instead of the File object -> leads to serialization errors
 			$entity->setLogo($file !== null ? $file->getFilename() : null);
 		}
 	}
 
+	/**
+	 * Pre update event
+	 *
+	 * @param LifecycleEventArgs $args
+	 */
+	public function postRemove(LifecycleEventArgs $args): void
+	{
+		$entity = $args->getEntity();
+
+		$this->removeFile($entity);
+	}
 
 	/**
 	 * Upload the file
@@ -137,9 +153,7 @@ class CustomerListener
 
 		// only upload new files
 		if ($file instanceof UploadedFile) {
-			$this->fileUploader->setTargetDirectory($this->directory);
-
-			$fileName = $this->fileUploader->upload($file);
+			$fileName = $this->fileManager->upload($this->directory, $file);
 
 			$entity->setLogo($fileName);
 		} elseif ($file instanceof File) {
@@ -148,6 +162,17 @@ class CustomerListener
 		}
 	}
 
+	/**
+	 * @param $entity
+	 */
+	private function removeFile($entity): void
+	{
+		if (!$entity instanceof Customer) {
+			return;
+		}
+
+		$this->fileManager->remove($this->directory . '/' . $entity->getLogo());
+	}
 
 	/**
 	 * @param Customer $entity

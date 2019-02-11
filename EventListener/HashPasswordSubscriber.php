@@ -3,16 +3,19 @@
 namespace Pronto\MobileBundle\EventListener;
 
 
+use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\Events;
 use Pronto\MobileBundle\Entity\AppUser;
 use Pronto\MobileBundle\Entity\User;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-class HashPasswordListener
+class HashPasswordSubscriber implements EventSubscriber
 {
-	/** @var UserPasswordEncoderInterface $passwordEncoder */
+	/**
+	 * @var UserPasswordEncoderInterface $passwordEncoder
+	 */
 	private $passwordEncoder;
-
 
 	/**
 	 * HashPasswordListener constructor.
@@ -23,6 +26,15 @@ class HashPasswordListener
 		$this->passwordEncoder = $passwordEncoder;
 	}
 
+	/**
+	 * Returns an array of events this subscriber wants to listen to.
+	 *
+	 * @return string[]
+	 */
+	public function getSubscribedEvents(): array
+	{
+		return [Events::prePersist, Events::preUpdate];
+	}
 
 	/**
 	 * Pre persist listener
@@ -40,7 +52,6 @@ class HashPasswordListener
 
 		$this->encodePassword($entity);
 	}
-
 
 	/**
 	 * Pre update listener
@@ -63,7 +74,6 @@ class HashPasswordListener
 		$meta = $em->getClassMetadata(get_class($entity));
 		$em->getUnitOfWork()->recomputeSingleEntityChangeSet($meta, $entity);
 	}
-
 
 	/**
 	 * Encode the users' password

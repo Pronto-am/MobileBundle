@@ -3,14 +3,15 @@
 namespace Pronto\MobileBundle\EventListener;
 
 
+use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\Events;
 use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\Plugin;
-use Pronto\MobileBundle\Service\Cache;
 use Pronto\MobileBundle\Service\PluginInitializer;
 
-class PluginListener
+class PluginSubscriber implements EventSubscriber
 {
 	/**
 	 * @var PluginInitializer $initializer
@@ -24,7 +25,7 @@ class PluginListener
 
 
 	/**
-	 * PluginListener constructor.
+	 * PluginSubscriber constructor.
 	 * @param PluginInitializer $initializer
 	 * @param EntityManagerInterface $entityManager
 	 */
@@ -32,6 +33,16 @@ class PluginListener
 	{
 		$this->initializer = $initializer;
 		$this->entityManager = $entityManager;
+	}
+
+	/**
+	 * Returns an array of events this subscriber wants to listen to.
+	 *
+	 * @return string[]
+	 */
+	public function getSubscribedEvents(): array
+	{
+		return [Events::postPersist];
 	}
 
 	/**

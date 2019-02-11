@@ -25,35 +25,34 @@ services:
         tags: ['twig.extension']
 
 
-    #### PRONTO MOBILE DOCTRINE EVENT LISTENERS ####
-    Pronto\MobileBundle\EventListener\HashPasswordListener:
+    #### PRONTO MOBILE DOCTRINE EVENT SUBSCRIBERS ####
+    Pronto\MobileBundle\EventListener\HashPasswordSubscriber:
         tags:
-            - { name: doctrine.event_listener, event: prePersist }
-            - { name: doctrine.event_listener, event: preUpdate }
+            - { name: doctrine.event_subscriber, connection: default }
 
-    Pronto\MobileBundle\EventListener\CustomerListener:
+    Pronto\MobileBundle\EventListener\CustomerSubscriber:
         tags:
-            - { name: doctrine.event_listener, event: prePersist }
-            - { name: doctrine.event_listener, event: postPersist }
-            - { name: doctrine.event_listener, event: preUpdate }
-            - { name: doctrine.event_listener, event: postLoad }
+            - { name: doctrine.event_subscriber, connection: default }
 
-    Pronto\MobileBundle\EventListener\NotificationListener:
+    Pronto\MobileBundle\EventListener\AppVersionSubscriber:
         tags:
-            - { name: doctrine.event_listener, event: prePersist }
-            - { name: doctrine.event_listener, event: preUpdate }
+            - { name: doctrine.event_subscriber, connection: default }
 
-    Pronto\MobileBundle\EventListener\AccessTokenListener:
+    Pronto\MobileBundle\EventListener\NotificationSubscriber:
         tags:
-            - { name: doctrine.event_listener, event: postPersist }
+            - { name: doctrine.event_subscriber, connection: default }
 
-    Pronto\MobileBundle\EventListener\ApplicationVersionListener:
+    Pronto\MobileBundle\EventListener\AccessTokenSubscriber:
         tags:
-            - { name: doctrine.event_listener, event: postPersist }
+            - { name: doctrine.event_subscriber, connection: default }
 
-    Pronto\MobileBundle\EventListener\PluginListener:
+    Pronto\MobileBundle\EventListener\ApplicationVersionSubscriber:
         tags:
-            - { name: doctrine.event_listener, event: postPersist }
+            - { name: doctrine.event_subscriber, connection: default }
+
+    Pronto\MobileBundle\EventListener\PluginSubscriber:
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
 
 
     #### PRONTO MOBILE DATA FIXTURES ####

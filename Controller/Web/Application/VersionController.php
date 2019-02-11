@@ -38,8 +38,7 @@ class VersionController extends BaseController
 			$versionDTO = $form->getData();
 
 			/** @var Version $applicationVersion */
-			$applicationVersion = $versionDTO->toEntity($applicationVersion);
-
+			$applicationVersion = $versionDTO->toEntity($applicationVersion ?? new Version());
 			$applicationVersion->setApplication($application);
 
 			$entityManager->persist($applicationVersion);

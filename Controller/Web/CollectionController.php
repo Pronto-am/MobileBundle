@@ -84,7 +84,7 @@ class CollectionController extends BaseController implements ValidatePluginState
 			$collectionDTO = $form->getData();
 
 			/** @var Collection $collection */
-			$collection = $collectionDTO->toEntity($collection);
+			$collection = $collectionDTO->toEntity($collection ?? new Collection());
 
 			$collection->setApplicationVersion($applicationVersion);
 

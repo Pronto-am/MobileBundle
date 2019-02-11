@@ -81,7 +81,7 @@ class ProntoMobile
 
 			if (count($url) > 0 && $url[1] === 'admin') {
 
-				$differentModules = ['collections', 'notifications', 'chatbot', 'users'];
+				$differentModules = ['collections', 'notifications', 'users', 'app'];
 
 				// The active module is a larger string for above modules
 				if (isset($url[2], $url[3]) && $url[3] !== 'edit' && $url[3] !== 'details' && in_array($url[2], $differentModules)) {

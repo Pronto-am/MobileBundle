@@ -130,7 +130,7 @@ class UserController extends BaseController implements ValidateCustomerSelection
 			$userDTO = $form->getData();
 
 			/** @var User $user */
-			$user = $userDTO->toEntity($user);
+			$user = $userDTO->toEntity($user ?? new User());
 
 			$user->setCustomer($customer);
 

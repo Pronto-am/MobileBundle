@@ -6,6 +6,11 @@ namespace Pronto\MobileBundle\DTO;
 abstract class BaseDTO
 {
 	/**
+	 * @var bool $new
+	 */
+	public $new = true;
+
+	/**
 	 * @return array
 	 */
 	abstract public static function getFillable(): array;
@@ -21,6 +26,7 @@ abstract class BaseDTO
 		}
 
 		$data = new static();
+		$data->new = false;
 
 		foreach (static::getFillable() as $field => $method) {
 			if (is_numeric($field)) {

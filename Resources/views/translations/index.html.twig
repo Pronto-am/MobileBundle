@@ -64,7 +64,7 @@
 
                                             {% set text = translation.text|replace({"\\n": "<br>"}) %}
 
-                                            <div contenteditable class="toggle-field" data-translation-key-id="{{ translationKey.id }}" data-lang="{{ translation.language }}">{{ text|raw }}</div>
+                                            <textarea class="materialize-textarea toggle-field" data-translation-key-id="{{ translationKey.id }}" data-lang="{{ translation.language }}">{{ text|raw }}</textarea>
 
                                             {% if loop.first == false %}
                                                 <span><a href="#!" class="btn btn-primary"><i class="fa fa-language"></i></a></span>

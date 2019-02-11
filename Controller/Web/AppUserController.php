@@ -82,7 +82,7 @@ class AppUserController extends BaseController implements ValidateCustomerSelect
 
 		if ($form->isSubmitted() && $form->isValid()) {
 			$userDTO = $form->getData();
-			$user = $userDTO->toEntity($user);
+			$user = $userDTO->toEntity($user ?? new AppUser());
 
 			$entityManager->persist($user);
 			$entityManager->flush();

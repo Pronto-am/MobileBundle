@@ -17,13 +17,12 @@ class Str
 	{
 		$string = str_replace('_', '', ucwords($string, $delimiter));
 
-		if($lowerCaseFirst) {
+		if ($lowerCaseFirst) {
 			$string = lcfirst($string);
 		}
 
 		return $string;
 	}
-
 
 	/**
 	 * Remove the slashes from a string
@@ -35,14 +34,24 @@ class Str
 	 */
 	public static function removeSlashes(string $string, bool $left = true, bool $right = false): string
 	{
-		if($left) {
+		if ($left) {
 			$string = ltrim($string, '/');
 		}
 
-		if($right) {
+		if ($right) {
 			$string = rtrim($string, '/');
 		}
 
 		return $string;
+	}
+
+	/**
+	 * @param string $directory
+	 * @param string $file
+	 * @return string
+	 */
+	public static function concatDirectories(string $directory, string $file): string
+	{
+		return $directory . '/' . self::removeSlashes($file);
 	}
 }

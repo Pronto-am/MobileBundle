@@ -76,7 +76,7 @@ class ApplicationController extends BaseController
 
 		if ($form->isSubmitted() && $form->isValid()) {
 			$data = $form->getData();
-			$application = $data->toEntity($application);
+			$application = $data->toEntity($application ?? new Application());
 
 			$application->setCustomer($customer);
 
