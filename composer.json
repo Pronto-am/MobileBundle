@@ -34,7 +34,9 @@
         "symfony/serializer": "^3.4|^4.1",
         "doctrine/doctrine-fixtures-bundle": "^3.0",
         "symfony/proxy-manager-bridge": "^3.4|^4.1",
-        "symfony/expression-language": "^3.4|^4.1"
+        "symfony/expression-language": "^3.4|^4.1",
+        "composer/semver": "^1.4",
+        "symfony/dotenv": "^4.2"
     },
     "require-dev": {
         "nelmio/alice": "3.4.1",
