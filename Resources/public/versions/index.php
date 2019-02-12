@@ -7,8 +7,10 @@ use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\DriverManager;
 use Symfony\Component\Dotenv\Dotenv;
 
+$projectRoot = getProjectRoot();
+
 // Go back to the root of the project
-require __DIR__ . '/../../../../vendor/autoload.php';
+require $projectRoot . '/vendor/autoload.php';
 
 // Validate used request method
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
@@ -22,7 +24,7 @@ if (!isset($_GET['version'], $_GET['platform'])) {
 }
 
 // The check is to ensure we don't use .env in production
-(new Dotenv())->load(__DIR__ . '/../.env');
+(new Dotenv())->load($projectRoot . '/.env');
 
 $accessToken = parseAuthorizationHeader();
 
@@ -42,7 +44,7 @@ try {
 
 try {
 	$versions = getVersions(getApplicationId());
-} catch(Exception $exception) {
+} catch (Exception $exception) {
 	returnError($exception->getCode(), $exception->getMessage());
 }
 
@@ -68,6 +70,25 @@ echo json_encode([
 	'versions' => $versions
 ]);
 exit;
+
+
+/**
+ * @return string
+ */
+function getProjectRoot(): string
+{
+	$root = null;
+
+	do {
+		$directory = __DIR__ . '/..';
+
+		if (file_exists($directory . '/composer.json')) {
+			$root = $directory;
+		}
+	} while ($root === null && $directory !== '/');
+
+	return $root;
+}
 
 
 /**
@@ -129,7 +150,8 @@ function getVersions(int $applicationId): array
  * @param string $id
  * @return string
  */
-function createUrl(string $id): string {
+function createUrl(string $id): string
+{
 	return 'https://' . $_SERVER['HTTP_HOST'] . '/api/v1/versions/app/' . $id;
 }
 
