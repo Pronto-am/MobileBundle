@@ -70,9 +70,24 @@ $versions = array_reduce($versions, function ($result, $version) {
 	return $result;
 }, []);
 
-echo json_encode([
-	'versions' => $versions
-]);
+// Sort the versions
+usort($versions, function($first, $second) {
+	if(Comparator::equalTo($first['version'], $second['version'])) {
+		return 0;
+	}
+
+	if (Comparator::greaterThan($first['version'], $second['version'])) {
+		return -1;
+	}
+
+	return 1;
+});
+
+if(count($versions) === 0) {
+	returnError(404, 'No new versions available');
+}
+
+echo json_encode($versions[0]);
 exit;
 
 
