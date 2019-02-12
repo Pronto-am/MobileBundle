@@ -23,11 +23,6 @@ class CustomerSubscriber implements EventSubscriber
 	private $fileManager;
 
 	/**
-	 * @var string $directory
-	 */
-	private $directory;
-
-	/**
 	 * @var ProntoMobile $prontoMobile
 	 */
 	private $prontoMobile;
@@ -47,7 +42,6 @@ class CustomerSubscriber implements EventSubscriber
 	public function __construct(FileManager $fileManager, ProntoMobile $prontoMobile, TranslatorInterface $translator)
 	{
 		$this->prontoMobile = $prontoMobile;
-		$this->directory = '/customers/images';
 		$this->fileManager = $fileManager;
 		$this->translator = $translator;
 	}
@@ -119,7 +113,7 @@ class CustomerSubscriber implements EventSubscriber
 
 		if ($fileName = $entity->getLogo()) {
 			// Check if the logo exists
-			$file = $this->fileManager->get($this->directory . '/' . $fileName);
+			$file = $this->fileManager->get(FileManager::IMAGES_DIRECTORY . '/' . $fileName);
 
 			// Get the path name instead of the File object -> leads to serialization errors
 			$entity->setLogo($file !== null ? $file->getFilename() : null);
@@ -153,7 +147,7 @@ class CustomerSubscriber implements EventSubscriber
 
 		// only upload new files
 		if ($file instanceof UploadedFile) {
-			$fileName = $this->fileManager->upload($this->directory, $file);
+			$fileName = $this->fileManager->upload(FileManager::IMAGES_DIRECTORY, $file);
 
 			$entity->setLogo($fileName);
 		} elseif ($file instanceof File) {
@@ -171,7 +165,7 @@ class CustomerSubscriber implements EventSubscriber
 			return;
 		}
 
-		$this->fileManager->remove($this->directory . '/' . $entity->getLogo());
+		$this->fileManager->remove(FileManager::IMAGES_DIRECTORY . '/' . $entity->getLogo());
 	}
 
 	/**

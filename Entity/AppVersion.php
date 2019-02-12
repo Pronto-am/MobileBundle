@@ -20,6 +20,8 @@ class AppVersion extends TimestampedEntity implements ApiEntityInterface
 {
 	use ApiEntityTrait;
 
+	public const FILE_NOT_FOUND = [404, 'Version file not found'];
+
 	/**
 	 * @var int|null $id
 	 *

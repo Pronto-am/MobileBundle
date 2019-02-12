@@ -11,6 +11,9 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class FileManager
 {
+	public const APP_VERSIONS_DIRECTORY = '/customers/app_versions';
+	public const IMAGES_DIRECTORY = '/customers/images';
+
 	/**
 	 * @var string $uploadsDir
 	 */

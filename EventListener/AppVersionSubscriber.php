@@ -20,11 +20,6 @@ class AppVersionSubscriber implements EventSubscriber
 	private $fileManager;
 
 	/**
-	 * @var string $directory
-	 */
-	private $directory;
-
-	/**
 	 * CustomerSubscriber constructor.
 	 * @param FileManager $fileManager
 	 * @param ProntoMobile $prontoMobile
@@ -33,7 +28,6 @@ class AppVersionSubscriber implements EventSubscriber
 	public function __construct(FileManager $fileManager, ProntoMobile $prontoMobile, TranslatorInterface $translator)
 	{
 		$this->fileManager = $fileManager;
-		$this->directory = '/customers/app_versions';
 	}
 
 	/**
@@ -89,7 +83,7 @@ class AppVersionSubscriber implements EventSubscriber
 
 		// only upload new files
 		if ($file instanceof UploadedFile) {
-			$fileName = $this->fileManager->upload($this->directory, $file);
+			$fileName = $this->fileManager->upload(FileManager::APP_VERSIONS_DIRECTORY, $file);
 
 			$entity->setFileName($fileName);
 		}
@@ -104,6 +98,6 @@ class AppVersionSubscriber implements EventSubscriber
 			return;
 		}
 
-		$this->fileManager->remove($this->directory . '/' . $entity->getFileName());
+		$this->fileManager->remove(FileManager::APP_VERSIONS_DIRECTORY . '/' . $entity->getFileName());
 	}
 }

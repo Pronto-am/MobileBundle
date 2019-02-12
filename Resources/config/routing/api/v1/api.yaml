@@ -84,3 +84,12 @@ translations:
     defaults:
         _controller: ProntoMobileBundle:Api\V1\Translation:index
     condition: "context.getMethod() in ['GET']"
+
+
+#### APP VERSIONS ####
+
+translations:
+    path: /versions/app/{id}/file
+    defaults:
+        _controller: ProntoMobileBundle:Api\V1\AppVersion:downloadAction
+    condition: "context.getMethod() in ['GET']"

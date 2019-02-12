@@ -7,82 +7,73 @@ use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\DriverManager;
 use Symfony\Component\Dotenv\Dotenv;
 
-try {
-	$projectRoot = getProjectRoot();
+$projectRoot = getProjectRoot();
 
-	// Go back to the root of the project
-	require $projectRoot . '/vendor/autoload.php';
+if ($projectRoot === null) {
+	returnError(500, 'Internal server error');
+}
 
-	// Validate used request method
-	if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
-		header('HTTP/1.0 405 Method Not Allowed');
-		exit;
-	}
+// Go back to the root of the project
+require $projectRoot . '/vendor/autoload.php';
 
-	if (!isset($_GET['version'], $_GET['platform'])) {
-		header('HTTP/1.0 400 Bad Request');
-		exit;
-	}
-
-	// The check is to ensure we don't use .env in production
-	(new Dotenv())->load($projectRoot . '/.env');
-
-	$accessToken = parseAuthorizationHeader();
-
-	// Validate the authorization header
-	if ($accessToken === null) {
-		returnError($exception->getCode(), $exception->getMessage());
-	}
-
-	try {
-		// Establish the connection with the database
-		$connection = DriverManager::getConnection([
-			'url' => getenv('DATABASE_URL')
-		], new Configuration());
-	} catch (Exception $exception) {
-		returnError($exception->getCode(), $exception->getMessage());
-	}
-
-	try {
-		$versions = getVersions(getApplicationId());
-	} catch (Exception $exception) {
-		returnError($exception->getCode(), $exception->getMessage());
-	}
-
-	// Determine which versions are new
-	$versions = array_reduce($versions, function ($result, $version) {
-		if (Comparator::greaterThan($version['version'], $_GET['version'])) {
-			$result[] = [
-				'id'           => (int)$version['id'],
-				'version'      => $version['version'],
-				'required'     => (bool)$version['required'],
-				'description'  => json_decode($version['description']),
-				'url'          => createUrl($version['id']),
-				'release_date' => $version['release_date'],
-				'created_at'   => (new DateTime($version['created_at']))->setTimezone(new DateTimeZone('Europe/Amsterdam'))->format(DateTimeInterface::ATOM),
-				'updated_at'   => (new DateTime($version['updated_at']))->setTimezone(new DateTimeZone('Europe/Amsterdam'))->format(DateTimeInterface::ATOM)
-			];
-		}
-
-		return $result;
-	}, []);
-
-	echo json_encode([
-		'versions' => $versions
-	]);
-	exit;
-} catch (Exception $exception) {
-	$response = [
-		'error' => [
-			'code'    => $exception->getCode(),
-			'message' => $exception->getMessage(),
-			'line'    => $exception->getLine()
-		]
-	];
-
-	echo json_encode($response);
+// Validate used request method
+if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
+	header('HTTP/1.0 405 Method Not Allowed');
 	exit;
 }
+
+if (!isset($_GET['version'], $_GET['platform'])) {
+	header('HTTP/1.0 400 Bad Request');
+	exit;
+}
+
+// The check is to ensure we don't use .env in production
+(new Dotenv())->load($projectRoot . '/.env');
+
+$accessToken = parseAuthorizationHeader();
+
+// Validate the authorization header
+if ($accessToken === null) {
+	returnError($exception->getCode(), $exception->getMessage());
+}
+
+try {
+	// Establish the connection with the database
+	$connection = DriverManager::getConnection([
+		'url' => getenv('DATABASE_URL')
+	], new Configuration());
+} catch (Exception $exception) {
+	returnError($exception->getCode(), $exception->getMessage());
+}
+
+try {
+	$versions = getVersions(getApplicationId());
+} catch (Exception $exception) {
+	returnError($exception->getCode(), $exception->getMessage());
+}
+
+// Determine which versions are new
+$versions = array_reduce($versions, function ($result, $version) {
+	if (Comparator::greaterThan($version['version'], $_GET['version'])) {
+		$result[] = [
+			'id'           => (int)$version['id'],
+			'version'      => $version['version'],
+			'required'     => (bool)$version['required'],
+			'description'  => json_decode($version['description']),
+			'url'          => createUrl($version['id']),
+			'release_date' => $version['release_date'],
+			'created_at'   => (new DateTime($version['created_at']))->setTimezone(new DateTimeZone('Europe/Amsterdam'))->format(DateTimeInterface::ATOM),
+			'updated_at'   => (new DateTime($version['updated_at']))->setTimezone(new DateTimeZone('Europe/Amsterdam'))->format(DateTimeInterface::ATOM)
+		];
+	}
+
+	return $result;
+}, []);
+
+echo json_encode([
+	'versions' => $versions
+]);
+exit;
 
 
 /**
@@ -91,6 +82,7 @@ try {
 function getProjectRoot(): string
 {
 	$root = null;
+	$wentUp = 0;
 
 	do {
 		$directory = __DIR__ . '/..';
@@ -98,7 +90,9 @@ function getProjectRoot(): string
 		if (file_exists($directory . '/composer.json')) {
 			$root = $directory;
 		}
-	} while ($root === null && $directory !== '/');
+
+		$wentUp++;
+	} while ($root === null && $wentUp < 10);
 
 	return $root;
 }

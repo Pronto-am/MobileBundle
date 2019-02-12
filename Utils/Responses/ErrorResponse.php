@@ -3,9 +3,11 @@
 namespace Pronto\MobileBundle\Utils\Responses;
 
 use Pronto\MobileBundle\Entity\AppUser;
+use Pronto\MobileBundle\Entity\AppVersion;
 use Pronto\MobileBundle\Entity\Collection;
 use Pronto\MobileBundle\Entity\Device;
 use Pronto\MobileBundle\Entity\PushNotification\Segment;
+use Pronto\MobileBundle\Entity\TranslationKey;
 
 class ErrorResponse extends BaseResponse
 {
@@ -30,6 +32,8 @@ class ErrorResponse extends BaseResponse
 		AppUser::class          => 11,
 		Collection::class       => 12,
 		Collection\Entry::class => 13,
+		TranslationKey::class   => 14,
+		AppVersion::class       => 15
 	];
 
 
