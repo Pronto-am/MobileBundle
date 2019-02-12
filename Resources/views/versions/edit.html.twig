@@ -29,6 +29,8 @@
                             'label': 'app_version.description_label'|trans({'%lang%': description.vars.name|upper}),
                         }) }}
 
+                        {{ form_errors(description) }}
+
                         {{ form_widget(description) }}
                     </div>
                 </div>

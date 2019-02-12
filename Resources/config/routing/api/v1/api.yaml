@@ -88,8 +88,8 @@ translations:
 
 #### APP VERSIONS ####
 
-translations:
+app_version_file:
     path: /versions/app/{id}/file
     defaults:
-        _controller: ProntoMobileBundle:Api\V1\AppVersion:downloadAction
+        _controller: ProntoMobileBundle:Api\V1\AppVersion:download
     condition: "context.getMethod() in ['GET']"

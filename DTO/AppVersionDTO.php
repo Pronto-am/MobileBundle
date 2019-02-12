@@ -43,7 +43,6 @@ class AppVersionDTO extends BaseDTO
 
 	/**
 	 * @var string $url
-	 * @Assert\NotBlank()
 	 */
 	public $url;
 

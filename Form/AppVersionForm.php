@@ -60,15 +60,10 @@ class AppVersionForm extends AbstractType
 			],
 		])->add('file', FileType::class, [
 			'label'    => 'app_version.file',
-			'required' => $builder->getData()->new,
-			'attr'     => [
-				'class' => 'validate'
-			],
+			'required' => false
 		])->add('url', UrlType::class, [
-			'label' => 'app_version.url',
-			'attr'  => [
-				'class' => 'validate'
-			],
+			'label'    => 'app_version.url',
+			'required' => false
 		]);
 	}
 
