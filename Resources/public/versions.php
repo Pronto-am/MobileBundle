@@ -77,18 +77,20 @@ exit;
 
 
 /**
- * @return string
+ * @return string|null
  */
-function getProjectRoot(): string
+function getProjectRoot(): ?string
 {
 	$root = null;
 	$wentUp = 0;
 
-	do {
-		$directory = __DIR__ . '/..';
+	$directory = __DIR__ . '/..';
 
+	do {
 		if (file_exists($directory . '/composer.json')) {
 			$root = $directory;
+		} else {
+			$directory .= '/..';
 		}
 
 		$wentUp++;
