@@ -34,7 +34,7 @@ $accessToken = parseAuthorizationHeader();
 
 // Validate the authorization header
 if ($accessToken === null) {
-	returnError($exception->getCode(), $exception->getMessage());
+	returnError(403, 'Unauthorized');
 }
 
 try {
@@ -134,15 +134,11 @@ function getVersions(int $applicationId): array
 	global $connection;
 
 	// Get the application
-	$query = 'SELECT * FROM app_versions WHERE application_id = :application_id AND release_date <= :now' . (isset($_GET['platform']) ? ' AND platform = :platform' : '');
+	$query = 'SELECT * FROM app_versions WHERE application_id = :application_id AND release_date <= :now AND platform = :platform';
 	$statement = $connection->prepare($query);
 	$statement->bindValue('application_id', $applicationId);
 	$statement->bindValue('now', date('Y-m-d'));
-
-	if (isset($_GET['platform'])) {
-		$statement->bindValue('platform', $_GET['platform'] ?? 'android');
-	}
-
+	$statement->bindValue('platform', $_GET['platform']);
 	$statement->execute();
 
 	$result = $statement->fetchAll();
