@@ -118,7 +118,7 @@ class Scripts
 				]
 			],
 			'app_users' => [
-				'id' => 'pronto_mobile.security.app_user_provider'
+				'id' => 'Pronto\MobileBundle\Provider\AppUserProvider'
 			]
 		];
 
@@ -159,7 +159,7 @@ class Scripts
 				'guard'       => [
 					'provider'       => 'cms_users',
 					'authenticators' => [
-						'pronto_mobile.security.login_form_authenticator'
+						'Pronto\MobileBundle\Security\LoginFormAuthenticator'
 					]
 				],
 				'logout'      => [
