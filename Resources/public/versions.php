@@ -182,7 +182,7 @@ function createUrl(string $id): string
  */
 function returnError(int $code, string $message): void
 {
-	header('HTTP/1.0 403 Unauthorized');
+	header('HTTP/1.0 ' . $code);
 
 	$response = [
 		'error' => [
