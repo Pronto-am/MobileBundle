@@ -86,9 +86,9 @@ class Collection extends TimestampedEntity implements ApiEntityInterface
 
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }

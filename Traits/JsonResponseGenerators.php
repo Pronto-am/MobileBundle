@@ -35,7 +35,7 @@ trait JsonResponseGenerators
 	public function successResponse($data = null, $message = null): JsonResponse
 	{
 		// Convert json to an array when necessary
-		$data = is_string($data) ? json_decode($data) : $data;
+		$data = is_string($data) ? json_decode($data, true) : $data;
 
 		$response = new SuccessResponse();
 		$response->setData($data)->setMessage($message)->create();
@@ -53,7 +53,7 @@ trait JsonResponseGenerators
 	 */
 	public function paginatedResponse($data = null, $pagination = null): JsonResponse
 	{
-		$data = is_string($data) ? json_decode($data) : $data;
+		$data = is_string($data) ? json_decode($data, true) : $data;
 
 		$response = new PaginatedResponse();
 		$response->setPagination($pagination)->setData($data)->create();

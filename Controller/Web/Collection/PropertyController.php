@@ -55,7 +55,7 @@ class PropertyController extends BaseController implements ValidatePluginStateIn
 	 */
 	public function editAction(EntityManagerInterface $entityManager, $identifier, Property $property = null)
 	{
-		$types = $entityManager->getRepository(Type::class)->findBy([], ['ordering']);
+		$types = $entityManager->getRepository(Type::class)->findBy([], ['ordering' => 'asc']);
 
 		// Get a list of collections for the related entity list
 		$collections = $entityManager->getRepository(Collection::class)->findBy([

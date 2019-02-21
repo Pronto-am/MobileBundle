@@ -382,7 +382,7 @@ class AppUser extends TimestampedEntity implements UserInterface, ApiEntityInter
 	 */
 	public function getSalt(): ?string
 	{
-		//
+		return null;
 	}
 
 

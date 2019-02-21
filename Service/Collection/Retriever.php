@@ -10,35 +10,47 @@ use Pronto\MobileBundle\Utils\Collect;
 
 class Retriever
 {
-	/** @var QueryGenerator $queryGenerator */
+	/**
+     * @var QueryGenerator $queryGenerator
+     */
 	private $queryGenerator;
 
-	/** @var Collection $collection */
+	/**
+     * @var Collection $collection
+     */
 	private $collection;
 
-	/** @var MapperRepository $mapperRepository */
+	/**
+     * @var MapperRepository $mapperRepository
+     */
 	private $mapperRepository;
 
-	/** @var EntryParser $entryParser */
+	/**
+     * @var EntryParser $entryParser
+     */
 	private $entryParser;
 
-	/** @var array $cachedEntries */
+	/**
+     * @var array $cachedEntries
+     */
 	private $cachedEntries = [];
 
-	/** @var array $mappedRelationships */
+	/**
+     * @var array $mappedRelationships
+     */
 	private $mappedRelationships = [];
 
 
-	/**
-	 * Retriever constructor.
-	 * @param QueryGenerator $queryGenerator
-	 * @param MapperRepository $mapperRepository
-	 * @param EntryParser $entryParser
-	 */
-	public function __construct(QueryGenerator $queryGenerator, MapperRepository $mapperRepository, EntryParser $entryParser)
+    /**
+     * Retriever constructor.
+     * @param QueryGenerator $queryGenerator
+     * @param EntityManagerInterface $entityManager
+     * @param EntryParser $entryParser
+     */
+	public function __construct(QueryGenerator $queryGenerator, EntityManagerInterface $entityManager, EntryParser $entryParser)
 	{
 		$this->queryGenerator = $queryGenerator;
-		$this->mapperRepository = $mapperRepository;
+		$this->mapperRepository = $entityManager->getRepository(Collection\Relationship\Mapper::class);
 		$this->entryParser = $entryParser;
 	}
 

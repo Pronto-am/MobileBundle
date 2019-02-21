@@ -281,9 +281,9 @@ class User extends TimestampedEntity implements UserInterface
 
 
 	/**
-	 * @param string $activationToken
+	 * @param null|string $activationToken
 	 */
-	public function setActivationToken(string $activationToken): void
+	public function setActivationToken(?string $activationToken): void
 	{
 		$this->activationToken = $activationToken;
 	}

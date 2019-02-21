@@ -132,7 +132,7 @@ class AppUserController extends BaseApiController
 
 		// Save additional data
 		if (isset($content->extra_data)) {
-			$user->setExtraData($content->extra_data);
+			$user->setExtraData(json_decode(json_encode($content->extra_data), true));
 		}
 
 		$entityManager->persist($user);

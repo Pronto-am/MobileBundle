@@ -27,7 +27,7 @@ class PluginFixtures extends Fixture
 
 		$appUsers = new Plugin();
 		$appUsers->setName('App users');
-		$appUsers->setIdentifier('appUsers');
+		$appUsers->setIdentifier('app_users');
 		$appUsers->setIcon('fa-mobile fa-lg');
 		$appUsers->setDefaultConfig([
 			'registrationEnabled'       => [
