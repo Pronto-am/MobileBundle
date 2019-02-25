@@ -15,7 +15,6 @@ class TranslationDTO extends BaseDTO
 
 	/**
 	 * @var string $description
-	 * @Assert\NotBlank()
 	 */
 	public $description;
 

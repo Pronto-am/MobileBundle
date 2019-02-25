@@ -13,50 +13,48 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class TranslationForm extends AbstractType
 {
-	/**
-	 * @param FormBuilderInterface $builder
-	 * @param array $options
-	 */
-	public function buildForm(FormBuilderInterface $builder, array $options): void
-	{
-		$builder->add('identifier', TextType::class, [
-			'attr'  => [
-				'class' => 'validate'
-			],
-			'label' => 'translation.identifier'
-		])->add('description', TextType::class, [
-			'attr'  => [
-				'class' => 'validate'
-			],
-			'label' => 'translation.description'
-		])->add('type', ChoiceType::class, [
-			'attr'    => [
-				'class' => 'validate'
-			],
-			'choices' => [
-				'App'              => 'app',
-				'Metadata'         => 'metadata',
-				'App- & Playstore' => 'store'
-			],
-			'label'   => 'translation.type'
-		])->add('android', CheckboxType::class, [
-			'label_attr' => [
-				'class' => 'no-asterisk'
-			]
-		])->add('ios', CheckboxType::class, [
-			'label_attr' => [
-				'class' => 'no-asterisk'
-			]
-		]);
-	}
+    /**
+     * @param FormBuilderInterface $builder
+     * @param array $options
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options): void
+    {
+        $builder->add('identifier', TextType::class, [
+            'attr'  => [
+                'class' => 'validate'
+            ],
+            'label' => 'translation.identifier'
+        ])->add('description', TextType::class, [
+            'required' => false,
+            'label'    => 'translation.description'
+        ])->add('type', ChoiceType::class, [
+            'attr'    => [
+                'class' => 'validate'
+            ],
+            'choices' => [
+                'App'              => 'app',
+                'Metadata'         => 'metadata',
+                'App- & Playstore' => 'store'
+            ],
+            'label'   => 'translation.type'
+        ])->add('android', CheckboxType::class, [
+            'label_attr' => [
+                'class' => 'no-asterisk'
+            ]
+        ])->add('ios', CheckboxType::class, [
+            'label_attr' => [
+                'class' => 'no-asterisk'
+            ]
+        ]);
+    }
 
-	/**
-	 * @param OptionsResolver $resolver
-	 */
-	public function configureOptions(OptionsResolver $resolver): void
-	{
-		$resolver->setDefaults([
-			'data_class' => TranslationDTO::class
-		]);
-	}
+    /**
+     * @param OptionsResolver $resolver
+     */
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefaults([
+            'data_class' => TranslationDTO::class
+        ]);
+    }
 }

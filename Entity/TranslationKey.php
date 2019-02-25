@@ -129,10 +129,10 @@ class TranslationKey extends TimestampedEntity implements ApiEntityInterface
 		return $this->description;
 	}
 
-	/**
-	 * @param string|null $description
-	 * @return TranslationKey
-	 */
+    /**
+     * @param string|null $description
+     * @return TranslationKey
+     */
 	public function setDescription(?string $description): TranslationKey
 	{
 		$this->description = $description;

@@ -135,14 +135,14 @@ class CollectionController extends BaseApiController
 	}
 
 
-	/**
-	 * Get the collection by application version and provided identifier
-	 *
-	 * @param string $version
-	 * @param string $identifier
-	 * @return Collection
-	 * @throws \Pronto\MobileBundle\Exceptions\ApiException
-	 */
+    /**
+     * Get the collection by application version and provided identifier
+     *
+     * @param string $version
+     * @param string $identifier
+     * @return Collection
+     * @throws \Pronto\MobileBundle\Exceptions\ApiException
+     */
 	private function getCollection(string $version, string $identifier): Collection
 	{
 		$entityManager = $this->getDoctrine()->getManager();
