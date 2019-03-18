@@ -3,6 +3,7 @@
 namespace Pronto\MobileBundle\Form\Collection;
 
 
+use Pronto\MobileBundle\DTO\Collection\RelationshipDTO;
 use Pronto\MobileBundle\Entity\Collection;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -69,7 +70,7 @@ class RelationshipForm extends AbstractType
 	public function configureOptions(OptionsResolver $resolver): void
 	{
 		$resolver->setDefaults([
-			'data_class' => Collection\Relationship::class
+			'data_class' => RelationshipDTO::class
 		]);
 
 		$resolver->setRequired(['types', 'collections']);

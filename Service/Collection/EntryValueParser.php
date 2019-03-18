@@ -63,12 +63,13 @@ class EntryValueParser
 	}
 
 
-	/**
-	 * Return date string
-	 *
-	 * @param string $value
-	 * @return string
-	 */
+    /**
+     * Return date string
+     *
+     * @param string $value
+     * @return string
+     * @throws \Exception
+     */
 	public function parseDate(string $value): string
 	{
 		$date = new DateTime($value);
@@ -77,12 +78,13 @@ class EntryValueParser
 	}
 
 
-	/**
-	 * Return date string
-	 *
-	 * @param string $value
-	 * @return string
-	 */
+    /**
+     * Return date string
+     *
+     * @param string $value
+     * @return string
+     * @throws \Exception
+     */
 	public function parseDateTime(string $value): string
 	{
 		$dateTime = new DateTime($value);

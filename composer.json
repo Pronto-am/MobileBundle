@@ -22,7 +22,7 @@
         "kreait/firebase-php": "^4.13",
         "league/flysystem": "^1.0",
         "league/flysystem-sftp": "^1.0",
-        "php-http/guzzle6-adapter": "^1.1",
+        "php-http/guzzle6-adapter": "^2.0",
         "symfony/swiftmailer-bundle": "^3.2",
         "symfony/translation": "^3.4|^4.1",
         "symfony/orm-pack": "^1.0",

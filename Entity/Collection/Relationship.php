@@ -7,7 +7,6 @@ use Pronto\MobileBundle\Entity\Collection;
 use Pronto\MobileBundle\Entity\Collection\Relationship\Type;
 use Pronto\MobileBundle\Entity\TimestampedEntity;
 use Ramsey\Uuid\Uuid;
-use Symfony\Component\Validator\Constraints as Assert;
 
 
 /**
@@ -26,49 +25,38 @@ class Relationship extends TimestampedEntity
 	 */
 	private $id;
 
-
 	/**
 	 * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Collection", inversedBy="relationships")
 	 * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
 	 */
 	private $collection;
 
-
 	/**
 	 * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Collection")
 	 * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
-	 * @Assert\NotBlank()
 	 */
 	private $relatedCollection;
-
 
 	/**
 	 * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Collection\Relationship\Type")
 	 * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
-	 * @Assert\NotBlank()
 	 */
 	private $type;
 
-
 	/**
 	 * @ORM\Column(type="string")
-	 * @Assert\NotBlank()
 	 */
 	private $name;
 
-
 	/**
 	 * @ORM\Column(type="string")
-	 * @Assert\NotBlank()
 	 */
 	private $identifier;
-
 
 	/**
 	 * @ORM\Column(type="boolean")
 	 */
-	private $includeInJsonListview = true;
-
+	private $includeInJsonListView = true;
 
 	/**
 	 * Triggered on pre persist
@@ -83,7 +71,6 @@ class Relationship extends TimestampedEntity
 		$this->id = Uuid::uuid1()->toString();
 	}
 
-
 	/**
 	 * @return string
 	 */
@@ -91,7 +78,6 @@ class Relationship extends TimestampedEntity
 	{
 		return $this->id;
 	}
-
 
 	/**
 	 * @return Collection
@@ -101,7 +87,6 @@ class Relationship extends TimestampedEntity
 		return $this->collection;
 	}
 
-
 	/**
 	 * @param Collection $collection
 	 */
@@ -109,7 +94,6 @@ class Relationship extends TimestampedEntity
 	{
 		$this->collection = $collection;
 	}
-
 
 	/**
 	 * @return Collection
@@ -119,7 +103,6 @@ class Relationship extends TimestampedEntity
 		return $this->relatedCollection;
 	}
 
-
 	/**
 	 * @param Collection $relatedCollection
 	 */
@@ -128,15 +111,13 @@ class Relationship extends TimestampedEntity
 		$this->relatedCollection = $relatedCollection;
 	}
 
-
 	/**
 	 * @return string
 	 */
-	public function getName(): string
+	public function getName(): ?string
 	{
 		return $this->name;
 	}
-
 
 	/**
 	 * @param string $name
@@ -146,7 +127,6 @@ class Relationship extends TimestampedEntity
 		$this->name = $name;
 	}
 
-
 	/**
 	 * @return string
 	 */
@@ -154,7 +134,6 @@ class Relationship extends TimestampedEntity
 	{
 		return $this->identifier;
 	}
-
 
 	/**
 	 * @param string $identifier
@@ -164,7 +143,6 @@ class Relationship extends TimestampedEntity
 		$this->identifier = $identifier;
 	}
 
-
 	/**
 	 * @return Type
 	 */
@@ -172,7 +150,6 @@ class Relationship extends TimestampedEntity
 	{
 		return $this->type;
 	}
-
 
 	/**
 	 * @param Type $type
@@ -182,21 +159,19 @@ class Relationship extends TimestampedEntity
 		$this->type = $type;
 	}
 
-
 	/**
 	 * @return bool
 	 */
 	public function includeInJsonListView(): bool
 	{
-		return $this->includeInJsonListview;
+		return $this->includeInJsonListView;
 	}
-
 
 	/**
 	 * @param bool $includeInListView
 	 */
 	public function setIncludeInJsonListView(bool $includeInListView): void
 	{
-		$this->includeInJsonListview = $includeInListView;
+		$this->includeInJsonListView = $includeInListView;
 	}
 }

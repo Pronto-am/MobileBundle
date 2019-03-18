@@ -4,7 +4,9 @@ namespace Pronto\MobileBundle\Controller\Web\Collection;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Pronto\MobileBundle\Controller\BaseController;
+use Pronto\MobileBundle\DTO\Collection\RelationshipDTO;
 use Pronto\MobileBundle\Entity\Collection;
+use Pronto\MobileBundle\Entity\Collection\Relationship;
 use Pronto\MobileBundle\Entity\Plugin;
 use Pronto\MobileBundle\EventSubscriber\ValidateApplicationSelectionInterface;
 use Pronto\MobileBundle\EventSubscriber\ValidateCustomerSelectionInterface;
@@ -68,9 +70,11 @@ class RelationshipController extends BaseController implements ValidatePluginSta
 		]);
 
 		// Get the relationship types
-		$types = $entityManager->getRepository(Collection\Relationship\Type::class)->findAll();
+		$types = $entityManager->getRepository(Relationship\Type::class)->findAll();
 
-		$form = $this->createForm(RelationshipForm::class, $relationship, [
+		$relationshipDTO = RelationshipDTO::fromEntity($relationship);
+
+		$form = $this->createForm(RelationshipForm::class, $relationshipDTO, [
 			'collections' => $collections,
 			'types'       => $types,
 		]);
@@ -78,8 +82,9 @@ class RelationshipController extends BaseController implements ValidatePluginSta
 		$form->handleRequest($request);
 
 		if ($form->isSubmitted() && $form->isValid()) {
-			/** @var Collection\Relationship $relationship */
-			$relationship = $form->getData();
+		    /** @var RelationshipDTO $relationshipDTO */
+            $relationshipDTO = $form->getData();
+            $relationship = $relationshipDTO->toEntity($relationship ?? new Relationship());
 
 			$relationship->setCollection($collection);
 
