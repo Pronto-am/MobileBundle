@@ -15,7 +15,7 @@ class AuthCode extends BaseAuthCode
 {
 	/**
 	 * @ORM\Id
-	 * @ORM\Column(type="string", unique=true, length=36)
+	 * @ORM\Column(type="integer")
 	 */
 	protected $id;
 

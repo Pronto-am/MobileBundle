@@ -30,7 +30,7 @@ class AppUser extends TimestampedEntity implements UserInterface, ApiEntityInter
 
 	/**
 	 * @ORM\Id
-	 * @ORM\Column(type="string", unique=true, length=36)
+	 * @ORM\Column(type="string", unique=true)
 	 *
 	 * @Groups({"AppUser", "Device"})
 	 */

@@ -26,7 +26,7 @@ class Entry extends TimestampedWithUserEntity implements ApiEntityInterface
 
 	/**
      * @ORM\Id
-     * @ORM\Column(type="string", unique=true, length=36)
+     * @ORM\Column(type="string", unique=true)
 	 *
 	 * @Groups({"Entry"})
      */

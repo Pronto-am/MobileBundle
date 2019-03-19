@@ -19,7 +19,7 @@ class AccessToken extends BaseAccessToken
 
 	/**
 	 * @ORM\Id
-	 * @ORM\Column(type="string", unique=true, length=36)
+	 * @ORM\Column(type="string", unique=true)
 	 */
 	protected $id;
 
