@@ -160,10 +160,10 @@ class AppVersion extends TimestampedEntity implements ApiEntityInterface
 		return $this->platform;
 	}
 
-	/**
-	 * @param string $platform
-	 * @return AppVersion
-	 */
+    /**
+     * @param string $platform
+     * @return AppVersion
+     */
 	public function setPlatform(string $platform): AppVersion
 	{
 		$this->platform = $platform;
@@ -197,10 +197,10 @@ class AppVersion extends TimestampedEntity implements ApiEntityInterface
 	}
 
 	/**
-	 * @param array $description
+	 * @param null|array $description
 	 * @return AppVersion
 	 */
-	public function setDescription(array $description): AppVersion
+	public function setDescription(?array $description): AppVersion
 	{
 		$this->description = $description;
 		return $this;
@@ -215,10 +215,10 @@ class AppVersion extends TimestampedEntity implements ApiEntityInterface
 	}
 
 	/**
-	 * @param string $url
+	 * @param null|string $url
 	 * @return AppVersion
 	 */
-	public function setUrl(string $url): AppVersion
+	public function setUrl(?string $url): AppVersion
 	{
 		$this->url = $url;
 		return $this;
