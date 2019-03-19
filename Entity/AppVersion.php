@@ -79,7 +79,7 @@ class AppVersion extends TimestampedEntity implements ApiEntityInterface
 	/**
 	 * @var string $url
 	 *
-	 * @ORM\Column(type="string")
+	 * @ORM\Column(type="string", nullable=true)
 	 */
 	private $url;
 
