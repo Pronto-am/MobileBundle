@@ -148,9 +148,9 @@ class UserLogin
 
 
 	/**
-	 * @param string $date
+	 * @param null|string $date
 	 */
-	public function setDate(string $date): void
+	public function setDate(?string $date): void
 	{
 		$this->date = $date;
 	}
@@ -165,9 +165,9 @@ class UserLogin
 
 
 	/**
-	 * @param string $browserName
+	 * @param null|string $browserName
 	 */
-	public function setBrowserName(string $browserName): void
+	public function setBrowserName(?string $browserName): void
 	{
 		$this->browserName = $browserName;
 	}
@@ -183,9 +183,9 @@ class UserLogin
 
 
 	/**
-	 * @param string $platform
+	 * @param null|string $platform
 	 */
-	public function setPlatform(string $platform): void
+	public function setPlatform(?string $platform): void
 	{
 		$this->platform = $platform;
 	}
@@ -200,9 +200,9 @@ class UserLogin
 
 
 	/**
-	 * @param string $version
+	 * @param null|string $version
 	 */
-	public function setVersion(string $version): void
+	public function setVersion(?string $version): void
 	{
 		$this->version = $version;
 	}
@@ -218,9 +218,9 @@ class UserLogin
 
 
 	/**
-	 * @param string $aolVersion
+	 * @param null|string $aolVersion
 	 */
-	public function setAolVersion(string $aolVersion): void
+	public function setAolVersion(?string $aolVersion): void
 	{
 		$this->aolVersion = $aolVersion;
 	}
@@ -324,9 +324,9 @@ class UserLogin
 
 
 	/**
-	 * @param string $userAgent
+	 * @param null|string $userAgent
 	 */
-	public function setUserAgent(string $userAgent): void
+	public function setUserAgent(?string $userAgent): void
 	{
 		$this->userAgent = $userAgent;
 	}

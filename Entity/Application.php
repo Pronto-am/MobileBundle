@@ -190,9 +190,9 @@ class Application extends Client implements ApiEntityInterface
 
 
 	/**
-	 * @param string $label
+	 * @param null|string $label
 	 */
-	public function setLabel(string $label): void
+	public function setLabel(?string $label): void
 	{
 		$this->label = $label;
 	}
@@ -235,9 +235,9 @@ class Application extends Client implements ApiEntityInterface
 
 
 	/**
-	 * @param string $androidBundleIdentifier
+	 * @param null|string $androidBundleIdentifier
 	 */
-	public function setAndroidBundleIdentifier(string $androidBundleIdentifier): void
+	public function setAndroidBundleIdentifier(?string $androidBundleIdentifier): void
 	{
 		$this->androidBundleIdentifier = $androidBundleIdentifier;
 	}
@@ -253,9 +253,9 @@ class Application extends Client implements ApiEntityInterface
 
 
 	/**
-	 * @param string $iosBundleIdentifier
+	 * @param null|string $iosBundleIdentifier
 	 */
-	public function setIosBundleIdentifier(string $iosBundleIdentifier): void
+	public function setIosBundleIdentifier(?string $iosBundleIdentifier): void
 	{
 		$this->iosBundleIdentifier = $iosBundleIdentifier;
 	}

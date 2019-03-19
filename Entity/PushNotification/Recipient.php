@@ -118,9 +118,9 @@ class Recipient implements ApiEntityInterface
 
 
 	/**
-	 * @param string $description
+	 * @param null|string $description
 	 */
-	public function setDescription(string $description): void
+	public function setDescription(?string $description): void
 	{
 		$this->description = $description;
 	}

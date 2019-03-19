@@ -235,7 +235,7 @@ class Customer
 	}
 
 	/**
-	 * @param string $logo
+	 * @param null|string $logo
 	 */
 	public function setLogo(?string $logo): void
 	{

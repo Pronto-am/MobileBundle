@@ -223,9 +223,9 @@ class User extends TimestampedEntity implements UserInterface
 
 
 	/**
-	 * @param string $password
+	 * @param null|string $password
 	 */
-	public function setPassword(string $password): void
+	public function setPassword(?string $password): void
 	{
 		$this->password = $password;
 	}

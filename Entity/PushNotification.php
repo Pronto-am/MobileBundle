@@ -174,9 +174,9 @@ class PushNotification implements ApiEntityInterface
 
 
 	/**
-	 * @param User $sentBy
+	 * @param null|User $sentBy
 	 */
-	public function setSentBy(User $sentBy): void
+	public function setSentBy(?User $sentBy): void
 	{
 		$this->sentBy = $sentBy;
 	}
@@ -192,9 +192,9 @@ class PushNotification implements ApiEntityInterface
 
 
 	/**
-	 * @param Segment $segment
+	 * @param null|Segment $segment
 	 */
-	public function setSegment(Segment $segment): void
+	public function setSegment(?Segment $segment): void
 	{
 		$this->segment = $segment;
 	}
@@ -228,9 +228,9 @@ class PushNotification implements ApiEntityInterface
 
 
 	/**
-	 * @param array $content
+	 * @param null|array $content
 	 */
-	public function setContent(array $content): void
+	public function setContent(?array $content): void
 	{
 		$this->content = $content;
 	}
@@ -264,9 +264,9 @@ class PushNotification implements ApiEntityInterface
 
 
 	/**
-	 * @param array $clickActionUrl
+	 * @param null|array $clickActionUrl
 	 */
-	public function setClickActionUrl(array $clickActionUrl): void
+	public function setClickActionUrl(?array $clickActionUrl): void
 	{
 		$this->clickActionUrl = $clickActionUrl;
 	}
@@ -282,9 +282,9 @@ class PushNotification implements ApiEntityInterface
 
 
 	/**
-	 * @param array $clickActionHtml
+	 * @param null|array $clickActionHtml
 	 */
-	public function setClickActionHtml(array $clickActionHtml): void
+	public function setClickActionHtml(?array $clickActionHtml): void
 	{
 		$this->clickActionHtml = $clickActionHtml;
 	}
@@ -300,9 +300,9 @@ class PushNotification implements ApiEntityInterface
 
 
 	/**
-	 * @param DateTime $sent
+	 * @param null|DateTime $sent
 	 */
-	public function setSent(DateTime $sent): void
+	public function setSent(?DateTime $sent): void
 	{
 		$this->sent = $sent;
 	}

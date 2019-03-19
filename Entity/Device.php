@@ -217,9 +217,9 @@ class Device implements ApiEntityInterface
 
 
 	/**
-	 * @param AppUser $appUser
+	 * @param null|AppUser $appUser
 	 */
-	public function setAppUser(AppUser $appUser): void
+	public function setAppUser(?AppUser $appUser): void
 	{
 		$this->appUser = $appUser;
 	}
@@ -235,9 +235,9 @@ class Device implements ApiEntityInterface
 
 
 	/**
-	 * @param string $firebaseToken
+	 * @param null|string $firebaseToken
 	 */
-	public function setFirebaseToken($firebaseToken): void
+	public function setFirebaseToken(?string $firebaseToken): void
 	{
 		$this->firebaseToken = $firebaseToken;
 	}
@@ -253,9 +253,9 @@ class Device implements ApiEntityInterface
 
 
 	/**
-	 * @param string $apnsToken
+	 * @param null|string $apnsToken
 	 */
-	public function setApnsToken(string $apnsToken): void
+	public function setApnsToken(?string $apnsToken): void
 	{
 		$this->apnsToken = $apnsToken;
 	}
@@ -433,9 +433,9 @@ class Device implements ApiEntityInterface
 
 
 	/**
-	 * @param DateTime $lastLogin
+	 * @param null|DateTime $lastLogin
 	 */
-	public function setLastLogin(DateTime $lastLogin): void
+	public function setLastLogin(?DateTime $lastLogin): void
 	{
 		$this->lastLogin = $lastLogin;
 	}

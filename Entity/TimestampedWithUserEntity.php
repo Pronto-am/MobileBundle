@@ -78,9 +78,9 @@ abstract class TimestampedWithUserEntity
 
 
 	/**
-	 * @param User $createdBy
+	 * @param null|User $createdBy
 	 */
-	public function setCreatedBy(User $createdBy): void
+	public function setCreatedBy(?User $createdBy): void
 	{
 		$this->createdBy = $createdBy;
 	}
@@ -114,9 +114,9 @@ abstract class TimestampedWithUserEntity
 
 
 	/**
-	 * @param User $updatedBy
+	 * @param null|User $updatedBy
 	 */
-	public function setUpdatedBy(User $updatedBy): void
+	public function setUpdatedBy(?User $updatedBy): void
 	{
 		$this->updatedBy = $updatedBy;
 	}

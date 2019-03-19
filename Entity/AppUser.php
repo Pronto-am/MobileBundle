@@ -314,9 +314,9 @@ class AppUser extends TimestampedEntity implements UserInterface, ApiEntityInter
 
 
 	/**
-	 * @param DateTime $lastLogin
+	 * @param null|DateTime $lastLogin
 	 */
-	public function setLastLogin(DateTime $lastLogin): void
+	public function setLastLogin(?DateTime $lastLogin): void
 	{
 		$this->lastLogin = $lastLogin;
 	}
@@ -334,9 +334,9 @@ class AppUser extends TimestampedEntity implements UserInterface, ApiEntityInter
 
 
 	/**
-	 * @param array $extraData
+	 * @param null|array $extraData
 	 */
-	public function setExtraData(array $extraData): void
+	public function setExtraData(?array $extraData): void
 	{
 		$this->extraData = $extraData;
 	}
