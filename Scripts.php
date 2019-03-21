@@ -77,7 +77,7 @@ class Scripts
 
         $routes = [
             'pronto_mobile' => [
-                'resource' => '@ProntoMobileBundle/Resources/Config/routing.yaml',
+                'resource' => '@ProntoMobileBundle/Resources/config/routing.yaml',
             ]
         ];
 
