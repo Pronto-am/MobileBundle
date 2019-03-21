@@ -61,12 +61,12 @@ mails.base.salutation: "Met vriendelijke groet,<br><br>Pronto"
 mails.base.custom_salutation: "Met vriendelijke groet,<br><br>%company%"
 
 mails.password.header: "Wachtwoord resetten"
-mails.password.body: "Via de website heeft u een nieuw wachtwoord aangevraagd voor het CMS. Uw wachtwoord kunt u resetten door op onderstaande link te klikken. Deze link blijft slechts 1 uur geldig. Indien u geen nieuw wachtwoord heeft aangevraagd, dan hoeft u niets te doen, deze mail is enkel naar u verzonden.<br>"
+mails.password.body: "Via de website heeft u een nieuw wachtwoord aangevraagd voor het CMS. Uw wachtwoord kunt u resetten door op onderstaande link te klikken. Deze link blijft slechts 1 uur geldig. Indien u geen nieuw wachtwoord heeft aangevraagd, dan hoeft u niets te doen, deze mail is enkel naar u verzonden."
 
 mails.registration.header: "Uw account"
 mails.registration.body: "Er is een account voor u aangemaakt voor het CMS van uw app. Hiervoor kunt u dit e-mailadres gebruiken om in te loggen. U kunt uw wachtwoord maken door op onderstaande link te klikken."
 
-mails.app.password.body: "U heeft een nieuw wachtwoord aangevraagd voor de %application% app. Uw wachtwoord kunt u resetten door op onderstaande link te klikken. Deze link blijft slechts 1 uur geldig. Indien u geen nieuw wachtwoord heeft aangevraagd, dan hoeft u niets te doen, deze mail is enkel naar u verzonden.<br>"
+mails.app.password.body: "U heeft een nieuw wachtwoord aangevraagd voor de %application% app. Uw wachtwoord kunt u resetten door op onderstaande link te klikken. Deze link blijft slechts 1 uur geldig. Indien u geen nieuw wachtwoord heeft aangevraagd, dan hoeft u niets te doen, deze mail is enkel naar u verzonden."
 
 ##
 ##  Entity translations

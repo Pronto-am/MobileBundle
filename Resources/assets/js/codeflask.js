@@ -8,6 +8,7 @@ module.exports = {
      */
     initPushNotifications: function () {
         let flask = new codeFlask;
+
         flask.run('.code-mirror', {
             rtl: false,
             language: 'html'

@@ -23,7 +23,6 @@ class ApplicationPlugin
      */
     private $application;
 
-
     /**
      * @ORM\Id
      * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Plugin", inversedBy="applicationPlugins")
@@ -31,25 +30,21 @@ class ApplicationPlugin
      */
     private $plugin;
 
-
     /**
      * @ORM\Column(type="boolean")
      */
     private $active = false;
-
 
     /**
      * @ORM\Column(type="json_array")
      */
     private $config;
 
-
     public function __construct(Application $application, Plugin $plugin)
     {
         $this->application = $application;
         $this->plugin = $plugin;
     }
-
 
     /**
      * @return Application
@@ -59,7 +54,6 @@ class ApplicationPlugin
         return $this->application;
     }
 
-
     /**
      * @param Application $application
      */
@@ -67,7 +61,6 @@ class ApplicationPlugin
 	{
         $this->application = $application;
     }
-
 
     /**
      * @return Plugin
@@ -77,7 +70,6 @@ class ApplicationPlugin
         return $this->plugin;
     }
 
-
     /**
      * @param Plugin $plugin
      */
@@ -85,7 +77,6 @@ class ApplicationPlugin
     {
         $this->plugin = $plugin;
     }
-
 
     /**
      * @return bool
@@ -95,7 +86,6 @@ class ApplicationPlugin
         return $this->active;
     }
 
-
     /**
      * @param bool $active
      */
@@ -104,7 +94,6 @@ class ApplicationPlugin
         $this->active = $active;
     }
 
-
     /**
      * @return array
      */
@@ -112,7 +101,6 @@ class ApplicationPlugin
     {
         return $this->config;
     }
-
 
     /**
      * @param array $config

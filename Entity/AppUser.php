@@ -137,9 +137,9 @@ class AppUser extends TimestampedEntity implements UserInterface, ApiEntityInter
 
 
 	/**
-	 * @return string
+	 * @return string|null
 	 */
-	public function getId(): string
+	public function getId(): ?string
 	{
 		return $this->id;
 	}

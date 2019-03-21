@@ -99,9 +99,9 @@ class ProntoMobile
 	/**
 	 * Get the active module
 	 *
-	 * @return string
+	 * @return string|null
 	 */
-	public function getActiveModule(): string
+	public function getActiveModule(): ?string
 	{
 		return $this->activeModule;
 	}

@@ -129,8 +129,8 @@ class Application extends Client implements ApiEntityInterface
 	 * @ORM\PrePersist
 	 */
 	public function onPrePersist() {
-		$this->createdAt = new \DateTime();
-		$this->updatedAt = new \DateTime();
+		$this->createdAt = new DateTime();
+		$this->updatedAt = new DateTime();
 	}
 
 
@@ -140,7 +140,7 @@ class Application extends Client implements ApiEntityInterface
 	 * @ORM\PreUpdate
 	 */
 	public function onPreUpdate() {
-		$this->updatedAt = new \DateTime();
+		$this->updatedAt = new DateTime();
 	}
 
 

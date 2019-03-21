@@ -27,13 +27,11 @@ class Version
      */
     private $id;
 
-
     /**
      * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Application", inversedBy="applicationVersions")
      * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     private $application;
-
 
     /**
      * @ORM\Column(type="string")
@@ -41,21 +39,18 @@ class Version
      */
     private $name;
 
-
 	/**
 	 * @ORM\OneToMany(targetEntity="Pronto\MobileBundle\Entity\Collection", mappedBy="applicationVersion")
 	 */
     private $collections;
 
-
     /**
-     * @return int
+     * @return int|null
      */
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
-
 
     /**
      * @return Application
@@ -65,7 +60,6 @@ class Version
         return $this->application;
     }
 
-
     /**
      * @param Application $application
      */
@@ -73,7 +67,6 @@ class Version
 	{
         $this->application = $application;
     }
-
 
     /**
      * @return string|null
@@ -83,7 +76,6 @@ class Version
         return $this->name;
     }
 
-
     /**
      * @param string $name
      */
@@ -91,7 +83,6 @@ class Version
 	{
         $this->name = $name;
     }
-
 
 	/**
 	 * @return DoctrineCollection

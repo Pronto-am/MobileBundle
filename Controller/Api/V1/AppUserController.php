@@ -264,7 +264,7 @@ class AppUserController extends BaseApiController
 			->setTo($user->getEmail())
 			->setBody(
 				$this->renderView(
-					'mails/users/app/password.html.twig',
+					'@ProntoMobile/mails/users/app/password.html.twig',
 					[
 						'application' => $application,
 						'customer'    => $application->getCustomer(),

@@ -17,96 +17,116 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class ApplicationVersionSubscriber implements EventSubscriber
 {
-	/**
-	 * @var TokenStorageInterface
-	 */
-	private $tokenStorage;
+    /**
+     * @var TokenStorageInterface
+     */
+    private $tokenStorage;
 
-	/**
-	 * @var \Symfony\Component\HttpFoundation\Request
-	 */
-	private $request;
+    /**
+     * @var \Symfony\Component\HttpFoundation\Request
+     */
+    private $request;
 
-	/**
-	 * @var PluginInitializer $initializer
-	 */
-	private $initializer;
+    /**
+     * @var PluginInitializer $initializer
+     */
+    private $initializer;
 
-	/**
-	 * @var Application $application
-	 */
-	private $application;
+    /**
+     * @var Application $application
+     */
+    private $application;
 
-	/**
-	 * ApplicationVersionSubscriber constructor.
-	 * @param RequestStack $requestStack
-	 * @param TokenStorageInterface $tokenStorage
-	 * @param PluginInitializer $initializer
-	 */
-	public function __construct(RequestStack $requestStack, TokenStorageInterface $tokenStorage, PluginInitializer $initializer)
-	{
-		$this->tokenStorage = $tokenStorage;
-		$this->request = $requestStack->getCurrentRequest();
-		$this->initializer = $initializer;
-	}
+    /**
+     * ApplicationVersionSubscriber constructor.
+     * @param RequestStack $requestStack
+     * @param TokenStorageInterface $tokenStorage
+     * @param PluginInitializer $initializer
+     */
+    public function __construct(RequestStack $requestStack, TokenStorageInterface $tokenStorage, PluginInitializer $initializer)
+    {
+        $this->tokenStorage = $tokenStorage;
+        $this->request = $requestStack->getCurrentRequest();
+        $this->initializer = $initializer;
+    }
 
-	/**
-	 * Returns an array of events this subscriber wants to listen to.
-	 *
-	 * @return string[]
-	 */
-	public function getSubscribedEvents(): array
-	{
-		return [Events::postPersist];
-	}
+    /**
+     * Returns an array of events this subscriber wants to listen to.
+     *
+     * @return string[]
+     */
+    public function getSubscribedEvents(): array
+    {
+        return [Events::prePersist, Events::postPersist];
+    }
 
-	/**
-	 * Handle the post persist event of an application object
-	 *
-	 * @param LifecycleEventArgs $args
-	 * @throws \Doctrine\ORM\ORMException
-	 */
-	public function postPersist(LifecycleEventArgs $args): void
-	{
-		$entity = $args->getEntity();
+    /**
+     * @param LifecycleEventArgs $args
+     */
+    public function prePersist(LifecycleEventArgs $args)
+    {
+        $entity = $args->getEntity();
 
-		if (!$entity instanceof Application) {
-			return;
-		}
+        if (!$entity instanceof Application) {
+            return;
+        }
 
-		$this->application = $entity;
+        $entity->setRedirectUris([
+            'https://pronto.am'
+        ]);
 
-		$this->initializeFirstVersion($args->getEntityManager());
-	}
+        $entity->setAllowedGrantTypes([
+            'refresh_token', 'password', 'token', 'authorization_code', 'client_credentials'
+        ]);
+    }
 
-	/**
-	 * @param EntityManager $entityManager
-	 * @throws \Doctrine\ORM\ORMException
-	 * @throws \Doctrine\ORM\OptimisticLockException
-	 */
-	private function initializeFirstVersion(EntityManager $entityManager): void
-	{
-		$version = new Version();
-		$version->setName('V1');
-		$version->setApplication($this->application);
+    /**
+     * Handle the post persist event of an application object
+     *
+     * @param LifecycleEventArgs $args
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function postPersist(LifecycleEventArgs $args): void
+    {
+        $entity = $args->getEntity();
 
-		$entityManager->persist($version);
-		$entityManager->flush();
+        if (!$entity instanceof Application) {
+            return;
+        }
 
-		// Add the plugins and deactivate them
-		$plugins = $entityManager->getRepository(Plugin::class)->findAll();
+        $this->application = $entity;
 
-		/** @var Plugin $plugin */
-		foreach ($plugins as $plugin) {
-			$this->initializer->initialize($this->application, $plugin);
-		}
+        $this->initializeFirstVersion($args->getEntityManager());
+    }
 
-		$entityManager->flush();
+    /**
+     * @param EntityManager $entityManager
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    private function initializeFirstVersion(EntityManager $entityManager): void
+    {
+        $version = new Version();
+        $version->setName('V1');
+        $version->setApplication($this->application);
 
-		$token = $this->tokenStorage->getToken();
+        $entityManager->persist($version);
+        $entityManager->flush();
 
-		if ($token !== null && $entityManager->getRepository(Application::class)->count(['customer' => $this->application->getCustomer()]) === 1) {
-			$this->request->getSession()->set(Version::SESSION_IDENTIFIER, $version->getId());
-		}
-	}
+        // Add the plugins and deactivate them
+        $plugins = $entityManager->getRepository(Plugin::class)->findAll();
+
+        /** @var Plugin $plugin */
+        foreach ($plugins as $plugin) {
+            $this->initializer->initialize($this->application, $plugin);
+        }
+
+        $entityManager->flush();
+
+        $token = $this->tokenStorage->getToken();
+
+        if ($token !== null && $entityManager->getRepository(Application::class)->count(['customer' => $this->application->getCustomer()]) === 1) {
+            $this->request->getSession()->set(Version::SESSION_IDENTIFIER, $version->getId());
+        }
+    }
 }

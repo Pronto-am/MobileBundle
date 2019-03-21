@@ -28,7 +28,6 @@ class Type
 	public const TYPE_COORDINATES = 'coordinates';
 	public const TYPE_FILE = 'file';
 
-
     /**
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -36,51 +35,43 @@ class Type
      */
     private $id;
 
-
     /**
      * @ORM\Column(type="string")
      */
     private $type;
-
 
 	/**
 	 * @ORM\Column(type="boolean")
 	 */
     private $translatable = false;
 
-
 	/**
 	 * @ORM\Column(type="boolean")
 	 */
 	private $listviewCompatible = false;
-
 
 	/**
 	 * @ORM\Column(type="boolean")
 	 */
 	private $jsonListviewCompatible = false;
 
-
 	/**
 	 * @ORM\Column(type="smallint")
 	 */
 	private $ordering;
-
 
 	/**
 	 * @ORM\Column(type="json_array")
 	 */
     private $config;
 
-
     /**
-     * @return int
+     * @return int|null
      */
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
-
 
     /**
      * @return string
@@ -90,7 +81,6 @@ class Type
         return $this->type;
     }
 
-
     /**
      * @param string $type
      */
@@ -98,7 +88,6 @@ class Type
     {
         $this->type = $type;
     }
-
 
 	/**
 	 * @return boolean
@@ -108,7 +97,6 @@ class Type
 		return $this->translatable;
 	}
 
-
 	/**
 	 * @param bool $translatable
 	 */
@@ -116,7 +104,6 @@ class Type
 	{
 		$this->translatable = $translatable;
 	}
-
 
 	/**
 	 * @return boolean
@@ -126,7 +113,6 @@ class Type
 		return $this->listviewCompatible;
 	}
 
-
 	/**
 	 * @param bool $listviewCompatible
 	 */
@@ -134,7 +120,6 @@ class Type
 	{
 		$this->listviewCompatible = $listviewCompatible;
 	}
-
 
 	/**
 	 * @return bool
@@ -144,7 +129,6 @@ class Type
 		return $this->jsonListviewCompatible;
 	}
 
-
 	/**
 	 * @param bool $jsonListviewCompatible
 	 */
@@ -152,7 +136,6 @@ class Type
 	{
 		$this->jsonListviewCompatible = $jsonListviewCompatible;
 	}
-
 
 	/**
 	 * @return int
@@ -162,7 +145,6 @@ class Type
 		return $this->ordering;
 	}
 
-
 	/**
 	 * @param int $ordering
 	 */
@@ -171,7 +153,6 @@ class Type
 		$this->ordering = $ordering;
 	}
 
-
 	/**
 	 * @return array
 	 */
@@ -179,7 +160,6 @@ class Type
 	{
 		return $this->config;
 	}
-
 
 	/**
 	 * @param array $config

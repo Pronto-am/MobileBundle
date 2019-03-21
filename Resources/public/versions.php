@@ -172,7 +172,7 @@ function getVersions(int $applicationId): array
  */
 function createUrl(string $id): string
 {
-	return 'https://' . $_SERVER['HTTP_HOST'] . '/api/v1/versions/app/' . $id;
+	return 'https://' . $_SERVER['HTTP_HOST'] . '/api/v1/versions/app/' . $id . '/file';
 }
 
 

@@ -59,8 +59,11 @@ class ApplicationController extends BaseController
 		}
 
 		$applicationData = ApplicationDTO::fromEntity($application);
-		$applicationData->clientId = $application->getId() . '_' . $application->getRandomId();
-		$applicationData->clientSecret = $application->getSecret();
+
+		if($application !== null) {
+            $applicationData->clientId = $application->getId() . '_' . $application->getRandomId();
+            $applicationData->clientSecret = $application->getSecret();
+        }
 
 		$form = $this->createForm(ApplicationForm::class, $applicationData, [
 			'languages' => $languagesLoader,

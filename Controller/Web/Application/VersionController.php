@@ -15,17 +15,23 @@ use Symfony\Component\HttpFoundation\Request;
 
 class VersionController extends BaseController
 {
-	/**
-	 * Edit a new or existing application version
-	 *
-	 * @param Request $request
-	 * @param EntityManagerInterface $entityManager
-	 * @param null $id
-	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-	 */
-	public function editAction(Request $request, EntityManagerInterface $entityManager, $id = null)
+    /**
+     * Edit a new or existing application version
+     *
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @param int $applicationId
+     * @param null $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
+	public function editAction(Request $request, EntityManagerInterface $entityManager, int $applicationId, $id = null)
 	{
-		$application = $this->getApplication();
+	    $application = $entityManager->getRepository(Application::class)->find($applicationId);
+
+	    if($application === null) {
+            $response = new ErrorResponse([404, 'The ID does not exist']);
+            return $response->create()->getJsonResponse();
+        }
 
 		$applicationVersion = $id !== null ? $entityManager->getRepository(Version::class)->find($id) : null;
 
