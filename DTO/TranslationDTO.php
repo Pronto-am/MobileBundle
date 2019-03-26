@@ -3,13 +3,17 @@
 namespace Pronto\MobileBundle\DTO;
 
 
-use Symfony\Component\Validator\Constraints as Assert;
+use /** @noinspection PhpUnusedAliasInspection */
+    Symfony\Component\Validator\Constraints as Assert;
+use /** @noinspection PhpUnusedAliasInspection */
+    Pronto\MobileBundle\Validator\Constraints\Translation\IsUniqueIdentifier;
 
 class TranslationDTO extends BaseDTO
 {
 	/**
 	 * @var string $identifier
 	 * @Assert\NotBlank()
+     * @IsUniqueIdentifier
 	 */
 	public $identifier;
 

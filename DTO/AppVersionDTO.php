@@ -7,7 +7,7 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use /** @noinspection PhpUnusedAliasInspection */
     Symfony\Component\Validator\Constraints as Assert;
 use /** @noinspection PhpUnusedAliasInspection */
-    Pronto\MobileBundle\Validator\Constraints\IsSemanticVersion;
+    Pronto\MobileBundle\Validator\Constraints\AppVersion\IsSemanticVersion;
 
 /**
  * Class AppVersionDTO

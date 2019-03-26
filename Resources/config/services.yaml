@@ -15,7 +15,7 @@ services:
         public: false
 
     Pronto\MobileBundle\:
-        resource: '../../{Command,Controller,DataFixtures,EventListener,EventSubscriber,Provider,Security,Service,Repository}'
+        resource: '../../{Command,Controller,DataFixtures,EventListener,EventSubscriber,Provider,Security,Service,Repository,Validator}'
 
     pronto_mobile.global.app:
         class: Pronto\MobileBundle\Service\ProntoMobile
@@ -53,7 +53,6 @@ services:
     Pronto\MobileBundle\EventListener\PluginSubscriber:
         tags:
             - { name: doctrine.event_subscriber, connection: default }
-
 
     #### PRONTO MOBILE DATA FIXTURES ####
     Pronto\MobileBundle\DataFixtures\:

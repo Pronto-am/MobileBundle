@@ -321,6 +321,7 @@ translation.upload: Upload
 translation.upload_new: Upload nieuwe vertalingen
 translation.fill: Vullen
 translation.identifier: Key
+translation.identifier.unique: De key van de vertalingen dient uniek te zijn
 translation.description: Omschrijving
 translation.type: Type
 translation.import_partly_failed: De import is gedeeltelijk gefaald, controleer het bestand op inconsistenties
@@ -328,6 +329,7 @@ translation.import_partly_failed: De import is gedeeltelijk gefaald, controleer 
 app_versions: app versies
 app_version: app versie
 app_version.version: Versie
+app_version.version.is_semantic: De versie dient semantisch te zijn
 app_version.platform: Platform
 app_version.release_date: Release datum
 app_version.description: Omschrijving

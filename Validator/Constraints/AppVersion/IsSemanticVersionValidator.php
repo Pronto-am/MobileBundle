@@ -1,8 +1,9 @@
 <?php
 
-namespace Pronto\MobileBundle\Validator\Constraints;
+namespace Pronto\MobileBundle\Validator\Constraints\AppVersion;
 
 
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
@@ -10,6 +11,20 @@ use UnexpectedValueException;
 
 class IsSemanticVersionValidator extends ConstraintValidator
 {
+    /**
+     * @var TranslatorInterface $translator
+     */
+    private $translator;
+
+    /**
+     * IsSemanticVersionValidator constructor.
+     * @param TranslatorInterface $translator
+     */
+    public function __construct(TranslatorInterface $translator)
+    {
+        $this->translator = $translator;
+    }
+
     /**
      * Checks if the passed value is valid.
      *
@@ -34,9 +49,7 @@ class IsSemanticVersionValidator extends ConstraintValidator
         }
 
         if (!preg_match('/^\d+.\d+.\d+$/', $value, $matches)) {
-            $this->context->buildViolation($constraint->message)
-                ->setParameter('{{ string }}', $value)
-                ->addViolation();
+            $this->context->buildViolation($this->translator->trans($constraint->getTranslationKey()))->addViolation();
         }
     }
 }

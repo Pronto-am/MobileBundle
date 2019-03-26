@@ -320,6 +320,7 @@ translation.upload: Upload
 translation.upload_new: Upload new translations
 translation.fill: Fill
 translation.identifier: Key
+translation.identifier.unique: Translation identifier needs to be unique
 translation.description: Description
 translation.type: Type
 translation.import_partly_failed: The import has failed partiallly, check the file for inconsistencies
@@ -327,6 +328,7 @@ translation.import_partly_failed: The import has failed partiallly, check the fi
 app_versions: app versions
 app_version: app version
 app_version.version: Version
+app_version.version.is_semantic: The version is required to be semantic
 app_version.platform: Platform
 app_version.release_date: Release date
 app_version.description: Description
