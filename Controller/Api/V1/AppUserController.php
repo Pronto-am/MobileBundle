@@ -2,6 +2,7 @@
 
 namespace Pronto\MobileBundle\Controller\Api\V1;
 
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Pronto\MobileBundle\Controller\Api\BaseApiController;
 use Pronto\MobileBundle\Entity\Application;
@@ -284,15 +285,16 @@ class AppUserController extends BaseApiController
 	}
 
 
-	/**
-	 * Show the reset password form
-	 *
-	 * @param Request $request
-	 * @param EntityManagerInterface $entityManager
-	 * @param TranslatorInterface $translator
-	 * @param $token
-	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-	 */
+    /**
+     * Show the reset password form
+     *
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @param TranslatorInterface $translator
+     * @param $token
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @throws \Exception
+     */
 	public function resetPasswordAction(Request $request, EntityManagerInterface $entityManager, TranslatorInterface $translator, $token)
 	{
 		/** @var PasswordReset $passwordReset */
@@ -308,7 +310,7 @@ class AppUserController extends BaseApiController
 		$customer = $passwordReset->getUser()->getApplication()->getCustomer();
 
 		// Check if the reset link has expired (1 hour)
-		$now = new \DateTime();
+		$now = new DateTime();
 		$difference = $now->diff($passwordReset->getCreatedAt());
 		$hours = $difference->h + ($difference->days * 24);
 
@@ -503,7 +505,7 @@ class AppUserController extends BaseApiController
 
 		// Save additional data
 		if (isset($content->extra_data)) {
-			$user->setExtraData($content->extra_data);
+			$user->setExtraData(json_decode(json_encode($content->extra_data), true));
 		}
 
 		$entityManager->persist($user);

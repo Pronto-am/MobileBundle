@@ -11,6 +11,7 @@ use Pronto\MobileBundle\Service\ProntoMobile;
 use Pronto\MobileBundle\Utils\Responses\ErrorResponse;
 use Pronto\MobileBundle\Utils\Responses\SuccessResponse;
 use Pronto\MobileBundle\Utils\Str;
+use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -111,7 +112,13 @@ class CustomerController extends BaseController
 
 		// The form requires an instance of File, so parse the filename to a File object
 		if ($originalCustomer->getLogo() !== null) {
-			$originalCustomer->setLogo(new File(Str::removeSlashes($uploadsFolder, true, true), '/customers/images/' . $originalCustomer->getLogo()));
+		    try {
+                $file = new File('/' . Str::removeSlashes($uploadsFolder, true, true), '/customers/images/' . $originalCustomer->getLogo());
+            } catch(FileNotFoundException $exception) {
+                $file = null;
+            }
+
+			$originalCustomer->setLogo($file);
 		}
 
 		$file = $originalCustomer->getLogo();
