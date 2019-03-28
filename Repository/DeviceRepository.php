@@ -137,13 +137,13 @@ class DeviceRepository extends EntityRepository
 	}
 
 
-	/**
-	 * Set devices disabled by expired or invalid tokens
-	 *
-	 * @param array $tokens
-	 * @return \Doctrine\ORM\QueryBuilder
-	 */
-	public function setDisabledByTokens(array $tokens): QueryBuilder
+    /**
+     * Set devices disabled by expired or invalid tokens
+     *
+     * @param array $tokens
+     * @return mixed
+     */
+	public function setDisabledByTokens(array $tokens)
 	{
 		return $this->createQueryBuilder('devices')->update()
 			->set('devices.tokenState', 0)
@@ -154,14 +154,14 @@ class DeviceRepository extends EntityRepository
 	}
 
 
-	/**
-	 * Update a token
-	 *
-	 * @param $oldToken
-	 * @param $newToken
-	 * @return \Doctrine\ORM\QueryBuilder
-	 */
-	public function updateToken($oldToken, $newToken): QueryBuilder
+    /**
+     * Update a token
+     *
+     * @param $oldToken
+     * @param $newToken
+     * @return mixed
+     */
+	public function updateToken($oldToken, $newToken)
 	{
 		return $this->createQueryBuilder('devices')->update()
 			->set('devices.firebaseToken', ':newToken')
@@ -190,15 +190,15 @@ class DeviceRepository extends EntityRepository
 	}
 
 
-	/**
-	 * Update a token
-	 *
-	 * @param int $applicationId
-	 * @param string $apnsToken
-	 * @param string $firebaseToken
-	 * @return \Doctrine\ORM\QueryBuilder
-	 */
-	public function addFirebaseToken(int $applicationId, string $apnsToken, string $firebaseToken): QueryBuilder
+    /**
+     * Update a token
+     *
+     * @param int $applicationId
+     * @param string $apnsToken
+     * @param string $firebaseToken
+     * @return mixed
+     */
+	public function addFirebaseToken(int $applicationId, string $apnsToken, string $firebaseToken)
 	{
 		return $this->createQueryBuilder('devices')->update()
 			->set('devices.firebaseToken', ':firebaseToken')
