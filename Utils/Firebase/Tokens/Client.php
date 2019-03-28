@@ -29,7 +29,6 @@ class Client extends BaseClient
 		}
 	}
 
-
     /**
      * Parse the response
      *

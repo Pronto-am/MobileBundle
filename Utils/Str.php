@@ -45,11 +45,11 @@ class Str
 		return $string;
 	}
 
-	/**
-	 * @param string $directory
-	 * @param string $file
-	 * @return string
-	 */
+    /**
+     * @param string $directory
+     * @param string $file
+     * @return string
+     */
 	public static function concatDirectories(string $directory, string $file): string
 	{
 		return $directory . '/' . self::removeSlashes($file);

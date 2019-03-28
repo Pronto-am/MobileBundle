@@ -45,7 +45,7 @@ class TranslationController extends BaseController implements ValidateCustomerSe
 	 */
 	public function indexAction(Request $request, EntityManagerInterface $entityManager): Response
 	{
-		$pageHelper = new PageHelper($request, $entityManager, TranslationKey::class, 15, 't.identifier');
+		$pageHelper = new PageHelper($request, $entityManager, TranslationKey::class, 500, 't.identifier');
 		$pageHelper->addClause(new WhereClause('t.application', $this->getApplication()));
 
 		return $this->render('@ProntoMobile/translations/index.html.twig', [
