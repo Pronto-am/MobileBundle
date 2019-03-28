@@ -67,7 +67,9 @@ class TranslationController extends BaseController implements ValidateCustomerSe
 		if ($key === null) {
 			$data->android = true;
 			$data->ios = true;
-		}
+		} else {
+		    $data->id = $key->getId();
+        }
 
 		$form = $this->createForm(TranslationForm::class, $data);
 		$form->handleRequest($request);

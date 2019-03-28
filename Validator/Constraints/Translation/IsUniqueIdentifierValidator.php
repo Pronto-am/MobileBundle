@@ -6,6 +6,8 @@ namespace Pronto\MobileBundle\Validator\Constraints\Translation;
 use Doctrine\ORM\EntityManagerInterface;
 use Pronto\MobileBundle\Entity\TranslationKey;
 use Pronto\MobileBundle\Service\ProntoMobile;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -30,16 +32,23 @@ class IsUniqueIdentifierValidator extends ConstraintValidator
     private $translator;
 
     /**
+     * @var Request $request
+     */
+    private $request;
+
+    /**
      * IsUniqueIdentifierValidator constructor.
      * @param EntityManagerInterface $entityManager
      * @param ProntoMobile $prontoMobile
      * @param TranslatorInterface $translator
+     * @param RequestStack $requestStack
      */
-    public function __construct(EntityManagerInterface $entityManager, ProntoMobile $prontoMobile, TranslatorInterface $translator)
+    public function __construct(EntityManagerInterface $entityManager, ProntoMobile $prontoMobile, TranslatorInterface $translator, RequestStack $requestStack)
     {
         $this->entityManager = $entityManager;
         $this->prontoMobile = $prontoMobile;
         $this->translator = $translator;
+        $this->request = $requestStack->getCurrentRequest();
     }
 
     /**
@@ -65,13 +74,14 @@ class IsUniqueIdentifierValidator extends ConstraintValidator
             throw new UnexpectedValueException($value, 'string');
         }
 
-        // Determine whether the identifier is already being used
-        $translationKey = $this->entityManager->getRepository(TranslationKey::class)->findOneBy([
-            'application' => $this->prontoMobile->getApplication(),
-            'identifier'  => $value
-        ]);
+        $data = $this->request->request->get('translation_form');
+        $id = (int) $data['id'];
+        $id = $id > 0 ? $id : null;
 
-        if ($translationKey !== null) {
+        // Determine whether the identifier is already being used
+        $isUnique = $this->entityManager->getRepository(TranslationKey::class)->isUnique($this->prontoMobile->getApplication(), $value, $id);
+
+        if (!$isUnique) {
             $this->context->buildViolation($this->translator->trans($constraint->getTranslationKey()))->addViolation();
         }
     }

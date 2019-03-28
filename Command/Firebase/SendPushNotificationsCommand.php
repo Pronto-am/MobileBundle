@@ -3,6 +3,7 @@
 namespace Pronto\MobileBundle\Command\Firebase;
 
 
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Pronto\MobileBundle\Entity\Application;
@@ -16,16 +17,20 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class SendPushNotificationsCommand extends Command
 {
-
-	/** @var EntityManagerInterface $entityManager */
+	/**
+     * @var EntityManagerInterface $entityManager
+     */
 	private $entityManager;
 
-	/** @var Sender $sender */
+	/**
+     * @var Sender $sender
+     */
 	private $sender;
 
-	/** @var ProntoMobile $prontoMobile */
+	/**
+     * @var ProntoMobile $prontoMobile
+     */
 	private $prontoMobile;
-
 
 	/**
 	 * SendPushNotificationsCommand constructor.
@@ -43,7 +48,6 @@ class SendPushNotificationsCommand extends Command
 		parent::__construct($name);
 	}
 
-
 	/**
 	 * Configure the command
 	 */
@@ -53,19 +57,17 @@ class SendPushNotificationsCommand extends Command
 			->setHelp('This command sends scheduled push notifications for you');
 	}
 
-
-	/**
-	 * Execute the command
-	 *
-	 * @param InputInterface $input
-	 * @param OutputInterface $output
-	 * @return int|null|void
-	 * @throws \Doctrine\ORM\NoResultException
-	 * @throws \Doctrine\ORM\NonUniqueResultException
-	 */
+    /**
+     * Execute the command
+     *
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @return int|null|void
+     * @throws Exception
+     */
 	protected function execute(InputInterface $input, OutputInterface $output)
 	{
-		$currentDate = new \DateTime();
+		$currentDate = new DateTime();
 
 		// Get the to-send notifications
 		$notifications = $this->entityManager->getRepository(PushNotification::class)->retrieveScheduledTasksByDate($currentDate);
@@ -106,7 +108,6 @@ class SendPushNotificationsCommand extends Command
 
 				try {
 					$this->sender->setNotification($notification);
-
 					$this->sender->send();
 				} catch(Exception $exception) {
 					$output->writeln([' - Error sending the notification', ' - E: ' . $exception->getMessage()]);

@@ -82,17 +82,17 @@ class PageHelper
 	 */
 	private $countField;
 
-	/**
-	 * PageHelper constructor.
-	 *
-	 * @param Request $request
-	 * @param EntityManager|\Doctrine\Common\Persistence\ObjectManager $entityManager
-	 * @param $entity
-	 * @param int $perPage
-	 * @param string $sortField
-	 * @param string $sortOrder
-	 * @param string $countField
-	 */
+    /**
+     * PageHelper constructor.
+     *
+     * @param Request $request
+     * @param EntityManager|\Doctrine\Common\Persistence\ObjectManager $entityManager
+     * @param string $entity
+     * @param int $perPage
+     * @param string $sortField
+     * @param string $sortOrder
+     * @param string $countField
+     */
 	public function __construct(Request $request, EntityManager $entityManager, string $entity, int $perPage = 15, string $sortField = 't.id', $sortOrder = 'ASC', $countField = 't.id')
 	{
 		$this->request = $request;

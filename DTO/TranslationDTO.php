@@ -10,6 +10,11 @@ use /** @noinspection PhpUnusedAliasInspection */
 
 class TranslationDTO extends BaseDTO
 {
+    /**
+     * @var int|null $id
+     */
+    public $id;
+
 	/**
 	 * @var string $identifier
 	 * @Assert\NotBlank()

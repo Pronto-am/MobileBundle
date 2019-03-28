@@ -7,9 +7,10 @@ use Pronto\MobileBundle\Utils\Guzzle\BaseClient;
 
 class Client extends BaseClient
 {
-	/** @var array $messageGroups Array of message groups */
+	/**
+     * @var array $messageGroups Array of message groups
+     */
 	private $messageGroups;
-
 
 	/**
 	 * Constructor
