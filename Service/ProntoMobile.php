@@ -180,16 +180,22 @@ class ProntoMobile
 		return !empty($plugins);
 	}
 
-	/**
-	 * Get the plugin configuration
-	 *
-	 * @param $plugin
-	 * @param Application|int|null $application
-	 * @return array
-	 */
+    /**
+     * Get the plugin configuration
+     *
+     * @param $plugin
+     * @param Application|int|null $application
+     * @return array
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
 	public function getPluginConfiguration($plugin, $application = null): array
 	{
 		$application = $application ?? $this->application;
+
+		if(!$application instanceof Application) {
+		    $application = $this->entityManager->getRepository(Application::class)->find($application);
+        }
 
 		/** @var ApplicationPlugin $plugin */
 		$plugin = $this->entityManager->getRepository(ApplicationPlugin::class)->findOneByApplicationAndIdentifier($application, $plugin);
