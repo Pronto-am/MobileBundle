@@ -30,13 +30,13 @@ class Client extends BaseClient
 	}
 
 
-	/**
-	 * Parse the response
-	 *
-	 * @param ResponseInterface $response
-	 * @return ResponseInterface|stdClass
-	 */
-	public function parseResponse(ResponseInterface $response): ResponseInterface
+    /**
+     * Parse the response
+     *
+     * @param ResponseInterface $response
+     * @return ResponseInterface|stdClass
+     */
+	public function parseResponse(ResponseInterface $response)
 	{
 		try {
 			return json_decode($response->getBody()->getContents());

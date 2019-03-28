@@ -83,11 +83,12 @@ class ApnsTokenConverter
 	}
 
 
-	/**
-	 * Convert the tokens
-	 *
-	 * @return bool|array
-	 */
+    /**
+     * Convert the tokens
+     *
+     * @return bool|array
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
 	public function convert()
 	{
 		if (!$this->canConvert()) {
@@ -113,12 +114,13 @@ class ApnsTokenConverter
 	}
 
 
-	/**
-	 * Execute the request
-	 *
-	 * @param $chunk
-	 * @return mixed
-	 */
+    /**
+     * Execute the request
+     *
+     * @param $chunk
+     * @return mixed
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
 	private function execute(array $chunk)
 	{
 		$client = new Client($this->serverKey);

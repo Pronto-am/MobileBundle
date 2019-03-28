@@ -114,14 +114,15 @@ class BaseClient implements ClientInterface
 	}
 
 
-	/**
-	 * Send the request
-	 *
-	 * @param string $endpoint
-	 * @param string $method
-	 * @return ResponseInterface
-	 */
-	public function send(string $endpoint = '', string $method = 'GET'): ResponseInterface
+    /**
+     * Send the request
+     *
+     * @param string $endpoint
+     * @param string $method
+     * @return mixed
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+	public function send(string $endpoint = '', string $method = 'GET')
 	{
 		$client = new Client([
 			'base_uri'    => $this->baseUrl,

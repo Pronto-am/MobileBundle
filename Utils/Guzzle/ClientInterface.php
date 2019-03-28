@@ -14,11 +14,11 @@ interface ClientInterface
 	public const METHOD_DELETE = 'DELETE';
 
 
-	/**
-	 * Set the base url
-	 *
-	 * @param string $baseUrl
-	 */
+    /**
+     * Set the base url
+     *
+     * @param string $baseUrl
+     */
 	public function setBaseUrl(string $baseUrl): void;
 
 
