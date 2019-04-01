@@ -23,7 +23,6 @@ class DeviceSegment
 	 */
 	private $segment;
 
-
 	/**
 	 * @ORM\Id
 	 * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Device")

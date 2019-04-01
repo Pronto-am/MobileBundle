@@ -26,7 +26,6 @@ class Device implements ApiEntityInterface
 	public const DEVICE_ALREADY_REGISTERED = [422, 22, 'This device is already registered'];
 	public const MISSING_APNS_OR_FIREBASE_TOKEN = [422, 23, 'Either the firebaseToken or the apnsToken should be provided'];
 
-
 	/**
 	 * @ORM\Id
 	 * @ORM\Column(type="string", unique=true)
@@ -35,13 +34,11 @@ class Device implements ApiEntityInterface
 	 */
 	private $id;
 
-
 	/**
 	 * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Application")
 	 * @ORM\JoinColumn(onDelete="CASCADE")
 	 */
 	private $application;
-
 
 	/**
 	 * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\AppUser", inversedBy="devices")
@@ -51,14 +48,12 @@ class Device implements ApiEntityInterface
 	 */
 	private $appUser;
 
-
 	/**
 	 * @ORM\Column(type="string", nullable=true)
 	 *
 	 * @Groups({"Device"})
 	 */
 	private $firebaseToken;
-
 
 	/**
 	 * @ORM\Column(type="string", nullable=true)
@@ -67,14 +62,12 @@ class Device implements ApiEntityInterface
 	 */
 	private $apnsToken;
 
-
 	/**
 	 * @ORM\Column(type="string")
 	 *
 	 * @Groups({"Device"})
 	 */
 	private $name;
-
 
 	/**
 	 * @ORM\Column(type="string")
@@ -83,14 +76,12 @@ class Device implements ApiEntityInterface
 	 */
 	private $model;
 
-
 	/**
 	 * @ORM\Column(type="string")
 	 *
 	 * @Groups({"Device"})
 	 */
 	private $manufacturer;
-
 
 	/**
 	 * @ORM\Column(type="string")
@@ -99,14 +90,12 @@ class Device implements ApiEntityInterface
 	 */
 	private $platform;
 
-
 	/**
 	 * @ORM\Column(type="string")
 	 *
 	 * @Groups({"Device"})
 	 */
 	private $osVersion;
-
 
 	/**
 	 * @ORM\Column(type="string")
@@ -115,14 +104,12 @@ class Device implements ApiEntityInterface
 	 */
 	private $appVersion;
 
-
 	/**
 	 * @ORM\Column(type="boolean")
 	 *
 	 * @Groups({"Device"})
 	 */
 	private $testDevice = false;
-
 
 	/**
 	 * @ORM\Column(type="boolean")
@@ -131,14 +118,12 @@ class Device implements ApiEntityInterface
 	 */
 	private $tokenState = true;
 
-
 	/**
 	 * @ORM\Column(type="boolean")
 	 *
 	 * @Groups({"Device"})
 	 */
 	private $pushNotifications = true;
-
 
 	/**
 	 * @ORM\Column(type="datetime", nullable=true)
@@ -147,7 +132,6 @@ class Device implements ApiEntityInterface
 	 */
 	private $lastLogin;
 
-
 	/**
 	 * @ORM\Column(type="string")
 	 *
@@ -155,18 +139,20 @@ class Device implements ApiEntityInterface
 	 */
 	private $language;
 
-
 	/**
 	 * @ORM\Column(type="json_array", nullable=true)
 	 */
 	private $extraData;
-
 
 	/**
 	 * @ORM\OneToMany(targetEntity="Pronto\MobileBundle\Entity\PushNotification\Recipient", mappedBy="device")
 	 */
 	private $pushNotificationRecipients;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Pronto\MobileBundle\Entity\Device\DeviceSegment", mappedBy="device")
+     */
+    private $deviceSegments;
 
 	/**
 	 * Triggered on pre persist
@@ -368,7 +354,6 @@ class Device implements ApiEntityInterface
 		$this->appVersion = $appVersion;
 	}
 
-
 	/**
 	 * @return bool
 	 */
@@ -376,7 +361,6 @@ class Device implements ApiEntityInterface
 	{
 		return $this->testDevice;
 	}
-
 
 	/**
 	 * @param bool $testDevice
@@ -386,7 +370,6 @@ class Device implements ApiEntityInterface
 		$this->testDevice = $testDevice;
 	}
 
-
 	/**
 	 * @return bool
 	 */
@@ -394,7 +377,6 @@ class Device implements ApiEntityInterface
 	{
 		return $this->tokenState;
 	}
-
 
 	/**
 	 * @param bool $tokenState
@@ -404,7 +386,6 @@ class Device implements ApiEntityInterface
 		$this->tokenState = $tokenState;
 	}
 
-
 	/**
 	 * @return bool
 	 */
@@ -412,7 +393,6 @@ class Device implements ApiEntityInterface
 	{
 		return $this->pushNotifications;
 	}
-
 
 	/**
 	 * @param bool $pushNotifications
@@ -422,7 +402,6 @@ class Device implements ApiEntityInterface
 		$this->pushNotifications = $pushNotifications;
 	}
 
-
 	/**
 	 * @return DateTime|null
 	 */
@@ -430,7 +409,6 @@ class Device implements ApiEntityInterface
 	{
 		return $this->lastLogin;
 	}
-
 
 	/**
 	 * @param null|DateTime $lastLogin
@@ -440,7 +418,6 @@ class Device implements ApiEntityInterface
 		$this->lastLogin = $lastLogin;
 	}
 
-
 	/**
 	 * @return string
 	 */
@@ -448,7 +425,6 @@ class Device implements ApiEntityInterface
 	{
 		return $this->language;
 	}
-
 
 	/**
 	 * @param string $language
@@ -458,7 +434,6 @@ class Device implements ApiEntityInterface
 		$this->language = $language;
 	}
 
-
 	/**
 	 * @return array|null
 	 */
@@ -466,7 +441,6 @@ class Device implements ApiEntityInterface
 	{
 		return $this->extraData;
 	}
-
 
 	/**
 	 * Get meta data of the device, specially created for the json serializer
@@ -480,7 +454,6 @@ class Device implements ApiEntityInterface
 		return (array)$this->extraData;
 	}
 
-
 	/**
 	 * @param array|object|null $extraData
 	 */
@@ -489,7 +462,6 @@ class Device implements ApiEntityInterface
 		$this->extraData = $extraData;
 	}
 
-
 	/**
 	 * @return DoctrineCollection
 	 */
@@ -497,4 +469,12 @@ class Device implements ApiEntityInterface
 	{
 		return $this->pushNotificationRecipients;
 	}
+
+    /**
+     * @return mixed
+     */
+    public function getDeviceSegments()
+    {
+        return $this->deviceSegments;
+    }
 }
