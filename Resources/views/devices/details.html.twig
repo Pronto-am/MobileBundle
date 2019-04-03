@@ -147,7 +147,7 @@
                             <td>
                                 {% set path = notification.pushNotification.sent == null and notification.pushNotification.scheduledSending != null ? 'notifications_edit' : 'notifications_details' %}
 
-                                <a href="{{ path(path, {'identifier': notification.pushNotification.id}) }}" class="regular">
+                                <a href="{{ path('pronto_mobile_' ~ path, {'identifier': notification.pushNotification.id}) }}" class="regular">
                                     {{ json_translator.getTranslation(notification.pushNotification.title) }}
                                 </a>
                             </td>

@@ -21,7 +21,8 @@ services:
         class: Pronto\MobileBundle\Service\ProntoMobile
 
     #### TWIG EXTENSIONS ####
-    Pronto\MobileBundle\Twig\AssetVersioning:
+    Pronto\MobileBundle\Twig\:
+        resource: '../../Twig'
         tags: ['twig.extension']
 
 

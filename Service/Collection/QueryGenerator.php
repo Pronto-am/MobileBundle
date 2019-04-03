@@ -81,7 +81,7 @@ class QueryGenerator
 	private function mapProperties(): void
 	{
 		// Create a properties array of this relationship
-		$this->properties = Collect::changeArrayKey($this->collection->getProperties()->getValues(), 'identifier');
+		$this->properties = Collect::keyBy($this->collection->getProperties()->getValues(), 'identifier');
 	}
 
 

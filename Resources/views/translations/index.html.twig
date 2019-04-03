@@ -58,13 +58,15 @@
                                     </div>
                                 </td>
                                 <td>
-                                    {% for translation in translationKey.translations %}
+                                    {% set translations = translationKey.translations|keyBy('language') %}
+
+                                    {% for language in pronto_mobile.application.availableLanguages %}
                                         <div class="inline-field">
-                                            <span>{{ translation.language }}</span>
+                                            <span>{{ language.code }}</span>
 
-                                            {% set text = translation.text|replace({"\\n": "<br>"}) %}
+                                            {% set text = translations[language.code].text|replace({"\\n": "<br>"}) %}
 
-                                            <textarea class="materialize-textarea toggle-field" data-translation-key-id="{{ translationKey.id }}" data-lang="{{ translation.language }}">{{ text|raw }}</textarea>
+                                            <textarea class="materialize-textarea toggle-field" data-original-height="30" data-translation-key-id="{{ translationKey.id }}" data-lang="{{ language.code }}">{{ text|raw }}</textarea>
 
                                             {% if loop.first == false %}
                                                 <span><a href="#!" class="btn btn-primary"><i class="fa fa-language"></i></a></span>

@@ -152,7 +152,7 @@ class Retriever
 					$toCache = $this->queryGenerator->getRelatedEntries($toRetrieve);
 
 					// Parse the related entries so that the ID becomes key
-					$parsed = Collect::changeArrayKey($this->parseEntries($toCache), 'id');
+					$parsed = Collect::keyBy($this->parseEntries($toCache), 'id');
 
 					// Add the retrieved entries to the local cache
 					$this->cachedEntries = array_merge($this->cachedEntries, $parsed);

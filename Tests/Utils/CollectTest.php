@@ -136,7 +136,7 @@ class CollectTest extends TestCase
 			]
 		];
 
-		$newCollection = Collect::changeArrayKey($collection, 'shouldBeKey');
+		$newCollection = Collect::keyBy($collection, 'shouldBeKey');
 
 		$this->assertArrayHasKey('first', $newCollection);
 		$this->assertArrayNotHasKey(0, $newCollection);

@@ -99,7 +99,7 @@ class EntryParser
 	private function mapProperties(Collection $collection): void
 	{
 		// Create a properties array of this relationship
-		$this->properties = Collect::changeArrayKey($collection->getProperties()->getValues(), 'identifier');
+		$this->properties = Collect::keyBy($collection->getProperties()->getValues(), 'identifier');
 	}
 
 
@@ -130,7 +130,7 @@ class EntryParser
 		]);
 
 		// Map the users array so that the ID is key
-		$this->users = Collect::changeArrayKey($this->users, 'id');
+		$this->users = Collect::keyBy($this->users, 'id');
 	}
 
 

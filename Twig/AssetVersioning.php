@@ -11,9 +11,10 @@ use Twig_Function;
 
 class AssetVersioning extends AbstractExtension
 {
-	/** @var array $manifest */
+	/**
+     * @var array $manifest
+     */
 	private $manifest;
-
 
 	/**
 	 * AssetVersioning constructor.
@@ -31,7 +32,6 @@ class AssetVersioning extends AbstractExtension
 		}
 	}
 
-
 	/**
 	 * @return array|Twig_Function[]
 	 */
@@ -41,7 +41,6 @@ class AssetVersioning extends AbstractExtension
 			new TwigFunction('mix', [$this, 'getFile'])
 		];
 	}
-
 
 	/**
 	 * Get the versioned filename
