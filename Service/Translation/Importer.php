@@ -204,7 +204,7 @@ class Importer
 
         // Keep the old IOS setting when an existing key is overridden
         if($this->fileType === self::FILE_TYPE_XML) {
-            $ios = $translationKey !== null ? $translationKey->isIos() : $ios;
+            $ios = $translationKey->getId() !== null ? $translationKey->isIos() : $ios;
         }
 
         $translationKey->setIos($ios ?? true);
