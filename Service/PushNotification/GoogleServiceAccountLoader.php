@@ -8,9 +8,10 @@ use Symfony\Component\HttpKernel\Config\FileLocator;
 
 class GoogleServiceAccountLoader
 {
-	/** @var FileLocator $fileLocator */
+	/**
+     * @var FileLocator $fileLocator
+     */
 	private $fileLocator;
-
 
 	/**
 	 * GoogleServiceAccountLoader constructor.
@@ -20,7 +21,6 @@ class GoogleServiceAccountLoader
 	{
 		$this->fileLocator = $fileLocator;
 	}
-
 
 	/**
 	 * @return ServiceAccount

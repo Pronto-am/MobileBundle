@@ -1,19 +1,10 @@
 # redirecting the homepage
 
-#root:
-#    path: /
-#    defaults:
-#        _controller: FrameworkBundle:Redirect:urlRedirect
-#        path: /admin
-#        permanent: true
-
-
 fos_oauth_server_token:
     resource: "@FOSOAuthServerBundle/Resources/config/routing/token.xml"
 
 fos_oauth_server_authorize:
     resource: "@FOSOAuthServerBundle/Resources/config/routing/authorize.xml"
-
 
 #### LOGIN AND PASSWORD RESET ####
 
@@ -21,37 +12,37 @@ pronto_mobile_login:
     path: /login
     schemes: [https]
     defaults:
-        _controller: ProntoMobileBundle:Web\Authentication:login
+        _controller: Pronto\MobileBundle\Controller\Web\AuthenticationController:loginAction
 
 pronto_mobile_logout:
     path: /logout
     schemes: [https]
     defaults:
-        _controller: ProntoMobileBundle:Web\Authentication:logout
+        _controller: Pronto\MobileBundle\Controller\Web\AuthenticationController:logoutAction
 
 pronto_mobile_forgot_password:
     path: /password/reset
     schemes: [https]
     defaults:
-        _controller: ProntoMobileBundle:Web\Authentication:resetPasswordForm
+        _controller: Pronto\MobileBundle\Controller\Web\AuthenticationController:resetPasswordFormAction
 
 pronto_mobile_reset_password:
     path: /password/reset/{token}
     schemes: [https]
     defaults:
-        _controller: ProntoMobileBundle:Web\Authentication:resetPassword
+        _controller: Pronto\MobileBundle\Controller\Web\AuthenticationController:resetPasswordAction
 
 pronto_mobile_create_password:
     path: /password/create/{token}
     schemes: [https]
     defaults:
-        _controller: ProntoMobileBundle:Web\Authentication:createPassword
+        _controller: Pronto\MobileBundle\Controller\Web\AuthenticationController:createPasswordAction
 
 pronto_mobile_app_users_reset_password:
     path: /users/app/password/reset/{token}
     schemes: [https]
     defaults:
-        _controller: ProntoMobileBundle:Api\V1\AppUser:resetPassword
+        _controller: Pronto\MobileBundle\Controller\Api\V1\AppUserController:resetPasswordAction
 
 
 pronto_mobile_app_web_file:

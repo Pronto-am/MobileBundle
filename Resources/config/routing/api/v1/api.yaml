@@ -4,13 +4,13 @@
 devices_register:
     path: /devices/registration
     defaults:
-        _controller: ProntoMobileBundle:Api\V1\Device:register
+        _controller: Pronto\MobileBundle\Controller\Api\V1\DeviceController:registerAction
     condition: "context.getMethod() in ['POST']"
 
 devices_unregister:
     path: /devices/registration/{deviceIdentifier}
     defaults:
-        _controller: ProntoMobileBundle:Api\V1\Device:deregister
+        _controller: Pronto\MobileBundle\Controller\Api\V1\DeviceController:deregisterAction
     condition: "context.getMethod() in ['DELETE']"
 
 
@@ -19,13 +19,13 @@ devices_unregister:
 notifications_segments:
     path: /notifications/segments/{deviceIdentifier}
     defaults:
-        _controller: ProntoMobileBundle:Api\V1\PushNotificationSegment:subscribed
+        _controller: Pronto\MobileBundle\Controller\Api\V1\PushNotificationSegmentController:subscribedAction
     condition: "context.getMethod() in ['GET']"
 
 notifications_segments_update:
     path: /notifications/segments
     defaults:
-        _controller: ProntoMobileBundle:Api\V1\PushNotificationSegment:update
+        _controller: Pronto\MobileBundle\Controller\Api\V1\PushNotificationSegmentController:updateAction
     condition: "context.getMethod() in ['PUT']"
 
 
@@ -34,31 +34,31 @@ notifications_segments_update:
 app_users_register:
     path: /users/app/registration
     defaults:
-        _controller: ProntoMobileBundle:Api\V1\AppUser:register
+        _controller: Pronto\MobileBundle\Controller\Api\V1\AppUserController:registerAction
     condition: "context.getMethod() in ['POST']"
 
 app_users_deregister:
     path: /users/app/registration/{userIdentifier}
     defaults:
-        _controller: ProntoMobileBundle:Api\V1\AppUser:deregister
+        _controller: Pronto\MobileBundle\Controller\Api\V1\AppUserController:deregisterAction
     condition: "context.getMethod() in ['DELETE']"
 
 app_users_profile:
     path: /users/app/profile
     defaults:
-        _controller: ProntoMobileBundle:Api\V1\AppUser:getProfile
+        _controller: Pronto\MobileBundle\Controller\Api\V1\AppUserController:getProfileAction
     condition: "context.getMethod() in ['GET']"
 
 app_users_update_profile:
     path: /users/app/profile
     defaults:
-        _controller: ProntoMobileBundle:Api\V1\AppUser:updateProfile
+        _controller: Pronto\MobileBundle\Controller\Api\V1\AppUserController:updateProfileAction
     condition: "context.getMethod() in ['PUT']"
 
 app_users_password_reset:
     path: /users/app/password/reset
     defaults:
-        _controller: ProntoMobileBundle:Api\V1\AppUser:requestPasswordResetLink
+        _controller: Pronto\MobileBundle\Controller\Api\V1\AppUserController:requestPasswordResetLinkAction
     condition: "context.getMethod() in ['POST']"
 
 
@@ -67,13 +67,13 @@ app_users_password_reset:
 collection_entries:
     path: /collections/{version}/{identifier}
     defaults:
-        _controller: ProntoMobileBundle:Api\V1\Collection:getEntries
+        _controller: Pronto\MobileBundle\Controller\Api\V1\CollectionController:getEntriesAction
     condition: "context.getMethod() in ['GET']"
 
 collection_entry:
     path: /collections/{version}/{identifier}/{id}
     defaults:
-        _controller: ProntoMobileBundle:Api\V1\Collection:getEntry
+        _controller: Pronto\MobileBundle\Controller\Api\V1\CollectionController:getEntryAction
     condition: "context.getMethod() in ['GET']"
 
 
@@ -82,7 +82,7 @@ collection_entry:
 translations:
     path: /translations
     defaults:
-        _controller: ProntoMobileBundle:Api\V1\Translation:index
+        _controller: Pronto\MobileBundle\Controller\Api\V1\TranslationController:indexAction
     condition: "context.getMethod() in ['GET']"
 
 
@@ -91,5 +91,5 @@ translations:
 app_version_file:
     path: /versions/app/{id}/file
     defaults:
-        _controller: ProntoMobileBundle:Api\V1\AppVersion:download
+        _controller: Pronto\MobileBundle\Controller\Api\V1\AppVersionController:downloadAction
     condition: "context.getMethod() in ['GET']"

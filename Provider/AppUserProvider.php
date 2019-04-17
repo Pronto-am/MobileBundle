@@ -11,9 +11,10 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class AppUserProvider implements UserProviderInterface
 {
-	/** @var EntityManagerInterface $entityManager */
+	/**
+     * @var EntityManagerInterface $entityManager
+     */
 	protected $entityManager;
-
 
 	/**
 	 * AppUserProvider constructor.
@@ -23,7 +24,6 @@ class AppUserProvider implements UserProviderInterface
 	{
 		$this->entityManager = $entityManager;
 	}
-
 
 	/**
 	 * Get user by email address
@@ -48,7 +48,6 @@ class AppUserProvider implements UserProviderInterface
 		return $user;
 	}
 
-
 	/**
 	 * Refresh the user
 	 *
@@ -70,7 +69,6 @@ class AppUserProvider implements UserProviderInterface
 
 		return $this->entityManager->getRepository(AppUser::class)->find($user->getId());
 	}
-
 
 	/**
 	 * @param string $class

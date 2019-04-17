@@ -3,29 +3,29 @@
 select_customer:
     path: /customers
     defaults:
-        _controller: ProntoMobileBundle:Web\Customer:selectCustomer
+        _controller: Pronto\MobileBundle\Controller\Web\CustomerController:selectCustomerAction
     condition: "context.getMethod() in ['GET']"
 
 set_customer:
     path: /customers
     defaults:
-        _controller: ProntoMobileBundle:Web\Customer:setCustomer
+        _controller: Pronto\MobileBundle\Controller\Web\CustomerController:setCustomerAction
     condition: "context.getMethod() in ['POST']"
 
 add_customer:
     path: /customers/add
     defaults:
-        _controller: ProntoMobileBundle:Web\Customer:add
+        _controller: Pronto\MobileBundle\Controller\Web\CustomerController:addAction
 
 edit_customer:
     path: /customers/edit
     defaults:
-        _controller: ProntoMobileBundle:Web\Customer:edit
+        _controller: Pronto\MobileBundle\Controller\Web\CustomerController:editAction
 
 delete_customer:
     path: /customers/delete
     defaults:
-        _controller: ProntoMobileBundle:Web\Customer:delete
+        _controller: Pronto\MobileBundle\Controller\Web\CustomerController:deleteAction
     condition: "context.getMethod() in ['POST']"
 
 
@@ -34,13 +34,13 @@ delete_customer:
 select_application:
     path: /applications/select
     defaults:
-        _controller: ProntoMobileBundle:Web\Application:selectApplication
+        _controller: Pronto\MobileBundle\Controller\Web\ApplicationController:selectApplicationAction
     condition: "context.getMethod() in ['GET']"
 
 set_application:
     path: /applications
     defaults:
-        _controller: ProntoMobileBundle:Web\Application:setApplication
+        _controller: Pronto\MobileBundle\Controller\Web\ApplicationController:setApplicationAction
     condition: "context.getMethod() in ['POST']"
 
 
@@ -49,7 +49,7 @@ set_application:
 homepage:
     path: /
     defaults:
-        _controller: ProntoMobileBundle:Web\Default:index
+        _controller: Pronto\MobileBundle\Controller\Web\DefaultController:indexAction
 
 
 #### USERS ####
@@ -57,23 +57,23 @@ homepage:
 profile:
     path: /profile
     defaults:
-        _controller: ProntoMobileBundle:Web\User:profile
+        _controller: Pronto\MobileBundle\Controller\Web\UserController:profileAction
 
 users:
     path: /users
     defaults:
-        _controller: ProntoMobileBundle:Web\User:index
+        _controller: Pronto\MobileBundle\Controller\Web\UserController:indexAction
 
 users_edit:
     path: /users/edit/{id}
     defaults:
-        _controller: ProntoMobileBundle:Web\User:edit
+        _controller: Pronto\MobileBundle\Controller\Web\UserController:editAction
         id: null
 
 users_delete:
     path: /users/delete
     defaults:
-        _controller: ProntoMobileBundle:Web\User:delete
+        _controller: Pronto\MobileBundle\Controller\Web\UserController:deleteAction
 
 
 #### APPLICATIONS ####
@@ -81,18 +81,18 @@ users_delete:
 applications:
     path: /applications
     defaults:
-        _controller: ProntoMobileBundle:Web\Application:index
+        _controller: Pronto\MobileBundle\Controller\Web\ApplicationController:indexAction
 
 applications_edit:
     path: /applications/edit/{id}
     defaults:
-        _controller: ProntoMobileBundle:Web\Application:edit
+        _controller: Pronto\MobileBundle\Controller\Web\ApplicationController:editAction
         id: null
 
 applications_delete:
     path: /applications/delete
     defaults:
-        _controller: ProntoMobileBundle:Web\Application:delete
+        _controller: Pronto\MobileBundle\Controller\Web\ApplicationController:deleteAction
     condition: "context.getMethod() in ['POST']"
 
 
@@ -101,13 +101,13 @@ applications_delete:
 application_versions_edit:
     path: /applications/{applicationId}/versions/edit/{id}
     defaults:
-        _controller: ProntoMobileBundle:Web\Application\Version:edit
+        _controller: Pronto\MobileBundle\Controller\Web\Application\VersionController:editAction
         id: null
 
 application_versions_delete:
     path: /applications/versions/delete
     defaults:
-        _controller: ProntoMobileBundle:Web\Application\Version:delete
+        _controller: Pronto\MobileBundle\Controller\Web\Application\VersionController:deleteAction
     condition: "context.getMethod() in ['POST']"
 
 
@@ -116,18 +116,18 @@ application_versions_delete:
 collections:
     path: /collections
     defaults:
-        _controller: ProntoMobileBundle:Web\Collection:index
+        _controller: Pronto\MobileBundle\Controller\Web\CollectionController:indexAction
 
 collections_edit:
     path: /collections/edit/{identifier}
     defaults:
-        _controller: ProntoMobileBundle:Web\Collection:edit
+        _controller: Pronto\MobileBundle\Controller\Web\CollectionController:editAction
         identifier: null
 
 collections_delete:
     path: /collections/delete
     defaults:
-        _controller: ProntoMobileBundle:Web\Collection:delete
+        _controller: Pronto\MobileBundle\Controller\Web\CollectionController:deleteAction
     condition: "context.getMethod() in ['POST']"
 
 
@@ -136,38 +136,38 @@ collections_delete:
 collection_properties:
     path: /collections/{identifier}/properties
     defaults:
-        _controller: ProntoMobileBundle:Web\Collection\Property:index
+        _controller: Pronto\MobileBundle\Controller\Web\Collection\PropertyController:indexAction
 
 collection_properties_edit:
     path: /collections/{identifier}/properties/edit/{id}
     defaults:
-        _controller: ProntoMobileBundle:Web\Collection\Property:edit
+        _controller: Pronto\MobileBundle\Controller\Web\Collection\PropertyController:editAction
         id: null
     condition: "context.getMethod() in ['GET']"
 
 collection_properties_save:
     path: /collections/{identifier}/properties/edit/{id}
     defaults:
-        _controller: ProntoMobileBundle:Web\Collection\Property:save
+        _controller: Pronto\MobileBundle\Controller\Web\Collection\PropertyController:saveAction
         id: null
     condition: "context.getMethod() in ['POST']"
 
 collection_properties_delete:
     path: /collections/{identifier}/properties/delete
     defaults:
-        _controller: ProntoMobileBundle:Web\Collection\Property:delete
+        _controller: Pronto\MobileBundle\Controller\Web\Collection\PropertyController:deleteAction
     condition: "context.getMethod() in ['POST']"
 
 collection_properties_order:
     path: /collections/properties/order
     defaults:
-        _controller: ProntoMobileBundle:Web\Collection\Property:order
+        _controller: Pronto\MobileBundle\Controller\Web\Collection\PropertyController:orderAction
     condition: "context.getMethod() in ['POST']"
 
 collection_properties_set_entry_title:
     path: /collections/properties/title
     defaults:
-        _controller: ProntoMobileBundle:Web\Collection\Property:entryTitle
+        _controller: Pronto\MobileBundle\Controller\Web\Collection\PropertyController:entryTitleAction
     condition: "context.getMethod() in ['POST']"
 
 
@@ -176,19 +176,19 @@ collection_properties_set_entry_title:
 collection_relationships:
     path: /collections/{identifier}/relationships
     defaults:
-        _controller: ProntoMobileBundle:Web\Collection\Relationship:index
+        _controller: Pronto\MobileBundle\Controller\Web\Collection\RelationshipController:indexAction
 
 collection_relationships_edit:
     path: /collections/{identifier}/relationships/edit/{id}
     defaults:
-        _controller: ProntoMobileBundle:Web\Collection\Relationship:edit
+        _controller: Pronto\MobileBundle\Controller\Web\Collection\RelationshipController:editAction
         id: null
     condition: "context.getMethod() in ['GET', 'POST']"
 
 collection_relationships_delete:
     path: /collections/{identifier}/relationships/delete
     defaults:
-        _controller: ProntoMobileBundle:Web\Collection\Relationship:delete
+        _controller: Pronto\MobileBundle\Controller\Web\Collection\RelationshipController:deleteAction
     condition: "context.getMethod() in ['POST']"
 
 
@@ -197,32 +197,32 @@ collection_relationships_delete:
 collection_entries:
     path: /collections/{identifier}/entries
     defaults:
-        _controller: ProntoMobileBundle:Web\Collection\Entry:index
+        _controller: Pronto\MobileBundle\Controller\Web\Collection\EntryController:indexAction
 
 collection_entries_edit:
     path: /collections/{identifier}/entries/edit/{id}
     defaults:
-        _controller: ProntoMobileBundle:Web\Collection\Entry:edit
+        _controller: Pronto\MobileBundle\Controller\Web\Collection\EntryController:editAction
         id: null
     condition: "context.getMethod() in ['GET']"
 
 collection_entries_save:
     path: /collections/{identifier}/entries/edit/{id}
     defaults:
-        _controller: ProntoMobileBundle:Web\Collection\Entry:save
+        _controller: Pronto\MobileBundle\Controller\Web\Collection\EntryController:saveAction
         id: null
     condition: "context.getMethod() in ['POST']"
 
 collection_entries_delete:
     path: /collections/{identifier}/entries/delete
     defaults:
-        _controller: ProntoMobileBundle:Web\Collection\Entry:delete
+        _controller: Pronto\MobileBundle\Controller\Web\Collection\EntryController:deleteAction
     condition: "context.getMethod() in ['POST']"
 
 collection_entry_files_delete:
     path: /collections/{identifier}/entries/{id}/files/delete
     defaults:
-        _controller: ProntoMobileBundle:Web\Collection\Entry:deleteFile
+        _controller: Pronto\MobileBundle\Controller\Web\Collection\EntryController:deleteFileAction
     condition: "context.getMethod() in ['POST']"
 
 
@@ -231,13 +231,13 @@ collection_entry_files_delete:
 collection_entry_relationships_edit:
     path: /collections/entries/{entry}/relationships/{relationship}
     defaults:
-        _controller: ProntoMobileBundle:Web\Collection\Relationship:editRelationships
+        _controller: Pronto\MobileBundle\Controller\Web\Collection\RelationshipController:editRelationshipsAction
     condition: "context.getMethod() in ['GET']"
 
 collection_entry_relationships_save:
     path: /collections/entries/{entry}/relationships/{relationship}
     defaults:
-        _controller: ProntoMobileBundle:Web\Collection\Relationship:saveRelationships
+        _controller: Pronto\MobileBundle\Controller\Web\Collection\RelationshipController:saveRelationshipsAction
     condition: "context.getMethod() in ['POST']"
 
 
@@ -246,23 +246,23 @@ collection_entry_relationships_save:
 app_users:
     path: /users/app
     defaults:
-        _controller: ProntoMobileBundle:Web\AppUser:index
+        _controller: Pronto\MobileBundle\Controller\Web\AppUserController:indexAction
 
 app_users_delete:
     path: /users/app/delete
     defaults:
-        _controller: ProntoMobileBundle:Web\AppUser:delete
+        _controller: Pronto\MobileBundle\Controller\Web\AppUserController:deleteAction
     condition: "context.getMethod() in ['POST']"
 
 app_users_details:
     path: /users/app/{identifier}
     defaults:
-        _controller: ProntoMobileBundle:Web\AppUser:details
+        _controller: Pronto\MobileBundle\Controller\Web\AppUserController:detailsAction
 
 app_users_password_reset:
     path: /users/app/password/reset
     defaults:
-        _controller: ProntoMobileBundle:Web\AppUser:resetPassword
+        _controller: Pronto\MobileBundle\Controller\Web\AppUserController:resetPasswordAction
 
 
 #### PUSH NOTIFICATIONS ####
@@ -270,31 +270,31 @@ app_users_password_reset:
 notifications:
     path: /notifications
     defaults:
-        _controller: ProntoMobileBundle:Web\PushNotification:index
+        _controller: Pronto\MobileBundle\Controller\Web\PushNotificationController:indexAction
 
 notifications_details:
     path: /notifications/details/{identifier}
     defaults:
-        _controller: ProntoMobileBundle:Web\PushNotification:details
+        _controller: Pronto\MobileBundle\Controller\Web\PushNotificationController:detailsAction
 
 notifications_edit:
     path: /notifications/edit/{identifier}
     defaults:
-        _controller: ProntoMobileBundle:Web\PushNotification:edit
+        _controller: Pronto\MobileBundle\Controller\Web\PushNotificationController:editAction
         identifier: null
     condition: "context.getMethod() in ['GET']"
 
 notifications_save:
     path: /notifications/edit/{identifier}
     defaults:
-        _controller: ProntoMobileBundle:Web\PushNotification:save
+        _controller: Pronto\MobileBundle\Controller\Web\PushNotificationController:saveAction
         identifier: null
     condition: "context.getMethod() in ['POST']"
 
 notifications_recipient_count:
     path: /notifications/recipients
     defaults:
-        _controller: ProntoMobileBundle:Web\PushNotification:recipients
+        _controller: Pronto\MobileBundle\Controller\Web\PushNotificationController:recipientsAction
     condition: "context.getMethod() in ['POST']"
 
 
@@ -303,7 +303,7 @@ notifications_recipient_count:
 notification_recipients:
     path: /notifications/{identifier}/recipients/{sent}
     defaults:
-        _controller: ProntoMobileBundle:Web\PushNotification\Recipient:index
+        _controller: Pronto\MobileBundle\Controller\Web\PushNotification\RecipientController:indexAction
 
 
 #### PUSH NOTIFICATION SEGMENTS ####
@@ -311,26 +311,26 @@ notification_recipients:
 notification_segments:
     path: /notifications/segments
     defaults:
-        _controller: ProntoMobileBundle:Web\PushNotification\Segment:index
+        _controller: Pronto\MobileBundle\Controller\Web\PushNotification\SegmentController:indexAction
 
 notification_segments_edit:
     path: /notifications/segments/edit/{id}
     defaults:
-        _controller: ProntoMobileBundle:Web\PushNotification\Segment:edit
+        _controller: Pronto\MobileBundle\Controller\Web\PushNotification\SegmentController:editAction
         id: null
     condition: "context.getMethod() in ['GET']"
 
 notification_segments_save:
     path: /notifications/segments/edit/{id}
     defaults:
-        _controller: ProntoMobileBundle:Web\PushNotification\Segment:save
+        _controller: Pronto\MobileBundle\Controller\Web\PushNotification\SegmentController:saveAction
         id: null
     condition: "context.getMethod() in ['POST']"
 
 notification_segments_delete:
     path: /notifications/segments/delete
     defaults:
-        _controller: ProntoMobileBundle:Web\PushNotification\Segment:delete
+        _controller: Pronto\MobileBundle\Controller\Web\PushNotification\SegmentController:deleteAction
 
 
 #### DEVICES ####
@@ -338,18 +338,18 @@ notification_segments_delete:
 devices:
     path: /devices
     defaults:
-        _controller: ProntoMobileBundle:Web\Device:index
+        _controller: Pronto\MobileBundle\Controller\Web\DeviceController:indexAction
 
 devices_delete:
     path: /devices/delete
     defaults:
-        _controller: ProntoMobileBundle:Web\Device:delete
+        _controller: Pronto\MobileBundle\Controller\Web\DeviceController:deleteAction
     condition: "context.getMethod() in ['POST']"
 
 devices_details:
     path: /devices/{identifier}
     defaults:
-        _controller: ProntoMobileBundle:Web\Device:details
+        _controller: Pronto\MobileBundle\Controller\Web\DeviceController:detailsAction
 
 
 #### TRANSLATIONS ####
@@ -357,37 +357,37 @@ devices_details:
 translations:
     path: /translations
     defaults:
-        _controller: ProntoMobileBundle:Web\Translation:index
+        _controller: Pronto\MobileBundle\Controller\Web\TranslationController:indexAction
 
 translations_inline:
     path: /translations/inline
     defaults:
-        _controller: ProntoMobileBundle:Web\Translation:saveInline
+        _controller: Pronto\MobileBundle\Controller\Web\TranslationController:saveInlineAction
     condition: "context.getMethod() in ['POST']"
 
 translations_platform:
     path: /translations/platform
     defaults:
-        _controller: ProntoMobileBundle:Web\Translation:togglePlatform
+        _controller: Pronto\MobileBundle\Controller\Web\TranslationController:togglePlatformAction
     condition: "context.getMethod() in ['POST']"
 
 translations_edit:
     path: /translations/edit/{id}
     defaults:
-        _controller: ProntoMobileBundle:Web\Translation:edit
+        _controller: Pronto\MobileBundle\Controller\Web\TranslationController:editAction
         id: null
     condition: "context.getMethod() in ['GET', 'POST']"
 
 translations_upload:
     path: /translations/upload
     defaults:
-        _controller: ProntoMobileBundle:Web\Translation:upload
+        _controller: Pronto\MobileBundle\Controller\Web\TranslationController:uploadAction
     condition: "context.getMethod() in ['GET', 'POST']"
 
 translations_delete:
     path: /translations/delete
     defaults:
-        _controller: ProntoMobileBundle:Web\Translation:delete
+        _controller: Pronto\MobileBundle\Controller\Web\TranslationController:deleteAction
 
 
 #### APP VERSIONS ####
@@ -395,19 +395,19 @@ translations_delete:
 app_versions:
     path: /versions/app
     defaults:
-        _controller: ProntoMobileBundle:Web\AppVersion:index
+        _controller: Pronto\MobileBundle\Controller\Web\AppVersionController:indexAction
 
 app_versions_edit:
     path: /versions/app/edit/{id}
     defaults:
-        _controller: ProntoMobileBundle:Web\AppVersion:edit
+        _controller: Pronto\MobileBundle\Controller\Web\AppVersionController:editAction
         id: null
     condition: "context.getMethod() in ['GET', 'POST']"
 
 app_versions_delete:
     path: /versions/app/delete
     defaults:
-        _controller: ProntoMobileBundle:Web\AppVersion:delete
+        _controller: Pronto\MobileBundle\Controller\Web\AppVersionController:deleteAction
 
 
 #### PLUGINS ####
@@ -415,16 +415,16 @@ app_versions_delete:
 plugins:
     path: /plugins
     defaults:
-        _controller: ProntoMobileBundle:Web\Plugin:index
+        _controller: Pronto\MobileBundle\Controller\Web\PluginController:indexAction
 
 plugins_edit:
     path: /plugins/edit/{id}
     defaults:
-        _controller: ProntoMobileBundle:Web\Plugin:edit
+        _controller: Pronto\MobileBundle\Controller\Web\PluginController:editAction
     condition: "context.getMethod() in ['GET']"
 
 plugins_save:
     path: /plugins/edit/{id}
     defaults:
-        _controller: ProntoMobileBundle:Web\Plugin:save
+        _controller: Pronto\MobileBundle\Controller\Web\PluginController:saveAction
     condition: "context.getMethod() in ['POST']"

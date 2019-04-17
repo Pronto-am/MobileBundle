@@ -3,7 +3,6 @@
 namespace Pronto\MobileBundle\Twig;
 
 
-use Exception;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
@@ -11,45 +10,44 @@ use Twig_Function;
 
 class AssetVersioning extends AbstractExtension
 {
-	/**
+    /**
      * @var array $manifest
      */
-	private $manifest;
+    private $manifest = [];
 
-	/**
-	 * AssetVersioning constructor.
-	 * @param KernelInterface $kernel
-	 */
-	public function __construct(KernelInterface $kernel)
-	{
-		// Try to parse the mix manifest
-		try {
-			$fileLocation = $kernel->getProjectDir() . '/public/bundles/prontomobile/mix-manifest.json';
+    /**
+     * AssetVersioning constructor.
+     * @param KernelInterface $kernel
+     */
+    public function __construct(KernelInterface $kernel)
+    {
+        // Try to parse the mix manifest
+        $fileLocation = $kernel->getRootDir() . '/../public/bundles/prontomobile/mix-manifest.json';
+        $manifest = @file_get_contents($fileLocation);
 
-			$this->manifest = json_decode(file_get_contents($fileLocation), true);
-		} catch (Exception $exception) {
-			$this->manifest = [];
-		}
-	}
+        if ($manifest !== false) {
+            $this->manifest = json_decode($manifest, true);
+        }
+    }
 
-	/**
-	 * @return array|Twig_Function[]
-	 */
-	public function getFunctions(): array
-	{
-		return [
-			new TwigFunction('mix', [$this, 'getFile'])
-		];
-	}
+    /**
+     * @return array|Twig_Function[]
+     */
+    public function getFunctions(): array
+    {
+        return [
+            new TwigFunction('mix', [$this, 'getFile'])
+        ];
+    }
 
-	/**
-	 * Get the versioned filename
-	 *
-	 * @param $fileName
-	 * @return string
-	 */
-	public function getFile(string $fileName): string
-	{
-		return '/bundles/prontomobile' . ($this->manifest[$fileName] ?? $fileName);
-	}
+    /**
+     * Get the versioned filename
+     *
+     * @param $fileName
+     * @return string
+     */
+    public function getFile(string $fileName): string
+    {
+        return '/bundles/prontomobile' . ($this->manifest[$fileName] ?? $fileName);
+    }
 }
