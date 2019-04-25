@@ -384,6 +384,12 @@ translations_upload:
         _controller: Pronto\MobileBundle\Controller\Web\TranslationController:uploadAction
     condition: "context.getMethod() in ['GET', 'POST']"
 
+translations_export:
+    path: /translations/export
+    defaults:
+        _controller: Pronto\MobileBundle\Controller\Web\TranslationController:exportAction
+    condition: "context.getMethod() in ['GET']"
+
 translations_delete:
     path: /translations/delete
     defaults:
