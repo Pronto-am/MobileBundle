@@ -16,10 +16,11 @@ matrix:
           # Minimum supported dependencies with the latest and oldest PHP version
         - php: 7.2
           env: COMPOSER_FLAGS="--prefer-stable --prefer-lowest" SYMFONY_DEPRECATIONS_HELPER="weak_vendors"
-        - php: 7.1
+        - php: 7.0
           env: COMPOSER_FLAGS="--prefer-stable --prefer-lowest" SYMFONY_DEPRECATIONS_HELPER="weak_vendors"
 
           # Test the latest stable release
+        - php: 7.0
         - php: 7.1
         - php: 7.2
           env: COVERAGE=true PHPUNIT_FLAGS="-v --coverage-text"
@@ -27,7 +28,7 @@ matrix:
           # Test LTS versions. This makes sure we do not use Symfony packages with version greater
           # than 4. Read more at https://github.com/symfony/lts
         - php: 7.2
-          env: DEPENDENCIES="symfony/lts:^4"
+          env: DEPENDENCIES="symfony/lts:^3"
 
           # Latest commit to master
         - php: 7.2
@@ -44,8 +45,7 @@ before_install:
 
 install:
     # To be removed when this issue will be resolved: https://github.com/composer/composer/issues/5355
-    - if [[ "$COMPOSER_FLAGS" == *"--prefer-lowest"* ]]; then travis_wait COMPOSER_MEMORY_LIMIT=-1 composer update --prefer-dist --no-interaction --prefer-stable --quiet; fi
-    - travis_wait COMPOSER_MEMORY_LIMIT=-1 composer update ${COMPOSER_FLAGS} --prefer-dist --no-interaction
+    - composer update ${COMPOSER_FLAGS} --prefer-dist --no-interaction
     - ./vendor/bin/simple-phpunit install
 
 script:
@@ -59,9 +59,4 @@ notifications:
     recipients:
       - thomas@e-sites.nl
     on_success: never
-    on_failure: always
-  slack:
-    rooms:
-      - secure: egNzPQbtE5NJWYI26IczazXQ3yCTiJ0aOwev4Z468uly/SpOQqZN/jEKeYnMGRSPRSo4adXoGwoI1TvBSWv9RsVjqde4feqvBSlo2QVQmTZzq8yh4P9Lcxc2Lpf8fKkwwr9VR5/+tcPuuUTeZM3NCQTjq0qywv8Tzpy/Q7q9RrX8PgMFBrRAsGedut6fN5gUsIpCOSZz18ZmnSpDYc3De4I72FqtS/5Mcwg6y5o/rETW0xXB5TU/4Fl2AX5eZ3EsEzcN7k8FJk4IYarwpjO71oPrTnM8kcFtp43kNnP35kvhj6UpCpMByzb1xh17A8ikU5wCH/Kc9hHY27qTDDScJappPkUCsLNHQjyh6J2HTd62yYRiXrbf3lqjGS7NO1lKu9NhgWL0PQ5oCGacTU24/WGEIptIFVzZccdiMYwVupF3AVfHP9Gl9zhf2lJHjFOKWSs8akbCSaPJPuejW9BqQKOtpmxzrmZ9sVxekaNGLYm+sNm81TOk9aGk7OCpGormyQ8EHL5gnKcay8j/eKZwHtjbSikSAbzpxq4eS4YMTyBE70PiW93N27Hej9UKXozOVOUbbom5mKpScdmOeAHHQYoAC5ocW24NlXeJnFnhdDq9YfeUPTafIq57krHf4a19MfDwGvHf/8h9qc9z/JMJdk2rtfXfdgdvCla/v6CVWko=
-    on_success: always
     on_failure: always
