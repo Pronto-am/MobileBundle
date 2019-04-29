@@ -5,14 +5,12 @@ namespace Pronto\MobileBundle\Controller\Web;
 use Doctrine\ORM\EntityManagerInterface;
 use Pronto\MobileBundle\Controller\BaseController;
 use Pronto\MobileBundle\Entity\Application\ApplicationPlugin;
+use Pronto\MobileBundle\EventSubscriber\ValidateApplicationSelectionInterface;
 use Pronto\MobileBundle\EventSubscriber\ValidateCustomerSelectionInterface;
 
-class DefaultController extends BaseController implements ValidateCustomerSelectionInterface
+class DefaultController extends BaseController implements ValidateCustomerSelectionInterface, ValidateApplicationSelectionInterface
 {
-
 	/**
-	 * Dashboard view
-	 *
 	 * @param EntityManagerInterface $entityManager
 	 * @return \Symfony\Component\HttpFoundation\Response
 	 */

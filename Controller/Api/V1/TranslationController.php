@@ -125,17 +125,17 @@ class TranslationController extends BaseApiController
         }, []);
 
         // Create the directory
-        if (!is_dir($kernel->getRootDir() . '/../tmp')) {
-            mkdir($kernel->getRootDir() . '/../tmp');
+        if (!is_dir($kernel->getProjectDir() . '/tmp')) {
+            mkdir($kernel->getProjectDir() . '/tmp');
         }
 
-        mkdir($kernel->getRootDir() . '/../tmp/' . $directory);
+        mkdir($kernel->getProjectDir() . '/tmp/' . $directory);
 
         $files = [];
 
         foreach ($languages as $key => $translations) {
             $folder = $key === 'base' ? 'values' : 'values-' . $key;
-            $folder = sprintf($kernel->getRootDir() . '/../tmp/' . $directory . '/%s', $folder);
+            $folder = sprintf($kernel->getProjectDir() . '/tmp/' . $directory . '/%s', $folder);
 
             mkdir($folder);
 
@@ -192,7 +192,7 @@ class TranslationController extends BaseApiController
         @unlink($zipFileName);
 
         // Remove the files
-        File::rmDir($kernel->getRootDir() . '/../tmp/' . $directory);
+        File::rmDir($kernel->getProjectDir() . '/tmp/' . $directory);
 
         return $response;
     }

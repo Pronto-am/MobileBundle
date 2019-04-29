@@ -22,7 +22,7 @@ class AssetVersioning extends AbstractExtension
     public function __construct(KernelInterface $kernel)
     {
         // Try to parse the mix manifest
-        $fileLocation = $kernel->getRootDir() . '/../public/bundles/prontomobile/mix-manifest.json';
+        $fileLocation = $kernel->getProjectDir() . '/public/bundles/prontomobile/mix-manifest.json';
         $manifest = @file_get_contents($fileLocation);
 
         if ($manifest !== false) {

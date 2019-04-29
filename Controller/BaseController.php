@@ -6,12 +6,11 @@ use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\Application\Version;
 use Pronto\MobileBundle\Entity\Customer;
 use Pronto\MobileBundle\Service\ProntoMobile;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Translation\Translator;
 use Symfony\Component\Translation\TranslatorInterface;
 
-class BaseController extends Controller
+class BaseController extends AbstractController
 {
 	/**
 	 * @var ProntoMobile $prontoMobile
