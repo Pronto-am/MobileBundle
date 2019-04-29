@@ -51,3 +51,34 @@
         </div>
     </div>
 {% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('input.file-path').change(function() {
+                const fileName = $(this).val();
+
+                if(fileName) {
+                    const lastDot = fileName.lastIndexOf('.');
+                    const extension = fileName.substring(lastDot + 1);
+                    const divIndexes = [2, 3];
+
+                    console.log(extension);
+
+                    if(extension === 'csv') {
+                        for(let index of divIndexes) {
+                            console.log($('.card#details form .row:nth-child(' + index + ')'));
+                            $('.card#details form .row:nth-child(' + index + ')').hide();
+                        }
+                    } else {
+                        for(let index of divIndexes) {
+                            $('.card#details form .row:nth-child(' + index + ')').show();
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+{% endblock %}

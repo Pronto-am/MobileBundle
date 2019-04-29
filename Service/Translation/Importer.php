@@ -6,16 +6,16 @@ namespace Pronto\MobileBundle\Service\Translation;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Pronto\MobileBundle\DTO\Translation\UploadDTO;
-use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\Translation;
 use Pronto\MobileBundle\Entity\TranslationKey;
 use Pronto\MobileBundle\Service\ProntoMobile;
-use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class Importer
 {
     public const FILE_TYPE_XML = 'xml';
     public const FILE_TYPE_JSON = 'json';
+    public const FILE_TYPE_CSV = 'csv';
     public const FILE_TYPE_PLAIN_TEXT = 'plain_text';
 
     /**
@@ -29,9 +29,9 @@ class Importer
     private $availableLanguages;
 
     /**
-     * @var Application $application
+     * @var ProntoMobile $prontoMobile
      */
-    private $application;
+    private $prontoMobile;
 
     /**
      * @var \Doctrine\Common\Persistence\ObjectRepository $translationKeyRepository
@@ -56,7 +56,7 @@ class Importer
     public function __construct(EntityManagerInterface $entityManager, ProntoMobile $prontoMobile)
     {
         $this->entityManager = $entityManager;
-        $this->application = $prontoMobile->getApplication();
+        $this->prontoMobile = $prontoMobile;
         $this->availableLanguages = array_reduce($prontoMobile->getApplication()->getAvailableLanguages(), function ($result, $language) {
             $result[] = $language['code'];
 
@@ -68,11 +68,11 @@ class Importer
     }
 
     /**
-     * @param File $file
+     * @param UploadedFile $file
      * @param UploadDTO $data
      * @return bool
      */
-    public function import(File $file, UploadDTO $data): bool
+    public function import(UploadedFile $file, UploadDTO $data): bool
     {
         $contents = file_get_contents($file->getRealPath());
 
@@ -85,6 +85,10 @@ class Importer
                 $this->fileType = self::FILE_TYPE_JSON;
 
                 $this->fromJson($contents);
+            } else if ($this->isCsv($file)) {
+                $this->fileType = self::FILE_TYPE_CSV;
+
+                $this->fromCsv($file);
             } else {
                 // Try to parse the file as a .strings file
                 $this->fileType = self::FILE_TYPE_PLAIN_TEXT;
@@ -126,13 +130,13 @@ class Importer
     }
 
     /**
-     * @param File $file
+     * @param UploadedFile $file
      * @param string $language
      * @param string $type
      * @param bool $android
      * @param bool $ios
      */
-    private function fromPlainText(File $file, string $language, string $type = 'app', bool $android = true, bool $ios = true): void
+    private function fromPlainText(UploadedFile $file, string $language, string $type = 'app', bool $android = true, bool $ios = true): void
     {
         $handle = $file->openFile();
 
@@ -141,7 +145,7 @@ class Importer
             // Loop through the lines of the file
             while (($line = $handle->fgets()) !== false) {
                 // The line must match: "<string>" = "<string>";
-                preg_match('/(["])([a-zA-Z.-]+)(["]\s+[=]+\s+["])(.*)(["][;]?)/', $line, $matches);
+                preg_match('/(["])([a-zA-Z.-_]+)(["]\s+[=]+\s+["])(.*)(["][;]?)/', $line, $matches);
 
                 // With above regex, a valid key value pair exists of five keys
                 if (count($matches) === 6) {
@@ -185,6 +189,52 @@ class Importer
     }
 
     /**
+     * @param UploadedFile $file
+     */
+    private function fromCsv(UploadedFile $file): void
+    {
+        $first = true;
+        $languages = [];
+
+        if ($handle = $file->openFile()) {
+
+            while (($data = $handle->fgetcsv(';')) !== false) {
+                if ($first) {
+                    // Validate the headers
+                    if($data !== $this->getCsvHeaders()) {
+                        return;
+                    }
+
+                    for($index = 4; $index < count($data); $index++) {
+                        preg_match('/\(([a-zA-Z]+)\)/', $data[$index], $matches);
+
+                        if($matches[1]) {
+                            $languages[$index] = $matches[1];
+                        }
+                    }
+
+                    $first = false;
+                } else {
+                    [$identifier, $type, $android, $ios] = $data;
+
+                    $translationKey = $this->saveTranslationKey($identifier, $type, (int) $android === 1, (int) $ios === 1);
+
+                    foreach ($languages as $index => $code) {
+                        $this->saveTranslation($translationKey, $code, $data[$index]);
+                    }
+
+                    // Stop at the end of the file
+                    if ($handle->eof()) {
+                        break;
+                    }
+                }
+            }
+
+            $this->entityManager->flush();
+        }
+    }
+
+    /**
      * @param string $identifier
      * @param string $type
      * @param bool $android
@@ -193,9 +243,11 @@ class Importer
      */
     private function saveTranslationKey(string $identifier, string $type, bool $android = true, bool $ios = true): TranslationKey
     {
+        $application = $this->prontoMobile->getApplication();
+
         $translationKey = $this->translationKeyRepository->findOneBy([
                 'identifier'  => $identifier,
-                'application' => $this->application
+                'application' => $application
             ]) ?? new TranslationKey();
 
         $translationKey->setIdentifier($identifier);
@@ -203,12 +255,12 @@ class Importer
         $translationKey->setAndroid($android);
 
         // Keep the old IOS setting when an existing key is overridden
-        if($this->fileType === self::FILE_TYPE_XML) {
+        if ($this->fileType === self::FILE_TYPE_XML) {
             $ios = $translationKey->getId() !== null ? $translationKey->isIos() : $ios;
         }
 
         $translationKey->setIos($ios ?? true);
-        $translationKey->setApplication($this->application);
+        $translationKey->setApplication($application);
 
         $this->entityManager->persist($translationKey);
 
@@ -291,5 +343,30 @@ class Importer
         } catch (Exception $exception) {
             return false;
         }
+    }
+
+    /**
+     * @param UploadedFile $file
+     * @return bool
+     */
+    private function isCsv(UploadedFile $file): bool
+    {
+        return $file->getClientOriginalExtension() === 'csv';
+    }
+
+    /**
+     * @return array
+     */
+    private function getCsvHeaders(): array
+    {
+        $availableLanguages = $this->prontoMobile->getApplication()->getAvailableLanguages();
+
+        $headers = ['key', 'type', 'android', 'ios'];
+
+        foreach ($availableLanguages as $language) {
+            $headers[] = ucfirst($language['nativeName']) . ' (' . $language['code'] . ')';
+        }
+
+        return $headers;
     }
 }

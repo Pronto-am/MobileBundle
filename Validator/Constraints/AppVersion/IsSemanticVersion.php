@@ -11,15 +11,10 @@ use Pronto\MobileBundle\Validator\Constraints\TranslatableConstraint;
 class IsSemanticVersion extends TranslatableConstraint
 {
     /**
-     * @var string $translationKey
-     */
-    private $translationKey = 'app_version.version.is_semantic';
-
-    /**
      * @return string
      */
     public function getTranslationKey(): string
     {
-        return $this->translationKey;
+        return 'app_version.version.is_semantic';
     }
 }

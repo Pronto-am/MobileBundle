@@ -11,15 +11,10 @@ use Pronto\MobileBundle\Validator\Constraints\TranslatableConstraint;
 class IsUniqueIdentifier extends TranslatableConstraint
 {
     /**
-     * @var string $translationKey
-     */
-    private $translationKey = 'translation.identifier.unique';
-
-    /**
      * @return string
      */
     public function getTranslationKey(): string
     {
-        return $this->translationKey;
+        return 'translation.identifier.unique';
     }
 }
