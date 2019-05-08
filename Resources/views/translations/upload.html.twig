@@ -65,11 +65,8 @@
                     const extension = fileName.substring(lastDot + 1);
                     const divIndexes = [2, 3];
 
-                    console.log(extension);
-
                     if(extension === 'csv') {
                         for(let index of divIndexes) {
-                            console.log($('.card#details form .row:nth-child(' + index + ')'));
                             $('.card#details form .row:nth-child(' + index + ')').hide();
                         }
                     } else {

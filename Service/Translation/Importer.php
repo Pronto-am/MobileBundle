@@ -201,14 +201,14 @@ class Importer
             while (($data = $handle->fgetcsv(';')) !== false) {
                 if ($first) {
                     // Validate the headers
-                    if($data !== $this->getCsvHeaders()) {
+                    if ($data !== $this->getCsvHeaders()) {
                         return;
                     }
 
-                    for($index = 4; $index < count($data); $index++) {
+                    for ($index = 4; $index < count($data); $index++) {
                         preg_match('/\(([a-zA-Z]+)\)/', $data[$index], $matches);
 
-                        if($matches[1]) {
+                        if ($matches[1]) {
                             $languages[$index] = $matches[1];
                         }
                     }
@@ -336,13 +336,9 @@ class Importer
      */
     private function isXml(string $string): bool
     {
-        try {
-            simplexml_load_string($string);
+        $xml = @simplexml_load_string($string);
 
-            return true;
-        } catch (Exception $exception) {
-            return false;
-        }
+        return $xml !== false;
     }
 
     /**
