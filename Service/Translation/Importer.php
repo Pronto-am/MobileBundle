@@ -205,7 +205,7 @@ class Importer
                         return;
                     }
 
-                    for ($index = 4; $index < count($data); $index++) {
+                    for ($index = 5; $index < count($data); $index++) {
                         preg_match('/\(([a-zA-Z]+)\)/', $data[$index], $matches);
 
                         if ($matches[1]) {
@@ -215,9 +215,9 @@ class Importer
 
                     $first = false;
                 } else {
-                    [$identifier, $type, $android, $ios] = $data;
+                    [$identifier, $type, $description, $android, $ios] = $data;
 
-                    $translationKey = $this->saveTranslationKey($identifier, $type, (int) $android === 1, (int) $ios === 1);
+                    $translationKey = $this->saveTranslationKey($identifier, $type, (int) $android === 1, (int) $ios === 1, $description);
 
                     foreach ($languages as $index => $code) {
                         $this->saveTranslation($translationKey, $code, $data[$index]);
@@ -239,9 +239,10 @@ class Importer
      * @param string $type
      * @param bool $android
      * @param bool $ios
+     * @param string $description
      * @return TranslationKey
      */
-    private function saveTranslationKey(string $identifier, string $type, bool $android = true, bool $ios = true): TranslationKey
+    private function saveTranslationKey(string $identifier, string $type, bool $android = true, bool $ios = true, string $description = null): TranslationKey
     {
         $application = $this->prontoMobile->getApplication();
 
@@ -252,6 +253,11 @@ class Importer
 
         $translationKey->setIdentifier($identifier);
         $translationKey->setType($type);
+
+        if($description !== null) {
+            $translationKey->setDescription($description);
+        }
+
         $translationKey->setAndroid($android);
 
         // Keep the old IOS setting when an existing key is overridden
@@ -358,7 +364,7 @@ class Importer
     {
         $availableLanguages = $this->prontoMobile->getApplication()->getAvailableLanguages();
 
-        $headers = ['key', 'type', 'android', 'ios'];
+        $headers = ['key', 'type', 'description', 'android', 'ios'];
 
         foreach ($availableLanguages as $language) {
             $headers[] = ucfirst($language['nativeName']) . ' (' . $language['code'] . ')';

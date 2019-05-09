@@ -237,7 +237,7 @@ class TranslationController extends BaseController implements ValidateCustomerSe
 
         $availableLanguages = $prontoMobile->getApplication()->getAvailableLanguages();
 
-        $headers = ['key', 'type', 'android', 'ios'];
+        $headers = ['key', 'type', 'description', 'android', 'ios'];
 
         foreach ($availableLanguages as $language) {
             $headers[] = ucfirst($language['nativeName']) . ' (' . $language['code'] . ')';
@@ -259,6 +259,7 @@ class TranslationController extends BaseController implements ValidateCustomerSe
             $fields = [
                 $translationKey->getIdentifier(),
                 $translationKey->getType(),
+                $translationKey->getDescription(),
                 $translationKey->isAndroid(),
                 $translationKey->isIos()
             ];
