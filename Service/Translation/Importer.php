@@ -209,7 +209,7 @@ class Importer
                         preg_match('/\(([a-zA-Z]+)\)/', $data[$index], $matches);
 
                         if ($matches[1]) {
-                            $languages[$index] = $matches[1];
+                            $languages[$index] = strtolower($matches[1]);
                         }
                     }
 
@@ -263,6 +263,7 @@ class Importer
         $translationKey->setApplication($application);
 
         $this->entityManager->persist($translationKey);
+        $this->entityManager->flush();
 
         // Initialize translations when the key is new
         if ($translationKey->getId() === null) {
