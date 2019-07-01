@@ -116,14 +116,17 @@ class Importer
         xml_parser_free($parser);
 
         foreach ($values as $translation) {
-            if ($translation['type'] !== 'complete') {
+            if ($translation['type'] !== 'complete' ||
+                $translation['tag'] !== 'STRING' ||
+                !isset($translation['attributes'])
+            ) {
                 continue;
             }
 
             $translationKey = $this->saveTranslationKey($translation['attributes']['NAME'], $type, $android, $ios);
             $this->entityManager->flush();
 
-            $this->saveTranslation($translationKey, $language, $translation['value']);
+            $this->saveTranslation($translationKey, $language, $translation['value'] ?? '');
 
             $this->entityManager->flush();
         }

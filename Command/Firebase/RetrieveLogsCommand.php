@@ -47,7 +47,6 @@ class RetrieveLogsCommand extends Command
 	 */
 	private $output;
 
-
 	/**
 	 * RetrieveLogsCommand constructor.
 	 * @param EntityManagerInterface $entityManager
@@ -76,13 +75,14 @@ class RetrieveLogsCommand extends Command
 	}
 
 
-	/**
-	 * Execute the command
-	 *
-	 * @param InputInterface $input
-	 * @param OutputInterface $output
-	 * @return int|null|void
-	 */
+    /**
+     * Execute the command
+     *
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @return int|null|void
+     * @throws Exception
+     */
 	protected function execute(InputInterface $input, OutputInterface $output)
 	{
 		$this->output = $output;
