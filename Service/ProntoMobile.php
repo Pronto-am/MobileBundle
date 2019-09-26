@@ -45,8 +45,7 @@ class ProntoMobile
 	/**
 	 * @var array $configuration
 	 */
-	private $configuration;
-
+	public $configuration;
 
 	/**
 	 * AppInitiator constructor.

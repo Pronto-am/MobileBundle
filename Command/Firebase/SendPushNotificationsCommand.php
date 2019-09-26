@@ -11,11 +11,13 @@ use Pronto\MobileBundle\Entity\Plugin;
 use Pronto\MobileBundle\Entity\PushNotification;
 use Pronto\MobileBundle\Service\ProntoMobile;
 use Pronto\MobileBundle\Service\PushNotification\Sender;
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class SendPushNotificationsCommand extends Command
+class SendPushNotificationsCommand extends ContainerAwareCommand
 {
 	/**
      * @var EntityManagerInterface $entityManager
@@ -32,18 +34,18 @@ class SendPushNotificationsCommand extends Command
      */
 	private $prontoMobile;
 
-	/**
-	 * SendPushNotificationsCommand constructor.
-	 * @param EntityManagerInterface $entityManager
-	 * @param ProntoMobile $prontoMobile
-	 * @param Sender $sender
-	 * @param null $name
-	 */
-	public function __construct(EntityManagerInterface $entityManager, ProntoMobile $prontoMobile, Sender $sender, $name = null)
+    /**
+     * SendPushNotificationsCommand constructor.
+     * @param EntityManagerInterface $entityManager
+     * @param ContainerInterface $container
+     * @param Sender $sender
+     * @param null $name
+     */
+	public function __construct(EntityManagerInterface $entityManager, ContainerInterface $container, Sender $sender, $name = null)
 	{
 		$this->entityManager = $entityManager;
 		$this->sender = $sender;
-		$this->prontoMobile = $prontoMobile;
+		$this->prontoMobile = $container->get('pronto_mobile.global.app');
 
 		parent::__construct($name);
 	}

@@ -8,6 +8,7 @@ use Exception;
 use Pronto\MobileBundle\Entity\Application\Version;
 use Pronto\MobileBundle\Exceptions\InvalidApplicationSelectionException;
 use Pronto\MobileBundle\Service\ProntoMobile;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
@@ -17,29 +18,33 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ValidateApplicationSelectionSubscriber implements EventSubscriberInterface
 {
-	/** @var UrlGeneratorInterface $router */
+	/**
+     * @var UrlGeneratorInterface $router
+     */
 	private $router;
 
-	/** @var EntityManagerInterface $entityManager */
+	/**
+     * @var EntityManagerInterface $entityManager
+     */
 	private $entityManager;
 
-	/** @var ProntoMobile $prontoMobile */
+	/**
+     * @var ProntoMobile $prontoMobile
+     */
 	private $prontoMobile;
 
-
-	/**
-	 * ValidateApplicationSelectionSubscriber constructor.
-	 * @param UrlGeneratorInterface $router
-	 * @param ProntoMobile $prontoMobile
-	 * @param EntityManagerInterface $entityManager
-	 */
-	public function __construct(UrlGeneratorInterface $router, ProntoMobile $prontoMobile, EntityManagerInterface $entityManager)
+    /**
+     * ValidateApplicationSelectionSubscriber constructor.
+     * @param UrlGeneratorInterface $router
+     * @param ContainerInterface $container
+     * @param EntityManagerInterface $entityManager
+     */
+	public function __construct(UrlGeneratorInterface $router, ContainerInterface $container, EntityManagerInterface $entityManager)
 	{
 		$this->router = $router;
-		$this->prontoMobile = $prontoMobile;
+		$this->prontoMobile = $container->get('pronto_mobile.global.app');
 		$this->entityManager = $entityManager;
 	}
-
 
 	/**
 	 * Check whether the controller is an instance of the required interface
@@ -86,8 +91,8 @@ class ValidateApplicationSelectionSubscriber implements EventSubscriberInterface
 		$exception = $event->getException();
 
 		if (!$exception instanceof InvalidApplicationSelectionException) {
-			return;
-		}
+            return;
+        }
 
 		$url = $this->router->generate('pronto_mobile_select_application');
 		$response = new RedirectResponse($url);

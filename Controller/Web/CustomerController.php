@@ -11,6 +11,7 @@ use Pronto\MobileBundle\Service\ProntoMobile;
 use Pronto\MobileBundle\Utils\Responses\ErrorResponse;
 use Pronto\MobileBundle\Utils\Responses\SuccessResponse;
 use Pronto\MobileBundle\Utils\Str;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -95,20 +96,19 @@ class CustomerController extends BaseController
 	}
 
 
-	/**
-	 * Edit a customers' account
-	 *
-	 * @param Request $request
-	 * @param ProntoMobile $prontoMobile
-	 * @param EntityManagerInterface $entityManager
-	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-	 */
-	public function editAction(Request $request, ProntoMobile $prontoMobile, EntityManagerInterface $entityManager)
+    /**
+     * Edit a customers' account
+     *
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
+	public function editAction(Request $request, EntityManagerInterface $entityManager)
 	{
-		/** @var Customer $originalCustomer */
+        /** @var Customer $originalCustomer */
 		$originalCustomer = $this->getCustomer();
 
-		$uploadsFolder = $prontoMobile->getConfiguration('uploads_folder', 'uploads');
+		$uploadsFolder = $this->prontoMobile->getConfiguration('uploads_folder', 'uploads');
 
 		// The form requires an instance of File, so parse the filename to a File object
 		if ($originalCustomer->getLogo() !== null) {

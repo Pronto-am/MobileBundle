@@ -217,12 +217,11 @@ class EntryController extends BaseController implements ValidatePluginStateInter
 	 *
 	 * @param Request $request
 	 * @param EntityManagerInterface $entityManager
-	 * @param ProntoMobile $prontoMobile
 	 * @param $identifier
 	 * @param $id
 	 * @return JsonResponse
 	 */
-	public function deleteFileAction(Request $request, EntityManagerInterface $entityManager, ProntoMobile $prontoMobile, $identifier, $id)
+	public function deleteFileAction(Request $request, EntityManagerInterface $entityManager, $identifier, $id)
 	{
 		$filename = $request->request->get('filename');
 		$property = $request->request->get('property');
@@ -230,7 +229,7 @@ class EntryController extends BaseController implements ValidatePluginStateInter
 		/** @var Collection $collection */
 		$collection = $entityManager->getRepository(Collection::class)->findOneBy([
 			'identifier'         => $identifier,
-			'applicationVersion' => $prontoMobile->getApplicationVersion()
+			'applicationVersion' => $this->prontoMobile->getApplicationVersion()
 		]);
 
 		/** @var Collection\Entry $entry */
@@ -253,7 +252,7 @@ class EntryController extends BaseController implements ValidatePluginStateInter
 
 		$data[$property] = array_values($data[$property]);
 
-		$uploadsFolder = $prontoMobile->getConfiguration('uploads_folder', 'uploads');
+		$uploadsFolder = $this->prontoMobile->getConfiguration('uploads_folder', 'uploads');
 
 		// Delete the file from the uploads directory
 		$filesystem = new Filesystem();
@@ -275,15 +274,14 @@ class EntryController extends BaseController implements ValidatePluginStateInter
 	 *
 	 * @param Request $request
 	 * @param EntityManagerInterface $entityManager
-	 * @param ProntoMobile $prontoMobile
 	 * @param $identifier
 	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
 	 */
-	public function deleteAction(Request $request, EntityManagerInterface $entityManager, ProntoMobile $prontoMobile, $identifier)
+	public function deleteAction(Request $request, EntityManagerInterface $entityManager, $identifier)
 	{
 		$collection = $entityManager->getRepository(Collection::class)->findOneBy([
 			'identifier'         => $identifier,
-			'applicationVersion' => $prontoMobile->getApplicationVersion()
+			'applicationVersion' => $this->prontoMobile->getApplicationVersion()
 		]);
 
 		// Redirect when the collection doesn't exist

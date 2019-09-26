@@ -17,6 +17,7 @@ use Pronto\MobileBundle\Utils\Responses\SuccessResponse;
 use RuntimeException;
 use Swift_Mailer;
 use Swift_Message;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -94,23 +95,21 @@ class AuthenticationController extends BaseController implements RedirectWhenAut
 	}
 
 
-	/**
-	 * Show the reset password form
-	 *
-	 * @param Request $request
-	 * @param EntityManagerInterface $entityManager
-	 * @param AuthenticationUtils $authenticationUtils
-	 * @param Swift_Mailer $mailer
-	 * @param TranslatorInterface $translator
-	 * @param ProntoMobile $prontoMobile
-	 * @return Response
-	 */
+    /**
+     * Show the reset password form
+     *
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @param AuthenticationUtils $authenticationUtils
+     * @param Swift_Mailer $mailer
+     * @param TranslatorInterface $translator
+     * @return Response
+     */
 	public function resetPasswordFormAction(Request $request,
 											EntityManagerInterface $entityManager,
 											AuthenticationUtils $authenticationUtils,
 											Swift_Mailer $mailer,
-											TranslatorInterface $translator,
-											ProntoMobile $prontoMobile): Response
+											TranslatorInterface $translator): Response
 	{
 		// get the login error if there is one
 		$error = $authenticationUtils->getLastAuthenticationError();
@@ -130,7 +129,7 @@ class AuthenticationController extends BaseController implements RedirectWhenAut
 			/** @var User $user */
 			$user = $entityManager->getRepository(User::class)->findOneBy(['email' => $data['email']]);
 
-			$domain = $prontoMobile->getConfiguration('domain', 'pronto.am');
+			$domain = $this->prontoMobile->getConfiguration('domain', 'pronto.am');
 
 			if ($user !== null) {
 				// Create a password reset link for the user and mail it

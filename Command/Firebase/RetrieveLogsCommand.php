@@ -12,11 +12,13 @@ use Pronto\MobileBundle\Entity\Device;
 use Pronto\MobileBundle\Entity\PushNotification\Recipient;
 use Pronto\MobileBundle\Service\ProntoMobile;
 use Pronto\MobileBundle\Service\PushNotification\GoogleServiceAccountLoader;
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class RetrieveLogsCommand extends Command
+class RetrieveLogsCommand extends ContainerAwareCommand
 {
 	// Table logging constants
 	public const LOG_TABLE_NAME = 'pronto_logs';
@@ -47,23 +49,21 @@ class RetrieveLogsCommand extends Command
 	 */
 	private $output;
 
-
-	/**
-	 * RetrieveLogsCommand constructor.
-	 * @param EntityManagerInterface $entityManager
-	 * @param GoogleServiceAccountLoader $googleServiceAccountLoader
-	 * @param ProntoMobile $prontoMobile
-	 * @param null $name
-	 */
-	public function __construct(EntityManagerInterface $entityManager, GoogleServiceAccountLoader $googleServiceAccountLoader, ProntoMobile $prontoMobile, $name = null)
+    /**
+     * RetrieveLogsCommand constructor.
+     * @param EntityManagerInterface $entityManager
+     * @param GoogleServiceAccountLoader $googleServiceAccountLoader
+     * @param ContainerInterface $container
+     * @param null $name
+     */
+	public function __construct(EntityManagerInterface $entityManager, GoogleServiceAccountLoader $googleServiceAccountLoader, ContainerInterface $container, $name = null)
 	{
 		$this->entityManager = $entityManager;
 		$this->googleServiceAccountLoader = $googleServiceAccountLoader;
-		$this->prontoMobile = $prontoMobile;
+		$this->prontoMobile = $container->get('pronto_mobile.global.app');
 
 		parent::__construct($name);
 	}
-
 
 	/**
 	 * Configure the command
@@ -75,14 +75,14 @@ class RetrieveLogsCommand extends Command
 			->setHelp('Retrieve the app logins from the Firebase database');
 	}
 
-
-	/**
-	 * Execute the command
-	 *
-	 * @param InputInterface $input
-	 * @param OutputInterface $output
-	 * @return int|null|void
-	 */
+    /**
+     * Execute the command
+     *
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @return int|null|void
+     * @throws Exception
+     */
 	protected function execute(InputInterface $input, OutputInterface $output)
 	{
 		$this->output = $output;
@@ -114,7 +114,6 @@ class RetrieveLogsCommand extends Command
 		// Check if the snapshot has values
 		if ($snapshot->getValue() === null) {
 			$output->writeln(' - There are no logs to retrieve');
-
 			return;
 		}
 
@@ -122,6 +121,11 @@ class RetrieveLogsCommand extends Command
 
 		// Loop through the data
 		foreach ($snapshot->getValue() as $value) {
+		    if(!is_array($value)) {
+                $output->writeln(['<error>Value is not an array, skipping</error>']);
+		        continue;
+            }
+
 			// Try to decrypt the data
 			try {
 				$configuration = $this->prontoMobile->getConfiguration('firebase');
@@ -136,6 +140,11 @@ class RetrieveLogsCommand extends Command
 
 				continue;
 			}
+
+		    if($data === false) {
+                $output->writeln(['<error>Data could not be decrypted</error>']);
+                continue;
+            }
 
 			$data = json_decode($data);
 

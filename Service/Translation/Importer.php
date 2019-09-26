@@ -9,6 +9,7 @@ use Pronto\MobileBundle\DTO\Translation\UploadDTO;
 use Pronto\MobileBundle\Entity\Translation;
 use Pronto\MobileBundle\Entity\TranslationKey;
 use Pronto\MobileBundle\Service\ProntoMobile;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class Importer
@@ -51,13 +52,13 @@ class Importer
     /**
      * Importer constructor.
      * @param EntityManagerInterface $entityManager
-     * @param ProntoMobile $prontoMobile
+     * @param ContainerInterface $container
      */
-    public function __construct(EntityManagerInterface $entityManager, ProntoMobile $prontoMobile)
+    public function __construct(EntityManagerInterface $entityManager, ContainerInterface $container)
     {
         $this->entityManager = $entityManager;
-        $this->prontoMobile = $prontoMobile;
-        $this->availableLanguages = array_reduce($prontoMobile->getApplication()->getAvailableLanguages(), function ($result, $language) {
+        $this->prontoMobile = $container->get('pronto_mobile.global.app');
+        $this->availableLanguages = array_reduce($this->prontoMobile->getApplication()->getAvailableLanguages(), function ($result, $language) {
             $result[] = $language['code'];
 
             return $result;

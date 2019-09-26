@@ -7,6 +7,7 @@ use Pronto\MobileBundle\Entity\Application\Version;
 use Pronto\MobileBundle\Entity\Customer;
 use Pronto\MobileBundle\Service\ProntoMobile;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -15,21 +16,21 @@ class BaseController extends AbstractController
 	/**
 	 * @var ProntoMobile $prontoMobile
 	 */
-	private $prontoMobile;
+	protected $prontoMobile;
 
 	/**
 	 * @var TranslatorInterface $translator
 	 */
 	private $translator;
 
-	/**
-	 * BaseController constructor.
-	 * @param TranslatorInterface $translator
-	 * @param ProntoMobile $prontoMobile
-	 */
-	public function __construct(TranslatorInterface $translator, ProntoMobile $prontoMobile)
+    /**
+     * BaseController constructor.
+     * @param TranslatorInterface $translator
+     * @param ContainerInterface $container
+     */
+	public function __construct(TranslatorInterface $translator, ContainerInterface $container)
 	{
-		$this->prontoMobile = $prontoMobile;
+		$this->prontoMobile = $container->get('pronto_mobile.global.app');
 		$this->translator = $translator;
 	}
 
@@ -41,7 +42,6 @@ class BaseController extends AbstractController
 		$this->addFlashWithMessage($this->translator->trans('alert.success.data_saved'));
 	}
 
-
 	/**
 	 * Add the data removed flash
 	 */
@@ -50,7 +50,6 @@ class BaseController extends AbstractController
 		$this->addFlashWithMessage($this->translator->trans('alert.success.data_removed'));
 	}
 
-
 	/**
 	 * Add non authorized flash
 	 */
@@ -58,7 +57,6 @@ class BaseController extends AbstractController
 	{
 		$this->addFlashWithMessage($this->translator->trans('alert.warning.no_permission'), 'danger');
 	}
-
 
 	/**
 	 * Create a flash from a message provided string
@@ -74,7 +72,6 @@ class BaseController extends AbstractController
 		);
 	}
 
-
 	/**
 	 * Generate an absolute url
 	 *
@@ -87,7 +84,6 @@ class BaseController extends AbstractController
 		return $this->generateUrl($route, $parameters, UrlGeneratorInterface::ABSOLUTE_URL);
 	}
 
-
 	/**
 	 * Get the customer from the main pronto mobile service
 	 *
@@ -98,7 +94,6 @@ class BaseController extends AbstractController
 		return $this->prontoMobile->getCustomer();
 	}
 
-
 	/**
 	 * Get the application version from the main pronto mobile service
 	 *
@@ -108,7 +103,6 @@ class BaseController extends AbstractController
 	{
 		return $this->prontoMobile->getApplicationVersion();
 	}
-
 
 	/**
 	 * Get the application from the main pronto mobile service
