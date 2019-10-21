@@ -80,15 +80,16 @@ class EntryController extends BaseController implements ValidatePluginStateInter
 	}
 
 
-	/**
-	 * Edit a collection entry
-	 *
-	 * @param EntryValueParser $entryValueParser
-	 * @param EntityManagerInterface $entityManager
-	 * @param $identifier
-	 * @param Collection\Entry|null $entry
-	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-	 */
+    /**
+     * Edit a collection entry
+     *
+     * @param EntryValueParser $entryValueParser
+     * @param EntityManagerInterface $entityManager
+     * @param $identifier
+     * @param Collection\Entry|null $entry
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @throws \Doctrine\DBAL\DBALException
+     */
 	public function editAction(EntryValueParser $entryValueParser, EntityManagerInterface $entityManager, $identifier, Collection\Entry $entry = null)
 	{
 		/** @var Collection $collection */
@@ -135,7 +136,7 @@ class EntryController extends BaseController implements ValidatePluginStateInter
 					 */
 					$value = $entry['data'][$entryTitleProperty->getIdentifier()];
 
-					$result[$relationship->getRelatedCollection()->getId()][] = $entryValueParser->parse($entryTitleProperty->getType(), $value);
+					$result[$relationship->getRelatedCollection()->getId()][] = $entryValueParser->parse($entryTitleProperty, $value);
 
 					return $result;
 				}, $related);

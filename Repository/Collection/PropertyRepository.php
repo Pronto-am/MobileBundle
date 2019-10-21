@@ -16,10 +16,9 @@ class PropertyRepository extends EntityRepository
      */
     public function findAllByCollection(Collection $collection, bool $translatable = false) {
         return $this->createQueryBuilder('property')
-			->leftJoin('property.type', 'type')
             ->where('property.collection = :collection')
             ->setParameter('collection', $collection)
-			->andWhere('type.translatable = :translatable')
+			->andWhere('property.translatable = :translatable')
 			->setParameter('translatable', $translatable)
             ->getQuery()
             ->execute();

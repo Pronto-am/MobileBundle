@@ -8,21 +8,30 @@ use Symfony\Component\HttpFoundation\FileBag;
 
 class BaseType implements PropertyType
 {
-	/** @var array $fields */
+	/**
+     * @var array $fields
+     */
 	public $fields;
 
-	/** @var Property $property */
+	/**
+     * @var Property $property
+     */
 	public $property;
 
-	/** @var array $fileBag */
+	/**
+     * @var array $fileBag
+     */
 	public $fileBag;
 
-	/** @var array $parsed */
+	/**
+     * @var array $parsed
+     */
 	public $parsed;
 
-	/** @var array $identifier */
+	/**
+     * @var array $identifier
+     */
 	public $identifier;
-
 
 	/**
 	 * PropertyType constructor.
@@ -42,7 +51,6 @@ class BaseType implements PropertyType
 		}, ARRAY_FILTER_USE_KEY);
 	}
 
-
 	/**
 	 * Get the identifier of the property
 	 *
@@ -53,7 +61,6 @@ class BaseType implements PropertyType
 		return $this->property->getIdentifier();
 	}
 
-
 	/**
 	 * Check if a property is translatable
 	 *
@@ -61,9 +68,8 @@ class BaseType implements PropertyType
 	 */
 	public function isTranslatable(): bool
 	{
-		return $this->property->getType()->getTranslatable();
+		return $this->property->isTranslatable();
 	}
-
 
 	/**
 	 * Parse the form data as entry value
@@ -89,7 +95,6 @@ class BaseType implements PropertyType
 		];
 	}
 
-
 	/**
 	 * Parse the language and identifier from the field name
 	 *
@@ -106,7 +111,6 @@ class BaseType implements PropertyType
 
 		return [$language ?? null, $identifier[0]];
 	}
-
 
 	/**
 	 * Check if a field belongs to a property

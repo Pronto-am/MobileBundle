@@ -48,7 +48,7 @@
                         {% for property in properties %}
                             {% set value = entry.data[property.identifier] is defined ? entry.data[property.identifier] : '' %}
 
-                            <td {% if property.entryTitle %}class="entry-title"{% endif %}>{{ entry_value_parser.parse(property.type, value) }}</td>
+                            <td {% if property.entryTitle %}class="entry-title"{% endif %}>{{ entry_value_parser.parse(property, value) }}</td>
                         {% endfor %}
 
                         <td>{{ entry.active ? 'buttons.yes'|trans : 'buttons.no'|trans }}</td>

@@ -1,4 +1,13 @@
-{% set propertyValue = attribute(attribute(entry.data, property.identifier), language) is defined ? attribute(attribute(entry.data, property.identifier), language) : property.config.defaultValue %}
+{% if property.translatable == false %}
+    {% set propertyValue = attribute(entry.data, property.identifier) %}
+
+{% elseif attribute(attribute(entry.data, property.identifier), language) is defined %}
+    {% set propertyValue = attribute(attribute(entry.data, property.identifier), language) %}
+
+{% else %}
+    {% set propertyValue = property.config.defaultValue %}
+
+{% endif %}
 
 <div class="row">
     <div class="col s12">

@@ -159,6 +159,7 @@ property: property
 properties: properties
 collection.property.include_in_table_list_view: Include in table list view
 collection.property.include_in_json_list_view: Include in json list view
+collection.property.is_translatable: Is translatable
 collection.property.required: Required
 collection.property.key: Key
 collection.property.value: Value

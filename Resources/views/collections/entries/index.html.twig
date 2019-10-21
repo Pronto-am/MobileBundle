@@ -57,10 +57,10 @@
                                     <td>
                                         {% if property.entryTitle %}
                                             <a href="{{ path('pronto_mobile_collection_entries_edit', {identifier: collection.identifier, id: entry.id}) }}" class="regular">
-                                                {{ entry_value_parser.parse(property.type, value) }}
+                                                {{ entry_value_parser.parse(property, value) }}
                                             </a>
                                         {% else %}
-                                            {{ entry_value_parser.parse(property.type, value) }}
+                                            {{ entry_value_parser.parse(property, value) }}
                                         {% endif %}
                                     </td>
                                 {% endfor %}

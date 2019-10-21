@@ -158,6 +158,7 @@ property: eigenschap
 properties: eigenschappen
 collection.property.include_in_table_list_view: Weergeven in lijstweergave
 collection.property.include_in_json_list_view: Weergeven in json lijstweergave
+collection.property.is_translatable: Is vertaalbaar
 collection.property.required: Verplicht veld
 collection.property.key: Key
 collection.property.value: Value

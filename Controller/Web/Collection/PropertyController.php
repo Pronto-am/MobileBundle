@@ -30,7 +30,6 @@ class PropertyController extends BaseController implements ValidatePluginStateIn
 		return Plugin::COLLECTIONS;
 	}
 
-
 	/**
 	 * A fancy redirect to set the properties as active tab when navigating back
 	 *
@@ -43,7 +42,6 @@ class PropertyController extends BaseController implements ValidatePluginStateIn
 
 		return $this->redirectToRoute('pronto_mobile_collections_edit', ['identifier' => $identifier]);
 	}
-
 
 	/**
 	 * Edit a property
@@ -81,7 +79,6 @@ class PropertyController extends BaseController implements ValidatePluginStateIn
 			'editable'     => $editable
 		]);
 	}
-
 
 	/**
 	 * Save a collection property
@@ -173,6 +170,7 @@ class PropertyController extends BaseController implements ValidatePluginStateIn
 		$property->setCollection($collection);
 		$property->setConfig($config);
 		$property->setIncludeInListView(isset($form['includeInListView']) || $property->getEntryTitle());
+		$property->setTranslatable(isset($form['translatable']));
 		$property->setRequired(isset($form['required']));
 
 		if ($property->getId() === null) {
@@ -188,7 +186,6 @@ class PropertyController extends BaseController implements ValidatePluginStateIn
 
 		return $this->redirectToRoute('pronto_mobile_collections_edit', ['identifier' => $identifier]);
 	}
-
 
 	/**
 	 * Delete one or multiple properties
@@ -231,7 +228,6 @@ class PropertyController extends BaseController implements ValidatePluginStateIn
 		return $this->redirectToRoute('pronto_mobile_collections_edit', ['identifier' => $identifier]);
 	}
 
-
 	/**
 	 * Update the ordering of properties
 	 *
@@ -256,7 +252,6 @@ class PropertyController extends BaseController implements ValidatePluginStateIn
 		$response = new SuccessResponse([]);
 		return $response->create()->getJsonResponse();
 	}
-
 
 	/**
 	 * Change the entry title of the collection

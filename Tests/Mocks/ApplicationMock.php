@@ -9,18 +9,25 @@ use Pronto\MobileBundle\Entity\Customer;
 
 class ApplicationMock
 {
-	/** @var Customer $customer */
+	/**
+     * @var Customer $customer
+     */
 	private $customer;
 
-	/** @var Application $application */
+	/**
+     * @var Application $application
+     */
 	private $application;
 
-	/** @var Application\Version $applicationVersion */
+	/**
+     * @var Application\Version $applicationVersion
+     */
 	private $applicationVersion;
 
-	/** @var Collection $collection */
+	/**
+     * @var Collection $collection
+     */
 	private $collection;
-
 
 	/**
 	 * ApplicationMock constructor.
@@ -40,7 +47,6 @@ class ApplicationMock
 		$this->collection->setIdentifier('locations');
 	}
 
-
 	/**
 	 * @return Customer
 	 */
@@ -48,7 +54,6 @@ class ApplicationMock
 	{
 		return $this->customer;
 	}
-
 
 	/**
 	 * @return Application
@@ -58,7 +63,6 @@ class ApplicationMock
 		return $this->application;
 	}
 
-
 	/**
 	 * @return Application\Version
 	 */
@@ -66,7 +70,6 @@ class ApplicationMock
 	{
 		return $this->applicationVersion;
 	}
-
 
 	/**
 	 * @return Collection
@@ -76,20 +79,31 @@ class ApplicationMock
 		return $this->collection;
 	}
 
+    /**
+     * @param string $identifier
+     * @param bool $translatable
+     * @return Collection\Property\Type
+     */
+    public function getCollectionPropertyType(string $identifier, bool $translatable = false): Collection\Property\Type
+    {
+        $type = new Collection\Property\Type();
+        $type->setType($identifier);
+        $type->setTranslatable($translatable);
+        $type->setOrdering(1);
+        $type->setJsonListviewCompatible(true);
 
-	/**
-	 * @param string $identifier
-	 * @param bool $translatable
-	 * @return Collection\Property\Type
-	 */
-	public function getCollectionPropertyType(string $identifier, bool $translatable = false): Collection\Property\Type
-	{
-		$type = new Collection\Property\Type();
-		$type->setType($identifier);
-		$type->setTranslatable($translatable);
-		$type->setOrdering(1);
-		$type->setJsonListviewCompatible(true);
+        return $type;
+    }
 
-		return $type;
-	}
+    /**
+     * @param bool $translatable
+     * @return Collection\Property
+     */
+    public function getCollectionProperty(bool $translatable = false): Collection\Property
+    {
+        $property = new Collection\Property();
+        $property->setTranslatable($translatable);
+
+        return $property;
+    }
 }
