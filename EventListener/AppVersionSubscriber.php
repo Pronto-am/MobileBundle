@@ -9,6 +9,7 @@ use Doctrine\ORM\Events;
 use Pronto\MobileBundle\Entity\AppVersion;
 use Pronto\MobileBundle\Service\FileManager;
 use Pronto\MobileBundle\Service\ProntoMobile;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -22,10 +23,8 @@ class AppVersionSubscriber implements EventSubscriber
 	/**
 	 * CustomerSubscriber constructor.
 	 * @param FileManager $fileManager
-	 * @param ProntoMobile $prontoMobile
-	 * @param TranslatorInterface $translator
 	 */
-	public function __construct(FileManager $fileManager, ProntoMobile $prontoMobile, TranslatorInterface $translator)
+	public function __construct(FileManager $fileManager)
 	{
 		$this->fileManager = $fileManager;
 	}

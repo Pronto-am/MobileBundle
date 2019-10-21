@@ -145,15 +145,14 @@ class RelationshipController extends BaseController implements ValidatePluginSta
 	 *
 	 * @param Request $request
 	 * @param EntityManagerInterface $entityManager
-	 * @param ProntoMobile $prontoMobile
 	 * @param $identifier
 	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
 	 */
-	public function deleteAction(Request $request, EntityManagerInterface $entityManager, ProntoMobile $prontoMobile, $identifier)
+	public function deleteAction(Request $request, EntityManagerInterface $entityManager, $identifier)
 	{
 		$collection = $entityManager->getRepository(Collection::class)->findOneBy([
 			'identifier'         => $identifier,
-			'applicationVersion' => $prontoMobile->getApplicationVersion()
+			'applicationVersion' => $this->prontoMobile->getApplicationVersion()
 		]);
 
 		// Redirect when the collection doesn't exist
@@ -179,14 +178,15 @@ class RelationshipController extends BaseController implements ValidatePluginSta
 	}
 
 
-	/**
-	 * Edit the relation of an entry
-	 *
-	 * @param EntityManagerInterface $entityManager
-	 * @param Collection\Entry $entry
-	 * @param Collection\Relationship $relationship
-	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-	 */
+    /**
+     * Edit the relation of an entry
+     *
+     * @param EntityManagerInterface $entityManager
+     * @param Collection\Entry $entry
+     * @param Collection\Relationship $relationship
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @throws \Doctrine\DBAL\DBALException
+     */
 	public function editRelationshipsAction(EntityManagerInterface $entityManager, Collection\Entry $entry, Collection\Relationship $relationship)
 	{
 		if ($relationship->getCollection()->getName() !== $entry->getCollection()->getName()) {

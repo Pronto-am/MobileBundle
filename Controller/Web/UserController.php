@@ -16,6 +16,7 @@ use Pronto\MobileBundle\Utils\Doctrine\WhereClause;
 use Pronto\MobileBundle\Utils\PageHelper;
 use Swift_Mailer;
 use Swift_Message;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -97,25 +98,23 @@ class UserController extends BaseController implements ValidateCustomerSelection
 	}
 
 
-	/**
-	 * Add or edit a user
-	 *
-	 * @param Request $request
-	 * @param EntityManagerInterface $entityManager
-	 * @param ProntoMobile $prontoMobile
-	 * @param TranslatorInterface $translator
-	 * @param Swift_Mailer $mailer
-	 * @param User|null $user
-	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-	 */
+    /**
+     * Add or edit a user
+     *
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @param TranslatorInterface $translator
+     * @param Swift_Mailer $mailer
+     * @param User|null $user
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
 	public function editAction(Request $request,
 							   EntityManagerInterface $entityManager,
-							   ProntoMobile $prontoMobile,
 							   TranslatorInterface $translator,
 							   Swift_Mailer $mailer,
 							   User $user = null)
 	{
-		$customer = $this->getCustomer();
+        $customer = $this->getCustomer();
 
 		// The user is not allowed to edit users belonging to other customers
 		if ($user !== null && $user->getCustomer()->getId() !== $customer->getId()) {
@@ -146,7 +145,7 @@ class UserController extends BaseController implements ValidateCustomerSelection
 			$entityManager->persist($user);
 			$entityManager->flush();
 
-			$domain = $prontoMobile->getConfiguration('domain', 'pronto.am');
+			$domain = $this->prontoMobile->getConfiguration('domain', 'pronto.am');
 
 			if ($new) {
 				// Create an account activation link for the user and mail it

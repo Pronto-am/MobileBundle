@@ -19,6 +19,7 @@ services:
 
     pronto_mobile.global.app:
         class: Pronto\MobileBundle\Service\ProntoMobile
+        public: true
 
     #### TWIG EXTENSIONS ####
     Pronto\MobileBundle\Twig\:

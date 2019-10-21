@@ -40,7 +40,6 @@ class Retriever
      */
 	private $mappedRelationships = [];
 
-
     /**
      * Retriever constructor.
      * @param QueryGenerator $queryGenerator
@@ -54,7 +53,6 @@ class Retriever
 		$this->entryParser = $entryParser;
 	}
 
-
 	/**
 	 * Set the collection
 	 * @param Collection $collection
@@ -66,7 +64,6 @@ class Retriever
 		$this->queryGenerator->setCollection($collection);
 		$this->entryParser->setCollection($collection);
 	}
-
 
 	/**
 	 * Get a single entry of the collection
@@ -91,7 +88,6 @@ class Retriever
 		return $entries[0];
 	}
 
-
 	/**
 	 * Get a paginated list of entries
 	 *
@@ -109,7 +105,6 @@ class Retriever
 		// Now we can parse the entire object including the relationships
 		return $this->parseEntries($results, $this->mappedRelationships);
 	}
-
 
 	/**
 	 * Load the relationships of all entries
@@ -170,7 +165,6 @@ class Retriever
 		$this->entryParser->setCollection($this->collection);
 	}
 
-
 	/**
 	 * Parse the entries
 	 *
@@ -182,7 +176,6 @@ class Retriever
 	{
 		return $this->entryParser->parse($entries, $mappedRelationships);
 	}
-
 
 	/**
 	 * Get pagination info object

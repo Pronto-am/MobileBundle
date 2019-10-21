@@ -45,7 +45,11 @@ class EntryValueParserTest extends TestCase
 
 		/** @noinspection PhpParamsInspection */
 		$entryValueParser = new EntryValueParser($this->translator, $this->jsonTranslator);
-		$value = $entryValueParser->parse($this->applicationMock->getCollectionPropertyType(Type::TYPE_TEXT, true), ['en' => 'Translatable text']);
+
+		$property = $this->applicationMock->getCollectionProperty(true);
+		$property->setType($this->applicationMock->getCollectionPropertyType(Type::TYPE_TEXT, true));
+
+		$value = $entryValueParser->parse($property, ['en' => 'Translatable text']);
 
 		$this->assertEquals('Translatable text', $value);
 	}

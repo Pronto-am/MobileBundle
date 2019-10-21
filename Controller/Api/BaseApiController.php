@@ -11,6 +11,7 @@ use Pronto\MobileBundle\Service\ProntoMobile;
 use Pronto\MobileBundle\Service\RequestBodyValidator;
 use Pronto\MobileBundle\Traits\JsonResponseGenerators;
 use Pronto\MobileBundle\Utils\Responses\ErrorResponse;
+use Psr\Container\ContainerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
@@ -34,13 +35,14 @@ class BaseApiController extends Controller
 	 */
 	protected $serializer;
 
-	/**
-	 * @required
-	 * @param ProntoMobile $prontoMobile
-	 */
-	public function setProntoMobile(ProntoMobile $prontoMobile): void
+    /**
+     * @required
+     * @param ContainerInterface $container
+     */
+	public function setProntoMobile(ContainerInterface $container): void
 	{
-		$this->prontoMobile = $prontoMobile;
+	    // Injection is not possible, ProntoMobile service needs the bundle yaml config, which is being set with the container addMethodCall function in ProntoMobileExtension
+		$this->prontoMobile = $container->get('pronto_mobile.global.app');
 	}
 
 	/**

@@ -22,19 +22,25 @@ class EntryParser
 	// These properties need json decoding
 	public const JSON = ['json', 'coordinates', 'file'];
 
-
-	/** @var EntityManagerInterface $entityManager */
+	/**
+     * @var EntityManagerInterface $entityManager
+     */
 	private $entityManager;
 
-	/** @var Collection $collection */
+	/**
+     * @var Collection $collection
+     */
 	private $collection;
 
-	/** @var array $users */
+	/**
+     * @var array $users
+     */
 	private $users;
 
-	/** @var array $properties */
+	/**
+     * @var array $properties
+     */
 	private $properties;
-
 
 	/**
 	 * EntryParser constructor.
@@ -44,7 +50,6 @@ class EntryParser
 	{
 		$this->entityManager = $entityManager;
 	}
-
 
 	/**
 	 * Set the collection for which entries need parsing
@@ -61,7 +66,6 @@ class EntryParser
 		$this->setUsers();
 	}
 
-
 	/**
 	 * Parse the entries to the correct format to return as an API response
 	 *
@@ -76,7 +80,6 @@ class EntryParser
 		return $entries;
 	}
 
-
 	/**
 	 * Parse the entries
 	 * @param array $entries
@@ -90,7 +93,6 @@ class EntryParser
 		}
 	}
 
-
 	/**
 	 * Map the properties to a readable format
 	 *
@@ -101,7 +103,6 @@ class EntryParser
 		// Create a properties array of this relationship
 		$this->properties = Collect::keyBy($collection->getProperties()->getValues(), 'identifier');
 	}
-
 
 	/**
 	 * Get the users from the database and store them locally
@@ -133,13 +134,13 @@ class EntryParser
 		$this->users = Collect::keyBy($this->users, 'id');
 	}
 
-
-	/**
-	 * Parse an entry to the correct format
-	 *
-	 * @param array $entry
-	 * @param array $mappedRelationships
-	 */
+    /**
+     * Parse an entry to the correct format
+     *
+     * @param array $entry
+     * @param array $mappedRelationships
+     * @throws Exception
+     */
 	private function parseEntry(array &$entry, array $mappedRelationships): void
 	{
 		// Remove the data object, because we only needed it to perform a HAVING search on it
@@ -151,11 +152,12 @@ class EntryParser
 				continue;
 			}
 
-			/** @var Collection\Property\Type $type */
-			$type = $this->properties[$key]->getType();
+			/** @var Collection\Property $property */
+			$property = $this->properties[$key];
+			$type = $property->getType();
 
 			// JSON encoding collection property types
-			if ($type->getTranslatable() || \in_array($type->getType(), self::JSON, true)) {
+			if ($property->isTranslatable() || \in_array($type->getType(), self::JSON, true)) {
 				$value = json_decode($value, true);
 			}
 
@@ -200,7 +202,6 @@ class EntryParser
 		$this->mapRelationships($mappedRelationships, $entry);
 	}
 
-
 	/**
 	 * Perform the type casting for the values
 	 *
@@ -232,7 +233,6 @@ class EntryParser
 				break;
 		}
 	}
-
 
 	/**
 	 * Add the relationships to the entry

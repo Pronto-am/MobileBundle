@@ -10,41 +10,46 @@ use Pronto\MobileBundle\DTO\BaseDTO;
  */
 class PropertyDTO extends BaseDTO
 {
-	/**
-	 * @var string $name
-	 */
-	public $name;
+    /**
+     * @var string $name
+     */
+    public $name;
 
-	/**
-	 * @var string $identifier
-	 */
-	public $identifier;
+    /**
+     * @var string $identifier
+     */
+    public $identifier;
 
-	/**
-	 * @var int $type
-	 */
-	public $type;
+    /**
+     * @var int $type
+     */
+    public $type;
 
-	/**
-	 * @var bool $includeInListView
-	 */
-	public $includeInListView;
+    /**
+     * @var bool $includeInListView
+     */
+    public $includeInListView;
 
-	/**
-	 * @var bool $includeInJsonListView
-	 */
-	public $includeInJsonListView;
+    /**
+     * @var bool $includeInJsonListView
+     */
+    public $includeInJsonListView;
 
-	/**
-	 * @var bool $required
-	 */
-	public $required;
+    /**
+     * @var bool $required
+     */
+    public $required;
 
-	/**
-	 * @return array
-	 */
-	public static function getFillable(): array
-	{
-		return ['name', 'identifier', 'type', 'includeInListView', 'includeInJsonListView', 'required'];
-	}
+    /**
+     * @var boolean $translatable
+     */
+    public $translatable;
+
+    /**
+     * @return array
+     */
+    public static function getFillable(): array
+    {
+        return ['name', 'identifier', 'type', 'includeInListView', 'includeInJsonListView', 'required', 'translatable' => 'isTranslatable'];
+    }
 }

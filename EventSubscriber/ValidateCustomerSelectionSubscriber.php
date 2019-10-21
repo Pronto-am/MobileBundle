@@ -8,6 +8,7 @@ use Exception;
 use Pronto\MobileBundle\Entity\Customer;
 use Pronto\MobileBundle\Exceptions\InvalidCustomerSelectionException;
 use Pronto\MobileBundle\Service\ProntoMobile;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
@@ -17,27 +18,31 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ValidateCustomerSelectionSubscriber implements EventSubscriberInterface
 {
-
-	/** @var UrlGeneratorInterface */
+	/**
+     * @var UrlGeneratorInterface
+     */
 	private $router;
 
-	/** @var ProntoMobile $prontoMobile */
+	/**
+     * @var ProntoMobile $prontoMobile
+     */
 	private $prontoMobile;
 
-	/** @var EntityManagerInterface */
+	/**
+     * @var EntityManagerInterface
+     */
 	private $entityManager;
 
-
-	/**
-	 * ValidateCustomerSelectionSubscriber constructor.
-	 * @param UrlGeneratorInterface $router
-	 * @param ProntoMobile $prontoMobile
-	 * @param EntityManagerInterface $entityManager
-	 */
-	public function __construct(UrlGeneratorInterface $router, ProntoMobile $prontoMobile, EntityManagerInterface $entityManager)
+    /**
+     * ValidateCustomerSelectionSubscriber constructor.
+     * @param UrlGeneratorInterface $router
+     * @param ContainerInterface $container
+     * @param EntityManagerInterface $entityManager
+     */
+	public function __construct(UrlGeneratorInterface $router, ContainerInterface $container, EntityManagerInterface $entityManager)
 	{
 		$this->router = $router;
-		$this->prontoMobile = $prontoMobile;
+		$this->prontoMobile = $container->get('pronto_mobile.global.app');
 		$this->entityManager = $entityManager;
 	}
 

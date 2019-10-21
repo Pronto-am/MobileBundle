@@ -25,6 +25,7 @@ use Pronto\MobileBundle\Utils\Doctrine\WhereClause;
 use Pronto\MobileBundle\Utils\Doctrine\WhereNotNullClause;
 use Pronto\MobileBundle\Utils\PageHelper;
 use Pronto\MobileBundle\Utils\Responses\SuccessResponse;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -82,7 +83,6 @@ class PushNotificationController extends BaseController implements ValidateCusto
 	/**
 	 * Create a new push notification
 	 *
-	 * @param ProntoMobile $prontoMobile
 	 * @param JsonTranslator $jsonTranslator
 	 * @param EntityManagerInterface $entityManager
 	 * @param null $identifier
@@ -90,7 +90,7 @@ class PushNotificationController extends BaseController implements ValidateCusto
 	 * @throws \Doctrine\ORM\NoResultException
 	 * @throws \Doctrine\ORM\NonUniqueResultException
 	 */
-	public function editAction(ProntoMobile $prontoMobile, JsonTranslator $jsonTranslator, EntityManagerInterface $entityManager, $identifier = null)
+	public function editAction(ContainerInterface $container, JsonTranslator $jsonTranslator, EntityManagerInterface $entityManager, $identifier = null)
 	{
 		$notification = null;
 
@@ -127,7 +127,7 @@ class PushNotificationController extends BaseController implements ValidateCusto
 			$form->remove('segment');
 		}
 
-		$config = $prontoMobile->getPluginConfiguration(Plugin::PUSH_NOTIFICATIONS);
+		$config = $this->prontoMobile->getPluginConfiguration(Plugin::PUSH_NOTIFICATIONS);
 
 		return $this->render('@ProntoMobile/notifications/edit.html.twig', [
 			'notificationForm' => $form->createView(),

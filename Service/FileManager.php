@@ -4,6 +4,7 @@ namespace Pronto\MobileBundle\Service;
 
 use Exception;
 use Pronto\MobileBundle\Utils\Str;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\File\File;
@@ -24,15 +25,15 @@ class FileManager
 	 */
 	private $fileSystem;
 
-	/**
-	 * FileManager constructor.
-	 * @param ProntoMobile $prontoMobile
-	 * @param Filesystem $filesystem
-	 */
-	public function __construct(ProntoMobile $prontoMobile, Filesystem $filesystem)
+    /**
+     * FileManager constructor.
+     * @param ContainerInterface $container
+     * @param Filesystem $filesystem
+     */
+	public function __construct(ContainerInterface $container, Filesystem $filesystem)
 	{
 		$this->fileSystem = $filesystem;
-		$this->uploadsDir = $prontoMobile->getConfiguration('uploads_folder', 'uploads');
+		$this->uploadsDir = $container->get('pronto_mobile.global.app')->getConfiguration('uploads_folder', 'uploads');
 	}
 
 	/**

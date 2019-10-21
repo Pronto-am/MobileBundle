@@ -6,6 +6,7 @@ namespace Pronto\MobileBundle\Validator\Constraints\Translation;
 use Doctrine\ORM\EntityManagerInterface;
 use Pronto\MobileBundle\Entity\TranslationKey;
 use Pronto\MobileBundle\Service\ProntoMobile;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -39,14 +40,14 @@ class IsUniqueIdentifierValidator extends ConstraintValidator
     /**
      * IsUniqueIdentifierValidator constructor.
      * @param EntityManagerInterface $entityManager
-     * @param ProntoMobile $prontoMobile
+     * @param ContainerInterface $container
      * @param TranslatorInterface $translator
      * @param RequestStack $requestStack
      */
-    public function __construct(EntityManagerInterface $entityManager, ProntoMobile $prontoMobile, TranslatorInterface $translator, RequestStack $requestStack)
+    public function __construct(EntityManagerInterface $entityManager, ContainerInterface $container, TranslatorInterface $translator, RequestStack $requestStack)
     {
         $this->entityManager = $entityManager;
-        $this->prontoMobile = $prontoMobile;
+        $this->prontoMobile = $container->get('pronto_mobile.global.app');
         $this->translator = $translator;
         $this->request = $requestStack->getCurrentRequest();
     }

@@ -18,74 +18,80 @@ use Pronto\MobileBundle\Entity\TimestampedEntity;
 class Property extends TimestampedEntity
 {
     /**
+     * @var int $id
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      * @ORM\Column(type="integer")
      */
     private $id;
 
-
     /**
+     * @var Collection $collection
      * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Collection", inversedBy="properties")
      * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     private $collection;
 
-
-	/**
-	 * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Collection\Property\Type")
-	 * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
-	 */
-	private $type;
-
+    /**
+     * @var Type $type
+     * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Collection\Property\Type")
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
+     */
+    private $type;
 
     /**
+     * @var string $name
      * @ORM\Column(type="string")
      */
     private $name;
 
-
-	/**
-	 * @ORM\Column(type="string")
-	 */
-	private $identifier;
-
+    /**
+     * @var string $identifier
+     * @ORM\Column(type="string")
+     */
+    private $identifier;
 
     /**
+     * @var array $config
      * @ORM\Column(type="json_array")
      */
     private $config;
 
-
     /**
+     * @var boolean $required
      * @ORM\Column(type="boolean")
-    */
+     */
     private $required = true;
 
+    /**
+     * @var boolean $includeInListView
+     * @ORM\Column(type="boolean")
+     */
+    private $includeInListView = true;
 
-	/**
-	 * @ORM\Column(type="boolean")
-	 */
-	private $includeInListView = true;
+    /**
+     * @var boolean $includeInJsonListView
+     * @ORM\Column(type="boolean")
+     */
+    private $includeInJsonListView = true;
 
+    /**
+     * @var boolean $entryTitle
+     * @ORM\Column(type="boolean")
+     */
+    private $entryTitle = false;
 
-	/**
-	 * @ORM\Column(type="boolean")
-	 */
-	private $includeInJsonListView = true;
+    /**
+     * @var int $ordering
+     * @ORM\Column(type="integer")
+     */
+    private $ordering;
 
-
-	/**
-	 * @ORM\Column(type="boolean")
-	 */
-	private $entryTitle = false;
-
-
-	/**
-	 * @ORM\Column(type="integer")
-	 */
-	private $ordering;
-
+    /**
+     * @var boolean $translatable
+     * @ORM\Column(type="boolean")
+     */
+    private $translatable = true;
 
     /**
      * @return int|null
@@ -95,7 +101,6 @@ class Property extends TimestampedEntity
         return $this->id;
     }
 
-
     /**
      * @return Collection
      */
@@ -103,7 +108,6 @@ class Property extends TimestampedEntity
     {
         return $this->collection;
     }
-
 
     /**
      * @param Collection $collection
@@ -113,7 +117,6 @@ class Property extends TimestampedEntity
         $this->collection = $collection;
     }
 
-
     /**
      * @return string
      */
@@ -121,7 +124,6 @@ class Property extends TimestampedEntity
     {
         return $this->name;
     }
-
 
     /**
      * @param string $name
@@ -131,24 +133,21 @@ class Property extends TimestampedEntity
         $this->name = $name;
     }
 
+    /**
+     * @return string
+     */
+    public function getIdentifier(): string
+    {
+        return $this->identifier;
+    }
 
-	/**
-	 * @return string
-	 */
-	public function getIdentifier(): string
-	{
-		return $this->identifier;
-	}
-
-
-	/**
-	 * @param string $identifier
-	 */
-	public function setIdentifier(string $identifier): void
-	{
-		$this->identifier = $identifier;
-	}
-
+    /**
+     * @param string $identifier
+     */
+    public function setIdentifier(string $identifier): void
+    {
+        $this->identifier = $identifier;
+    }
 
     /**
      * @return Type
@@ -158,7 +157,6 @@ class Property extends TimestampedEntity
         return $this->type;
     }
 
-
     /**
      * @param Type $type
      */
@@ -167,24 +165,21 @@ class Property extends TimestampedEntity
         $this->type = $type;
     }
 
+    /**
+     * @return array
+     */
+    public function getConfig(): array
+    {
+        return $this->config;
+    }
 
-	/**
-	 * @return array
-	 */
-	public function getConfig(): array
-	{
-		return $this->config;
-	}
-
-
-	/**
-	 * @param array $config
-	 */
-	public function setConfig(array $config): void
-	{
-		$this->config = $config;
-	}
-
+    /**
+     * @param array $config
+     */
+    public function setConfig(array $config): void
+    {
+        $this->config = $config;
+    }
 
     /**
      * @return bool
@@ -194,7 +189,6 @@ class Property extends TimestampedEntity
         return $this->required;
     }
 
-
     /**
      * @param bool $required
      */
@@ -203,75 +197,85 @@ class Property extends TimestampedEntity
         $this->required = $required;
     }
 
+    /**
+     * @return bool
+     */
+    public function getIncludeInListView(): bool
+    {
+        return $this->includeInListView;
+    }
 
-	/**
-	 * @return bool
-	 */
-	public function getIncludeInListView(): bool
-	{
-		return $this->includeInListView;
-	}
+    /**
+     * @param bool $includeInListView
+     */
+    public function setIncludeInListView(bool $includeInListView): void
+    {
+        $this->includeInListView = $includeInListView;
+    }
 
+    /**
+     * @return bool
+     */
+    public function getIncludeInJsonListView(): bool
+    {
+        return $this->includeInJsonListView;
+    }
 
-	/**
-	 * @param bool $includeInListView
-	 */
-	public function setIncludeInListView(bool $includeInListView): void
-	{
-		$this->includeInListView = $includeInListView;
-	}
+    /**
+     * @param bool $includeInJsonListView
+     */
+    public function setIncludeInJsonListView(bool $includeInJsonListView): void
+    {
+        $this->includeInJsonListView = $includeInJsonListView;
+    }
 
+    /**
+     * @return bool
+     */
+    public function getEntryTitle(): bool
+    {
+        return $this->entryTitle;
+    }
 
-	/**
-	 * @return bool
-	 */
-	public function getIncludeInJsonListView(): bool
-	{
-		return $this->includeInJsonListView;
-	}
+    /**
+     * @param bool $entryTitle
+     */
+    public function setEntryTitle(bool $entryTitle): void
+    {
+        $this->entryTitle = $entryTitle;
+    }
 
+    /**
+     * @return int
+     */
+    public function getOrdering(): int
+    {
+        return $this->ordering;
+    }
 
-	/**
-	 * @param bool $includeInJsonListView
-	 */
-	public function setIncludeInJsonListView(bool $includeInJsonListView): void
-	{
-		$this->includeInJsonListView = $includeInJsonListView;
-	}
+    /**
+     * @param int $ordering
+     */
+    public function setOrdering(int $ordering): void
+    {
+        $this->ordering = $ordering;
+    }
 
+    /**
+     * @return boolean
+     */
+    public function isTranslatable()
+    {
+        return $this->translatable;
+    }
 
-	/**
-	 * @return bool
-	 */
-	public function getEntryTitle(): bool
-	{
-		return $this->entryTitle;
-	}
-
-
-	/**
-	 * @param bool $entryTitle
-	 */
-	public function setEntryTitle(bool $entryTitle): void
-	{
-		$this->entryTitle = $entryTitle;
-	}
-
-
-	/**
-	 * @return int
-	 */
-	public function getOrdering(): int
-	{
-		return $this->ordering;
-	}
-
-
-	/**
-	 * @param int $ordering
-	 */
-	public function setOrdering(int $ordering): void
-	{
-		$this->ordering = $ordering;
-	}
+    /**
+     * @param bool $translatable
+     * @return Property
+     */
+    public function setTranslatable($translatable)
+    {
+        $this->translatable = $translatable;
+        return $this;
+    }
 }

@@ -21,6 +21,7 @@ use Pronto\MobileBundle\Utils\Doctrine\WhereClause;
 use Pronto\MobileBundle\Utils\Optional;
 use Pronto\MobileBundle\Utils\PageHelper;
 use Pronto\MobileBundle\Utils\Responses\ErrorResponse;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -226,16 +227,16 @@ class TranslationController extends BaseController implements ValidateCustomerSe
 
     /**
      * @param EntityManagerInterface $entityManager
-     * @param ProntoMobile $prontoMobile
+     * @param ContainerInterface $container
      * @return Response
      */
-    public function exportAction(EntityManagerInterface $entityManager, ProntoMobile $prontoMobile)
+    public function exportAction(EntityManagerInterface $entityManager, ContainerInterface $container)
     {
         $translationKeys = $entityManager->getRepository(TranslationKey::class)->findBy([
             'application' => $this->getApplication()
         ]);
 
-        $availableLanguages = $prontoMobile->getApplication()->getAvailableLanguages();
+        $availableLanguages = $this->prontoMobile->getApplication()->getAvailableLanguages();
 
         $headers = ['key', 'type', 'description', 'android', 'ios'];
 
@@ -274,7 +275,7 @@ class TranslationController extends BaseController implements ValidateCustomerSe
 
         $response = new Response(implode("\r\n", $rows));
         $response->headers->set('Content-Type', 'text/csv');
-        $response->headers->set('Content-Disposition', 'attachment; filename=' . date('Y-m-d') . ' ' . $prontoMobile->getApplication()->getName() . '.csv');
+        $response->headers->set('Content-Disposition', 'attachment; filename=' . date('Y-m-d') . ' ' . $this->prontoMobile->getApplication()->getName() . '.csv');
 
         return $response;
     }

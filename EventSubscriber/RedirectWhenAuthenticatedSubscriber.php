@@ -17,12 +17,15 @@ use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundE
 
 class RedirectWhenAuthenticatedSubscriber implements EventSubscriberInterface
 {
-	/** @var AuthorizationCheckerInterface $authorizationChecker */
+	/**
+     * @var AuthorizationCheckerInterface $authorizationChecker
+     */
 	private $authorizationChecker;
 
-	/** @var UrlGeneratorInterface $router */
+	/**
+     * @var UrlGeneratorInterface $router
+     */
 	private $router;
-
 
 	/**
 	 * RedirectWhenAuthenticatedSubscriber constructor.
@@ -34,7 +37,6 @@ class RedirectWhenAuthenticatedSubscriber implements EventSubscriberInterface
 		$this->authorizationChecker = $authorizationChecker;
 		$this->router = $router;
 	}
-
 
 	/**
 	 * @param FilterControllerEvent $event
@@ -62,7 +64,6 @@ class RedirectWhenAuthenticatedSubscriber implements EventSubscriberInterface
 		}
 	}
 
-
 	/**
 	 * If user is logged in but has loaded one of the specified
 	 * FOSUserBundle controllers
@@ -82,7 +83,6 @@ class RedirectWhenAuthenticatedSubscriber implements EventSubscriberInterface
 
 		$event->setResponse($response);
 	}
-
 
 	/**
 	 * Returns an array of event names this subscriber wants to listen to.

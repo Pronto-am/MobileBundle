@@ -8,6 +8,7 @@ use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\Application\ApplicationPlugin;
 use Pronto\MobileBundle\Exceptions\InactivePluginException;
 use Pronto\MobileBundle\Service\ProntoMobile;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
@@ -17,24 +18,26 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ValidatePluginStateSubscriber implements EventSubscriberInterface
 {
-	/** @var UrlGeneratorInterface */
+	/**
+     * @var UrlGeneratorInterface
+     */
 	private $router;
 
-	/** @var ProntoMobile $prontoMobile */
+	/**
+     * @var ProntoMobile $prontoMobile
+     */
 	private $prontoMobile;
 
-
-	/**
-	 * ValidatePluginStateSubscriber constructor.
-	 * @param UrlGeneratorInterface $router
-	 * @param ProntoMobile $prontoMobile
-	 */
-	public function __construct(UrlGeneratorInterface $router, ProntoMobile $prontoMobile)
+    /**
+     * ValidatePluginStateSubscriber constructor.
+     * @param UrlGeneratorInterface $router
+     * @param ContainerInterface $container
+     */
+	public function __construct(UrlGeneratorInterface $router, ContainerInterface $container)
 	{
 		$this->router = $router;
-		$this->prontoMobile = $prontoMobile;
+		$this->prontoMobile = $container->get('pronto_mobile.global.app');
 	}
-
 
 	/**
 	 * @param FilterControllerEvent $event

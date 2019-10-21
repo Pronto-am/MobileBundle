@@ -4,18 +4,22 @@ namespace Pronto\MobileBundle\Service\Collection;
 
 
 use DateTime;
+use Pronto\MobileBundle\Entity\Collection\Property;
 use Pronto\MobileBundle\Entity\Collection\Property\Type;
 use Pronto\MobileBundle\Service\JsonTranslator;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class EntryValueParser
 {
-	/** @var TranslatorInterface $translator */
+	/**
+     * @var TranslatorInterface $translator
+     */
 	private $translator;
 
-	/** @var JsonTranslator $jsonTranslator */
+	/**
+     * @var JsonTranslator $jsonTranslator
+     */
 	private $jsonTranslator;
-
 
 	/**
 	 * EntryValueParser constructor.
@@ -29,17 +33,18 @@ class EntryValueParser
 		$this->jsonTranslator = $jsonTranslator;
 	}
 
-
-	/**
-	 * Parse an entry property
-	 *
-	 * @param Type $type
-	 * @param mixed $value
-	 * @return string
-	 */
-	public function parse(Type $type, $value): string
+    /**
+     * Parse an entry property
+     *
+     * @param Property $property
+     * @param mixed $value
+     * @return string
+     */
+	public function parse(Property $property, $value): string
 	{
-		if ($type->getTranslatable()) {
+	    $type = $property->getType();
+
+		if ($property->isTranslatable()) {
 			$value = $this->jsonTranslator->getTranslation($value);
 		}
 
@@ -49,7 +54,6 @@ class EntryValueParser
 
 		return $this->parseText($value);
 	}
-
 
 	/**
 	 * Return plain text
@@ -61,7 +65,6 @@ class EntryValueParser
 	{
 		return $value ?? '';
 	}
-
 
     /**
      * Return date string
@@ -77,7 +80,6 @@ class EntryValueParser
 		return $date->format('d-m-Y');
 	}
 
-
     /**
      * Return date string
      *
@@ -91,7 +93,6 @@ class EntryValueParser
 
 		return $this->translator->trans('format.date_and_time', ['%date%' => $dateTime->format('d-m-Y'), '%time%' => $dateTime->format('H:i')]);
 	}
-
 
 	/**
 	 * Parse a boolean

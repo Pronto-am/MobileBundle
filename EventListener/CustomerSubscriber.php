@@ -11,6 +11,7 @@ use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\Customer;
 use Pronto\MobileBundle\Service\FileManager;
 use Pronto\MobileBundle\Service\ProntoMobile;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -32,16 +33,15 @@ class CustomerSubscriber implements EventSubscriber
 	 */
 	private $translator;
 
-
-	/**
-	 * CustomerSubscriber constructor.
-	 * @param FileManager $fileManager
-	 * @param ProntoMobile $prontoMobile
-	 * @param TranslatorInterface $translator
-	 */
-	public function __construct(FileManager $fileManager, ProntoMobile $prontoMobile, TranslatorInterface $translator)
+    /**
+     * CustomerSubscriber constructor.
+     * @param FileManager $fileManager
+     * @param ContainerInterface $container
+     * @param TranslatorInterface $translator
+     */
+	public function __construct(FileManager $fileManager, ContainerInterface $container, TranslatorInterface $translator)
 	{
-		$this->prontoMobile = $prontoMobile;
+		$this->prontoMobile = $container->get('pronto_mobile.global.app');
 		$this->fileManager = $fileManager;
 		$this->translator = $translator;
 	}

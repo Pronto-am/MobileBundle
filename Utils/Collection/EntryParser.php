@@ -16,17 +16,24 @@ use Symfony\Component\HttpFoundation\Request;
 
 class EntryParser
 {
-
-	/** @var array $entry */
+	/**
+     * @var array $entry
+     */
 	private $entry = [];
 
-	/** @var array $formData */
+	/**
+     * @var array $formData
+     */
 	private $formData;
 
-	/** @var FileBag $files */
+	/**
+     * @var FileBag $files
+     */
 	private $files;
 
-	/** @var array $classes Mapping for the property types */
+	/**
+     * @var array $classes Mapping for the property types
+     */
 	private $classes = [
 		'boolean'     => BooleanProperty::class,
 		'coordinates' => CoordinatesProperty::class,
@@ -34,7 +41,6 @@ class EntryParser
 		'dateTime'    => DateTimeProperty::class,
 		'file'        => FileProperty::class
 	];
-
 
 	/**
 	 * EntryParser constructor.
@@ -52,7 +58,6 @@ class EntryParser
 		$this->files = $request->files;
 	}
 
-
 	/**
 	 * Add property values to the entry
 	 *
@@ -65,7 +70,6 @@ class EntryParser
 
 		$this->entry = array_merge($this->entry, $type->parse());
 	}
-
 
 	/**
 	 * Get the transformer by property type
@@ -89,7 +93,6 @@ class EntryParser
 
 		return new BaseType($this->formData, $property);
 	}
-
 
 	/**
 	 * Get the entry object as array

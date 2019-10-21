@@ -21,5 +21,5 @@ class DefaultController extends BaseController implements ValidateCustomerSelect
 		return $this->render('@ProntoMobile/default/index.html.twig', [
 			'plugins' => $plugins
 		]);
-	}
+    }
 }
