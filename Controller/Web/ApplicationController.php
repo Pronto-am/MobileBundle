@@ -7,9 +7,9 @@ use Pronto\MobileBundle\Controller\BaseController;
 use Pronto\MobileBundle\DTO\ApplicationDTO;
 use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\Application\Version;
+use Pronto\MobileBundle\EventSubscriber\ValidateCustomerSelectionInterface;
 use Pronto\MobileBundle\Form\ApplicationForm;
 use Pronto\MobileBundle\Service\LanguagesLoader;
-use Pronto\MobileBundle\Service\ProntoMobile;
 use Pronto\MobileBundle\Utils\Doctrine\WhereClause;
 use Pronto\MobileBundle\Utils\PageHelper;
 use Pronto\MobileBundle\Utils\Responses\ErrorResponse;
@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-class ApplicationController extends BaseController
+class ApplicationController extends BaseController implements ValidateCustomerSelectionInterface
 {
     /**
      * Show a list of applications
@@ -33,10 +33,9 @@ class ApplicationController extends BaseController
         $pageHelper = new PageHelper($request, $entityManager, Application::class, 15, 't.name');
         $pageHelper->addClause(new WhereClause('t.customer', $this->getCustomer()));
 
-        return $this->render('@ProntoMobile/applications/index.html.twig',
-            [
-                'pageHelper' => $pageHelper
-            ]);
+        return $this->render('@ProntoMobile/applications/index.html.twig', [
+            'pageHelper' => $pageHelper
+        ]);
     }
 
     /**

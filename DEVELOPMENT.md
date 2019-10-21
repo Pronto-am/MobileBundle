@@ -11,7 +11,7 @@ Installation
 
 Install this bundle in a clean Symfony project, and run every command from within that project. The bundle needs to be installed as a symlinked package to be able to see changes.
 
-### Step 1. Clone the skeleton
+### Step 1. Create the project
 
 Open a command console and execute the following command to create a new project inside the folder: <package-name>:
 
@@ -19,12 +19,33 @@ Open a command console and execute the following command to create a new project
 $ composer create-project pronto/mobile-skeleton <package-name> # for instance: MobileDev
 ```
 
-This command requires you to have Composer installed globally, as explained
-in the [installation chapter](https://getcomposer.org/doc/00-intro.md)
-of the Composer documentation.
+### Step 2. Clone the MobileBundle
 
+Clone the MobileBundle in a separate directory, to be able to use it as a local package.
 
-### Step 2: Setup the database
+```console
+$ git clone git@github.com:Pronto-am/MobileBundle.git MobileBundle
+```
+
+## Step 3. Change composer.json
+
+Change the `composer.json` file of the Skeleton, so the MobileBundle is used as local reference:
+
+```json
+"repositories": [
+    {
+        "type": "path",
+        "url": "../MobileBundle",
+        "symlink": true
+    }
+]
+```
+
+### Step 4: Reinstall composer dependencies
+
+Remove the `vendor` directory and `composer.lock` file, and reinstall all composer dependencies.
+
+### Step 5. Update database
 
 Update your database connection inside the `.env` file to match your configuration:
 
@@ -43,6 +64,10 @@ And run the fixtures to provide initial data:
 ```console
 $ php bin/console doctrine:fixtures:load
 ```
+
+### Step 6. Symlink assets
+
+Reinstall the bundle assets in the skeleton project by using as symlinks. This way, changes to asset files are updated in the skeleton project. 
 
 Asset compiling
 ===============

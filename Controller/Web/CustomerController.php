@@ -31,8 +31,7 @@ class CustomerController extends BaseController
 	{
 		$customers = $entityManager->getRepository(Customer::class)->findBy([], ['companyName' => 'asc']);
 
-		return $this->render('@ProntoMobile/customers/customers.html.twig',
-			[
+		return $this->render('@ProntoMobile/customers/customers.html.twig', [
 				'customers' => $customers
 			]);
 	}
@@ -53,6 +52,9 @@ class CustomerController extends BaseController
 			$response = new SuccessResponse(['url' => $this->generateAbsoluteUrl('pronto_mobile_select_application')]);
 
 			$request->getSession()->set(Customer::SESSION_IDENTIFIER, $id);
+
+			sleep(1);
+
 		} else {
 			$response = new ErrorResponse([404, 'No ID present']);
 		}
