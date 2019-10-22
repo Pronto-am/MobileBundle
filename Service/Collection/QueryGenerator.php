@@ -339,9 +339,9 @@ class QueryGenerator
 		// Add the having clauses for JSON extracted columns
 		foreach ($having as $field => $value) {
 			$query .= $first ? 'HAVING ' : 'AND ';
-			$query .= $this->jsonUnquote($field) . ' = ? ';
+			$query .= $this->jsonUnquote($field) . ' LIKE ? ';
 
-			$queryParameters[] = $value;
+			$queryParameters[] = '%' . $value . '%';
 
 			$first = false;
 		}

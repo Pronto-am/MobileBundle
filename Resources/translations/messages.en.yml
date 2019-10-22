@@ -337,3 +337,22 @@ app_version.description_label: "Description (%lang%)"
 app_version.required: Version is required
 app_version.file: File
 app_version.url: Url
+
+remote_config: remote config
+remote_configurations: configurations
+remote_config.name: Name
+remote_config.type: Type
+remote_config.type.string: String
+remote_config.type.bool: Boolean
+remote_config.type.integer: Integer
+remote_config.type.enum: Enum
+remote_config.type.enum.choices: Enum options
+remote_config.type.enum.multiple: Allow multiple
+remote_config.type.json: JSON
+remote_config.release_date: Release date
+remote_config.description: Description
+remote_config.identifier: Key
+remote_config.value: Value
+remote_config.platforms: Platforms
+remote_config.platforms.android: Android
+remote_config.platforms.ios: iOS

@@ -39,10 +39,12 @@ class TranslationForm extends AbstractType
             ],
             'label'   => 'translation.type'
         ])->add('android', CheckboxType::class, [
+            'label'      => 'remote_config.platforms.android',
             'label_attr' => [
                 'class' => 'no-asterisk'
             ]
         ])->add('ios', CheckboxType::class, [
+            'label'      => 'remote_config.platforms.ios',
             'label_attr' => [
                 'class' => 'no-asterisk'
             ]

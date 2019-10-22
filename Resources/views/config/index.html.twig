@@ -1,0 +1,68 @@
+{% extends '@ProntoMobile/base.html.twig' %}
+
+{% block body %}
+
+    {% include '@ProntoMobile/components/toolbar.html.twig' with {
+        pageTitle: 'remote_config'|trans|capitalize,
+        newObjectUrl: 'pronto_mobile_remote_config_edit',
+        delete: pageHelper.getList()|length > 0
+    } %}
+
+    {% if pageHelper.getList()|length > 0 %}
+        <div class="card">
+            <div class="card-content">
+                <form action="{{ path('pronto_mobile_remote_config_delete') }}" method="POST">
+                    <table class="table striped bordered highlight responsive-table">
+                        <thead>
+                        <tr>
+                            <th width="60" class="has-checkbox">
+                                <input type="checkbox" id="checkAll">
+                                <label for="checkAll"></label>
+                            </th>
+                            <th width="50">#</th>
+                            <th width="150">{{ pageHelper.createSortableLink('remote_config.name'|trans|capitalize, 't.name') }}</th>
+                            <th width="150">{{ pageHelper.createSortableLink('remote_config.identifier'|trans|capitalize, 't.key') }}</th>
+                            <th width="150">{{ pageHelper.createSortableLink('remote_config.release_date'|trans|capitalize, 't.releaseDate') }}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for key, configuration in pageHelper.getList() %}
+                            <tr data-remote-config-id="{{ configuration.id }}">
+                                <td class="has-checkbox">
+                                    <input type="checkbox" id="configCheckbox{{ configuration.id }}" name="items[]" value="{{ configuration.id }}">
+                                    <label for="configCheckbox{{ configuration.id }}"></label>
+                                </td>
+                                <td>{{ pageHelper.getRowNumber(key) }}</td>
+                                <td>
+                                    <a href="{{ path('pronto_mobile_remote_config_edit', {'id': configuration.id}) }}" class="regular">
+                                        {{ configuration.name }}
+                                    </a>&nbsp;
+                                    {% if is_granted('ROLE_SUPER_ADMIN') %}
+                                        <a href="#!" class="platform {{ configuration.android ? 'active' : '' }}"><i class="fa fa-android"></i></a>
+                                        <a href="#!" class="platform {{ configuration.ios ? 'active' : '' }}"><i class="fa fa-apple"></i></a>
+                                    {% endif %}
+                                </td>
+                                <td>{{ configuration.identifier }}</td>
+                                <td>{{ configuration.releaseDate != null ? configuration.releaseDate|date('d-m-Y') : '' }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+        </div>
+
+        {% include '@ProntoMobile/components/pagination.html.twig' with {pageHelper: pageHelper} %}
+    {% else %}
+        {% include '@ProntoMobile/components/alert.html.twig' with {type: 'info', collection: 'remote_configurations'} %}
+    {% endif %}
+
+    {% include '@ProntoMobile/components/confirm.html.twig' with {postUrl: path('pronto_mobile_remote_config_delete')} %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="text/javascript" src="{{ mix('/js/configurations/configurations.js') }}"></script>
+
+{% endblock %}
