@@ -1,0 +1,188 @@
+{% extends '@ProntoMobile/base.html.twig' %}
+
+{% block body %}
+    {% include '@ProntoMobile/components/pageTitle.html.twig' with {entity: 'remote_config', exists: version != null, backButton: path('pronto_mobile_remote_config')} %}
+
+    <div class="row card">
+        <div class="card-content col s12">
+            {{ form_start(form) }}
+
+            {% if is_granted('ROLE_SUPER_ADMIN') %}
+                <div class="row">
+                    <div class="col s12 m6">
+                        {{ form_row(form.name) }}
+                    </div>
+                    <div class="col s12 m6">
+                        {{ form_row(form.identifier) }}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col s12">
+                        {{ form_row(form.description) }}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col s12 m6">
+                        {{ form_row(form.type) }}
+                    </div>
+                    <div class="col s12 m6">
+                        {{ form_row(form.releaseDate) }}
+                    </div>
+                </div>
+
+                <div class="config-type config-type-enum">
+                    <div class="row">
+                        <div class="col s12">
+                            <label for="remote_config_form_enum_values">{{ 'remote_config.type.enum.choices'|trans }}</label>
+                            <select name="remote_config_form[options][enum][choices][]" id="remote_config_form_enum_values" class="select2 browser-default select2-tags" multiple>
+                                {% if configuration.options['choices'] is defined and configuration.options['choices'] is iterable %}
+                                    {% for option in configuration.options['choices'] %}
+                                        <option selected>{{ option }}</option>
+                                    {% endfor %}
+                                {% endif %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col s12">
+                            <input type="checkbox" name="remote_config_form[options][enum][multiple]" id="remote_config_form_enum_multiple" value="1" {% if configuration.options['multiple'] is defined and configuration.options['multiple'] == true %}checked{% endif %}>
+                            <label for="remote_config_form_enum_multiple">{{ 'remote_config.type.enum.multiple'|trans }}</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="config-type config-type-integer">
+                    <div class="row">
+                        {% for option in ['min', 'max', 'step'] %}
+                            <div class="col s6 m4">
+                                <label for="remote_config_form_value_integer_{{ option }}">{{ ('collection.property.type.' ~ option)|trans }}</label>
+                                <input type="number"
+                                       name="remote_config_form[options][integer][{{ option }}]"
+                                       id="remote_config_form_value_integer_{{ option }}"
+                                       value="{{ configuration.options[option] is defined ? configuration.options[option] : '' }}">
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col s12">
+                        <h3><span>/</span>{{ 'remote_config.platforms'|trans }}</h3>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col s6">
+                        {{ form_row(form.android) }}
+                    </div>
+                    <div class="col s6">
+                        {{ form_row(form.ios) }}
+                    </div>
+                </div>
+            {% endif %}
+
+            <div class="row">
+                <div class="col s12">
+                    <h3><span>/</span>{{ configuration.name ?? 'remote_config.value'|trans }}</h3>
+
+                    {% if valueError != null %}
+                        <ul>
+                            <li>{{ valueError }}</li>
+                        </ul>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s12">
+                    <div class="config-type config-type-string">
+                        <label for="remote_config_form_value_string">{{ 'remote_config.value'|trans }}</label>
+                        <input type="text" name="remote_config_form[value][string]" id="remote_config_form_value_string" value="{{ configuration.value }}">
+                    </div>
+
+                    <div class="config-type config-type-bool">
+                        <input type="checkbox" name="remote_config_form[value][bool]" id="remote_config_form_value_bool" value="1" {% if configuration.value == 1 %}checked{% endif %}>
+                        <label for="remote_config_form_value_bool">{{ configuration.name ?? 'remote_config.value'|trans }}</label>
+                    </div>
+
+                    <div class="config-type config-type-enum">
+                        <label for="remote_config_form_value_enum">{{ 'remote_config.value'|trans }}</label>
+                        <select name="remote_config_form[value][enum][]" id="remote_config_form_value_enum" class="select2 browser-default" {% if configuration.options['multiple'] is defined and configuration.options['choices'] == true %}multiple{% endif %}>
+                            {% if configuration.options['choices'] is iterable %}
+                                {% for option in configuration.options['choices'] %}
+                                    <option {% if configuration.jsonValue is iterable and option in configuration.jsonValue %}selected{% endif %}>{{ option }}</option>
+                                {% endfor %}
+                            {% endif %}
+                        </select>
+                    </div>
+
+                    <div class="config-type config-type-json">
+                        <label for="remote_config_form_value_json">{{ 'remote_config.value'|trans }}</label>
+                        <div class="codeflask" data-name="remote_config_form[value][json]" data-language="json">{{ configuration.jsonValue|json_encode(constant('JSON_PRETTY_PRINT')) }}</div>
+                    </div>
+
+                    <div class="config-type config-type-integer">
+                        <label for="remote_config_form_value_integer">
+                            {{ 'remote_config.value'|trans }}
+
+                            {% if configuration.options['min'] != '' and configuration.options['max'] != '' %}
+                                ({{ 'collection.entry.number_between'|trans({'%min%': configuration.options['min'], '%max%': configuration.options['max']}) }})
+                            {% elseif configuration.options['min'] != '' and configuration.options['max'] == '' %}
+                                ({{ 'collection.entry.number_greater_then'|trans({'%min%': configuration.options['min']}) }})
+                            {% elseif configuration.options['min'] == '' and configuration.options['max'] != '' %}
+                                ({{ 'collection.entry.number_less_then'|trans({'%max%': configuration.options['max']}) }})
+                            {% endif %}
+                        </label>
+
+                        <input type="number"
+                               name="remote_config_form[value][integer]"
+                               id="remote_config_form_value_integer"
+
+                                {% if configuration.options['min'] != '' %}
+                                    min="{{ configuration.options['min'] }}"
+                                {% endif %}
+
+                                {% if configuration.options['max'] != '' %}
+                                    max="{{ configuration.options['max'] }}"
+                                {% endif %}
+
+                                {% if configuration.options['step'] != '' %}
+                                    step="{{ configuration.options['step'] }}"
+                                {% endif %}
+
+                               value="{{ configuration.value }}">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s12">
+                    <button type="submit" class="btn btn-primary" {% if not is_granted('ROLE_SUPER_ADMIN') %}disabled="disabled"{% endif %} formnovalidate>{{ 'buttons.save'|trans }}</button>
+                </div>
+            </div>
+
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+    <link rel="stylesheet" href="{{ mix('/css/select2.css') }}"/>
+    <link rel="stylesheet" href="{{ mix('/css/codeflask.css') }}"/>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+        const valueTranslation = '{{ 'remote_config.value'|trans }}';
+    </script>
+    <script src="/bundles/prontomobile/libraries/select2/js/select2.min.js"></script>
+    <script type="text/javascript" src="{{ mix('/js/configurations/configurations.js') }}"></script>
+
+{% endblock %}

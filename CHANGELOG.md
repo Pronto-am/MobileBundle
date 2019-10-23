@@ -1,5 +1,13 @@
 # Changelog
 
+### v1.5.0
+
+#### Improvements:
+- Added remote config plugin
+
+#### Developer related
+- Added development documentation and public Postman API collection
+
 ### v1.4.0
 
 #### Improvements:

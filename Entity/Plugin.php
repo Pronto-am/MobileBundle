@@ -21,13 +21,13 @@ class Plugin
 	public const APP_VERSIONS = 'app_versions';
 	public const PUSH_NOTIFICATIONS = 'notifications';
 	public const TRANSLATIONS = 'translations';
+	public const REMOTE_CONFIG = 'remote_config';
 
 	// Config settings
 	public const PUSH_NOTIFICATIONS_FIREBASE_TOKEN = 'firebaseAccessToken';
 	public const PUSH_NOTIFICATIONS_NOTIFICATION_TEMPLATE = 'notificationHtmlTemplate';
 	public const APP_USERS_REGISTRATION_ENABLED = 'registrationEnabled';
 	public const APP_USERS_ACTIVATION_REQUIRED = 'accountActivationViaEmail';
-
 
 	/**
 	 * @ORM\Id
@@ -36,42 +36,38 @@ class Plugin
 	 */
 	private $id;
 
-
 	/**
 	 * @ORM\Column(type="string")
 	 */
 	private $name;
-
 
 	/**
 	 * @ORM\Column(type="string")
 	 */
 	private $identifier;
 
-
 	/**
 	 * @ORM\Column(type="string")
 	 */
 	private $icon;
-
 
 	/**
 	 * @ORM\Column(type="json_array")
 	 */
 	private $defaultConfig;
 
-
 	/**
 	 * @ORM\OneToMany(targetEntity="Pronto\MobileBundle\Entity\Application\ApplicationPlugin", mappedBy="plugin")
 	 */
 	private $applicationPlugins;
 
-
+    /**
+     * Plugin constructor.
+     */
 	public function __construct()
 	{
 		$this->applicationPlugins = new ArrayCollection();
 	}
-
 
 	/**
 	 * @return int|null
@@ -81,7 +77,6 @@ class Plugin
 		return $this->id;
 	}
 
-
 	/**
 	 * @return string
 	 */
@@ -89,7 +84,6 @@ class Plugin
 	{
 		return $this->name;
 	}
-
 
 	/**
 	 * @param string $name
@@ -99,7 +93,6 @@ class Plugin
 		$this->name = $name;
 	}
 
-
 	/**
 	 * @return string
 	 */
@@ -107,7 +100,6 @@ class Plugin
 	{
 		return $this->identifier;
 	}
-
 
 	/**
 	 * @param string $identifier
@@ -117,7 +109,6 @@ class Plugin
 		$this->identifier = $identifier;
 	}
 
-
 	/**
 	 * @return string
 	 */
@@ -125,7 +116,6 @@ class Plugin
 	{
 		return $this->icon;
 	}
-
 
 	/**
 	 * @param string $icon
@@ -135,7 +125,6 @@ class Plugin
 		$this->icon = $icon;
 	}
 
-
 	/**
 	 * @return array
 	 */
@@ -143,7 +132,6 @@ class Plugin
 	{
 		return $this->defaultConfig;
 	}
-
 
 	/**
 	 * @param array $defaultConfig

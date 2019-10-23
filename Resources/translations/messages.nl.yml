@@ -1,4 +1,3 @@
-
 ##
 ## General translations
 ##
@@ -40,6 +39,7 @@ buttons.no: Nee
 buttons.cancel: Annuleren
 
 form.required_field: Dit veld is verplicht
+form.invalid_value: Dit veld is ongeldig
 form.invalid_format: Het formaat is ongeldig
 form.inconsistent_field: Dit veld is niet voor iedere taal gevuld
 form.invalid_json: De ingevoerde JSON code is niet geldig
@@ -338,3 +338,23 @@ app_version.description_label: "Omschrijving (%lang%)"
 app_version.required: Versie is verplicht
 app_version.file: Bestand
 app_version.url: Url
+
+remote_config: remote config
+remote_configurations: configuraties
+remote_config.name: Naam
+remote_config.type: Type
+remote_config.type.string: String
+remote_config.type.bool: Boolean
+remote_config.type.integer: Integer
+remote_config.type.enum: Enum
+remote_config.type.enum.choices: Enum keuzes
+remote_config.type.enum.multiple: Meerdere toestaan
+remote_config.type.json: JSON
+remote_config.release_date: Release datum
+remote_config.description: Omschrijving
+remote_config.identifier: Key
+remote_config.value: Waarde
+remote_config.value.invalid: Ingevulde waarde is ongeldig
+remote_config.platforms: Platformen
+remote_config.platforms.android: Android
+remote_config.platforms.ios: iOS

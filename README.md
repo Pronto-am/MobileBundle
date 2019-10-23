@@ -127,15 +127,19 @@ crontab -e
 API Docs
 ========
 
+### Postman
+A [public Postman collection](https://documenter.getpostman.com/view/7226788/SVzw3zwg) is available, with the currently available API routes.
+
+### APIDoc JS
 The MobileBundle uses [apidocjs](http://apidocjs.com) to generate API docs. The docs are located inside the `public/apidoc` folder.
 
-### OAuth2
+#### OAuth2
 
 The API docs don't list the routes for OAuth. The Android and Mobile sdk of the MobileBundle both use OAuth to connect to the API. If you're not familiar with OAuth, I suggest you visit [https://www.oauth.com](https://www.oauth.com) to get yourself up to date.
 
 The routes for requesting an access token is: `https://yourdomain.app/oauth/v2/token`. You can request an access token by using the client credentials, or using the username and password combination of an app user.
 
-#### Request access token: Client Credentials 
+##### Request access token: Client Credentials 
 Documentation:[https://www.oauth.com/oauth2-servers/access-tokens/client-credentials/](https://www.oauth.com/oauth2-servers/access-tokens/client-credentials/)
 
 ```
@@ -148,7 +152,7 @@ Documentation:[https://www.oauth.com/oauth2-servers/access-tokens/client-credent
 }
 ```
 
-#### Request access token: Username and password 
+##### Request access token: Username and password 
 Documentation:[https://www.oauth.com/oauth2-servers/access-tokens/password-grant/](https://www.oauth.com/oauth2-servers/access-tokens/client-credentials/)
 
 ```

@@ -6,20 +6,6 @@ table {
           a.regular {
             margin-right: 10px;
           }
-
-          a.platform {
-            color: #cccccc;
-
-            &.active {
-              i.fa-android {
-                color: #A3C439;
-              }
-
-              i.fa-apple {
-                color: #666666;
-              }
-            }
-          }
         }
 
         div:last-child {

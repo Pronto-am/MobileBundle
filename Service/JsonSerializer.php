@@ -15,9 +15,10 @@ use Symfony\Component\Serializer\Serializer;
 
 class JsonSerializer
 {
-	/** @var ClassMetadataFactory classMetadataFactory */
+	/**
+     * @var ClassMetadataFactory classMetadataFactory
+     */
 	private $classMetadataFactory;
-
 
 	/**
 	 * JsonSerializer constructor.
@@ -27,7 +28,6 @@ class JsonSerializer
 	{
 		$this->classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
 	}
-
 
 	/**
 	 * Serialize an entity
@@ -59,7 +59,6 @@ class JsonSerializer
 		]);
 	}
 
-
 	/**
 	 * Set the groups of the serialization
 	 *
@@ -79,7 +78,6 @@ class JsonSerializer
 		$groups[] = 'TimestampedEntity';
 		$groups[] = 'TimestampedWithUserEntity';
 	}
-
 
 	/**
 	 * Get the class name by entity or array of entities

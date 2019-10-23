@@ -416,6 +416,32 @@ app_versions_delete:
         _controller: Pronto\MobileBundle\Controller\Web\AppVersionController:deleteAction
 
 
+#### REMOTE CONFIG ####
+
+remote_config:
+    path: /config
+    defaults:
+        _controller: Pronto\MobileBundle\Controller\Web\RemoteConfigController:indexAction
+
+remote_config_edit:
+    path: /config/edit/{id}
+    defaults:
+        _controller: Pronto\MobileBundle\Controller\Web\RemoteConfigController:editAction
+        id: null
+    condition: "context.getMethod() in ['GET', 'POST']"
+
+remote_config_delete:
+    path: /config/delete
+    defaults:
+        _controller: Pronto\MobileBundle\Controller\Web\RemoteConfigController:deleteAction
+
+remote_config_platform:
+    path: /config/platform
+    defaults:
+        _controller: Pronto\MobileBundle\Controller\Web\RemoteConfigController:togglePlatformAction
+    condition: "context.getMethod() in ['POST']"
+
+
 #### PLUGINS ####
 
 plugins:

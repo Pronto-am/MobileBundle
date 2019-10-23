@@ -65,13 +65,22 @@ class PluginFixtures extends Fixture
 
 		$manager->persist($translations);
 
-		$translations = new Plugin();
-		$translations->setName('App versions');
-		$translations->setIdentifier('app_versions');
-		$translations->setIcon('fa-code-fork');
-		$translations->setDefaultConfig([]);
+        $appVersions = new Plugin();
+        $appVersions->setName('App versions');
+        $appVersions->setIdentifier('app_versions');
+        $appVersions->setIcon('fa-code-fork');
+        $appVersions->setDefaultConfig([]);
 
-		$manager->persist($translations);
-		$manager->flush();
+        $manager->persist($appVersions);
+        $manager->flush();
+
+        $remoteConfig = new Plugin();
+        $remoteConfig->setName('Remote config');
+        $remoteConfig->setIdentifier('remote_config');
+        $remoteConfig->setIcon('fa-cog');
+        $remoteConfig->setDefaultConfig([]);
+
+        $manager->persist($remoteConfig);
+        $manager->flush();
 	}
 }
