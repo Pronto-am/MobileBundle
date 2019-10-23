@@ -83,12 +83,14 @@ class AppUserController extends BaseApiController
 	 * @apiUse AuthorizationErrors
 	 */
 
-	/**
-	 * @param Request $request
-	 * @param EntityManagerInterface $entityManager
-	 * @return \Symfony\Component\HttpFoundation\JsonResponse
-	 * @throws \Pronto\MobileBundle\Exceptions\ApiException
-	 */
+    /**
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Pronto\MobileBundle\Exceptions\ApiException
+     */
 	public function registerAction(Request $request, EntityManagerInterface $entityManager)
 	{
 		// Validate the authorization

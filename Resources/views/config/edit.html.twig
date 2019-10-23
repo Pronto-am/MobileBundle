@@ -87,6 +87,12 @@
             <div class="row">
                 <div class="col s12">
                     <h3><span>/</span>{{ configuration.name ?? 'remote_config.value'|trans }}</h3>
+
+                    {% if valueError != null %}
+                        <ul>
+                            <li>{{ valueError }}</li>
+                        </ul>
+                    {% endif %}
                 </div>
             </div>
 

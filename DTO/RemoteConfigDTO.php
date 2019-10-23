@@ -4,6 +4,8 @@ namespace Pronto\MobileBundle\DTO;
 
 use DateTime;
 use Pronto\MobileBundle\Enum\RemoteConfigType;
+use Pronto\MobileBundle\Validator\Constraints\Config\IsUniqueIdentifier;
+use Pronto\MobileBundle\Validator\Constraints\Config\IsValidForType;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -13,19 +15,20 @@ use Symfony\Component\Validator\Constraints as Assert;
 class RemoteConfigDTO extends BaseDTO
 {
     /**
-     * @var int $id
+     * @var int|null $id
      */
     public $id;
 
     /**
-     * @Assert\NotBlank()
      * @var string $name
+     * @Assert\NotBlank()
      */
     public $name;
 
     /**
-     * @Assert\NotBlank()
      * @var string $identifier
+     * @Assert\NotBlank()
+     * @IsUniqueIdentifier
      */
     public $identifier;
 
@@ -35,20 +38,16 @@ class RemoteConfigDTO extends BaseDTO
     public $description;
 
     /**
-     * @Assert\NotBlank()
      * @var string $type
+     * @Assert\NotBlank()
      */
     public $type;
 
     /**
-     * @var string $value
+     * @var array $value
+     * @IsValidForType
      */
     public $value;
-
-    /**
-     * @var array $jsonValue
-     */
-    public $jsonValue;
 
     /**
      * @var DateTime $releaseDate
@@ -70,7 +69,15 @@ class RemoteConfigDTO extends BaseDTO
      */
     public static function getFillable(): array
     {
-        return ['name', 'identifier', 'description', 'type', 'value', 'jsonValue', 'releaseDate', 'android' => 'isAndroid', 'ios' => 'isIos'];
+        return [
+            'name',
+            'identifier',
+            'description',
+            'type',
+            'releaseDate',
+            'android' => 'isAndroid',
+            'ios'     => 'isIos'
+        ];
     }
 
     /**

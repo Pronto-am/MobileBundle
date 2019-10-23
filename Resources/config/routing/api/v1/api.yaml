@@ -93,3 +93,12 @@ app_version_file:
     defaults:
         _controller: Pronto\MobileBundle\Controller\Api\V1\AppVersionController:downloadAction
     condition: "context.getMethod() in ['GET']"
+
+
+#### REMOTE CONFIG ####
+
+remote_configurations:
+    path: /config
+    defaults:
+        _controller: Pronto\MobileBundle\Controller\Api\V1\RemoteConfigController:indexAction
+    condition: "context.getMethod() in ['GET']"

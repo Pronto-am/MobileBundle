@@ -87,3 +87,10 @@ $ cd ../MobileDev && php bin/console assets:install --symlink
 ```console
 $ npm run production
 ```
+
+APIDoc generation
+=================
+
+```console
+apidoc -i Controller/Api/ -o Resources/public/apidoc/
+```

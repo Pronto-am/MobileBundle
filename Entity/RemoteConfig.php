@@ -14,7 +14,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * Class RemoteConfig
  * @package Pronto\MobileBundle\Entity
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Pronto\MobileBundle\Repository\RemoteConfigRepository")
  * @ORM\Table(name="remote_config")
  */
 class RemoteConfig extends TimestampedEntity implements ApiEntityInterface
@@ -32,11 +32,11 @@ class RemoteConfig extends TimestampedEntity implements ApiEntityInterface
     private $id;
 
     /**
-     * @var Version $applicationVersion
-     * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Application\Version")
+     * @var Application $application
+     * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Application")
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
-    private $applicationVersion;
+    private $application;
 
     /**
      * @var DateTime $releaseDate
@@ -92,7 +92,6 @@ class RemoteConfig extends TimestampedEntity implements ApiEntityInterface
     /**
      * @var array|null $options
      * @ORM\Column(type="json_array", nullable=true)
-     * @Groups({"RemoteConfig"})
      */
     private $options;
 
@@ -118,20 +117,20 @@ class RemoteConfig extends TimestampedEntity implements ApiEntityInterface
     }
 
     /**
-     * @return Version
+     * @return Application
      */
-    public function getApplicationVersion(): Version
+    public function getApplication(): Application
     {
-        return $this->applicationVersion;
+        return $this->application;
     }
 
     /**
-     * @param Version $applicationVersion
+     * @param Application $application
      * @return RemoteConfig
      */
-    public function setApplicationVersion(Version $applicationVersion): RemoteConfig
+    public function setApplication(Application $application): RemoteConfig
     {
-        $this->applicationVersion = $applicationVersion;
+        $this->application = $application;
         return $this;
     }
 
@@ -284,6 +283,12 @@ class RemoteConfig extends TimestampedEntity implements ApiEntityInterface
      */
     public function getValue(): ?string
     {
+        if($this->getType()->equals(RemoteConfigType::INTEGER())) {
+            return (float) $this->value;
+        } else if ($this->getType()->equals(RemoteConfigType::BOOL())) {
+            return (int) $this->value === 1;
+        }
+
         return $this->value;
     }
 

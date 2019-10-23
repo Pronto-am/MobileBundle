@@ -39,6 +39,7 @@ buttons.no: Nee
 buttons.cancel: Annuleren
 
 form.required_field: Dit veld is verplicht
+form.invalid_value: Dit veld is ongeldig
 form.invalid_format: Het formaat is ongeldig
 form.inconsistent_field: Dit veld is niet voor iedere taal gevuld
 form.invalid_json: De ingevoerde JSON code is niet geldig
@@ -353,6 +354,7 @@ remote_config.release_date: Release datum
 remote_config.description: Omschrijving
 remote_config.identifier: Key
 remote_config.value: Waarde
+remote_config.value.invalid: Ingevulde waarde is ongeldig
 remote_config.platforms: Platformen
 remote_config.platforms.android: Android
 remote_config.platforms.ios: iOS

@@ -13,12 +13,15 @@ use Pronto\MobileBundle\EventSubscriber\ValidateCustomerSelectionInterface;
 use Pronto\MobileBundle\EventSubscriber\ValidatePluginStateInterface;
 use Pronto\MobileBundle\Form\RemoteConfigForm;
 use Pronto\MobileBundle\Utils\Doctrine\WhereClause;
+use Pronto\MobileBundle\Utils\Optional;
 use Pronto\MobileBundle\Utils\PageHelper;
 use Pronto\MobileBundle\Utils\Responses\ErrorResponse;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class RemoteConfigController extends BaseController implements ValidateCustomerSelectionInterface, ValidateApplicationSelectionInterface, ValidatePluginStateInterface
@@ -42,7 +45,7 @@ class RemoteConfigController extends BaseController implements ValidateCustomerS
     public function indexAction(Request $request, EntityManagerInterface $entityManager)
     {
         $pageHelper = new PageHelper($request, $entityManager, RemoteConfig::class, 15);
-        $pageHelper->addClause(new WhereClause('t.applicationVersion', $this->getApplicationVersion()));
+        $pageHelper->addClause(new WhereClause('t.application', $this->getApplication()));
 
         return $this->render('@ProntoMobile/config/index.html.twig', [
             'pageHelper' => $pageHelper
@@ -61,10 +64,14 @@ class RemoteConfigController extends BaseController implements ValidateCustomerS
     {
         $configDTO = RemoteConfigDTO::fromEntity($configuration);
 
+        if ($configuration !== null) {
+            $configDTO->id = $configuration->getId();
+        }
+
         $form = $this->createForm(RemoteConfigForm::class, $configDTO, [
             'translator'           => $translator,
             'authorizationChecker' => $authorizationChecker,
-            'allow_extra_fields' => true,
+            'allow_extra_fields'   => true,
         ]);
 
         $form->handleRequest($request);
@@ -75,7 +82,7 @@ class RemoteConfigController extends BaseController implements ValidateCustomerS
 
             /** @var RemoteConfig $configuration */
             $configuration = $configDTO->toEntity($configuration ?? new RemoteConfig());
-            $configuration->setApplicationVersion($this->getApplicationVersion());
+            $configuration->setApplication($this->getApplication());
 
             $configuration->setValue(null)->setJsonValue(null)->setOptions(null);
 
@@ -114,9 +121,23 @@ class RemoteConfigController extends BaseController implements ValidateCustomerS
             return $this->redirectToRoute('pronto_mobile_remote_config');
         }
 
+        /** @var FormError|null $valueError */
+        $valueError = array_filter(iterator_to_array($form->getErrors()), function (FormError $error) {
+            $violation = $error->getCause();
+
+            if ($violation instanceof ConstraintViolation) {
+                return $violation->getPropertyPath() === 'data.value';
+            }
+
+            return false;
+        })[0] ?? null;
+
+        $valueError = Optional::get($valueError)->getMessage();
+
         return $this->render('@ProntoMobile/config/edit.html.twig', [
             'form'          => $form->createView(),
-            'configuration' => $configuration
+            'configuration' => $configuration,
+            'valueError'    => $valueError
         ]);
     }
 

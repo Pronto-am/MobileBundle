@@ -40,6 +40,7 @@ buttons.no: No
 buttons.cancel: Cancel
 
 form.required_field: This field is required
+form.invalid_value: The value is invalid
 form.invalid_format: The format is invalid
 form.inconsistent_field: This field is not consistent over all languages
 form.invalid_json: The provided JSON string is not valid
@@ -353,6 +354,7 @@ remote_config.release_date: Release date
 remote_config.description: Description
 remote_config.identifier: Key
 remote_config.value: Value
+remote_config.value.invalid: Value is invalid
 remote_config.platforms: Platforms
 remote_config.platforms.android: Android
 remote_config.platforms.ios: iOS
