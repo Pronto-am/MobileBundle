@@ -31,13 +31,11 @@ class Application extends Client implements ApiEntityInterface
 	 */
 	protected $id;
 
-
 	/**
 	 * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Customer")
 	 * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
 	 */
 	private $customer;
-
 
 	/**
 	 * @ORM\Column(type="string")
@@ -45,12 +43,10 @@ class Application extends Client implements ApiEntityInterface
 	 */
 	private $name;
 
-
 	/**
 	 * @ORM\Column(type="string", nullable=true)
 	 */
 	private $label;
-
 
 	/**
 	 * @ORM\Column(type="string")
@@ -58,13 +54,11 @@ class Application extends Client implements ApiEntityInterface
 	 */
 	private $color;
 
-
 	/**
 	 * @ORM\Column(type="string", nullable=true)
 	 * @Assert\NotBlank()
 	 */
 	private $androidBundleIdentifier;
-
 
 	/**
 	 * @ORM\Column(type="string", nullable=true)
@@ -72,13 +66,11 @@ class Application extends Client implements ApiEntityInterface
 	 */
 	private $iosBundleIdentifier;
 
-
 	/**
 	 * @ORM\Column(type="string")
 	 * @Assert\NotBlank()
 	 */
 	private $defaultLanguage;
-
 
 	/**
 	 * @ORM\Column(type="json_array")
@@ -86,30 +78,25 @@ class Application extends Client implements ApiEntityInterface
 	 */
 	private $availableLanguages;
 
-
 	/**
 	 * @ORM\Column(type="datetime")
 	 */
 	private $createdAt;
-
 
 	/**
 	 * @ORM\Column(type="datetime")
 	 */
 	private $updatedAt;
 
-
 	/**
 	 * @ORM\OneToMany(targetEntity="Pronto\MobileBundle\Entity\Application\ApplicationPlugin", mappedBy="application")
 	 */
 	private $applicationPlugins;
 
-
 	/**
 	 * @ORM\OneToMany(targetEntity="Pronto\MobileBundle\Entity\Application\Version", mappedBy="application")
 	 */
 	private $applicationVersions;
-
 
 	/**
 	 * Application constructor.
@@ -122,7 +109,6 @@ class Application extends Client implements ApiEntityInterface
 		$this->applicationVersions = new ArrayCollection();
 	}
 
-
 	/**
 	 * Triggered on pre persist
 	 *
@@ -133,7 +119,6 @@ class Application extends Client implements ApiEntityInterface
 		$this->updatedAt = new DateTime();
 	}
 
-
 	/**
 	 * Triggered on pre update
 	 *
@@ -143,7 +128,6 @@ class Application extends Client implements ApiEntityInterface
 		$this->updatedAt = new DateTime();
 	}
 
-
 	/**
 	 * @return mixed
 	 */
@@ -151,7 +135,6 @@ class Application extends Client implements ApiEntityInterface
 	{
 		return $this->customer;
 	}
-
 
 	/**
 	 * @param mixed $customer
@@ -161,7 +144,6 @@ class Application extends Client implements ApiEntityInterface
 		$this->customer = $customer;
 	}
 
-
 	/**
 	 * @return mixed
 	 */
@@ -170,15 +152,13 @@ class Application extends Client implements ApiEntityInterface
 		return $this->name;
 	}
 
-
 	/**
 	 * @param mixed $name
 	 */
 	public function setName($name): void
-	{
-		$this->name = $name;
-	}
-
+    {
+        $this->name = $name;
+    }
 
 	/**
 	 * @return string|null
@@ -188,7 +168,6 @@ class Application extends Client implements ApiEntityInterface
 		return $this->label;
 	}
 
-
 	/**
 	 * @param null|string $label
 	 */
@@ -196,7 +175,6 @@ class Application extends Client implements ApiEntityInterface
 	{
 		$this->label = $label;
 	}
-
 
 	/**
 	 * @return DoctrineCollection
@@ -206,7 +184,6 @@ class Application extends Client implements ApiEntityInterface
 		return $this->applicationVersions;
 	}
 
-
 	/**
 	 * @return string
 	 */
@@ -214,7 +191,6 @@ class Application extends Client implements ApiEntityInterface
 	{
 		return $this->color;
 	}
-
 
 	/**
 	 * @param string $color
@@ -224,7 +200,6 @@ class Application extends Client implements ApiEntityInterface
 		$this->color = $color;
 	}
 
-
 	/**
 	 * @return string|null
 	 */
@@ -232,7 +207,6 @@ class Application extends Client implements ApiEntityInterface
 	{
 		return $this->androidBundleIdentifier;
 	}
-
 
 	/**
 	 * @param null|string $androidBundleIdentifier
@@ -242,7 +216,6 @@ class Application extends Client implements ApiEntityInterface
 		$this->androidBundleIdentifier = $androidBundleIdentifier;
 	}
 
-
 	/**
 	 * @return string|null
 	 */
@@ -250,7 +223,6 @@ class Application extends Client implements ApiEntityInterface
 	{
 		return $this->iosBundleIdentifier;
 	}
-
 
 	/**
 	 * @param null|string $iosBundleIdentifier
@@ -260,7 +232,6 @@ class Application extends Client implements ApiEntityInterface
 		$this->iosBundleIdentifier = $iosBundleIdentifier;
 	}
 
-
 	/**
 	 * @return string
 	 */
@@ -268,7 +239,6 @@ class Application extends Client implements ApiEntityInterface
 	{
 		return $this->defaultLanguage;
 	}
-
 
 	/**
 	 * @param string $defaultLanguage
@@ -278,7 +248,6 @@ class Application extends Client implements ApiEntityInterface
 		$this->defaultLanguage = $defaultLanguage;
 	}
 
-
 	/**
 	 * @return array
 	 */
@@ -286,7 +255,6 @@ class Application extends Client implements ApiEntityInterface
 	{
 		return $this->availableLanguages;
 	}
-
 
 	/**
 	 * @param array $availableLanguages
@@ -296,7 +264,6 @@ class Application extends Client implements ApiEntityInterface
 		$this->availableLanguages = $availableLanguages;
 	}
 
-
 	/**
 	 * @return DateTime
 	 */
@@ -304,7 +271,6 @@ class Application extends Client implements ApiEntityInterface
 	{
 		return $this->createdAt;
 	}
-
 
 	/**
 	 * @param string $createdAt
@@ -314,7 +280,6 @@ class Application extends Client implements ApiEntityInterface
 		$this->createdAt = $createdAt;
 	}
 
-
 	/**
 	 * @return DateTime
 	 */
@@ -323,7 +288,6 @@ class Application extends Client implements ApiEntityInterface
 		return $this->updatedAt;
 	}
 
-
 	/**
 	 * @param string $updatedAt
 	 */
@@ -331,7 +295,6 @@ class Application extends Client implements ApiEntityInterface
 	{
 		$this->updatedAt = $updatedAt;
 	}
-
 
 	/**
 	 * @return DoctrineCollection
