@@ -14,6 +14,7 @@ use Pronto\MobileBundle\EventSubscriber\ValidatePluginStateInterface;
 use Pronto\MobileBundle\Form\Collection\RelationshipForm;
 use Pronto\MobileBundle\Service\ProntoMobile;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class RelationshipController extends BaseController implements ValidatePluginStateInterface, ValidateApplicationSelectionInterface, ValidateCustomerSelectionInterface
 {
@@ -42,16 +43,17 @@ class RelationshipController extends BaseController implements ValidatePluginSta
 	}
 
 
-	/**
-	 * Edit a collections relationship
-	 *
-	 * @param Request $request
-	 * @param EntityManagerInterface $entityManager
-	 * @param $identifier
-	 * @param Collection\Relationship|null $relationship
-	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-	 */
-	public function editAction(Request $request, EntityManagerInterface $entityManager, $identifier, Collection\Relationship $relationship = null)
+    /**
+     * Edit a collections relationship
+     *
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @param TranslatorInterface $translator
+     * @param $identifier
+     * @param Collection\Relationship|null $relationship
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
+	public function editAction(Request $request, EntityManagerInterface $entityManager, TranslatorInterface $translator, $identifier, Collection\Relationship $relationship = null)
 	{
 		/** @var Collection $collection */
 		$collection = $entityManager->getRepository(Collection::class)->findOneBy([
@@ -77,6 +79,7 @@ class RelationshipController extends BaseController implements ValidatePluginSta
 		$form = $this->createForm(RelationshipForm::class, $relationshipDTO, [
 			'collections' => $collections,
 			'types'       => $types,
+            'translator'  => $translator,
 		]);
 
 		$form->handleRequest($request);

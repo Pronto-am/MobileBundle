@@ -12,40 +12,52 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class RelationshipDTO extends BaseDTO
 {
-	/**
-	 * @var string $name
+    /**
+     * @var string $name
      * @Assert\NotBlank()
      */
-	public $name;
+    public $name;
 
-	/**
-	 * @var string $identifier
+    /**
+     * @var string $identifier
      * @Assert\NotBlank()
      */
-	public $identifier;
+    public $identifier;
 
     /**
      * @var Collection $relatedCollection
      * @Assert\NotBlank()
      */
-	public $relatedCollection;
+    public $relatedCollection;
 
     /**
      * @var string $type
      * @Assert\NotBlank()
      */
-	public $type;
+    public $type;
 
     /**
      * @var boolean $includeInJsonListView
      */
-	public $includeInJsonListView;
+    public $includeInJsonListView;
 
-	/**
-	 * @return array
-	 */
-	public static function getFillable(): array
-	{
-		return ['name', 'identifier', 'relatedCollection', 'type', 'includeInJsonListView'];
-	}
+    /**
+     * @var string $editableForRole
+     */
+    public $editableForRole;
+
+    /**
+     * @return array
+     */
+    public static function getFillable(): array
+    {
+        return [
+            'name',
+            'identifier',
+            'relatedCollection',
+            'type',
+            'includeInJsonListView' => 'includeInJsonListView',
+            'editableForRole'       => 'editableForRole',
+        ];
+    }
 }

@@ -125,6 +125,10 @@ user.activated: Activated
 user.reset_password_success: Your password has been successfully reset
 user.password_reset_link_expired: The password reset link has expired
 
+user.roles.regular: Regular user
+user.roles.admin: Administrator
+user.roles.super_admin: Super administrator
+
 application: application
 applications: applications
 application.name: Name
@@ -166,6 +170,7 @@ collection.property.key: Key
 collection.property.value: Value
 collection.property.add_select_option: Add another select option
 collection.property.leave_empty_to_ignore: Leave a key and or value empty to ignore the select option
+collection.property.editable_for_role: Editable for user with minimal role
 
 collection.property.type.label: Label (optional)
 collection.property.type.defaultValue: Default value

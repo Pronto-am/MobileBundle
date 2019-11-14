@@ -6,7 +6,7 @@
             {% set checked = property.config.defaultValue ? 'checked' : '' %}
         {% endif %}
 
-        <input type="checkbox" name="{{ property.identifier }}" id="{{ property.identifier }}" value="1" {{ checked }}>
+        <input type="checkbox" name="{{ property.identifier }}" id="{{ property.identifier }}" value="1" {{ checked }} {% if not is_granted_minimal(property.editableForRole) %}disabled="disabled"{% endif %}>
         <label for="{{ property.identifier }}" {% if property.required == true %}class="required"{% endif %}>{{ property.name }}</label>
     </div>
 </div>

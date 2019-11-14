@@ -56,7 +56,7 @@
 
                             {% set modalUrl = entry != null ? path('pronto_mobile_collection_entry_relationships_edit', {entry: entry.id, relationship: relationship.id}) : '' %}
 
-                            <a href="#!" data-href="{{ modalUrl }}" name="set-relationship" class="collection-item avatar {{ entry == null ? 'disabled' : '' }}">
+                            <a href="#!" data-href="{{ modalUrl }}" name="set-relationship" class="collection-item avatar {{ entry == null or not is_granted_minimal(relationship.editableForRole) ? 'disabled' : '' }}">
                                 <i class="fa {{ relationship.relatedCollection.icon }} circle" style="background-color: {{ '#' ~ applicationVersion.application.color }};" aria-hidden="true"></i>
                                 <span class="title">{{ relationship.relatedCollection.name }}</span>
                                 {% if related[relationship.relatedCollection.id] is defined %}

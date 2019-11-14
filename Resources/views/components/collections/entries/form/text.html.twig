@@ -14,6 +14,10 @@
         {% set label = property.config.label is defined and property.config.label != '' ? property.config.label : property.name %}
 
         <label for="{{ language ~ ':' ~ property.identifier }}" {% if property.required == true %}class="required"{% endif %}>{{ label }}</label>
-        <input type="text" name="{{ language ~ ':' ~ property.identifier }}" id="{{ language ~ ':' ~ property.identifier }}" value="{{ propertyValue }}">
+        <input type="text"
+               name="{{ language ~ ':' ~ property.identifier }}"
+               id="{{ language ~ ':' ~ property.identifier }}"
+               {% if not is_granted_minimal(property.editableForRole) %}readonly="readonly"{% endif %}
+               value="{{ propertyValue }}">
     </div>
 </div>

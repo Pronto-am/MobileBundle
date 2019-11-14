@@ -29,5 +29,6 @@
                 step="{{ property.config.step }}"
             {% endif %}
 
-           value="{{ attribute(entry.data, property.identifier) is defined ? attribute(entry.data, property.identifier) : property.config.defaultValue }}">
+           value="{{ attribute(entry.data, property.identifier) is defined ? attribute(entry.data, property.identifier) : property.config.defaultValue }}"
+            {% if not is_granted_minimal(property.editableForRole) %}readonly="readonly"{% endif %}>
 </div>

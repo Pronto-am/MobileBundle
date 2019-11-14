@@ -123,6 +123,10 @@ user.control_user_activation: Activeer of deactiveer het gebruikersaccount
 user.reset_password_success: Uw wachtwoord is opnieuw ingesteld
 user.password_reset_link_expired: De wachtwoord reset link is verouderd
 
+user.roles.regular: Reguliere gebruiker
+user.roles.admin: Administrator
+user.roles.super_admin: Super administrator
+
 application: applicatie
 applications: applicaties
 application.name: Naam
@@ -164,6 +168,7 @@ collection.property.key: Key
 collection.property.value: Value
 collection.property.add_select_option: Nog een select-optie toevoegen
 collection.property.leave_empty_to_ignore: Laat een key en/of value leeg om een optie te negeren
+collection.property.editable_for_role: Bewerkbaar voor gebruiker met rol
 
 collection.property.type.label: Label (optioneel)
 collection.property.type.defaultValue: Standaardwaarde

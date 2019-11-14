@@ -1,7 +1,11 @@
 <div class="row">
     <div class="col s12">
         <label for="{{ property.identifier }}" {% if property.required == true %}class="required"{% endif %}>{{ property.name }}</label>
-        <select name="{{ property.identifier }}{{ property.config.multiSelect ? '[]' : '' }}" id="{{ property.identifier }}" {{ property.config.multiSelect ? 'multiple' : '' }}>
+        <select class="browser-default"
+                name="{{ property.identifier }}{{ property.config.multiSelect ? '[]' : '' }}"
+                id="{{ property.identifier }}" {{ property.config.multiSelect ? 'multiple' : '' }}
+                {% if not is_granted_minimal(property.editableForRole) %}disabled="disabled"{% endif %}>
+
             <option disabled selected>{{ ('collection.' ~ (property.config.multiSelect ? 'entry.select_mutiple_items' : 'entry.select_item'))|trans }}</option>
             {% for option in property.config.values %}
                 {% if property.config.multiSelect %}

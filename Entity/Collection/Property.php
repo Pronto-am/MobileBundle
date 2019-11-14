@@ -94,6 +94,12 @@ class Property extends TimestampedEntity
     private $translatable = true;
 
     /**
+     * @var string|null $editableForRole
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $editableForRole = 'ROLE_USER';
+
+    /**
      * @return int|null
      */
     public function getId(): ?int
@@ -111,10 +117,12 @@ class Property extends TimestampedEntity
 
     /**
      * @param Collection $collection
+     * @return Property
      */
-    public function setCollection(Collection $collection): void
+    public function setCollection(Collection $collection): self
     {
         $this->collection = $collection;
+        return $this;
     }
 
     /**
@@ -127,10 +135,12 @@ class Property extends TimestampedEntity
 
     /**
      * @param string $name
+     * @return Property
      */
-    public function setName(string $name): void
+    public function setName(string $name): self
     {
         $this->name = $name;
+        return $this;
     }
 
     /**
@@ -143,10 +153,12 @@ class Property extends TimestampedEntity
 
     /**
      * @param string $identifier
+     * @return Property
      */
-    public function setIdentifier(string $identifier): void
+    public function setIdentifier(string $identifier): self
     {
         $this->identifier = $identifier;
+        return $this;
     }
 
     /**
@@ -159,10 +171,12 @@ class Property extends TimestampedEntity
 
     /**
      * @param Type $type
+     * @return Property
      */
-    public function setType(Type $type): void
+    public function setType(Type $type): self
     {
         $this->type = $type;
+        return $this;
     }
 
     /**
@@ -175,10 +189,12 @@ class Property extends TimestampedEntity
 
     /**
      * @param array $config
+     * @return Property
      */
-    public function setConfig(array $config): void
+    public function setConfig(array $config): self
     {
         $this->config = $config;
+        return $this;
     }
 
     /**
@@ -191,10 +207,12 @@ class Property extends TimestampedEntity
 
     /**
      * @param bool $required
+     * @return Property
      */
-    public function setRequired(bool $required): void
+    public function setRequired(bool $required): self
     {
         $this->required = $required;
+        return $this;
     }
 
     /**
@@ -207,10 +225,12 @@ class Property extends TimestampedEntity
 
     /**
      * @param bool $includeInListView
+     * @return Property
      */
-    public function setIncludeInListView(bool $includeInListView): void
+    public function setIncludeInListView(bool $includeInListView): self
     {
         $this->includeInListView = $includeInListView;
+        return $this;
     }
 
     /**
@@ -223,10 +243,12 @@ class Property extends TimestampedEntity
 
     /**
      * @param bool $includeInJsonListView
+     * @return Property
      */
-    public function setIncludeInJsonListView(bool $includeInJsonListView): void
+    public function setIncludeInJsonListView(bool $includeInJsonListView): self
     {
         $this->includeInJsonListView = $includeInJsonListView;
+        return $this;
     }
 
     /**
@@ -239,10 +261,12 @@ class Property extends TimestampedEntity
 
     /**
      * @param bool $entryTitle
+     * @return Property
      */
-    public function setEntryTitle(bool $entryTitle): void
+    public function setEntryTitle(bool $entryTitle): self
     {
         $this->entryTitle = $entryTitle;
+        return $this;
     }
 
     /**
@@ -255,10 +279,12 @@ class Property extends TimestampedEntity
 
     /**
      * @param int $ordering
+     * @return Property
      */
-    public function setOrdering(int $ordering): void
+    public function setOrdering(int $ordering): self
     {
         $this->ordering = $ordering;
+        return $this;
     }
 
     /**
@@ -273,9 +299,27 @@ class Property extends TimestampedEntity
      * @param bool $translatable
      * @return Property
      */
-    public function setTranslatable($translatable)
+    public function setTranslatable($translatable): self
     {
         $this->translatable = $translatable;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function editableForRole(): string
+    {
+        return $this->editableForRole ?? 'ROLE_USER';
+    }
+
+    /**
+     * @param string $editableForRole
+     * @return Property
+     */
+    public function setEditableForRole(string $editableForRole): self
+    {
+        $this->editableForRole = $editableForRole;
         return $this;
     }
 }

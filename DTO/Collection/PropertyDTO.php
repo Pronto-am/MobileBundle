@@ -46,10 +46,24 @@ class PropertyDTO extends BaseDTO
     public $translatable;
 
     /**
+     * @var string $editableForRole
+     */
+    public $editableForRole;
+
+    /**
      * @return array
      */
     public static function getFillable(): array
     {
-        return ['name', 'identifier', 'type', 'includeInListView', 'includeInJsonListView', 'required', 'translatable' => 'isTranslatable'];
+        return [
+            'name',
+            'identifier',
+            'type',
+            'includeInListView',
+            'includeInJsonListView',
+            'required',
+            'translatable'    => 'isTranslatable',
+            'editableForRole' => 'editableForRole',
+        ];
     }
 }

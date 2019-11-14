@@ -17,14 +17,12 @@ interface PropertyType
 	 */
 	public function __construct(array $formData, Property $property, FileBag $fileBag = null);
 
-
 	/**
 	 * Parse the form data as entry value
 	 *
 	 * @return array
 	 */
 	public function parse(): array;
-
 
 	/**
 	 * Get the identifier of the property
@@ -33,14 +31,12 @@ interface PropertyType
 	 */
 	public function getIdentifier(): string;
 
-
 	/**
 	 * Check if a property is translatable
 	 *
 	 * @return boolean
 	 */
 	public function isTranslatable(): bool;
-
 
 	/**
 	 * Parse the language and identifier from the field name
@@ -49,7 +45,6 @@ interface PropertyType
 	 * @return array
 	 */
 	public function parseIdentifier($field): array;
-
 
 	/**
 	 * Check if a field belongs to a property

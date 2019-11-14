@@ -58,6 +58,12 @@ class Relationship extends TimestampedEntity
 	 */
 	private $includeInJsonListView = true;
 
+    /**
+     * @var string|null $editableForRole
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $editableForRole = 'ROLE_USER';
+
 	/**
 	 * Triggered on pre persist
 	 *
@@ -87,13 +93,15 @@ class Relationship extends TimestampedEntity
 		return $this->collection;
 	}
 
-	/**
-	 * @param Collection $collection
-	 */
-	public function setCollection(Collection $collection): void
+    /**
+     * @param Collection $collection
+     * @return Relationship
+     */
+	public function setCollection(Collection $collection): self
 	{
 		$this->collection = $collection;
-	}
+        return $this;
+    }
 
 	/**
 	 * @return Collection
@@ -105,11 +113,13 @@ class Relationship extends TimestampedEntity
 
 	/**
 	 * @param Collection $relatedCollection
-	 */
-	public function setRelatedCollection(Collection $relatedCollection): void
+     * @return Relationship
+     */
+	public function setRelatedCollection(Collection $relatedCollection): self
 	{
 		$this->relatedCollection = $relatedCollection;
-	}
+        return $this;
+    }
 
 	/**
 	 * @return string
@@ -121,11 +131,13 @@ class Relationship extends TimestampedEntity
 
 	/**
 	 * @param string $name
-	 */
-	public function setName(string $name): void
+     * @return Relationship
+     */
+	public function setName(string $name): self
 	{
 		$this->name = $name;
-	}
+        return $this;
+    }
 
 	/**
 	 * @return string
@@ -137,10 +149,12 @@ class Relationship extends TimestampedEntity
 
 	/**
 	 * @param string $identifier
+     * @return Relationship
 	 */
-	public function setIdentifier(string $identifier): void
+	public function setIdentifier(string $identifier): self
 	{
 		$this->identifier = $identifier;
+        return $this;
 	}
 
 	/**
@@ -153,11 +167,13 @@ class Relationship extends TimestampedEntity
 
 	/**
 	 * @param Type $type
-	 */
-	public function setType(Type $type): void
+     * @return Relationship
+     */
+	public function setType(Type $type): self
 	{
 		$this->type = $type;
-	}
+        return $this;
+    }
 
 	/**
 	 * @return bool
@@ -169,9 +185,29 @@ class Relationship extends TimestampedEntity
 
 	/**
 	 * @param bool $includeInListView
-	 */
-	public function setIncludeInJsonListView(bool $includeInListView): void
+     * @return Relationship
+     */
+	public function setIncludeInJsonListView(bool $includeInListView): self
 	{
 		$this->includeInJsonListView = $includeInListView;
+		return $this;
 	}
+
+    /**
+     * @return string
+     */
+    public function editableForRole(): string
+    {
+        return $this->editableForRole ?? 'ROLE_USER';
+    }
+
+    /**
+     * @param string $editableForRole
+     * @return Relationship
+     */
+    public function setEditableForRole(string $editableForRole): self
+    {
+        $this->editableForRole = $editableForRole;
+        return $this;
+    }
 }
