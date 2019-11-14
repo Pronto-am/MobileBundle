@@ -7,7 +7,6 @@ use Doctrine\Common\Collections\Collection as DoctrineCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Pronto\MobileBundle\Entity\Application\Version;
 use Pronto\MobileBundle\Traits\ApiEntityTrait;
-use Pronto\MobileBundle\Utils\ErrorResponse;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
@@ -22,7 +21,6 @@ class Collection extends TimestampedEntity implements ApiEntityInterface
 {
 	use ApiEntityTrait;
 
-
 	/**
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -30,20 +28,17 @@ class Collection extends TimestampedEntity implements ApiEntityInterface
      */
     private $id;
 
-
 	/**
 	 * @ORM\Column(type="string")
 	 * @Assert\NotBlank()
 	 */
     private $name;
 
-
 	/**
 	 * @ORM\Column(type="string")
 	 * @Assert\NotBlank()
 	 */
 	private $identifier;
-
 
 	/**
 	 * @ORM\Column(type="string")
@@ -58,32 +53,27 @@ class Collection extends TimestampedEntity implements ApiEntityInterface
      */
     private $applicationVersion;
 
-
     /**
      * @ORM\OneToMany(targetEntity="Pronto\MobileBundle\Entity\Collection\Property", mappedBy="collection")
 	 * @ORM\OrderBy({"ordering" = "ASC"})
      */
     private $properties;
 
-
 	/**
 	 * @ORM\OneToMany(targetEntity="Pronto\MobileBundle\Entity\Collection\Entry", mappedBy="collection")
 	 */
 	private $entries;
-
 
 	/**
 	 * @ORM\OneToMany(targetEntity="Pronto\MobileBundle\Entity\Collection\Relationship", mappedBy="collection")
 	 */
 	private $relationships;
 
-
     public function __construct()
     {
         $this->properties = new ArrayCollection();
         $this->entries = new ArrayCollection();
     }
-
 
     /**
      * @return int|null
@@ -93,7 +83,6 @@ class Collection extends TimestampedEntity implements ApiEntityInterface
         return $this->id;
     }
 
-
     /**
      * @return Version
      */
@@ -101,7 +90,6 @@ class Collection extends TimestampedEntity implements ApiEntityInterface
     {
         return $this->applicationVersion;
     }
-
 
     /**
      * @param Version $applicationVersion
@@ -111,7 +99,6 @@ class Collection extends TimestampedEntity implements ApiEntityInterface
         $this->applicationVersion = $applicationVersion;
     }
 
-
 	/**
 	 * @return string
 	 */
@@ -119,7 +106,6 @@ class Collection extends TimestampedEntity implements ApiEntityInterface
 	{
 		return $this->name;
 	}
-
 
 	/**
 	 * @param mixed $name
@@ -129,7 +115,6 @@ class Collection extends TimestampedEntity implements ApiEntityInterface
 		$this->name = $name;
 	}
 
-
 	/**
 	 * @return string
 	 */
@@ -137,7 +122,6 @@ class Collection extends TimestampedEntity implements ApiEntityInterface
 	{
 		return $this->identifier;
 	}
-
 
 	/**
 	 * @param string $identifier
@@ -147,7 +131,6 @@ class Collection extends TimestampedEntity implements ApiEntityInterface
 		$this->identifier = $identifier;
 	}
 
-
 	/**
 	 * @return string
 	 */
@@ -155,7 +138,6 @@ class Collection extends TimestampedEntity implements ApiEntityInterface
 	{
 		return $this->icon;
 	}
-
 
 	/**
 	 * @param string $icon
@@ -165,7 +147,6 @@ class Collection extends TimestampedEntity implements ApiEntityInterface
 		$this->icon = $icon;
 	}
 
-
 	/**
 	 * @return DoctrineCollection
 	 */
@@ -173,7 +154,6 @@ class Collection extends TimestampedEntity implements ApiEntityInterface
 	{
 		return $this->properties;
 	}
-
 
 	/**
 	 * JUST FOR TESTING PURPOSES
@@ -185,7 +165,6 @@ class Collection extends TimestampedEntity implements ApiEntityInterface
 		$this->properties = $properties;
 	}
 
-
 	/**
 	 * @return DoctrineCollection
 	 */
@@ -193,7 +172,6 @@ class Collection extends TimestampedEntity implements ApiEntityInterface
 	{
 		return $this->entries;
 	}
-
 
 	/**
 	 * @return DoctrineCollection

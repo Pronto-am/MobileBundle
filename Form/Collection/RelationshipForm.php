@@ -10,6 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class RelationshipForm extends AbstractType
 {
@@ -19,6 +20,9 @@ class RelationshipForm extends AbstractType
 	 */
 	public function buildForm(FormBuilderInterface $builder, array $options): void
 	{
+        /** @var TranslatorInterface $translator */
+        $translator = $options['translator'];
+
 		$builder
 			->add('name', null, [
 				'attr'  => [
@@ -59,6 +63,17 @@ class RelationshipForm extends AbstractType
 					return $collection ? $collection->getId() : '';
 				}
 			])
+            ->add('editableForRole', ChoiceType::class, [
+                'attr'         => [
+                    'class' => 'browser-default'
+                ],
+                'label'        => 'collection.property.editable_for_role',
+                'choices'      => [
+                    $translator->trans('user.roles.regular')     => 'ROLE_USER',
+                    $translator->trans('user.roles.admin')       => 'ROLE_ADMIN',
+                    $translator->trans('user.roles.super_admin') => 'ROLE_SUPER_ADMIN',
+                ],
+            ])
 			->add('includeInJsonListView', CheckboxType::class, [
 				'label' => 'collection.property.include_in_json_list_view'
 			]);
@@ -73,6 +88,6 @@ class RelationshipForm extends AbstractType
 			'data_class' => RelationshipDTO::class
 		]);
 
-		$resolver->setRequired(['types', 'collections']);
+		$resolver->setRequired(['types', 'collections', 'translator']);
 	}
 }

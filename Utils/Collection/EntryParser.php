@@ -58,6 +58,14 @@ class EntryParser
 		$this->files = $request->files;
 	}
 
+    /**
+     * @param array $initial
+     */
+	public function setInitialData(array $initial): void
+    {
+        $this->entry = $initial;
+    }
+
 	/**
 	 * Add property values to the entry
 	 *

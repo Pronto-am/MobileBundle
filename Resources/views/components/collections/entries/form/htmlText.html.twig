@@ -15,10 +15,12 @@
 
         {% set class = property.type.config.defaultValue.class is defined ? property.type.config.defaultValue.class : '' %}
 
-        {% if 'codeflask' in class %}
+        {% if 'codeflask' in class and is_granted_minimal(property.editableForRole) %}
             <div class="{{ class }}" data-name="{{ language ~ ':' ~ property.identifier }}" data-language="html">{{ propertyValue is defined ? propertyValue : property.config.defaultValue }}</div>
         {% else %}
-            <textarea name="{{ language ~ ':' ~ property.identifier }}" class="materialize-textarea {{ class }}" id="{{ property.name }}">{{ propertyValue }}</textarea>
+            <textarea name="{{ language ~ ':' ~ property.identifier }}"
+                      class="materialize-textarea {{ class }}" id="{{ property.name }}"
+                      {% if not is_granted_minimal(property.editableForRole) %}readonly="readonly"{% endif %}>{{ propertyValue }}</textarea>
         {% endif %}
     </div>
 </div>

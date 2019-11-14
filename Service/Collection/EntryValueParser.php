@@ -102,6 +102,6 @@ class EntryValueParser
 	 */
 	public function parseBoolean(bool $value): string
 	{
-		return $this->translator->trans('attributeProperties.value_' . ($value ? 'true' : 'false'));
+		return $this->translator->trans('collection.entry.value_' . ($value ? 'true' : 'false'));
 	}
 }

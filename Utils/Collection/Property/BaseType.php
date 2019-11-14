@@ -120,7 +120,7 @@ class BaseType implements PropertyType
 	 */
 	public function belongsToProperty($field): bool
 	{
-		[$language, $identifier] = $this->parseIdentifier($field);
+		[ , $identifier] = $this->parseIdentifier($field);
 
 		return $identifier === $this->getIdentifier();
 	}

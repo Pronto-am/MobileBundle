@@ -10,6 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class PropertyForm extends AbstractType
 {
@@ -19,6 +20,9 @@ class PropertyForm extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        /** @var TranslatorInterface $translator */
+        $translator = $options['translator'];
+
         $builder
             ->add('name', null, [
                 'attr'  => [
@@ -56,6 +60,17 @@ class PropertyForm extends AbstractType
                     ];
                 },
             ])
+            ->add('editableForRole', ChoiceType::class, [
+                'attr'         => [
+                    'class' => 'browser-default'
+                ],
+                'label'        => 'collection.property.editable_for_role',
+                'choices'      => [
+                    $translator->trans('user.roles.regular')     => 'ROLE_USER',
+                    $translator->trans('user.roles.admin')       => 'ROLE_ADMIN',
+                    $translator->trans('user.roles.super_admin') => 'ROLE_SUPER_ADMIN',
+                ],
+            ])
             ->add('includeInListView', CheckboxType::class, [
                 'label'      => 'collection.property.include_in_table_list_view',
                 'label_attr' => [
@@ -91,6 +106,6 @@ class PropertyForm extends AbstractType
             'data_class' => PropertyDTO::class
         ]);
 
-        $resolver->setRequired(['types']);
+        $resolver->setRequired(['types', 'translator']);
     }
 }

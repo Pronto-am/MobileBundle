@@ -7,6 +7,7 @@ use Pronto\MobileBundle\Controller\BaseController;
 use Pronto\MobileBundle\Entity\Collection;
 use Pronto\MobileBundle\Entity\Plugin;
 use Pronto\MobileBundle\Service\ProntoMobile;
+use Pronto\MobileBundle\Twig\IsGrantedMinimal;
 use Pronto\MobileBundle\Utils\Collection\EntryParser;
 use Pronto\MobileBundle\EventSubscriber\ValidateApplicationSelectionInterface;
 use Pronto\MobileBundle\EventSubscriber\ValidateCustomerSelectionInterface;
@@ -154,16 +155,17 @@ class EntryController extends BaseController implements ValidatePluginStateInter
 	}
 
 
-	/**
-	 * Save the entry
-	 *
-	 * @param Request $request
-	 * @param EntityManagerInterface $entityManager
-	 * @param $identifier
-	 * @param Collection\Entry|null $entry
-	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
-	 */
-	public function saveAction(Request $request, EntityManagerInterface $entityManager, $identifier, Collection\Entry $entry = null)
+    /**
+     * Save the entry
+     *
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @param IsGrantedMinimal $isGranted
+     * @param $identifier
+     * @param Collection\Entry|null $entry
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+	public function saveAction(Request $request, EntityManagerInterface $entityManager, IsGrantedMinimal $isGranted, $identifier, Collection\Entry $entry = null)
 	{
 		/** @var Collection $collection */
 		$collection = $entityManager->getRepository(Collection::class)->findOneBy([
@@ -175,24 +177,30 @@ class EntryController extends BaseController implements ValidatePluginStateInter
 			'collection' => $collection
 		]);
 
+        // Get the logged in user
+        $user = $this->getUser();
+
+        $redirectToEditView = $entry === null;
+
+        // Create a new entry if it doesn't exist yet
+        if ($entry === null) {
+            $entry = new Collection\Entry();
+            $entry->setCollection($collection);
+            $entry->setCreatedBy($user);
+        }
+
 		// Create a new entry parser with the form data
 		$entryParser = new EntryParser($request);
+        $entryParser->setInitialData($entry->getData());
 
 		// Add the properties of the collection to the parser
 		foreach ($properties as $property) {
+		    // Check if the user has the minimal required role to edit this property
+            if(!$isGranted->isGrantedMinimal($property->editableForRole())) {
+                continue;
+            }
+
 			$entryParser->addProperty($property);
-		}
-
-		// Get the logged in user
-		$user = $this->getUser();
-
-		$redirectToEditView = $entry === null;
-
-		// Create a new entry if it doesn't exist yet
-		if ($entry === null) {
-			$entry = new Collection\Entry();
-			$entry->setCollection($collection);
-			$entry->setCreatedBy($user);
 		}
 
 		$entry->setData($entryParser->getEntryObject());

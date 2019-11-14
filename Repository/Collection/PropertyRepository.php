@@ -20,6 +20,7 @@ class PropertyRepository extends EntityRepository
             ->setParameter('collection', $collection)
 			->andWhere('property.translatable = :translatable')
 			->setParameter('translatable', $translatable)
+            ->orderBy('property.ordering')
             ->getQuery()
             ->execute();
     }

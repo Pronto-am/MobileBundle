@@ -4,17 +4,29 @@
 
         {% set address = attribute(attribute(entry.data, property.identifier), 'address') is defined ? attribute(attribute(entry.data, property.identifier), 'address') : '' %}
 
-        <input type="text" class="coordinates-address" name="{{ property.identifier }}-address" placeholder="{{ 'collection.property.type.address'|trans }}" value="{{ address }}">
+        <input type="text"
+               class="coordinates-address"
+               name="{{ property.identifier }}-address"
+               placeholder="{{ 'collection.property.type.address'|trans }}" value="{{ address }}"
+               {% if not is_granted_minimal(property.editableForRole) %}readonly="readonly"{% endif %}>
     </div>
     <div class="col s6">
         {% set latitude = attribute(attribute(entry.data, property.identifier), 'latitude') is defined ? attribute(attribute(entry.data, property.identifier), 'latitude') : '' %}
 
-        <input type="text" class="coordinates-latitude" name="{{ property.identifier }}-latitude" placeholder="{{ 'collection.property.type.latitude'|trans }}" value="{{ latitude }}">
+        <input type="text"
+               class="coordinates-latitude"
+               name="{{ property.identifier }}-latitude"
+               placeholder="{{ 'collection.property.type.latitude'|trans }}" value="{{ latitude }}"
+               {% if not is_granted_minimal(property.editableForRole) %}readonly="readonly"{% endif %}>
     </div>
     <div class="col s6">
         {% set longitude = attribute(attribute(entry.data, property.identifier), 'longitude') is defined ? attribute(attribute(entry.data, property.identifier), 'longitude') : '' %}
 
-        <input type="text" class="coordinates-longitude" name="{{ property.identifier }}-longitude" placeholder="{{ 'collection.property.type.longitude'|trans }}" value="{{ longitude }}">
+        <input type="text"
+               class="coordinates-longitude"
+               name="{{ property.identifier }}-longitude"
+               placeholder="{{ 'collection.property.type.longitude'|trans }}" value="{{ longitude }}"
+               {% if not is_granted_minimal(property.editableForRole) %}readonly="readonly"{% endif %}>
     </div>
     <div class="col s12">
         <div class="location-picker" style="height: 300px;"></div>

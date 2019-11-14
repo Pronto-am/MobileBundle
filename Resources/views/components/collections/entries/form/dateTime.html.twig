@@ -4,11 +4,21 @@
 
         {% set value = attribute(entry.data, property.identifier) is defined ? attribute(entry.data, property.identifier) : property.config.defaultValue %}
 
-        <input type="text" class="datepicker" name="{{ property.identifier }}-date" id="{{ property.identifier }}-date" value="{{ value == 'now' ? 'now'|date('d-m-Y') : (value != '' ? value|date('d-m-Y') : '') }}">
+        <input type="text"
+               class="datepicker"
+               name="{{ property.identifier }}-date"
+               id="{{ property.identifier }}-date"
+               value="{{ value == 'now' ? 'now'|date('d-m-Y') : (value != '' ? value|date('d-m-Y') : '') }}"
+               {% if not is_granted_minimal(property.editableForRole) %}readonly="readonly"{% endif %}>
     </div>
     <div class="col s4">
         <label for="{{ property.identifier }}-date" {% if property.required == true %}class="required"{% endif %}>{{ 'collection.entry.time'|trans }}</label>
 
-        <input type="text" class="timepicker" name="{{ property.identifier }}-time" id="{{ property.identifier }}-time" value="{{ value == 'now' ? 'now'|date('H:i') : (value != '' ? value|date('H:i') : '') }}">
+        <input type="text"
+               class="timepicker"
+               name="{{ property.identifier }}-time"
+               id="{{ property.identifier }}-time"
+               value="{{ value == 'now' ? 'now'|date('H:i') : (value != '' ? value|date('H:i') : '') }}"
+               {% if not is_granted_minimal(property.editableForRole) %}readonly="readonly"{% endif %}>
     </div>
 </div>
