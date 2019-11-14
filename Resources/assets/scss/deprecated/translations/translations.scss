@@ -1,0 +1,86 @@
+table {
+  tr {
+    td {
+      &:nth-child(2) {
+        div:first-child {
+          a.regular {
+            margin-right: 10px;
+          }
+        }
+
+        div:last-child {
+          line-height: 1.5rem;
+          font-size: 12px;
+          color: #a4a4a4;
+        }
+      }
+
+      .inline-field {
+        position: relative;
+        display: block;
+        min-height: 40px;
+        overflow-y: auto;
+
+        &:not(:last-child) {
+          margin-bottom: 2px;
+        }
+
+        span {
+          position: relative;
+          float: left;
+          width: 40px;
+          height: 40px;
+          line-height: 33px;
+          font-weight: bold;
+          text-transform: uppercase;
+
+          &:nth-of-type(2) {
+            position: absolute;
+            right: 0;
+            top: 0;
+            text-align: right;
+            padding: 4px 4px 8px 0;
+            line-height: normal;
+
+            .btn {
+              opacity: 0;
+              color: #ffffff;
+              height: 24px;
+              width: 24px;
+              text-align: center;
+              line-height: 24px;
+              padding: 0 !important;
+              transition: opacity 0.2s ease;
+
+              .fa {
+                color: #ffffff;
+                display: inline;
+                font-size: 14px;
+              }
+            }
+          }
+        }
+
+        textarea {
+          position: relative;
+          float: left;
+          min-height: 20px !important;
+          width: calc(100% - 52px) !important;
+          margin: 0 !important;
+
+          &.materialize-textarea:not(:focus) {
+            height: 20px !important;
+          }
+        }
+
+        &.focused {
+          span:nth-of-type(2) {
+            .btn {
+              opacity: 1;
+            }
+          }
+        }
+      }
+    }
+  }
+}

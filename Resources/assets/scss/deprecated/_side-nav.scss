@@ -1,0 +1,120 @@
+$color: $secondary-color;
+
+#side-nav {
+  flex: 0 0 250px;
+  display: flex;
+  flex-direction: column;
+  background-color: $side-nav-background;
+  -webkit-box-shadow: 2px 0 5px 0 #eeeeee;
+  -moz-box-shadow: 2px 0 5px 0 #eeeeee;
+  box-shadow: 2px 0 5px 0 #eeeeee;
+
+  img {
+    width: 250px;
+    height: 60px;
+    background-color: white;
+  }
+
+  #menu {
+    flex: auto;
+    overflow-y: auto;
+
+    > .row {
+      margin: 20px 0;
+    }
+
+    ul {
+      margin: 20px 0;
+      padding: 0;
+      list-style: none;
+
+      li {
+        display: block;
+        margin: 0 0 5px 0;
+
+        a {
+          height: 50px;
+          display: block;
+          color: darken(#ffffff, 10);
+          border-left: 5px solid $side-nav-background;
+          transition: background-color 0.2s ease, border-color 0.2s ease;
+
+          span {
+            position: relative;
+            float: left;
+            width: 50px;
+            height: 50px;
+            line-height: 50px;
+            font-size: 16px;
+            padding: 0 0 0 20px;
+
+            &:nth-child(1) {
+              color: $color;
+            }
+
+            &:nth-child(2) {
+              width: calc(100% - 50px);
+              padding-left: 0;
+            }
+          }
+
+          &.active {
+            border-color: $color;
+            background-color: $side-nav-background-focus;
+          }
+
+          &:not(.active):hover {
+            border-color: $side-nav-background-focus;
+            background-color: $side-nav-background-focus;
+          }
+        }
+
+        &.has-sub-menu {
+          > a {
+            span {
+              &:nth-child(2) {
+                width: calc(100% - 75px);
+              }
+
+              &:nth-child(3) {
+                width: 25px;
+                padding: 0;
+                color: darken(#ffffff, 20);
+              }
+            }
+          }
+
+          ul {
+            display: none;
+            margin: 0;
+
+            li {
+              margin: 0;
+
+              a {
+                height: 40px;
+                text-transform: none;
+
+                span {
+                  line-height: 40px;
+                  height: 40px;
+                  width: 100%;
+                  padding-left: 50px;
+                  color: darken(#ffffff, 30);
+                }
+
+                &.active {
+                  border-color: $color;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  footer {
+    flex: 0 0 100px;
+  }
+}

@@ -1,0 +1,20 @@
+.swal-footer {
+  background-color: rgb(245, 248, 250);
+  margin-top: 32px;
+  border-top: 1px solid #E9EEF1;
+  overflow: hidden;
+
+  button:focus {
+    &.swal-button--confirm {
+      background-color: #7cd1f9;
+    }
+
+    &.swal-button--cancel {
+      background-color: #efefef;
+    }
+
+    &.swal-button--danger {
+      background-color: #e64942;
+    }
+  }
+}

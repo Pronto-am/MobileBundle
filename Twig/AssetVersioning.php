@@ -48,6 +48,6 @@ class AssetVersioning extends AbstractExtension
      */
     public function getFile(string $fileName): string
     {
-        return '/bundles/prontomobile' . ($this->manifest[$fileName] ?? $fileName);
+        return '/bundles/prontomobile/' . ltrim($this->manifest[$fileName] ?? $fileName, '/');
     }
 }

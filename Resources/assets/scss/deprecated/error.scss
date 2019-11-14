@@ -1,0 +1,98 @@
+@import 'global';
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  background-color: $body-background;
+  color: #24282a;
+}
+
+#container {
+  width: 100%;
+  height: 100%;
+
+  #header {
+    height: 140px;
+    width: 100%;
+
+    #status-code {
+      font-size: 50px;
+      line-height: 140px;
+      height: 140px;
+      padding: 0 40px 0 0;
+      float: right;
+      position: relative;
+      color: $light-red-ochre;
+    }
+  }
+
+  #status-message {
+    max-width: 500px;
+    width: 80%;
+    margin: 40px auto;
+
+    h1 {
+      margin: 0 0 20px 0;
+      color: $side-nav-background;
+      font-size: 26px;
+    }
+
+    p {
+      margin: 0 0 15px 0;
+      line-height: 1.8rem;
+    }
+
+    h2 {
+      color: $primary-color;
+      font-size: 18px;
+    }
+
+    .code {
+      border: 1px solid #CCCCCC;
+      background-color: #F4F4F4;
+      font-family: "Courier New", sans-serif;
+      padding: 3px;
+      border-radius: 2px;
+      margin-right: 3px;
+    }
+
+    .card-action {
+      a:last-child {
+        margin-right: 0;
+      }
+    }
+  }
+
+  #footer {
+    margin-bottom: 40px;
+    text-align: center;
+    color: #999;
+    font-size: 12px;
+
+    a {
+      color: #ff004c;
+      border-bottom: 1px solid #ff004c;
+      transition: color 0.2s ease, border-color 0.2s ease;
+
+      &:hover {
+        color: black;
+        border-bottom-color: black;
+      }
+    }
+  }
+
+  @keyframes hinge {
+    0% { transform: rotate(0); transform-origin: top right; animation-timing-function: ease-in-out; }
+    20%, 50%, 80% { transform: rotate(-80deg); transform-origin: top right; animation-timing-function: ease-in-out; }
+    35%, 65% { transform: rotate(-60deg); transform-origin: top right; animation-timing-function: ease-in-out; }
+    90% { transform: rotate(-60deg) translateY(0); opacity: 1; transform-origin: top right; animation-timing-function: ease-in-out; }
+    100% { transform: translateY(150vh); opacity: 0; }
+  }
+
+  .hinge {
+    animation-duration: 6s;
+    animation-name: hinge;
+  }
+}

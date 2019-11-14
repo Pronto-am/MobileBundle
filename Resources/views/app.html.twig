@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>Pronto</title>
-    {{ encore_entry_link_tags('app') }}
+    <link rel="stylesheet" type="text/css" href="{{ mix('/build/css/app.css') }}"/>
 </head>
 <body>
     <div id="app"></div>
-    {{ encore_entry_script_tags('app') }}
+    <script src="{{ mix('/build/js/app.js') }}"></script>
 </body>
 </html>

@@ -1,0 +1,152 @@
+> ul {
+  list-style-type: none;
+  margin: 20px 0 10px 0;
+  padding: 0;
+  color: #ffffff;
+
+  > li {
+    min-height: 45px;
+    overflow-y: auto;
+    display: block;
+    margin: 0 0 5px 0;
+
+    > div {
+      display: flex;
+      flex-direction: row;
+      cursor: pointer;
+      background-color: transparent;
+      position: relative;
+
+      > span {
+        height: 45px;
+        line-height: 45px;
+        color: rgba(0, 0, 0, .5);
+        transition: color 0.2s ease;
+
+        &:nth-child(1) {
+          flex: 0 0 40px;
+          text-align: right;
+          padding: 0 15px 0 0;
+          font-size: 11px;
+        }
+
+        &:nth-child(2) {
+          flex: auto;
+        }
+
+        &:nth-child(3) {
+          flex: 0 0 40px;
+          padding: 0 0 0 10px;
+          font-size: 12px;
+          color: var(--link-color);
+
+          svg {
+            transition: transform 0.2s ease;
+
+            &.rotate {
+              transform: rotate(-90deg);
+            }
+          }
+        }
+      }
+
+      &:not(.router-link-exact-active):hover {
+        > span:not(:nth-child(3)) {
+          color: rgba(0, 0, 0, .7);
+        }
+      }
+    }
+
+    ul {
+      margin: 0;
+      padding: 0;
+      list-style-type: none;
+      opacity: 0;
+      transition: height 0.1s, opacity 0.2s ease;
+      //background-color: $gray-100;
+
+      li {
+        line-height: 45px;
+        overflow-y: auto;
+        display: block;
+        margin: 0 0 5px 0;
+
+        div {
+          display: flex;
+          flex-direction: row;
+          cursor: pointer;
+          background-color: transparent;
+          transition: background-color 0.2s ease;
+          position: relative;
+
+          span {
+            height: 45px;
+            line-height: 45px;
+            color: rgba(0, 0, 0, .5);
+
+            &:nth-child(1) {
+              padding-left: 40px;
+              flex: auto;
+            }
+
+            &:nth-child(2) {
+              flex: 0 0 40px;
+              padding: 0 0 0 10px;
+              font-size: 12px;
+              color: var(--link-color);
+
+              svg {
+                transition: transform 0.2s ease;
+
+                &.rotate {
+                  transform: rotate(-90deg);
+                }
+              }
+            }
+          }
+
+          &:not(.router-link-exact-active):hover {
+            > span:not(:nth-child(2)) {
+              color: rgba(0, 0, 0, .7);
+            }
+          }
+        }
+
+        > ul {
+          //background-color: $gray-200;
+
+          > li {
+            cursor: pointer;
+            padding-left: 40px;
+            margin: 0;
+            font-size: 12px;
+            color: rgba(0, 0, 0, .5);
+            background-color: transparent;
+            transition: background-color 0.2s ease;
+            position: relative;
+
+            &:hover {
+              color: rgba(0, 0, 0, .7);
+            }
+          }
+        }
+      }
+
+      &.open {
+        opacity: 1;
+      }
+    }
+
+    div.router-link-exact-active,
+    div.router-link-active,
+    li.router-link-exact-active,
+    li.router-link-active {
+      font-weight: bold;
+      color: var(--link-color);
+
+      span {
+        color: var(--link-color);
+      }
+    }
+  }
+}

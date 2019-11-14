@@ -1,0 +1,173 @@
+#page {
+  flex: auto;
+  padding: 40px 40px 80px 40px;
+  position: relative;
+  overflow-y: scroll;
+
+  .progress {
+    margin: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  .row {
+    &.toolbar {
+      a {
+        height: 35px;
+        width: 35px;
+        line-height: 35px;
+        border-radius: 0;
+
+        &:not(:last-of-type) {
+          margin: 0 15px 0 0;
+        }
+
+        i {
+          line-height: 35px;
+          font-size: 1.2rem;
+        }
+      }
+    }
+
+    &.no-margin {
+      margin-bottom: 0;
+    }
+
+    &.extra-margin {
+      margin-bottom: 40px;
+    }
+
+    &.row-flex {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    &.selection-box {
+      width: 100%;
+      border: 1px solid #cccccc;
+      border-radius: 3px;
+      padding: 0;
+
+      .col {
+        height: 30px;
+        line-height: 30px;
+        text-align: center;
+        cursor: pointer;
+        padding: 0;
+        margin: 0;
+
+        &:not(:last-child) {
+          border-right: 1px solid #cccccc;
+        }
+
+        &.active {
+          background-color: #f4f4f4;
+          color: $primary-color;
+        }
+      }
+    }
+
+    .col {
+      &.padding-top {
+        padding-top: 20px;
+      }
+
+      .btn-floating {
+        &.btn-square {
+          border-radius: 0;
+        }
+      }
+    }
+  }
+
+  h1 {
+    color: $primary-color;
+    margin: 0 0 20px 0;
+    font-size: 30px;
+
+    &.has-back-button {
+      a {
+        margin-right: 15px;
+        color: lighten($black, 60);
+      }
+    }
+  }
+
+  h2 {
+    font-size: 20px;
+    color: $black;
+  }
+
+  h3 {
+    font-size: 18px;
+    color: $black;
+  }
+
+  h2, h3 {
+    span {
+      color: $secondary-color;
+      margin: 0 15px 0 0;
+      font-weight: bold;
+    }
+  }
+
+  a {
+    position: relative;
+
+    &.regular:not(.column-sortable):after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      width: 96%;
+      left: 2%;
+      height: 1px;
+      background-color: transparent;
+      transition: background-color 0.2s ease, bottom 0.2s ease;
+    }
+
+    &.regular:not(.column-sortable):hover:after {
+      background-color: $link-color;
+      bottom: -4px;
+    }
+
+    &.column-sortable {
+      color: $black;
+
+      &.column-active {
+        color: $light-red-ochre;
+      }
+    }
+
+
+    &.platform {
+      color: #cccccc;
+
+      &.active {
+        i.fa-android {
+          color: #A3C439;
+        }
+
+        i.fa-apple {
+          color: #666666;
+        }
+      }
+    }
+  }
+
+  .divider {
+    margin: 40px 0 20px 0;
+  }
+
+  @import 'tabs';
+
+  @import 'modals';
+
+  @import 'collapsible';
+
+  @import 'dropdown';
+
+  @import 'sortable';
+
+  @import 'collections';
+}

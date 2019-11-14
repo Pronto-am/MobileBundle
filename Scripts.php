@@ -21,7 +21,6 @@ class Scripts
         self::modifyFosOauthServerConfiguration($packagesDir);
         self::modifySecurityConfiguration($packagesDir);
         self::modifyTwigConfiguration($packagesDir);
-        self::modifyWebpackEncoreConfiguration($packagesDir);
 
         self::addRoutes($routesDir);
     }
@@ -183,21 +182,5 @@ class Scripts
         ];
 
         file_put_contents($fileName, Yaml::dump($security, 4));
-    }
-
-    /**
-     * @param string $packagesDir
-     */
-    public static function modifyWebpackEncoreConfiguration(string $packagesDir): void
-    {
-        $fileName = $packagesDir . '/webpack_encore.yaml';
-
-        $prontoMobile = [
-            'webpack_encore' => [
-                'output_path' => '%kernel.root_dir%/../public/build/',
-            ]
-        ];
-
-        file_put_contents($fileName, Yaml::dump($prontoMobile, 4));
     }
 }

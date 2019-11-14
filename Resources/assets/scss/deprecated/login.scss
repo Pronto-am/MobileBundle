@@ -1,0 +1,137 @@
+@import 'global';
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  background-color: $body-background;
+  color: #24282a;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+div > a {
+  border-bottom: 1px dotted;
+  &:hover {
+    color: $primary-color;
+    border-bottom: 1px solid;
+  }
+}
+
+h1 {
+  text-align: center;
+
+  img {
+    width: 440px;
+    height: 140px;
+
+    &.mobile {
+      width: 300px;
+      height: auto;
+    }
+  }
+}
+
+footer.authentication-footer {
+  margin-top:50px;
+  text-align: center;
+  color: #999;
+  font-size:12px;
+  a {
+    color: #ff004c;
+    border-bottom: 1px solid #ff004c;
+    &:hover {
+      color: black;
+      border-bottom: 1px solid black;
+    }
+  }
+}
+
+.card {
+  .loader-container {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    height: 100%;
+    width: 100%;
+  }
+
+  .card-content {
+    h1 {
+      color: $black;
+      text-align: left;
+      position: relative;
+      margin: 0 0 35px 0;
+      font-size: 20px;
+
+      &.has-back-button {
+        padding-left: 68px;
+      }
+
+      a {
+        color: lighten($black, 60);
+        position: absolute;
+        top: 0;
+        left: 0;
+        padding: 0 11px;
+      }
+
+      span {
+        color: $primary-color;
+        font-weight: bold;
+      }
+    }
+
+    .collection.collection-customers, .collection.collection-applications {
+      border: 0;
+      margin: 0 -24px;
+
+      .collection-item {
+        border-bottom: 0;
+        min-height: 62px;
+        color: $black;
+        font-size: 20px;
+        padding-left: 92px;
+        padding-right: 40px;
+
+        div {
+          left: 25px !important;
+          color: #ffffff;
+          text-align: center;
+          line-height: 42px;
+
+          &.light {
+            color: #000000;
+          }
+        }
+
+        .label {
+          position: relative;
+          padding: 3px 6px;
+          border-radius: 5px;
+          margin: 0 5px;
+
+          &.light {
+            color: #133454;
+          }
+
+          &.dark {
+            color: #ffffff;
+          }
+        }
+
+        &:not(.active):hover {
+          background-color: #f9f9f9;
+        }
+
+        span {
+          min-height: 42px;
+          line-height: 42px;
+        }
+      }
+    }
+  }
+}

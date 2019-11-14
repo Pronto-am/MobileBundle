@@ -1,0 +1,11 @@
+.el-transfer-panel {
+  width: calc(50% - 50px) !important;
+
+  .el-transfer-panel__body {
+    height: auto;
+
+    .el-transfer-panel__list, .el-transfer-panel__empty {
+      min-height: 500px;
+    }
+  }
+}

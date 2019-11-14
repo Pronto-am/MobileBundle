@@ -1,0 +1,18 @@
+a {
+  color: var(--link-color);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: var(--link-color-dark);
+  }
+}
+
+.table-pagination ul.pagination .page-item.active .page-link,
+.table-pagination ul.pagination .page-item.active .page-link:focus,
+.table-pagination ul.pagination .page-item.active .page-link:hover {
+  background-color: var(--link-color-dark);
+  border-color: var(--link-color-dark);
+  color: var(--contrast-color);
+}
