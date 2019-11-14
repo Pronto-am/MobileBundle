@@ -56,3 +56,7 @@ pronto_mobile_app_api_file:
     prefix: /api
     name_prefix: pronto_mobile_
     schemes: [https]
+
+spa_route:
+    resource: '../../Controller/'
+    type: annotation

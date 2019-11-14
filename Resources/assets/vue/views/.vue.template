@@ -1,0 +1,29 @@
+<template>
+    <div class="row">
+        <div class="col-sm-12">
+
+        </div>
+    </div>
+</template>
+
+<script>
+    export default {
+        props: {
+            //
+        },
+
+        data() {
+            return {
+                //
+            }
+        },
+
+        beforeRouteEnter(to, from, next) {
+            next();
+        },
+
+        methods: {
+            //
+        }
+    }
+</script>

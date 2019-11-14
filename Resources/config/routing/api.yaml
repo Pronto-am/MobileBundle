@@ -4,3 +4,9 @@ api_v1_routes:
     prefix: /v1
     name_prefix: api_v1_
     schemes: [https]
+
+api_vue_routes:
+    resource: '../../../Controller/Api/Vue/'
+    prefix: /vue
+    name_prefix: api_vue_
+    type: annotation
