@@ -68,17 +68,17 @@ Encore
     // requires WebpackEncoreBundle 1.4 or higher
     .enableIntegrityHashes()
 
-    .addLoader({
-        enforce: 'pre',
-        test: /\.(js|vue)$/,
-        loader: 'eslint-loader',
-        exclude: /node_modules/,
-        options: {
-            fix: true,
-            emitError: true,
-            emitWarning: true,
-        },
-    })
+    // .addLoader({
+    //     enforce: 'pre',
+    //     test: /\.(js|vue)$/,
+    //     loader: 'eslint-loader',
+    //     exclude: /node_modules/,
+    //     options: {
+    //         fix: true,
+    //         emitError: true,
+    //         emitWarning: true,
+    //     },
+    // })
 
 // uncomment if you're having problems with a jQuery plugin
 //.autoProvidejQuery()

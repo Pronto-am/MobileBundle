@@ -71,66 +71,67 @@
 
 <script>
 export default {
-  props: {
-    token: {
-      type: String,
-      required: false
-    }
-  },
-
-  data() {
-    return {
-      action: null,
-      loading: false,
-      appPasswordChanged: false
-    }
-  },
-
-  beforeRouteEnter(to, from, next) {
-    axios.get(route('vue.password.token', {token: to.params.token})).then(response => {
-      next(vm => {
-        vm.action = response.data.data;
-      });
-    }).catch(error => {
-      next(vm => {
-        vm.$router.replace({name: 'login'});
-
-        this.$message({
-          message: error.response.data.message,
-          type: 'error'
-        });
-      });
-    })
-  },
-
-  methods: {
-    login(response) {
-      if(response.access_token) {
-        this.$oauth.storeSession(response);
-        this.$oauth.addAuthHeaders();
-
-        this.$router.push('dashboard');
-
-        this.$message({
-          message: 'Uw wachtwoord is gewijzigd',
-          type: 'success'
-        });
-
-        Events.$emit('users:authenticated');
-      } else {
-        this.appPasswordChanged = true;
-        this.$refs.form.reset();
-      }
+    props: {
+        token: {
+            type: String,
+            required: false,
+            default: null,
+        }
     },
 
-    error(error) {
-      this.loading = false;
+    data() {
+        return {
+            action: null,
+            loading: false,
+            appPasswordChanged: false
+        }
+    },
 
-      this.$message({
-        message: error.message,
-        type: 'error'
-      });
+    beforeRouteEnter(to, from, next) {
+        axios.get(this.route('/users/password/:token', {token: to.params.token})).then(response => {
+            next(vm => {
+                vm.action = response.data.data;
+            });
+        }).catch(error => {
+            next(vm => {
+                vm.$router.replace({name: 'login'});
+
+                this.$message({
+                    message: error.response.data.message,
+                    type: 'error'
+                });
+            });
+        })
+    },
+
+    methods: {
+        login(response) {
+            if (response.access_token) {
+                this.$oauth.storeSession(response);
+                this.$oauth.addAuthHeaders();
+
+                this.$router.push('dashboard');
+
+                this.$message({
+                    message: 'Uw wachtwoord is gewijzigd',
+                    type: 'success'
+                });
+
+                Events.$emit('users:authenticated');
+            } else {
+                this.appPasswordChanged = true;
+                this.$refs.form.reset();
+            }
+        },
+
+        error(error) {
+            this.loading = false;
+
+            this.$message({
+                message: error.message,
+                type: 'error'
+            });
+        }
     }
-  }
 }
 </script>

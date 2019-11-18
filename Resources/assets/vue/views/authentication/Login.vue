@@ -4,7 +4,7 @@
       <div class="col-sm-12 col-md-6 offset-md-3 col-lg-4 offset-lg-4">
         <vue-form
           :model="user"
-          url="/api/vue/login"
+          :url="route('auth/login')"
           @submit:success="authenticated"
           @submit:error="error"
         >
@@ -75,39 +75,39 @@
 
 <script>
 export default {
-  data() {
-    return {
-      user: {
-        email: null,
-        password: null,
-      },
-      loading: false
-    }
-  },
-
-  methods: {
-
-    authenticated(response) {
-      // this.$oauth.storeSession(response);
-      // this.$oauth.addAuthHeaders();
-
-      this.$router.replace({name: 'dashboard'});
+    data() {
+        return {
+            user: {
+                email: null,
+                password: null,
+            },
+            loading: false
+        }
     },
 
-    error(error) {
-      this.loading = false;
-      this.user.password = null;
+    methods: {
 
-      let message = 'Er is iets mis gegaan, probeer het opnieuw';
+        authenticated(response) {
+            // this.$oauth.storeSession(response);
+            // this.$oauth.addAuthHeaders();
 
-      if (error.status === 422) {
-        message = 'De ingevoerde gegevens zijn onjuist';
-      }
-    },
+            // this.$router.replace({name: 'dashboard'});
+        },
 
-    resetPassword() {
-      this.$router.push({name: 'password.forgot'});
+        error(error) {
+            // this.loading = false;
+            // this.user.password = null;
+            //
+            // let message = 'Er is iets mis gegaan, probeer het opnieuw';
+            //
+            // if (error.status === 422) {
+            //   message = 'De ingevoerde gegevens zijn onjuist';
+            // }
+        },
+
+        resetPassword() {
+            this.$router.push({name: 'password.forgot'});
+        }
     }
-  }
 }
 </script>

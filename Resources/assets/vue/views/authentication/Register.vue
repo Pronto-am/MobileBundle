@@ -107,7 +107,7 @@ export default {
   },
 
   beforeRouteEnter(to, from, next) {
-    axios.get(route('vue.registration', {token: to.params.token})).then(({data: {data: user}}) => {
+    axios.get(`${to.params.token}`).then(({data: {data: user}}) => {
       next(vm => {
         vm.user = user;
       });

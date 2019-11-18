@@ -3,10 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>Pronto</title>
-    <link rel="stylesheet" type="text/css" href="{{ mix('/build/css/app.css') }}"/>
+    {{ webpack_asset_tags('css/app') | raw }}
 </head>
 <body>
-    <div id="app"></div>
-    <script src="{{ mix('/build/js/app.js') }}"></script>
+    <div id="app">
+        <app/>
+    </div>
+    {{ webpack_asset_tags('js/app') | raw }}
 </body>
 </html>

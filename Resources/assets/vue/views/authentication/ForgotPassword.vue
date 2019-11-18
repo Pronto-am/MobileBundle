@@ -52,22 +52,22 @@
 
 <script>
 export default {
-  data() {
-    return {
-      user: {},
-      loading: false
-    }
-  },
-
-  methods: {
-    success() {
-      this.$message({
-        message: 'U heeft een e-mail ontvangen om uw wachtwoord te resetten',
-        type: 'success'
-      });
-
-      this.$refs.form.reset();
+    data() {
+        return {
+            user: {},
+            loading: false
+        }
     },
-  }
+
+    methods: {
+        success() {
+            this.$message({
+                message: 'U heeft een e-mail ontvangen om uw wachtwoord te resetten',
+                type: 'success'
+            });
+
+            this.$refs.form.reset();
+        },
+    }
 }
 </script>

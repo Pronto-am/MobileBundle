@@ -14,14 +14,14 @@
 
 <script>
 export default {
-  data() {
-    return {
-      //
-    }
-  },
+    data() {
+        return {
+            //
+        }
+    },
 
-  beforeRouteEnter(to, from, next) {
-    next();
-  }
+    beforeRouteEnter(to, from, next) {
+        next();
+    }
 }
 </script>

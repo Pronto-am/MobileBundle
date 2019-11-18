@@ -3,6 +3,7 @@
 namespace Pronto\MobileBundle\Twig;
 
 
+use Faker\Factory;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
@@ -22,7 +23,7 @@ class AssetVersioning extends AbstractExtension
     public function __construct(KernelInterface $kernel)
     {
         // Try to parse the mix manifest
-        $fileLocation = $kernel->getProjectDir() . '/public/bundles/prontomobile/mix-manifest.json';
+        $fileLocation = $kernel->getProjectDir() . '/public/bundles/prontomobile/build/entrypoints.json';
         $manifest = @file_get_contents($fileLocation);
 
         if ($manifest !== false) {
@@ -36,7 +37,7 @@ class AssetVersioning extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('mix', [$this, 'getFile'])
+            new TwigFunction('webpack_asset_tags', [$this, 'generateAssetTags'])
         ];
     }
 
@@ -46,8 +47,52 @@ class AssetVersioning extends AbstractExtension
      * @param $fileName
      * @return string
      */
-    public function getFile(string $fileName): string
+    public function generateAssetTags(string $fileName): string
     {
-        return '/bundles/prontomobile/' . ltrim($this->manifest[$fileName] ?? $fileName, '/');
+        $fileName = ltrim($fileName, '/');
+
+        // Return basic tags
+        if ($this->manifest['entrypoints'][$fileName] === null) {
+            if($this->isJavascriptFile($fileName)) {
+                return sprintf('<script src="/bundles/prontomobile/build/%s.js" type="text/javascript"></script>', $fileName);
+            } else if($this->isStyleFile($fileName)) {
+                return sprintf('<link rel="stylesheet" href="/bundles/prontomobile/build/%s.css" />', $fileName);
+            }
+            return '';
+        }
+
+        $tags = [];
+
+        foreach($this->manifest['entrypoints'][$fileName] as $type => $files) {
+            if($this->isJavascriptFile($type)) {
+                foreach($files as $file) {
+                    $tags[] = sprintf('<script src="/bundles/prontomobile/%s" type="text/javascript"></script>', ltrim($file, '/'));
+                }
+            } else if($this->isStyleFile($type)) {
+                foreach($files as $file) {
+                    $tags[] = sprintf('<link rel="stylesheet" href="/bundles/prontomobile/%s" />', ltrim($file, '/'));
+                }
+            }
+        }
+
+        return implode('', $tags);
+    }
+
+    /**
+     * @param string $fileName
+     * @return bool
+     */
+    private function isJavascriptFile(string $fileName)
+    {
+        return substr($fileName, 0, 2) === 'js';
+    }
+
+    /**
+     * @param string $fileName
+     * @return bool
+     */
+    private function isStyleFile(string $fileName)
+    {
+        return substr($fileName, 0, 3) === 'css';
     }
 }

@@ -16,7 +16,15 @@ Vue.mixin({
   },
 
   methods: {
-    route: route,
+    route: function(url, params = {}) {
+      let keys = Object.keys(params);
+
+      for(let key of keys) {
+        url = url.replace(`:${key}`, params[key]);
+      }
+
+      return `/api/vue/${url.replace(/^\/+/g, '')}`;
+    },
     submitSuccess: function () {
       this.$message({
         type: 'success',

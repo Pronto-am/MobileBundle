@@ -11,7 +11,10 @@ html, body {
   width: 100%;
   padding: 0;
   margin: 0;
-  //font-family: $default-font-family;
+}
+
+body {
+  background-color: var(--background-color);
 }
 
 #app {
@@ -20,40 +23,29 @@ html, body {
   > div {
     height: 100%;
     width: 100%;
+    display: flex;
+    flex-direction: column;
 
-    #template-admin {
-      height: 100%;
+    > header {
+      flex: 0 0 65px;
+      background-color: #ffffff;
+      box-shadow: 0 8px 8px -8px rgba(136, 152, 170, .15);
+    }
+
+    > main {
+      flex: auto;
+      position: relative;
       display: flex;
       flex-direction: row;
 
       > aside {
+        background-color: #ffffff;
         flex: 0 0 250px;
         overflow-y: scroll;
-        background-color: #ffffff;
-        box-shadow: 0 0 2rem 0 rgba(136, 152, 170, .15);
+        box-shadow: 8px 0 8px -8px rgba(136, 152, 170, .15);
 
         &::-webkit-scrollbar {
           display: none;
-        }
-
-        header {
-          text-transform: uppercase;
-          letter-spacing: 1px;
-          font-weight: bold;
-          text-align: center;
-          padding-top: 16px;
-          font-size: 24px;
-          position: relative;
-
-          &:after {
-            position: absolute;
-            bottom: 0;
-            left: 20px;
-            width: calc(100% - 40px);
-            height: 1px;
-            background-color: var(--primary-color);
-            content: '';
-          }
         }
 
         > main {
@@ -103,53 +95,14 @@ html, body {
         position: relative;
 
         > header {
-          position: fixed;
-          width: calc(100% - 250px);
-          z-index: 0;
-          right: 0;
-
-          div[class^="col"] {
-            padding-top: 20px;
-
-            a {
-              cursor: pointer;
-              font-size: 18px;
-              color: var(--contrast-color);
-            }
-
-            &.dashboard-link {
-              padding-left: 55px;
-              text-transform: uppercase;
-              letter-spacing: 1px;
-              font-weight: bold;
-              text-decoration: none;
-
-              a:hover {
-                text-decoration: none;
-              }
-            }
-
-            &:last-of-type {
-              padding-right: 55px;
-            }
-          }
-
-          &:before {
-            position: fixed;
-            z-index: -1;
-            top: 0;
-            right: 0;
-            width: calc(100% - 250px);
-            height: 250px;
-            content: '';
-            background: linear-gradient(87deg, var(--primary-color) 0, var(--primary-color-dark) 100%);
-          }
+          position: relative;
+          flex: 0 0 150px;
         }
 
         > main {
           flex: 1 0 auto;
           overflow-y: auto;
-          padding: 115px 40px 40px 40px;
+          padding: 40px;
         }
 
         > footer {
@@ -160,21 +113,7 @@ html, body {
       @media (max-width: 575.98px) {
         > main {
           > header {
-            width: 100%;
-
-            &:before {
-              width: 100%;
-            }
-
-            div[class^="col"] {
-              &.dashboard-link {
-                padding-left: 10px !important;
-              }
-
-              &:last-of-type {
-                padding-right: 15px;
-              }
-            }
+            //
           }
 
           > main {
@@ -183,13 +122,6 @@ html, body {
           }
         }
       }
-    }
-
-    #template-front {
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
     }
   }
 }

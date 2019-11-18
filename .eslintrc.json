@@ -9,10 +9,6 @@
     "browser": true,
     "es6": true
   },
-  "globals": {
-    "axios": "readonly",
-    "require": "readonly"
-  },
   "extends": [
     "eslint:recommended",
     "plugin:vue/recommended"
@@ -20,7 +16,7 @@
   "rules": {
     "indent": [
       "error",
-      2
+      4
     ]
   }
 }
