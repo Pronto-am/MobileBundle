@@ -23,7 +23,6 @@ class Entry extends TimestampedWithUserEntity implements ApiEntityInterface
 {
 	use ApiEntityTrait;
 
-
 	/**
      * @ORM\Id
      * @ORM\Column(type="string", unique=true)
@@ -32,13 +31,11 @@ class Entry extends TimestampedWithUserEntity implements ApiEntityInterface
      */
     private $id;
 
-
     /**
      * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Collection", inversedBy="entries")
      * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     private $collection;
-
 
     /**
      * @ORM\Column(type="json_array")
@@ -46,7 +43,6 @@ class Entry extends TimestampedWithUserEntity implements ApiEntityInterface
 	 * @Groups({"Entry"})
      */
     private $data;
-
 
 	/**
 	 * @ORM\Column(type="boolean")
@@ -67,7 +63,6 @@ class Entry extends TimestampedWithUserEntity implements ApiEntityInterface
 		$this->id = Uuid::uuid1()->toString();
 	}
 
-
 	/**
      * @return string|null
      */
@@ -75,7 +70,6 @@ class Entry extends TimestampedWithUserEntity implements ApiEntityInterface
     {
         return $this->id;
     }
-
 
     /**
      * @return Collection
@@ -85,7 +79,6 @@ class Entry extends TimestampedWithUserEntity implements ApiEntityInterface
         return $this->collection;
     }
 
-
     /**
      * @param Collection $collection
      */
@@ -94,15 +87,13 @@ class Entry extends TimestampedWithUserEntity implements ApiEntityInterface
         $this->collection = $collection;
     }
 
-
     /**
      * @return array
      */
     public function getData(): array
     {
-        return $this->data;
+        return $this->data ?? [];
     }
-
 
     /**
      * @param array $data
@@ -112,7 +103,6 @@ class Entry extends TimestampedWithUserEntity implements ApiEntityInterface
         $this->data = $data;
     }
 
-
 	/**
 	 * @return bool
 	 */
@@ -120,7 +110,6 @@ class Entry extends TimestampedWithUserEntity implements ApiEntityInterface
 	{
 		return $this->active;
 	}
-
 
 	/**
 	 * @param bool $active
