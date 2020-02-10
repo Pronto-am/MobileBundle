@@ -16,15 +16,6 @@ Vue.mixin({
   },
 
   methods: {
-    route: function(url, params = {}) {
-      let keys = Object.keys(params);
-
-      for(let key of keys) {
-        url = url.replace(`:${key}`, params[key]);
-      }
-
-      return `/api/vue/${url.replace(/^\/+/g, '')}`;
-    },
     submitSuccess: function () {
       this.$message({
         type: 'success',
@@ -107,3 +98,25 @@ Vue.directive('user-can', function (el, bindings, vnode) {
     }
   }
 });
+
+
+/**
+ * PROTOTYPES
+ */
+
+
+/**
+ * Prototype to create a url
+ * @param url
+ * @param params
+ * @returns {string}
+ */
+Vue.prototype.$url = function(url, params = {}) {
+  let keys = Object.keys(params);
+
+  for(let key of keys) {
+    url = url.replace(`:${key}`, params[key]);
+  }
+
+  return `/api/vue/${url.replace(/^\/+/g, '')}`;
+};

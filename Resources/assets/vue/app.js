@@ -9,7 +9,7 @@ import App from './views/App';
 // import './libraries/auth';
 // import './libraries/draggable';
 import './libraries/element';
-// import './libraries/fontawesome';
+import './libraries/fontawesome';
 import './libraries/form';
 // import './libraries/masonry';
 import './libraries/moment';
@@ -42,7 +42,7 @@ window.Events = new Vue();
 const files = require.context('./components/', true, /\.vue$/i);
 files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
 
-const app = new Vue({
+new Vue({
     el: '#app',
     components: {App},
     router,

@@ -35,7 +35,7 @@ class ValidatorService
 		// Validate the request
 		$result = $this->validator->schemaValidation($values, Schema::fromJsonString(json_encode([
 			'type'       => 'object',
-			'properties' => $rules,
+			'properties' => $this->parseToObject($rules),
 			'required'   => $required
 		])));
 

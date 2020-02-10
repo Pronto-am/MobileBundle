@@ -6,6 +6,7 @@ namespace Pronto\MobileBundle\Request;
 use Pronto\MobileBundle\Exception\InvalidRequestException;
 use Pronto\MobileBundle\Service\ValidatorService;
 use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 abstract class BaseRequest
@@ -15,11 +16,15 @@ abstract class BaseRequest
 	 */
 	public $parameterBag;
 
-
 	/**
 	 * @var ValidatorService $validatorService
 	 */
 	private $validatorService;
+
+    /**
+     * @var Request $current
+     */
+	public $current;
 
 	/**
 	 * ResultRequest constructor.
@@ -29,7 +34,8 @@ abstract class BaseRequest
 	 */
 	public function __construct(RequestStack $requestStack, ValidatorService $validatorService)
 	{
-		$this->parameterBag = $requestStack->getCurrentRequest()->request;
+	    $this->current = $requestStack->getCurrentRequest();
+		$this->parameterBag = $this->current->request;
 		$this->validatorService = $validatorService;
 
 		$this->handle();

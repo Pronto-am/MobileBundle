@@ -1,20 +1,18 @@
 <template>
-    <div>
+    <div class="container-fluid">
         <template v-if="$route.meta.auth">
             <header/>
 
             <main>
-                <aside/>
+                <aside></aside>
 
                 <main>
                     <!--<header/>-->
 
                     <main>
-                        <div class="container-fluid">
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <router-view/>
-                                </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <router-view/>
                             </div>
                         </div>
                     </main>
@@ -26,11 +24,9 @@
 
         <template v-else>
             <main>
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <router-view/>
-                        </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <router-view/>
                     </div>
                 </div>
             </main>
@@ -54,6 +50,5 @@
         },
 
         methods: {},
-
     }
 </script>
