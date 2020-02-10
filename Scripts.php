@@ -126,7 +126,7 @@ class Scripts
 
         $security['security']['encoders'] = [
             'Pronto\MobileBundle\Entity\User'    => 'bcrypt',
-            'Pronto\MobileBundle\Entity\AppUser' => 'bcrypt'
+//            'Pronto\MobileBundle\Entity\AppUser' => 'bcrypt'
         ];
 
         $security['security']['firewalls'] = [

@@ -19,19 +19,22 @@ class AuthCode extends BaseAuthCode
 	 */
 	protected $id;
 
-
 	/**
 	 * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Application")
 	 * @ORM\JoinColumn(nullable=false)
 	 */
 	protected $client;
 
-
 	/**
 	 * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\AppUser")
 	 */
-	protected $user;
+	protected $appUser;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\User")
+     * @ORM\JoinColumn(onDelete="cascade")
+     */
+    protected $user;
 
 	/**
 	 * Triggered on pre persist
@@ -41,6 +44,6 @@ class AuthCode extends BaseAuthCode
 	 */
 	public function onPrePersist(): void
 	{
-		$this->id = Uuid::uuid1()->toString();
+		$this->id = Uuid::uuid4()->toString();
 	}
 }

@@ -15,7 +15,7 @@ use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
-class AppUserProvider implements UserProviderInterface
+class UserProvider implements UserProviderInterface
 {
     /**
      * @var EntityManagerInterface $entityManager
@@ -71,14 +71,14 @@ class AppUserProvider implements UserProviderInterface
 
         /** @var User $user */
         $user = $this->entityManager->getRepository(User::class)->findOneBy([
-            'appUser'     => true,
+            'appUser'     => false,
             'email'       => $email,
             'activated'   => true,
             'application' => $application,
         ]);
 
         if ($user === null) {
-            $message = sprintf('Unable to find an active AppUser identified by "%s".', $email);
+            $message = sprintf('Unable to find an active User identified by "%s".', $email);
 
             throw new UsernameNotFoundException($message, 404);
         }

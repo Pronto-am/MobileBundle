@@ -8,7 +8,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Events;
 use Pronto\MobileBundle\Entity\AccessToken;
-use Pronto\MobileBundle\Entity\AppUser;
+use Pronto\MobileBundle\Entity\User;
 
 class AccessTokenSubscriber implements EventSubscriber
 {
@@ -36,11 +36,12 @@ class AccessTokenSubscriber implements EventSubscriber
 		return [Events::postPersist];
 	}
 
-	/**
-	 * Post persist event
-	 *
-	 * @param LifecycleEventArgs $args
-	 */
+    /**
+     * Post persist event
+     *
+     * @param LifecycleEventArgs $args
+     * @throws \Exception
+     */
 	public function postPersist(LifecycleEventArgs $args): void
 	{
 		$entity = $args->getEntity();
@@ -50,12 +51,13 @@ class AccessTokenSubscriber implements EventSubscriber
 		}
 	}
 
-	/**
-	 * @param AccessToken $accessToken
-	 */
+    /**
+     * @param AccessToken $accessToken
+     * @throws \Exception
+     */
 	private function updateUser(AccessToken $accessToken): void
 	{
-		/** @var AppUser $user */
+		/** @var User $user */
 		$user = $accessToken->getUser();
 
 		if ($user !== null) {

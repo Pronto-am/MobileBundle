@@ -40,13 +40,13 @@ class Device implements ApiEntityInterface
 	 */
 	private $application;
 
-	/**
-	 * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\AppUser", inversedBy="devices")
-	 * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
-	 *
-	 * @Groups({"Device"})
-	 */
-	private $appUser;
+    /**
+     * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\User", inversedBy="devices")
+     * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
+     *
+     * @Groups({"Device"})
+     */
+    private $appUser;
 
 	/**
 	 * @ORM\Column(type="string", nullable=true)
@@ -165,7 +165,6 @@ class Device implements ApiEntityInterface
 		$this->id = Uuid::uuid1()->toString();
 	}
 
-
 	/**
 	 * @return string|null
 	 */
@@ -173,7 +172,6 @@ class Device implements ApiEntityInterface
 	{
 		return $this->id;
 	}
-
 
 	/**
 	 * @param Application $application
@@ -183,7 +181,6 @@ class Device implements ApiEntityInterface
 		$this->application = $application;
 	}
 
-
 	/**
 	 * @return Application
 	 */
@@ -192,24 +189,21 @@ class Device implements ApiEntityInterface
 		return $this->application;
 	}
 
-
 	/**
-	 * @return AppUser|null
+	 * @return User|null
 	 */
-	public function getAppUser(): ?AppUser
+	public function getUser(): ?User
 	{
 		return $this->appUser;
 	}
 
-
 	/**
-	 * @param null|AppUser $appUser
+	 * @param null|User $user
 	 */
-	public function setAppUser(?AppUser $appUser): void
+	public function setUser(?User $user): void
 	{
-		$this->appUser = $appUser;
+		$this->appUser = $user;
 	}
-
 
 	/**
 	 * @return string
@@ -219,7 +213,6 @@ class Device implements ApiEntityInterface
 		return $this->firebaseToken;
 	}
 
-
 	/**
 	 * @param null|string $firebaseToken
 	 */
@@ -227,7 +220,6 @@ class Device implements ApiEntityInterface
 	{
 		$this->firebaseToken = $firebaseToken;
 	}
-
 
 	/**
 	 * @return string
@@ -237,7 +229,6 @@ class Device implements ApiEntityInterface
 		return $this->apnsToken;
 	}
 
-
 	/**
 	 * @param null|string $apnsToken
 	 */
@@ -245,7 +236,6 @@ class Device implements ApiEntityInterface
 	{
 		$this->apnsToken = $apnsToken;
 	}
-
 
 	/**
 	 * @return string
@@ -255,7 +245,6 @@ class Device implements ApiEntityInterface
 		return $this->name;
 	}
 
-
 	/**
 	 * @param mixed $name
 	 */
@@ -264,7 +253,6 @@ class Device implements ApiEntityInterface
 		$this->name = $name;
 	}
 
-
 	/**
 	 * @return string
 	 */
@@ -272,7 +260,6 @@ class Device implements ApiEntityInterface
 	{
 		return $this->model;
 	}
-
 
 	/**
 	 * @param string $model

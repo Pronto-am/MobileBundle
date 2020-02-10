@@ -23,19 +23,16 @@ class PasswordReset
 	 */
 	private $token;
 
-
 	/**
 	 * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\User")
 	 * @ORM\JoinColumn(onDelete="CASCADE")
 	 */
 	private $user;
 
-
 	/**
 	 * @ORM\Column(type="datetime")
 	 */
 	private $createdAt;
-
 
 	/**
 	 * PasswordReset constructor.
@@ -46,7 +43,6 @@ class PasswordReset
 		$this->user = $user;
 	}
 
-
 	/**
 	 * Triggered on pre persist
 	 *
@@ -55,10 +51,9 @@ class PasswordReset
 	 */
 	public function onPrePersist(): void
 	{
-		$this->token = Uuid::uuid1()->toString();
+		$this->token = Uuid::uuid4()->toString();
 		$this->createdAt = new \DateTime();
 	}
-
 
 	/**
 	 * @return string
@@ -68,7 +63,6 @@ class PasswordReset
 		return $this->token;
 	}
 
-
 	/**
 	 * @return User
 	 */
@@ -76,7 +70,6 @@ class PasswordReset
 	{
 		return $this->user;
 	}
-
 
 	/**
 	 * @return DateTime

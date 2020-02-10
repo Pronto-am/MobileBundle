@@ -27,7 +27,6 @@ class AppUser extends TimestampedEntity implements UserInterface, ApiEntityInter
 	public const USER_NOT_ACTIVATED = [400, 2, 'The users\' account hasn\'t been activated yet'];
 	public const EMAIL_ADDRESS_ALREADY_EXISTS = [409, 3, 'An account with the provided email address already exists'];
 
-
 	/**
 	 * @ORM\Id
 	 * @ORM\Column(type="string", unique=true)
@@ -36,13 +35,11 @@ class AppUser extends TimestampedEntity implements UserInterface, ApiEntityInter
 	 */
 	private $id;
 
-
 	/**
 	 * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Application")
 	 * @ORM\JoinColumn(onDelete="CASCADE")
 	 */
 	private $application;
-
 
 	/**
 	 * @ORM\Column(type="string")
@@ -52,7 +49,6 @@ class AppUser extends TimestampedEntity implements UserInterface, ApiEntityInter
 	 */
 	private $firstName;
 
-
 	/**
 	 * @ORM\Column(type="string")
 	 * @Assert\NotBlank()
@@ -60,7 +56,6 @@ class AppUser extends TimestampedEntity implements UserInterface, ApiEntityInter
 	 * @Groups({"AppUser", "Device"})
 	 */
 	private $lastName;
-
 
 	/**
 	 * @ORM\Column(type="string")
@@ -71,12 +66,10 @@ class AppUser extends TimestampedEntity implements UserInterface, ApiEntityInter
 	 */
 	private $email;
 
-
 	/**
 	 * @ORM\Column(type="string")
 	 */
 	private $password;
-
 
 	/**
 	 * A non-persisted field that's used to create the encoded password.
@@ -85,7 +78,6 @@ class AppUser extends TimestampedEntity implements UserInterface, ApiEntityInter
 	 */
 	private $plainPassword;
 
-
 	/**
 	 * @ORM\Column(type="boolean")
 	 *
@@ -93,12 +85,10 @@ class AppUser extends TimestampedEntity implements UserInterface, ApiEntityInter
 	 */
 	private $activated = false;
 
-
 	/**
 	 * @ORM\Column(type="string")
 	 */
 	private $activationToken;
-
 
 	/**
 	 * @ORM\Column(type="datetime", nullable=true)
@@ -107,18 +97,15 @@ class AppUser extends TimestampedEntity implements UserInterface, ApiEntityInter
 	 */
 	private $lastLogin;
 
-
 	/**
 	 * @ORM\Column(type="json_array", nullable=true)
 	 */
 	private $extraData;
 
-
 	/**
 	 * @ORM\OneToMany(targetEntity="Pronto\MobileBundle\Entity\Device", mappedBy="appUser")
 	 */
 	private $devices;
-
 
 	/**
 	 * Triggered on pre persist
@@ -135,7 +122,6 @@ class AppUser extends TimestampedEntity implements UserInterface, ApiEntityInter
 		$this->activationToken = base64_encode(Uuid::uuid1()->toString() . '-' . $this->email);
 	}
 
-
 	/**
 	 * @return string|null
 	 */
@@ -143,7 +129,6 @@ class AppUser extends TimestampedEntity implements UserInterface, ApiEntityInter
 	{
 		return $this->id;
 	}
-
 
 	/**
 	 * @return string
@@ -153,7 +138,6 @@ class AppUser extends TimestampedEntity implements UserInterface, ApiEntityInter
 		return $this->firstName;
 	}
 
-
 	/**
 	 * @param string $firstName
 	 */
@@ -161,7 +145,6 @@ class AppUser extends TimestampedEntity implements UserInterface, ApiEntityInter
 	{
 		$this->firstName = $firstName;
 	}
-
 
 	/**
 	 * @return string
@@ -171,7 +154,6 @@ class AppUser extends TimestampedEntity implements UserInterface, ApiEntityInter
 		return $this->lastName;
 	}
 
-
 	/**
 	 * @param string $lastName
 	 */
@@ -179,7 +161,6 @@ class AppUser extends TimestampedEntity implements UserInterface, ApiEntityInter
 	{
 		$this->lastName = $lastName;
 	}
-
 
 	/**
 	 * Get the full name of the user
@@ -193,7 +174,6 @@ class AppUser extends TimestampedEntity implements UserInterface, ApiEntityInter
 		return $this->firstName . ' ' . $this->lastName;
 	}
 
-
 	/**
 	 * @return string
 	 */
@@ -201,7 +181,6 @@ class AppUser extends TimestampedEntity implements UserInterface, ApiEntityInter
 	{
 		return $this->email;
 	}
-
 
 	/**
 	 * @param string $email
@@ -211,7 +190,6 @@ class AppUser extends TimestampedEntity implements UserInterface, ApiEntityInter
 		$this->email = $email;
 	}
 
-
 	/**
 	 * @return string
 	 */
@@ -220,7 +198,6 @@ class AppUser extends TimestampedEntity implements UserInterface, ApiEntityInter
 		return $this->password;
 	}
 
-
 	/**
 	 * @param string $password
 	 */
@@ -228,7 +205,6 @@ class AppUser extends TimestampedEntity implements UserInterface, ApiEntityInter
 	{
 		$this->password = $password;
 	}
-
 
 	/**
 	 * @param string $plainPassword
@@ -240,7 +216,6 @@ class AppUser extends TimestampedEntity implements UserInterface, ApiEntityInter
 		$this->password = null;
 	}
 
-
 	/**
 	 * @return string|null
 	 */
@@ -248,7 +223,6 @@ class AppUser extends TimestampedEntity implements UserInterface, ApiEntityInter
 	{
 		return $this->plainPassword;
 	}
-
 
 	/**
 	 * @return Application
@@ -258,7 +232,6 @@ class AppUser extends TimestampedEntity implements UserInterface, ApiEntityInter
 		return $this->application;
 	}
 
-
 	/**
 	 * @param Application $application
 	 */
@@ -266,7 +239,6 @@ class AppUser extends TimestampedEntity implements UserInterface, ApiEntityInter
 	{
 		$this->application = $application;
 	}
-
 
 	/**
 	 * @return bool
@@ -276,7 +248,6 @@ class AppUser extends TimestampedEntity implements UserInterface, ApiEntityInter
 		return $this->activated;
 	}
 
-
 	/**
 	 * @param bool $activated
 	 */
@@ -284,7 +255,6 @@ class AppUser extends TimestampedEntity implements UserInterface, ApiEntityInter
 	{
 		$this->activated = $activated;
 	}
-
 
 	/**
 	 * @return string
@@ -294,7 +264,6 @@ class AppUser extends TimestampedEntity implements UserInterface, ApiEntityInter
 		return $this->activationToken;
 	}
 
-
 	/**
 	 * @param string $activationToken
 	 */
@@ -302,7 +271,6 @@ class AppUser extends TimestampedEntity implements UserInterface, ApiEntityInter
 	{
 		$this->activationToken = $activationToken;
 	}
-
 
 	/**
 	 * @return DateTime|null
@@ -312,7 +280,6 @@ class AppUser extends TimestampedEntity implements UserInterface, ApiEntityInter
 		return $this->lastLogin;
 	}
 
-
 	/**
 	 * @param null|DateTime $lastLogin
 	 */
@@ -320,7 +287,6 @@ class AppUser extends TimestampedEntity implements UserInterface, ApiEntityInter
 	{
 		$this->lastLogin = $lastLogin;
 	}
-
 
 	/**
 	 * @return array|null
@@ -332,7 +298,6 @@ class AppUser extends TimestampedEntity implements UserInterface, ApiEntityInter
 		return (array)$this->extraData;
 	}
 
-
 	/**
 	 * @param null|array $extraData
 	 */
@@ -341,7 +306,6 @@ class AppUser extends TimestampedEntity implements UserInterface, ApiEntityInter
 		$this->extraData = $extraData;
 	}
 
-
 	/**
 	 * @return DoctrineCollection
 	 */
@@ -349,7 +313,6 @@ class AppUser extends TimestampedEntity implements UserInterface, ApiEntityInter
 	{
 		return $this->devices;
 	}
-
 
 	/**
 	 * Returns the roles granted to the user.
@@ -372,7 +335,6 @@ class AppUser extends TimestampedEntity implements UserInterface, ApiEntityInter
 		return ['ROLE_USER'];
 	}
 
-
 	/**
 	 * Returns the salt that was originally used to encode the password.
 	 *
@@ -384,7 +346,6 @@ class AppUser extends TimestampedEntity implements UserInterface, ApiEntityInter
 	{
 		return null;
 	}
-
 
 	/**
 	 * Returns the username used to authenticate the user.
@@ -406,7 +367,6 @@ class AppUser extends TimestampedEntity implements UserInterface, ApiEntityInter
 	{
 		$this->plainPassword = null;
 	}
-
 
 	/**
 	 * Get the serializer callbacks

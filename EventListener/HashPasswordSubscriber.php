@@ -6,7 +6,6 @@ namespace Pronto\MobileBundle\EventListener;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Events;
-use Pronto\MobileBundle\Entity\AppUser;
 use Pronto\MobileBundle\Entity\User;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
@@ -46,7 +45,7 @@ class HashPasswordSubscriber implements EventSubscriber
 		$entity = $args->getEntity();
 
 		// Only instances of app users and regular users need to be checked
-		if (!$entity instanceof User && !$entity instanceof AppUser) {
+		if (!$entity instanceof User) {
 			return;
 		}
 
@@ -63,7 +62,7 @@ class HashPasswordSubscriber implements EventSubscriber
 		$entity = $args->getEntity();
 
 		// Only instances of app users and regular users need to be checked
-		if (!$entity instanceof User && !$entity instanceof AppUser) {
+		if (!$entity instanceof User) {
 			return;
 		}
 
@@ -78,7 +77,7 @@ class HashPasswordSubscriber implements EventSubscriber
 	/**
 	 * Encode the users' password
 	 *
-	 * @param User|AppUser|object $user
+	 * @param User|object $user
 	 */
 	private function encodePassword($user): void
 	{
