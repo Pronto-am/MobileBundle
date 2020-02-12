@@ -3,11 +3,10 @@
 namespace Pronto\MobileBundle\Controller\Api\Vue\Auth;
 
 
+use Pronto\MobileBundle\Controller\Api\Vue\ApiController;
 use Pronto\MobileBundle\Request\Auth\RefreshTokenRequest;
-use Pronto\MobileBundle\Request\Auth\ResetPasswordRequest;
 use Pronto\MobileBundle\Service\OAuthClient;
 use Pronto\MobileBundle\Request\Auth\LoginRequest;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -16,7 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
  * @package Pronto\MobileBundle\Controller\Api\Vue\Auth
  * @Route(path="auth/")
  */
-class LoginController extends AbstractController
+class LoginController extends ApiController
 {
     /**
      * @var OAuthClient $client
@@ -26,6 +25,7 @@ class LoginController extends AbstractController
     /**
      * LoginController constructor.
      * @param OAuthClient $client
+     * @throws \Exception
      */
     public function __construct(OAuthClient $client)
     {
@@ -35,7 +35,7 @@ class LoginController extends AbstractController
     /**
      * @param LoginRequest $request
      * @return string
-     * @Route(path="login")
+     * @Route(path="login", methods={"POST"})
      */
     public function loginAction(LoginRequest $request)
     {
@@ -45,21 +45,9 @@ class LoginController extends AbstractController
     }
 
     /**
-     * @param ResetPasswordRequest $request
-     * @return string
-     * @Route(path="password")
-     */
-    public function resetPasswordAction(ResetPasswordRequest $request)
-    {
-        $response = $this->client->login($request->get('email'), $request->get('password'));
-
-        return new JsonResponse(json_decode($response->getBody()->getContents()), $response->getStatusCode());
-    }
-
-    /**
      * @param RefreshTokenRequest $request
      * @return string
-     * @Route(path="token")
+     * @Route(path="token", methods={"POST"})
      */
     public function refreshTokenAction(RefreshTokenRequest $request)
     {

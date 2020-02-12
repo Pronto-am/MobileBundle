@@ -6,7 +6,7 @@ namespace Pronto\MobileBundle\EventSubscriber;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Pronto\MobileBundle\Entity\Customer;
-use Pronto\MobileBundle\Exceptions\InvalidCustomerSelectionException;
+use Pronto\MobileBundle\Exception\InvalidCustomerSelectionException;
 use Pronto\MobileBundle\Service\ProntoMobile;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;

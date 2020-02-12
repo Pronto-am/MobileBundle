@@ -5,6 +5,7 @@ namespace Pronto\MobileBundle\Entity\Application;
 use Doctrine\Common\Collections\Collection as DoctrineCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Pronto\MobileBundle\Entity\Application;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
@@ -17,13 +18,13 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Version
 {
-
 	public const SESSION_IDENTIFIER = '_pronto.applicationVersion';
 
 	/**
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      * @ORM\Column(type="integer")
+     * @Groups({"Application"})
      */
     private $id;
 
@@ -36,6 +37,7 @@ class Version
     /**
      * @ORM\Column(type="string")
 	 * @Assert\NotBlank()
+     * @Groups({"Application"})
      */
     private $name;
 

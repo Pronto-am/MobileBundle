@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import routes from '../routes';
-import OAuth from './../oauth';
+import OAuthService from './../services/oauth.service';
 
 const router = new VueRouter({
     mode: 'history',
@@ -11,7 +11,7 @@ const router = new VueRouter({
 
 Vue.use(VueRouter);
 
-let oAuth = new OAuth();
+let oAuth = new OAuthService();
 
 router.beforeEach((to, from, next) => {
     //If visiting login view but you already have logged in, you should not be able to see this view
@@ -31,8 +31,20 @@ router.beforeEach((to, from, next) => {
         })
     }
 
-    if(to.meta.auth) {
-        //
+    // Logged in and visiting a protected route
+    if(to.meta.auth && oAuth.isAuthenticated()) {
+        // Check if the user has selected an application version
+        if(!Vue.prototype.$applicationService.versionIsSet() && to.name !== 'applications.select') {
+            return next({
+                name: 'applications.select'
+            });
+        }
+
+        if(!Vue.prototype.$auth.userHasRole(to.meta.role)) {
+            return next({
+                name: 'dashboard'
+            });
+        }
     }
 
     return next()

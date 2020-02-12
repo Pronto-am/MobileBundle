@@ -3,13 +3,27 @@
 Table of contents
 =================
 
-1. [Installation](#installation)
-2. [Configuration](#mobilebundle-configuration)
-3. [API Docs](#api-docs)
+1. [Upgrading](#upgrading)
+2. [Installation](#installation)
+3. [Configuration](#mobilebundle-configuration)
+4. [API Docs](#api-docs)
 
+## 1. Upgrading
 
-Installation
-============
+### From 1.* to 2.*
+
+There are significant changes when upgrading to 2.0.0, especially regarding user authentication. From version 2, Pronto will be an SPA. This required us to expand the currently used OAuth authentication form only the app-endpoints to the CMS endpoints as well. A command has been made available to easily migrate the user data to the new required format. Before using this command, make sure you backup your database!
+
+### What does it do?
+
+1. It first creates a locally stored backup of relationships between access and refresh tokens, devices and app users.
+2. Secondly, it migrates the app users to the users table.
+
+```
+php bin/console deployment:migrate
+``` 
+
+## 2. Installation
 
 ### Step 1. Install the skeleton
 
@@ -87,8 +101,7 @@ Click on the settings icon and choose "Project settings". Next, click on the tab
 For the MobileBundle to connect to your Firebase project, you need to **rename** this file to: `google-service-account.json` and place it in the root of your project.
 
 
-MobileBundle configuration
-==========================
+## 3. MobileBundle configuration
 
 The MobileBundle configuration is available in the `config/packages/pronto_mobile.yaml` file. At the moment, there are not a lot of options here.
 
@@ -124,8 +137,7 @@ crontab -e
 */15 * * * * php /path/to/project/bin firebase:tokens:convert       // every 15 minutes
 ```
 
-API Docs
-========
+## 4. API Docs
 
 ### Postman
 A [public Postman collection](https://documenter.getpostman.com/view/7226788/SVzw3zwg) is available, with the currently available API routes.

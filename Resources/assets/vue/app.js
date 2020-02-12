@@ -1,21 +1,19 @@
 import './bootstrap';
 import Vue from 'vue';
-
 import './plugins';
 import './interceptors/axios';
-
 import App from './views/App';
 
-// import './libraries/auth';
-// import './libraries/draggable';
+import './libraries/auth';
+import './libraries/draggable';
 import './libraries/element';
 import './libraries/fontawesome';
 import './libraries/form';
-// import './libraries/masonry';
 import './libraries/moment';
 import './libraries/progressbar';
 import router from './libraries/router';
 import './libraries/table';
+import ApplicationService from './services/application.service';
 
 window.Vue = Vue;
 window.Events = new Vue();
@@ -31,19 +29,18 @@ window.Events = new Vue();
 //     });
 // }
 
-/**
- * The following block of code may be used to automatically register your
- * Vue components. It will recursively scan this directory for the Vue
- * components and automatically register them with their "basename".
- *
- * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
- */
+Vue.prototype.$applicationService = new ApplicationService();
+Vue.prototype.$auth.init().then(() => {
+    /**
+     * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
+     */
 
-const files = require.context('./components/', true, /\.vue$/i);
-files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
+    const files = require.context('./components/', true, /\.vue$/i);
+    files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
 
-new Vue({
-    el: '#app',
-    components: {App},
-    router,
+    new Vue({
+        el: '#app',
+        components: {App},
+        router,
+    });
 });

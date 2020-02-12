@@ -1,7 +1,7 @@
-import AuthService from './oauth.service';
 import Cookies from 'js-cookie';
+import Vue from 'vue';
 
-export default class {
+export default class OAuthService {
 
     /**
      * Constructor
@@ -14,7 +14,7 @@ export default class {
      * Logout
      */
     logout() {
-        AuthService.destroySession();
+        Vue.prototype.$applicationService.clear();
 
         this.session.remove('access_token');
         this.session.remove('refresh_token');
@@ -37,62 +37,21 @@ export default class {
     }
 
     /**
-     * Login using username and password
-     * @param username
-     * @param password
-     * @returns {Promise<any>}
-     */
-    login(username, password) {
-        return new Promise((resolve, reject) => {
-            AuthService.attemptLogin({
-                username: username,
-                password: password
-            }).then(response => {
-                this.storeSession(response.data);
-                this.addAuthHeaders();
-
-                resolve(response)
-            }).catch(error => {
-                reject(error)
-            })
-        })
-    }
-
-    /**
      * Refresh the access token of the user
      * @returns {Promise<any>}
      */
     refreshToken() {
         return new Promise((resolve, reject) => {
-            AuthService.attemptLogin({
+            axios.post('/api/vue/auth/refresh', {
                 refresh_token: this.session.get('refresh_token')
             }).then(response => {
                 this.storeSession(response.data);
-                this.addAuthHeaders();
 
                 resolve(response)
             }).catch(error => {
                 reject(error)
             })
         })
-    }
-
-    /**
-     * Get the user from the API
-     * @returns {Promise<any>}
-     */
-    getUser() {
-        if (this.isAuthenticated()) {
-            return new Promise((resolve, reject) => {
-                AuthService.currentUser().then(response => {
-                    resolve(response);
-                }).catch(error => {
-                    reject(error)
-                })
-            })
-        }
-
-        return new Promise(resolve => resolve(null))
     }
 
     /**
@@ -115,15 +74,6 @@ export default class {
      */
     getItem(key) {
         return this.session.get(key);
-    }
-
-    /**
-     * Add auth headers to the requests
-     */
-    addAuthHeaders() {
-        let header = this.getAuthHeader();
-
-        AuthService.addAuthorizationHeader(header)
     }
 
     /**

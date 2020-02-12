@@ -37,7 +37,7 @@ class ValidatorService
 			'type'       => 'object',
 			'properties' => $this->parseToObject($rules),
 			'required'   => $required
-		])));
+		])), -1); // -1 is PHP_MAX_INT
 
 		if (!$result->isValid()) {
 			throw new InvalidRequestException($result->getErrors());

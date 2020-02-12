@@ -3,7 +3,7 @@
 namespace Pronto\MobileBundle\EventSubscriber;
 
 
-use Pronto\MobileBundle\Exceptions\ApiException;
+use Pronto\MobileBundle\Exception\ApiException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\KernelEvents;

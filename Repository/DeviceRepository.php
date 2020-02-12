@@ -2,8 +2,6 @@
 
 namespace Pronto\MobileBundle\Repository;
 
-use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\QueryBuilder;
 use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\PushNotification;
 

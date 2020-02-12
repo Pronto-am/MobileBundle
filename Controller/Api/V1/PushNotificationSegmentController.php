@@ -48,7 +48,7 @@ class PushNotificationSegmentController extends BaseApiController
 	 * @param EntityManagerInterface $entityManager
 	 * @param $deviceIdentifier
 	 * @return \Symfony\Component\HttpFoundation\JsonResponse
-	 * @throws \Pronto\MobileBundle\Exceptions\ApiException
+	 * @throws \Pronto\MobileBundle\Exception\ApiException
 	 */
 	public function subscribedAction(EntityManagerInterface $entityManager, $deviceIdentifier)
 	{
@@ -114,7 +114,7 @@ class PushNotificationSegmentController extends BaseApiController
 	 * @param Request $request
 	 * @param EntityManagerInterface $entityManager
 	 * @return \Symfony\Component\HttpFoundation\JsonResponse
-	 * @throws \Pronto\MobileBundle\Exceptions\ApiException
+	 * @throws \Pronto\MobileBundle\Exception\ApiException
 	 */
 	public function updateAction(Request $request, EntityManagerInterface $entityManager)
 	{

@@ -5,6 +5,7 @@ namespace Pronto\MobileBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection as DoctrineCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
@@ -17,23 +18,22 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Customer
 {
-
 	public const SESSION_IDENTIFIER = '_pronto.customer';
 
     /**
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      * @ORM\Column(type="integer")
+     * @Groups({"Application"})
      */
     private $id;
-
 
     /**
      * @ORM\Column(type="string")
 	 * @Assert\NotBlank()
+     * @Groups({"Application"})
      */
     private $companyName;
-
 
     /**
      * @ORM\Column(type="string")
@@ -41,13 +41,11 @@ class Customer
 	 */
     private $contactPerson;
 
-
     /**
      * @ORM\Column(type="string")
 	 * @Assert\NotBlank()
 	 */
     private $phoneNumber;
-
 
     /**
      * @ORM\Column(type="string")
@@ -55,33 +53,31 @@ class Customer
 	 */
     private $email;
 
-
 	/**
 	 * @ORM\Column(type="string")
 	 * @Assert\NotBlank()
+     * @Groups({"Application"})
 	 */
     private $primaryColor;
 
-
 	/**
 	 * @ORM\Column(type="string")
 	 * @Assert\NotBlank()
-	 */
+     * @Groups({"Application"})
+     */
 	private $secondaryColor;
 
-
 	/**
 	 * @ORM\Column(type="string")
 	 * @Assert\NotBlank()
+     * @Groups({"Application"})
 	 */
 	private $sidebarColor;
-
 
 	/**
 	 * @ORM\OneToMany(targetEntity="Pronto\MobileBundle\Entity\Application", mappedBy="customer")
 	 */
 	private $applications;
-
 
 	/**
 	 * @ORM\Column(type="string", nullable=true)
@@ -94,7 +90,8 @@ class Customer
 	 *     minHeight = 120,
 	 *     maxHeight = 120
 	 * )
-	 */
+     * @Groups({"Application"})
+     */
 	private $logo;
 
 	/**

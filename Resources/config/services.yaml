@@ -20,12 +20,12 @@ services:
     pronto_mobile.global.app:
         class: Pronto\MobileBundle\Service\ProntoMobile
         public: true
+        arguments: ['@doctrine.orm.entity_manager', null]
 
     #### TWIG EXTENSIONS ####
     Pronto\MobileBundle\Twig\:
         resource: '../../Twig'
         tags: ['twig.extension']
-
 
     #### PRONTO MOBILE DOCTRINE EVENT SUBSCRIBERS ####
     Pronto\MobileBundle\EventListener\HashPasswordSubscriber:

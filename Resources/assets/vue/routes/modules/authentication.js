@@ -14,10 +14,4 @@ export default [{
     props: true,
     component: require('../../views/authentication/ResetPassword').default,
     meta: {auth: false}
-}, {
-    path: '/register/:token',
-    name: 'register',
-    props: true,
-    component: require('../../views/authentication/Register').default,
-    meta: {auth: false}
 }];

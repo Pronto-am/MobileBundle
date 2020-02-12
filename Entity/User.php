@@ -32,7 +32,7 @@ class User extends TimestampedEntity implements UserInterface
 	 * @ORM\GeneratedValue(strategy="AUTO")
 	 * @ORM\Column(type="integer")
 	 *
-	 * @Groups({"TimestampedWithUserEntity"})
+	 * @Groups({"User"})
 	 */
 	private $id;
 
@@ -44,7 +44,7 @@ class User extends TimestampedEntity implements UserInterface
 
     /**
      * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Application")
-     * @ORM\JoinColumn(onDelete="CASCADE")
+     * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
      */
     private $application;
 
@@ -57,26 +57,27 @@ class User extends TimestampedEntity implements UserInterface
 	/**
 	 * @ORM\Column(type="string")
 	 *
-	 * @Groups({"TimestampedWithUserEntity"})
+	 * @Groups({"User"})
 	 */
 	private $firstName;
 
 	/**
 	 * @ORM\Column(type="string", nullable=true)
 	 *
-	 * @Groups({"TimestampedWithUserEntity"})
+	 * @Groups({"User"})
 	 */
 	private $insertion;
 
 	/**
 	 * @ORM\Column(type="string")
 	 *
-	 * @Groups({"TimestampedWithUserEntity"})
+	 * @Groups({"User"})
 	 */
 	private $lastName;
 
 	/**
 	 * @ORM\Column(type="string")
+     * @Groups({"User"})
 	 */
 	private $email;
 
@@ -109,7 +110,8 @@ class User extends TimestampedEntity implements UserInterface
 
 	/**
 	 * @ORM\Column(type="json_array")
-	 */
+     * @Groups({"User"})
+     */
 	private $roles = [];
 
     /**
@@ -287,17 +289,17 @@ class User extends TimestampedEntity implements UserInterface
 	}
 
     /**
-     * @return Application
+     * @return Application|null
      */
-    public function getApplication(): Application
+    public function getApplication(): ?Application
     {
         return $this->application;
     }
 
     /**
-     * @param Application $application
+     * @param Application|null $application
      */
-    public function setApplication(Application $application): void
+    public function setApplication(?Application $application): void
     {
         $this->application = $application;
     }
@@ -337,9 +339,9 @@ class User extends TimestampedEntity implements UserInterface
 	/**
 	 * Get the encoded activation token
 	 *
-	 * @return string
+	 * @return string|null
 	 */
-	public function getActivationToken(): string
+	public function getActivationToken(): ?string
 	{
 		return $this->activationToken;
 	}

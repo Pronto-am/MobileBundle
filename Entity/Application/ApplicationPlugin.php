@@ -5,6 +5,7 @@ namespace Pronto\MobileBundle\Entity\Application;
 use Doctrine\ORM\Mapping as ORM;
 use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\Plugin;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 
 /**
@@ -27,16 +28,19 @@ class ApplicationPlugin
      * @ORM\Id
      * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Plugin", inversedBy="applicationPlugins")
      * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
+     * @Groups({"ApplicationPlugin"})
      */
     private $plugin;
 
     /**
      * @ORM\Column(type="boolean")
+     * @Groups({"ApplicationPlugin"})
      */
     private $active = false;
 
     /**
      * @ORM\Column(type="json_array")
+     * @Groups({"ApplicationPlugin"})
      */
     private $config;
 

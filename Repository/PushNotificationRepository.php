@@ -3,7 +3,6 @@
 namespace Pronto\MobileBundle\Repository;
 
 use DateTime;
-use Doctrine\ORM\EntityRepository;
 use Pronto\MobileBundle\Entity\Application;
 
 class PushNotificationRepository extends EntityRepository

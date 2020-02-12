@@ -7,7 +7,7 @@ use Pronto\MobileBundle\Controller\Api\BaseApiController;
 use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\Translation;
 use Pronto\MobileBundle\Entity\TranslationKey;
-use Pronto\MobileBundle\Exceptions\ApiException;
+use Pronto\MobileBundle\Exception\ApiException;
 use Pronto\MobileBundle\Utils\File;
 use Pronto\MobileBundle\Utils\Responses\ErrorResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -49,7 +49,7 @@ class TranslationController extends BaseApiController
      * @param KernelInterface $kernel
      * @param EntityManagerInterface $entityManager
      * @return JsonResponse|Response
-     * @throws \Pronto\MobileBundle\Exceptions\ApiException
+     * @throws \Pronto\MobileBundle\Exception\ApiException
      */
     public function indexAction(Request $request, KernelInterface $kernel, EntityManagerInterface $entityManager)
     {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Pronto\MobileBundle\Exceptions;
+namespace Pronto\MobileBundle\Exception;
 
 
 class InactivePluginException extends \Exception

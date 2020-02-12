@@ -6,7 +6,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\User;
-use Pronto\MobileBundle\Exceptions\ApiException;
+use Pronto\MobileBundle\Exception\ApiException;
 use Pronto\MobileBundle\Utils\Responses\ErrorResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;

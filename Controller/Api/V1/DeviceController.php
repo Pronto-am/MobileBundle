@@ -7,7 +7,7 @@ use Pronto\MobileBundle\Controller\Api\BaseApiController;
 use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\Device;
 use Pronto\MobileBundle\Entity\User;
-use Pronto\MobileBundle\Exceptions\ApiException;
+use Pronto\MobileBundle\Exception\ApiException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;

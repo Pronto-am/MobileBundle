@@ -2,31 +2,26 @@
 
 namespace Pronto\MobileBundle\Entity;
 
-use DateTime;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection as DoctrineCollection;
 use Doctrine\ORM\Mapping as ORM;
 use FOS\OAuthServerBundle\Entity\Client as BaseClient;
-use Pronto\MobileBundle\Traits\ApiEntityTrait;
-use Symfony\Component\Validator\Constraints as Assert;
 
 
 /**
  * Class Application
  * @package Pronto\MobileBundle\Entity
  *
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="Pronto\MobileBundle\Repository\OAuthClientRepository")
  * @ORM\Table(name="oauth_clients")
  * @ORM\HasLifecycleCallbacks
  */
-class Client extends BaseClient
+class OAuthClient extends BaseClient
 {
-	/**
-	 * @ORM\Id
-	 * @ORM\GeneratedValue(strategy="AUTO")
-	 * @ORM\Column(type="integer")
-	 */
-	protected $id;
+    /**
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(type="integer")
+     */
+    protected $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Application")
@@ -50,19 +45,19 @@ class Client extends BaseClient
         $this->id = $id;
     }
 
-	/**
-	 * @return mixed
-	 */
-	public function getApplication()
-	{
-		return $this->application;
-	}
+    /**
+     * @return mixed
+     */
+    public function getApplication()
+    {
+        return $this->application;
+    }
 
     /**
      * @param Application|null $application
      */
-	public function setApplication(?Application $application): void
-	{
-		$this->application = $application;
-	}
+    public function setApplication(?Application $application): void
+    {
+        $this->application = $application;
+    }
 }

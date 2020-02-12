@@ -4,7 +4,7 @@ namespace Pronto\MobileBundle\EventSubscriber;
 
 
 use Exception;
-use Pronto\MobileBundle\Exceptions\UserRedirectException;
+use Pronto\MobileBundle\Exception\UserRedirectException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;

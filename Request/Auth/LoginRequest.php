@@ -20,6 +20,9 @@ class LoginRequest extends BaseRequest
      */
     public function rules(): array
     {
-        return [];
+        return [
+            'email'    => ['type' => 'string', 'minLength' => 1],
+            'password' => ['type' => 'string', 'minLength' => 1],
+        ];
     }
 }

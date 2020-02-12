@@ -1,10 +1,27 @@
 <template>
     <div class="row">
         <div class="col-sm-12">
-            <template v-if="plugins">
-                <div class="row">
-                    <div class="col-sm-12 col-md-6 col-lg-4" v-for="plugin of plugins">
-                        <div class="card-header" v-html=""></div>
+            <template v-if="items">
+                <div class="card">
+                    <div class="card-table">
+                        <vue-table url="vue.finances"
+                                   :can-delete="false"
+                                   :sorting="sorting"
+                                   :initial-data="items">
+
+                            <template slot="header" slot-scope="{sorting, clickHandler}">
+                                <vue-table-header :sorting="sorting" @click="clickHandler" label="Naam" identifier="plugin.name"></vue-table-header>
+                                <vue-table-header :sorting="sorting" @click="clickHandler" label="Actief" identifier="active"></vue-table-header>
+                            </template>
+
+                            <template slot="row" slot-scope="{row}">
+                                <vue-table-column :row="row" property="plugin.name" router-link :to="{name: 'plugins.edit', params: {id: row.id}}"></vue-table-column>
+                                <vue-table-column :row="row" property="active" type="custom">
+                                    {{ row.active ? 'Ja' : 'Nee' }}
+                                </vue-table-column>
+                            </template>
+
+                        </vue-table>
                     </div>
                 </div>
             </template>
@@ -16,18 +33,18 @@
     export default {
         data() {
             return {
-                plugins: null,
+                items: null,
                 sorting: {
-                    column: 'due_date',
+                    column: 'name',
                     order: 'asc'
                 }
             }
         },
 
         beforeRouteEnter(to, from, next) {
-            axios.get(this.$url('plugins')).then(({data: plugins}) => {
+            axios.get(url('plugins')).then(({data: {data: plugins}}) => {
                 next(vm => {
-                    vm.plugins = plugins;
+                    vm.items = plugins;
                 })
             }).catch(error => {
                 next();

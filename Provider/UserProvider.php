@@ -5,8 +5,9 @@ namespace Pronto\MobileBundle\Provider;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Pronto\MobileBundle\Entity\Application;
+use Pronto\MobileBundle\Entity\OAuthClient;
 use Pronto\MobileBundle\Entity\User;
-use Pronto\MobileBundle\Exceptions\ApiException;
+use Pronto\MobileBundle\Exception\ApiException;
 use Pronto\MobileBundle\Utils\Responses\ErrorResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -47,57 +48,43 @@ class UserProvider implements UserProviderInterface
      */
     public function loadUserByUsername($email): UserInterface
     {
-        $application = null;
+        $client = null;
 
         // Check application
         if ($this->request->request->has('client_id') && $this->request->request->has('client_secret')) {
-            $application = $this->determineApplication($this->request->request->get('client_id'), $this->request->request->get('client_secret'));
+            $client = $this->determineOAuthClient($this->request->request->get('client_id'), $this->request->request->get('client_secret'));
 
         } elseif ($this->request->headers->has('Authorization')) {
             // Split header value
             try {
                 [, $basic] = explode(' ', $this->request->headers->get('Authorization'));
                 [$clientId, $clientSecret] = explode(':', base64_decode($basic));
-                $application = $this->determineApplication($clientId, $clientSecret);
+                $client = $this->determineOAuthClient($clientId, $clientSecret);
 
             } catch (Exception $exception) {
-                $this->invalidAuthorization();
+                return null;
             }
         }
 
-        if ($application === null) {
-            $this->invalidAuthorization();
+        if($client === null) {
+            return null;
         }
 
-        /** @var User $user */
-        $user = $this->entityManager->getRepository(User::class)->findOneBy([
-            'appUser'     => false,
-            'email'       => $email,
-            'activated'   => true,
-            'application' => $application,
-        ]);
-
-        if ($user === null) {
-            $message = sprintf('Unable to find an active User identified by "%s".', $email);
-
-            throw new UsernameNotFoundException($message, 404);
-        }
-
-        return $user;
+        return $this->entityManager->getRepository(User::class)->findForAuthentication($email, $client->getApplication());
     }
 
     /**
      * @param string $clientId
      * @param string $clientSecret
-     * @return Application|null
+     * @return OAuthClient|null
      * @throws ApiException
      */
-    private function determineApplication(string $clientId, string $clientSecret): ?Application
+    private function determineOAuthClient(string $clientId, string $clientSecret): ?OAuthClient
     {
         try {
             [, $randomId] = explode('_', $clientId);
 
-            return $this->entityManager->getRepository(Application::class)->findByOAuthCredentials($randomId, $clientSecret);
+            return $this->entityManager->getRepository(OAuthClient::class)->findByCredentials($randomId, $clientSecret);
         } catch (Exception $exception) {
             $this->invalidAuthorization();
         }

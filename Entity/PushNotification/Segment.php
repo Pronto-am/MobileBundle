@@ -20,10 +20,8 @@ class Segment implements ApiEntityInterface
 {
 	use ApiEntityTrait;
 
-
 	// Custom entity error messages
 	public const INVALID_SEGMENT_PARAMETER = [422, 22, 'Segments has to be a list with the id and whether the device is subscribed or not'];
-
 
 	/**
 	 * @ORM\Id
@@ -32,13 +30,11 @@ class Segment implements ApiEntityInterface
 	 */
 	private $id;
 
-
 	/**
 	 * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Application")
 	 * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
 	 */
 	private $application;
-
 
 	/**
 	 * @ORM\Column(type="json_array")
@@ -46,12 +42,10 @@ class Segment implements ApiEntityInterface
 	 */
 	private $name;
 
-
 	/**
 	 * @ORM\OneToMany(targetEntity="Pronto\MobileBundle\Entity\Device\DeviceSegment", mappedBy="segment")
 	 */
 	private $deviceSegments;
-
 
 	/**
 	 * @return int|null
@@ -61,7 +55,6 @@ class Segment implements ApiEntityInterface
 		return $this->id;
 	}
 
-
 	/**
 	 * @return Application
 	 */
@@ -69,7 +62,6 @@ class Segment implements ApiEntityInterface
 	{
 		return $this->application;
 	}
-
 
 	/**
 	 * @param Application $application
@@ -79,7 +71,6 @@ class Segment implements ApiEntityInterface
 		$this->application = $application;
 	}
 
-
 	/**
 	 * @return array
 	 */
@@ -88,7 +79,6 @@ class Segment implements ApiEntityInterface
 		return $this->name;
 	}
 
-
 	/**
 	 * @param array $name
 	 */
@@ -96,7 +86,6 @@ class Segment implements ApiEntityInterface
 	{
 		$this->name = $name;
 	}
-
 
 	/**
 	 * @return array

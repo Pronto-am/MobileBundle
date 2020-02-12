@@ -4,13 +4,14 @@ namespace Pronto\MobileBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 
 /**
  * Class Plugin
  * @package Pronto\MobileBundle\Entity
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Pronto\MobileBundle\Repository\PluginRepository")
  * @ORM\Table(name="plugins")
  */
 class Plugin
@@ -33,21 +34,26 @@ class Plugin
 	 * @ORM\Id
 	 * @ORM\GeneratedValue(strategy="AUTO")
 	 * @ORM\Column(type="integer")
+     *
+     * @Groups({"Plugin", "ApplicationPlugin"})
 	 */
 	private $id;
 
 	/**
 	 * @ORM\Column(type="string")
-	 */
+     * @Groups({"Plugin", "ApplicationPlugin"})
+     */
 	private $name;
 
 	/**
 	 * @ORM\Column(type="string")
+     * @Groups({"Plugin"})
 	 */
 	private $identifier;
 
 	/**
 	 * @ORM\Column(type="string")
+     * @Groups({"Plugin"})
 	 */
 	private $icon;
 

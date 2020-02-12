@@ -20,7 +20,7 @@ body {
 #app {
   height: 100%;
 
-  > div.container-fluid {
+  > div {
     height: 100%;
     width: 100%;
     display: flex;
@@ -46,10 +46,6 @@ body {
 
         &::-webkit-scrollbar {
           display: none;
-        }
-
-        > main {
-          @import 'layouts/sidebar';
         }
       }
 

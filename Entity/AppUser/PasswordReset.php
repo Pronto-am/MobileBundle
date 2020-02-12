@@ -4,6 +4,7 @@ namespace Pronto\MobileBundle\Entity\AppUser;
 
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use Pronto\MobileBundle\Entity\AppUser;
 use Pronto\MobileBundle\Entity\User;
 use Ramsey\Uuid\Uuid;
 
@@ -25,9 +26,9 @@ class PasswordReset
 	private $token;
 
 	/**
-	 * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\User")
+	 * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\AppUser")
 	 * @ORM\JoinColumn(onDelete="CASCADE")
-     * @var User $user
+     * @var AppUser $user
 	 */
 	private $user;
 
@@ -66,9 +67,9 @@ class PasswordReset
 	}
 
 	/**
-	 * @return User
+	 * @return AppUser
 	 */
-	public function getUser(): User
+	public function getUser(): AppUser
 	{
 		return $this->user;
 	}

@@ -2,7 +2,7 @@
 
 namespace Pronto\MobileBundle\Repository\PushNotification;
 
-use Doctrine\ORM\EntityRepository;
+use Pronto\MobileBundle\Repository\EntityRepository;
 use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\Device;
 

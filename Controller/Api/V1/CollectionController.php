@@ -56,7 +56,7 @@ class CollectionController extends BaseApiController
 	 * @param $version
 	 * @param $identifier
 	 * @return \Symfony\Component\HttpFoundation\JsonResponse
-	 * @throws \Pronto\MobileBundle\Exceptions\ApiException
+	 * @throws \Pronto\MobileBundle\Exception\ApiException
 	 * @throws \Doctrine\DBAL\DBALException
 	 */
 	public function getEntriesAction(Retriever $retriever, $version, $identifier)
@@ -108,7 +108,7 @@ class CollectionController extends BaseApiController
 	 * @param $id
 	 * @return \Symfony\Component\HttpFoundation\JsonResponse
 	 * @throws \Doctrine\DBAL\DBALException
-	 * @throws \Pronto\MobileBundle\Exceptions\ApiException
+	 * @throws \Pronto\MobileBundle\Exception\ApiException
 	 */
 	public function getEntryAction(Retriever $retriever, $version, $identifier, $id)
 	{
@@ -141,7 +141,7 @@ class CollectionController extends BaseApiController
      * @param string $version
      * @param string $identifier
      * @return Collection
-     * @throws \Pronto\MobileBundle\Exceptions\ApiException
+     * @throws \Pronto\MobileBundle\Exception\ApiException
      */
 	private function getCollection(string $version, string $identifier): Collection
 	{

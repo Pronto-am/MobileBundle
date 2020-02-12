@@ -102,10 +102,20 @@ class AppUser extends TimestampedEntity implements UserInterface, ApiEntityInter
 	 */
 	private $extraData;
 
-	/**
-	 * @ORM\OneToMany(targetEntity="Pronto\MobileBundle\Entity\Device", mappedBy="appUser")
-	 */
-	private $devices;
+    /**
+     * @ORM\OneToMany(targetEntity="Pronto\MobileBundle\Entity\Device", mappedBy="appUser")
+     */
+    private $devices;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Pronto\MobileBundle\Entity\AccessToken", mappedBy="user")
+     */
+    private $accessTokens;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Pronto\MobileBundle\Entity\RefreshToken", mappedBy="user")
+     */
+    private $refreshTokens;
 
 	/**
 	 * Triggered on pre persist
@@ -381,4 +391,20 @@ class AppUser extends TimestampedEntity implements UserInterface, ApiEntityInter
 			}
 		];
 	}
+
+    /**
+     * @return mixed
+     */
+    public function getAccessTokens()
+    {
+        return $this->accessTokens;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRefreshTokens()
+    {
+        return $this->refreshTokens;
+    }
 }

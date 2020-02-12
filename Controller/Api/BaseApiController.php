@@ -12,11 +12,12 @@ use Pronto\MobileBundle\Service\RequestBodyValidator;
 use Pronto\MobileBundle\Traits\JsonResponseGenerators;
 use Pronto\MobileBundle\Utils\Responses\ErrorResponse;
 use Psr\Container\ContainerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 
-class BaseApiController extends Controller
+class BaseApiController extends AbstractController
 {
 	use JsonResponseGenerators;
 
@@ -143,7 +144,7 @@ class BaseApiController extends Controller
 	 * @param Request $request
 	 * @param array $required
 	 * @return bool|\Symfony\Component\HttpFoundation\JsonResponse
-	 * @throws \Pronto\MobileBundle\Exceptions\ApiException
+	 * @throws \Pronto\MobileBundle\Exception\ApiException
 	 */
 	public function validateRequestContent(Request $request, array $required = [])
 	{
@@ -196,7 +197,7 @@ class BaseApiController extends Controller
 	/**
 	 * @param string|null $pluginIdentifier
 	 * @return void
-	 * @throws \Pronto\MobileBundle\Exceptions\ApiException
+	 * @throws \Pronto\MobileBundle\Exception\ApiException
 	 */
 	public function validateAuthorization(string $pluginIdentifier = null): void
 	{

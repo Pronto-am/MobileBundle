@@ -25,6 +25,16 @@ try {
 
 window.axios = require('axios');
 
+// Helper methods
+window.url = (url, params = {}) => {
+    let keys = Object.keys(params);
+
+    for (let key of keys) {
+        url = url.replace(`:${key}`, params[key]);
+    }
+
+    return `/api/vue/${url.replace(/^\/+/g, '')}`;
+};
 
 /**
  * Echo exposes an expressive API for subscribing to channels and listening

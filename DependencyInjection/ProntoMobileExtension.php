@@ -22,6 +22,6 @@ class ProntoMobileExtension extends ConfigurableExtension
 		$loader->load('services.yaml');
 
 		$prontoMobile = $container->getDefinition('pronto_mobile.global.app');
-		$prontoMobile->addMethodCall('setConfiguration', [$mergedConfig]);
+		$prontoMobile->replaceArgument(1, $mergedConfig);
 	}
 }

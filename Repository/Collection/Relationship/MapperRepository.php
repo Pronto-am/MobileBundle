@@ -2,7 +2,7 @@
 
 namespace Pronto\MobileBundle\Repository\Collection\Relationship;
 
-use Doctrine\ORM\EntityRepository;
+use Pronto\MobileBundle\Repository\EntityRepository;
 use Pronto\MobileBundle\Entity\Collection;
 
 class MapperRepository extends EntityRepository

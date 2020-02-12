@@ -7,7 +7,7 @@
       >
         <vue-form
           ref="form"
-          :url="route('vue.password.reset')"
+          :url="$url('vue.password.reset')"
           :model="action"
           @submit:success="login"
           @submit:error="submitError"

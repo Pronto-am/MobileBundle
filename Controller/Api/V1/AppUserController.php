@@ -16,7 +16,7 @@ use Swift_Message;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class AppUserController extends BaseApiController
 {
@@ -89,7 +89,7 @@ class AppUserController extends BaseApiController
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      * @throws \Doctrine\ORM\NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
-     * @throws \Pronto\MobileBundle\Exceptions\ApiException
+     * @throws \Pronto\MobileBundle\Exception\ApiException
      */
     public function registerAction(Request $request, EntityManagerInterface $entityManager)
     {
@@ -171,7 +171,7 @@ class AppUserController extends BaseApiController
      * @param EntityManagerInterface $entityManager
      * @param $userIdentifier
      * @return \Symfony\Component\HttpFoundation\JsonResponse
-     * @throws \Pronto\MobileBundle\Exceptions\ApiException
+     * @throws \Pronto\MobileBundle\Exception\ApiException
      */
     public function deregisterAction(EntityManagerInterface $entityManager, $userIdentifier)
     {
@@ -227,7 +227,7 @@ class AppUserController extends BaseApiController
      * @param EntityManagerInterface $entityManager
      * @param TranslatorInterface $translator
      * @return \Symfony\Component\HttpFoundation\JsonResponse
-     * @throws \Pronto\MobileBundle\Exceptions\ApiException
+     * @throws \Pronto\MobileBundle\Exception\ApiException
      */
     public function requestPasswordResetLinkAction(Request $request, Swift_Mailer $mailer, EntityManagerInterface $entityManager, TranslatorInterface $translator)
     {
@@ -388,7 +388,7 @@ class AppUserController extends BaseApiController
      * Get the profile off a user
      *
      * @return \Symfony\Component\HttpFoundation\JsonResponse
-     * @throws \Pronto\MobileBundle\Exceptions\ApiException
+     * @throws \Pronto\MobileBundle\Exception\ApiException
      */
     public function getProfileAction()
     {
@@ -468,7 +468,7 @@ class AppUserController extends BaseApiController
      * @param Request $request
      * @param EntityManagerInterface $entityManager
      * @return \Symfony\Component\HttpFoundation\JsonResponse
-     * @throws \Pronto\MobileBundle\Exceptions\ApiException
+     * @throws \Pronto\MobileBundle\Exception\ApiException
      */
     public function updateProfileAction(Request $request, EntityManagerInterface $entityManager)
     {

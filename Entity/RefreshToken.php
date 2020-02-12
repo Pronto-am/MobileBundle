@@ -21,7 +21,7 @@ class RefreshToken extends BaseRefreshToken
 	protected $id;
 
 	/**
-	 * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Application")
+	 * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\OAuthClient")
 	 * @ORM\JoinColumn(nullable=false)
 	 */
 	protected $client;

@@ -3,7 +3,7 @@
 namespace Pronto\MobileBundle\Traits;
 
 
-use Pronto\MobileBundle\Exceptions\ApiException;
+use Pronto\MobileBundle\Exception\ApiException;
 use Pronto\MobileBundle\Utils\Responses\ErrorResponse;
 use Pronto\MobileBundle\Utils\Responses\PaginatedResponse;
 use Pronto\MobileBundle\Utils\Responses\ResponseInterface;

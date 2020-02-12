@@ -40,7 +40,7 @@ class AppVersionController extends BaseApiController
      * @param EntityManagerInterface $entityManager
      * @param int $id
      * @return \Symfony\Component\HttpFoundation\JsonResponse
-     * @throws \Pronto\MobileBundle\Exceptions\ApiException
+     * @throws \Pronto\MobileBundle\Exception\ApiException
      */
     public function getAction(EntityManagerInterface $entityManager, int $id): JsonResponse
     {
@@ -78,7 +78,7 @@ class AppVersionController extends BaseApiController
      * @param FileManager $fileManager
      * @param int $id
      * @return BinaryFileResponse
-     * @throws \Pronto\MobileBundle\Exceptions\ApiException
+     * @throws \Pronto\MobileBundle\Exception\ApiException
      */
     public function downloadAction(EntityManagerInterface $entityManager, FileManager $fileManager, int $id): BinaryFileResponse
     {

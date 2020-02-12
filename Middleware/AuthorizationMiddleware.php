@@ -6,7 +6,7 @@ namespace Pronto\MobileBundle\Middleware;
 use Doctrine\ORM\EntityManagerInterface;
 use Pronto\MobileBundle\Entity\AccessToken;
 use Pronto\MobileBundle\Entity\Application;
-use Pronto\MobileBundle\Exceptions\ApiException;
+use Pronto\MobileBundle\Exception\ApiException;
 use Pronto\MobileBundle\Service\ProntoMobile;
 use Pronto\MobileBundle\Utils\Responses\ErrorResponse;
 use Symfony\Component\DependencyInjection\ContainerInterface;

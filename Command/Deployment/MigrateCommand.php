@@ -4,9 +4,11 @@ namespace Pronto\MobileBundle\Command\Deployment;
 
 
 use Doctrine\ORM\EntityManagerInterface;
+use FOS\OAuthServerBundle\Model\ClientManager;
+use FOS\OAuthServerBundle\Model\ClientManagerInterface;
 use Pronto\MobileBundle\Entity\AccessToken;
 use Pronto\MobileBundle\Entity\AppUser;
-use Pronto\MobileBundle\Entity\Client;
+use Pronto\MobileBundle\Entity\OAuthClient;
 use Pronto\MobileBundle\Entity\Device;
 use Pronto\MobileBundle\Entity\RefreshToken;
 use Pronto\MobileBundle\Entity\User;
@@ -16,10 +18,21 @@ use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 class MigrateCommand extends Command
 {
+    /**
+     * @var ContainerInterface $container
+     */
+    private $container;
+
+    /**
+     * @var ClientManager $clientManager
+     */
+    private $clientManager;
+
     /**
      * @var EntityManagerInterface $entityManager
      */
@@ -37,13 +50,16 @@ class MigrateCommand extends Command
     private $deviceMapping = [];
 
     /**
-     * MigrateAppUsersCommand constructor.
+     * MigrateCommand constructor.
      * @param EntityManagerInterface $entityManager
      * @param KernelInterface $kernel
+     * @param ContainerInterface $container
      * @param null $name
      */
-    public function __construct(EntityManagerInterface $entityManager, KernelInterface $kernel, $name = null)
+    public function __construct(EntityManagerInterface $entityManager, KernelInterface $kernel, ClientManagerInterface $clientManager, ContainerInterface $container, $name = null)
     {
+        $this->clientManager = $clientManager;
+        $this->container = $container;
         $this->entityManager = $entityManager;
         $this->kernel = $kernel;
 
@@ -68,13 +84,8 @@ class MigrateCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->writeLn(['Backup devices', '']);
-        $this->backupDevices();
-
-        $output->writeLn(['Creating a backup of the tokens', '']);
-        $this->backupTokens();
-
-        die;
+        $output->writeLn(['Backup devices and access/refresh tokens', '']);
+        $this->backup();
 
         $output->writeLn(['Force updating the schema', '']);
         $this->schemaUpdate();
@@ -148,14 +159,28 @@ class MigrateCommand extends Command
                 $refreshToken->setUser($user);
             }
         }
+
+        $this->entityManager->flush();
     }
 
     private function createOAuthClients()
     {
         $applications = $this->entityManager->getRepository(\Pronto\MobileBundle\Entity\Application::class)->findAll();
 
+        $autoIncrement = 0;
+
         foreach ($applications as $application) {
-            $client = new Client();
+            // ID is going to be:
+            $autoIncrement++;
+
+            // To make sure the ID of the client is the same as the ID of the application, to preserve client ID's
+            while ($autoIncrement < $application->getId()) {
+                $autoIncrement++;
+                $client = $this->clientManager->createClient();
+                $this->entityManager->persist($client);
+            }
+
+            $client = new OAuthClient();
             $client->setId($application->getId());
             $client->setRandomId($application->getRandomId());
             $client->setApplication($application);
@@ -163,7 +188,25 @@ class MigrateCommand extends Command
             $client->setRedirectUris($application->getRedirectUris());
             $client->setSecret($application->getSecret());
             $this->entityManager->persist($client);
+
+            $autoIncrement = $client->getId();
         }
+
+        $this->entityManager->flush();
+
+        // Delete the clients without application ID
+        $clients = $this->entityManager->getRepository(OAuthClient::class)->findAll();
+
+        foreach($clients as $client) {
+            if($client->getApplication() === null) {
+                $this->entityManager->remove($client);
+            }
+        }
+
+        $client = $this->clientManager->createClient();
+        $client->setRedirectUris(['https://pronto.am']);
+        $client->setAllowedGrantTypes(['token', 'authorization_code', 'refresh_token', 'password', 'client_credentials']);
+        $this->clientManager->updateClient($client);
 
         $this->entityManager->flush();
     }
@@ -187,57 +230,43 @@ class MigrateCommand extends Command
         $application->run($input, $output);
     }
 
-    private function backupTokens()
+    /**
+     * Backup existing records of this app user
+     */
+    private function backup()
     {
         // Save all access token / user combinations locally
         $accessTokens = $this->entityManager->getRepository(AccessToken::class)->findAll();
 
-        foreach ($accessTokens as $accessToken) {
-            if ($accessToken->getUser() === null) {
-                continue;
+        $appUsers = $this->entityManager->getRepository(AppUser::class)->findAll();
+
+        foreach ($appUsers as $appUser) {
+            /** @var AccessToken $accessToken */
+            foreach ($appUser->getAccessTokens() as $accessToken) {
+                $this->accessTokenUserCombinations[$accessToken->getId()] = $appUser->getId();
+                $accessToken->setUser(null);
+                $this->entityManager->persist($accessToken);
             }
 
-            dump($accessToken->getUser());
-            $this->accessTokenUserCombinations[$accessToken->getId()] = $accessToken->getUser()->getId();
-            $accessToken->setUser(null);
-            $this->entityManager->persist($accessToken);
+            /** @var RefreshToken $refreshToken */
+            foreach ($appUser->getRefreshTokens() as $refreshToken) {
+                $this->refreshTokenUserCombinations[$refreshToken->getId()] = $appUser->getId();
+                $refreshToken->setUser(null);
+                $this->entityManager->persist($refreshToken);
+            }
+
+            /** @var Device $device */
+            foreach ($appUser->getDevices() as $device) {
+                $this->refreshTokenUserCombinations[$device->getId()] = $appUser->getId();
+                $device->setUser(null);
+                $this->entityManager->persist($device);
+            }
         }
 
-        dump($this->accessTokenUserCombinations);die;
         file_put_contents('/Users/thomasroovers/Developer/Sites/pronto.dev/access_tokens.json', json_encode($this->accessTokenUserCombinations));
-
-        // Save all refresh token / user combinations locally
-        $refreshTokens = $this->entityManager->getRepository(RefreshToken::class)->findAll();
-
-        foreach ($refreshTokens as $refreshToken) {
-            if ($refreshToken->getUser() === null) {
-                continue;
-            }
-
-            $this->refreshTokenUserCombinations[$refreshToken->getId()] = $refreshToken->getUser()->getId();
-            $refreshToken->setUser(null);
-            $this->entityManager->persist($refreshToken);
-        }
-
-        $this->entityManager->flush();
         file_put_contents('/Users/thomasroovers/Developer/Sites/pronto.dev/refresh_tokens.json', json_encode($this->refreshTokenUserCombinations));
-    }
-
-    private function backupDevices() {
-        // Save all device / user combinations locally
-        $devices = $this->entityManager->getRepository(Device::class)->findAll();
-
-        foreach ($devices as $device) {
-            if ($device->getUser() === null) {
-                continue;
-            }
-
-            $this->deviceMapping[$device->getId()] = $device->getUser()->getId();
-            $device->setUser(null);
-            $this->entityManager->persist($device);
-        }
+        file_put_contents('/Users/thomasroovers/Developer/Sites/pronto.dev/devices.json', json_encode($this->deviceMapping));
 
         $this->entityManager->flush();
-        file_put_contents('/Users/thomasroovers/Developer/Sites/pronto.dev/devices.json', json_encode($this->deviceMapping));
     }
 }

@@ -6,7 +6,7 @@ namespace Pronto\MobileBundle\EventSubscriber;
 use Exception;
 use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\Application\ApplicationPlugin;
-use Pronto\MobileBundle\Exceptions\InactivePluginException;
+use Pronto\MobileBundle\Exception\InactivePluginException;
 use Pronto\MobileBundle\Service\ProntoMobile;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;

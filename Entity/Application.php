@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection as DoctrineCollection;
 use Doctrine\ORM\Mapping as ORM;
 use FOS\OAuthServerBundle\Entity\Client;
 use Pronto\MobileBundle\Traits\ApiEntityTrait;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
@@ -23,64 +24,72 @@ class Application extends Client implements ApiEntityInterface
 {
 	use ApiEntityTrait;
 
-
 	/**
 	 * @ORM\Id
 	 * @ORM\GeneratedValue(strategy="AUTO")
 	 * @ORM\Column(type="integer")
+     * @Groups({"Application"})
 	 */
 	protected $id;
 
 	/**
 	 * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Customer")
 	 * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
-	 */
+     * @Groups({"Application"})
+     */
 	private $customer;
 
 	/**
 	 * @ORM\Column(type="string")
 	 * @Assert\NotBlank()
-	 */
+     * @Groups({"Application"})
+     */
 	private $name;
 
 	/**
 	 * @ORM\Column(type="string", nullable=true)
-	 */
+     * @Groups({"Application"})
+     */
 	private $label;
 
 	/**
 	 * @ORM\Column(type="string")
 	 * @Assert\NotBlank()
+     * @Groups({"Application"})
 	 */
 	private $color;
 
 	/**
 	 * @ORM\Column(type="string", nullable=true)
 	 * @Assert\NotBlank()
-	 */
+     * @Groups({"Application"})
+     */
 	private $androidBundleIdentifier;
 
 	/**
 	 * @ORM\Column(type="string", nullable=true)
 	 * @Assert\NotBlank()
-	 */
+     * @Groups({"Application"})
+     */
 	private $iosBundleIdentifier;
 
 	/**
 	 * @ORM\Column(type="string")
 	 * @Assert\NotBlank()
+     * @Groups({"Application"})
 	 */
 	private $defaultLanguage;
 
 	/**
 	 * @ORM\Column(type="json_array")
 	 * @Assert\NotBlank()
+     * @Groups({"Application"})
 	 */
 	private $availableLanguages;
 
 	/**
 	 * @ORM\Column(type="datetime")
-	 */
+     */
 	private $createdAt;
 
 	/**
@@ -95,7 +104,8 @@ class Application extends Client implements ApiEntityInterface
 
 	/**
 	 * @ORM\OneToMany(targetEntity="Pronto\MobileBundle\Entity\Application\Version", mappedBy="application")
-	 */
+     * @Groups({"Application"})
+     */
 	private $applicationVersions;
 
 	/**
