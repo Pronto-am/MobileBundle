@@ -6,6 +6,7 @@ namespace Pronto\MobileBundle\Service;
 
 use Doctrine\ORM\EntityManagerInterface;
 use GuzzleHttp\Client;
+use Pronto\MobileBundle\Repository\OAuthClientRepository;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -24,13 +25,13 @@ class OAuthClient
     /**
      * OAuthClient constructor.
      * @param RequestStack $requestStack
-     * @param EntityManagerInterface $entityManager
+     * @param OAuthClientRepository $repository
      * @throws \Doctrine\ORM\NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function __construct(RequestStack $requestStack, EntityManagerInterface $entityManager)
+    public function __construct(RequestStack $requestStack, OAuthClientRepository $repository)
     {
-        $this->oauthClient = $entityManager->getRepository(\Pronto\MobileBundle\Entity\OAuthClient::class)->getInternalClient();
+        $this->oauthClient = $repository->getInternalClient();
 
         $baseUri = $requestStack->getCurrentRequest()->getSchemeAndHttpHost();
 

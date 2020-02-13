@@ -3,9 +3,35 @@
 namespace Pronto\MobileBundle\Repository;
 
 use Pronto\MobileBundle\Entity\Application;
+use Pronto\MobileBundle\Utils\Pagination\PaginationResponse;
 
-class ApplicationRepository extends EntityRepository
+class ApplicationRepository extends PaginateableRepository
 {
+    /**
+     * @inheritDoc
+     */
+    public function getEntity(): string
+    {
+        return Application::class;
+    }
+
+    /**
+     * @return PaginationResponse
+     */
+    public function paginate(): PaginationResponse
+    {
+        $query = $this->createQueryBuilder('entity')
+            ->where('entity.customer = :customer')
+            ->setParameter('customer', $this->prontoMobile->getCustomer());
+
+        if($this->filters->isSearching()) {
+            $query = $query->andWhere('entity.name LIKE :search')
+                ->setParameter('search', '%' . $this->filters->searchValue() . '%');
+        }
+
+        return $this->paginateQuery($query);
+    }
+
     /**
      * Get the applications for which there are firebase tokens
      *
@@ -23,8 +49,7 @@ class ApplicationRepository extends EntityRepository
         $query = 'SELECT ' . implode(', ', $select) . ' FROM applications LEFT JOIN devices ON devices.application_id = applications.id GROUP BY applications.id HAVING tokens > 0';
 
         // Execute the query
-        $entityManager = $this->getEntityManager();
-        $statement = $entityManager->getConnection()->prepare($query);
+        $statement = $this->entityManager->getConnection()->prepare($query);
 
         $statement->execute();
 
@@ -40,7 +65,7 @@ class ApplicationRepository extends EntityRepository
      */
     public function findByOAuthCredentials(string $randomId, string $secret): ?Application
     {
-        $connection = $this->getEntityManager()->getConnection();
+        $connection = $this->entityManager->getConnection();
         $query = 'SELECT * FROM applications WHERE random_id = :randomId AND secret = :secret';
         $statement = $connection->prepare($query);
         $statement->bindValue('randomId', $randomId);
@@ -50,7 +75,7 @@ class ApplicationRepository extends EntityRepository
         $data = $statement->fetchAll();
 
         if(isset($data[0])) {
-            return $this->getEntityManager()->getReference(Application::class, $data[0]['id']);
+            return $this->entityManager->getReference(Application::class, $data[0]['id']);
         }
 
         return null;

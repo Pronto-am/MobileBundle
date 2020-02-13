@@ -7,6 +7,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Pronto\MobileBundle\Controller\Api\Vue\ApiController;
 use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\AppVersion;
+use Pronto\MobileBundle\Repository\AppVersionRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -20,18 +21,17 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 class AppVersionController extends ApiController
 {
     /**
-     * @var EntityManagerInterface $entityManager
+     * @var AppVersionRepository $appVersions
      */
-    private $entityManager;
+    private $appVersions;
 
     /**
      * LoginController constructor.
-     * @param EntityManagerInterface $entityManager
-     * @throws \Exception
+     * @param AppVersionRepository $appVersions
      */
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(AppVersionRepository $appVersions)
     {
-        $this->entityManager = $entityManager;
+        $this->appVersions = $appVersions;
     }
 
     /**
@@ -40,11 +40,8 @@ class AppVersionController extends ApiController
      */
     public function paginateAction()
     {
-        $versions = $this->entityManager->getRepository(AppVersion::class)->findBy([
-            'application' => $this->prontoMobile->getApplication()
-        ]);
-
-        return $this->response($versions);
+        $paginated = $this->appVersions->paginate();
+        return $this->paginatedResponse($paginated);
     }
 
     /**

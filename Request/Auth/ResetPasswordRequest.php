@@ -20,8 +20,6 @@ class ResetPasswordRequest extends BaseRequest
      */
     public function rules(): array
     {
-        return [
-            'email' => ['type' => 'string', 'minLength' => 1]
-        ];
+        return [];
     }
 }

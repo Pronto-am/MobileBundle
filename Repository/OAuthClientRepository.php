@@ -8,6 +8,14 @@ use Pronto\MobileBundle\Entity\OAuthClient;
 class OAuthClientRepository extends EntityRepository
 {
     /**
+     * @inheritDoc
+     */
+    public function getEntity(): string
+    {
+        return OAuthClient::class;
+    }
+
+    /**
      * Get the internal OAuth Client
      * @throws \Doctrine\ORM\NonUniqueResultException
      * @throws \Doctrine\ORM\NoResultException

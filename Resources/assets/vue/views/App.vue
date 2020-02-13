@@ -1,6 +1,15 @@
+<style lang="scss">
+    :root {
+        --primary-color: red;
+        --primary-color-dark: red;
+        --link-color: red;
+        --link-color-dark: red;
+    }
+</style>
+
 <template>
     <div>
-        <template v-if="authenticated">
+        <template v-if="$route.meta.layout !== 'front'">
             <header/>
 
             <main>
@@ -35,6 +44,8 @@
                 </div>
             </main>
         </template>
+
+        <vue-progress-bar/>
     </div>
 </template>
 
@@ -53,10 +64,26 @@
         },
 
         created() {
-            console.log('App.vue created');
+            // Hook the progress bar to start before we move router-view
+            this.$router.beforeEach((to, from, next) => {
+                this.authenticated = to.meta.auth;
+
+                //  start the progress bar
+                this.$Progress.start();
+
+                next();
+            });
+
+            // Hook the progress bar to finish after we've finished moving router-view
+            this.$router.afterEach((to, from) => {
+                //  finish the progress bar
+                this.$Progress.finish();
+            });
         },
 
         mounted() {
+            this.$Progress.finish();
+
             Events.$on('users:authenticated', (user) => {
                 this.$auth.init().then(() => {
                     this.authenticated = true;

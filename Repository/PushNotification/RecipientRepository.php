@@ -2,12 +2,22 @@
 
 namespace Pronto\MobileBundle\Repository\PushNotification;
 
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\QueryBuilder;
 use Pronto\MobileBundle\Entity\PushNotification;
 use Pronto\MobileBundle\Repository\EntityRepository;
 
 class RecipientRepository extends EntityRepository
 {
+    /**
+     * @inheritDoc
+     */
+    public function getEntity(): string
+    {
+        return PushNotification\Recipient::class;
+    }
+
 	/**
 	 * Get the reusable basic query builder
 	 *
@@ -22,14 +32,14 @@ class RecipientRepository extends EntityRepository
 			->setParameter('notification', $notification);
 	}
 
-
-	/**
-	 * Get the number of successfully delivered notifications
-	 *
-	 * @param PushNotification $notification
-	 * @return mixed
-	 * @throws \Doctrine\ORM\NonUniqueResultException
-	 */
+    /**
+     * Get the number of successfully delivered notifications
+     *
+     * @param PushNotification $notification
+     * @return mixed
+     * @throws NoResultException
+     * @throws NonUniqueResultException
+     */
 	public function getSuccessfulSentCountByNotification(PushNotification $notification) {
 		return $this->getBasicCountQuery($notification)
 			->andWhere('recipients.sent = 1')
@@ -37,14 +47,14 @@ class RecipientRepository extends EntityRepository
 			->getSingleScalarResult();
 	}
 
-
-	/**
-	 * Get the number of bounced notifications
-	 *
-	 * @param PushNotification $notification
-	 * @return mixed
-	 * @throws \Doctrine\ORM\NonUniqueResultException
-	 */
+    /**
+     * Get the number of bounced notifications
+     *
+     * @param PushNotification $notification
+     * @return mixed
+     * @throws NoResultException
+     * @throws NonUniqueResultException
+     */
 	public function getBounceCountByNotification(PushNotification $notification) {
 		return $this->getBasicCountQuery($notification)
 			->andWhere('recipients.sent = 0')
@@ -52,21 +62,20 @@ class RecipientRepository extends EntityRepository
 			->getSingleScalarResult();
 	}
 
-
-	/**
-	 * Get the number of bounced notifications
-	 *
-	 * @param PushNotification $notification
-	 * @return mixed
-	 * @throws \Doctrine\ORM\NonUniqueResultException
-	 */
+    /**
+     * Get the number of bounced notifications
+     *
+     * @param PushNotification $notification
+     * @return mixed
+     * @throws NoResultException
+     * @throws NonUniqueResultException
+     */
 	public function getOpenedCountByNotification(PushNotification $notification) {
 		return $this->getBasicCountQuery($notification)
 			->andWhere('recipients.opened IS NOT NULL')
 			->getQuery()
 			->getSingleScalarResult();
 	}
-
 
 	/**
 	 * Get the clicked statistics, grouped by date
@@ -84,7 +93,6 @@ class RecipientRepository extends EntityRepository
 			->getQuery()
 			->execute();
 	}
-
 
 	/**
 	 * Get the number of successfully delivered notifications

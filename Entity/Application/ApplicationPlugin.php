@@ -12,7 +12,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * Class ApplicationPlugin
  * @package Pronto\MobileBundle\Entity
  *
- * @ORM\Entity(repositoryClass="Pronto\MobileBundle\Repository\Application\PluginRepository")
+ * @ORM\Entity
  * @ORM\Table(name="application_plugins")
  */
 class ApplicationPlugin

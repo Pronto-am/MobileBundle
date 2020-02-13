@@ -1,11 +1,12 @@
-import authentication from './modules/authentication';
 import applications from './modules/applications';
-import plugins from './modules/plugins';
-import users from './modules/users';
-import notifications from './modules/notifications';
-import versions from './modules/app_versions';
-import devices from './modules/devices';
+import authentication from './modules/authentication';
 import config from './modules/remote_config';
+import customers from './modules/customers';
+import devices from './modules/devices';
+import notifications from './modules/notifications';
+import plugins from './modules/plugins';
+import versions from './modules/app_versions';
+import users from './modules/users';
 
 const routes = [{
     path: '/',
@@ -18,7 +19,7 @@ const routes = [{
     component: require('../views/errors/NotFound').default,
     meta: {auth: false},
 }].concat(
-    authentication, plugins, applications, versions, users, notifications, devices, config
+    applications, authentication, config, customers, devices, notifications, plugins, users, versions,
 );
 
 export default routes;

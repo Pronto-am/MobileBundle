@@ -76,3 +76,6 @@ google-service-account.json
 ###< symfony/web-server-bundle ###
 translations.json
 translations.xml
+
+## BIT
+/components/

@@ -8,7 +8,7 @@ window.axios.interceptors.request.use((config) => {
     config.headers['X-Requested-With'] = 'XMLHttpRequest';
 
     // Add the authentication header when the user is logged in
-    if (Vue.prototype.$oauth.isAuthenticated()) {
+    if (Vue.prototype.$oauth.isAuthenticated() && !config.url.includes('auth/login') && !config.url.includes('auth/token')) {
         // Set the authorization header for each request
         config.headers['Authorization'] = Vue.prototype.$oauth.getAuthHeader();
     }

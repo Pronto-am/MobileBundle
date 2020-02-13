@@ -1,7 +1,7 @@
 <template>
     <div class="row">
         <div class="col-sm-12">
-            <vue-form :url="url('plugins')"
+            <vue-form :url="'plugins'"
                       :model="item"
                       @submit:success="submitSuccess"
                       @submit:error="submitError">

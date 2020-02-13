@@ -13,7 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Class Recipient
  * @package Pronto\MobileBundle\Entity
  *
- * @ORM\Entity(repositoryClass="Pronto\MobileBundle\Repository\PushNotification\SegmentRepository")
+ * @ORM\Entity
  * @ORM\Table(name="push_notification_segments")
  */
 class Segment implements ApiEntityInterface

@@ -55,7 +55,7 @@
         },
 
         beforeRouteEnter(to, from, next) {
-            axios.get(url('applications')).then(({data: {data: applications}}) => {
+            axios.get(path('applications')).then(({data: {data: applications}}) => {
                 next(vm => {
                     vm.items = applications.reduce((result, application) => {
                         let customer = result[application.customer.id];

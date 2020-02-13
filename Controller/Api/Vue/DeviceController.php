@@ -8,6 +8,7 @@ use Pronto\MobileBundle\Controller\Api\Vue\ApiController;
 use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\AppVersion;
 use Pronto\MobileBundle\Entity\Device;
+use Pronto\MobileBundle\Repository\DeviceRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -20,19 +21,15 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
  */
 class DeviceController extends ApiController
 {
-    /**
-     * @var EntityManagerInterface $entityManager
-     */
-    private $entityManager;
+    private $devices;
 
     /**
      * LoginController constructor.
-     * @param EntityManagerInterface $entityManager
-     * @throws \Exception
+     * @param DeviceRepository $devices
      */
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(DeviceRepository $devices)
     {
-        $this->entityManager = $entityManager;
+        $this->devices = $devices;
     }
 
     /**
@@ -41,11 +38,8 @@ class DeviceController extends ApiController
      */
     public function paginateAction()
     {
-        $devices = $this->entityManager->getRepository(Device::class)->findBy([
-            'application' => $this->prontoMobile->getApplication()
-        ]);
-
-        return $this->response($devices);
+        $paginated = $this->devices->paginate();
+        return $this->paginatedResponse($paginated);
     }
 
     /**

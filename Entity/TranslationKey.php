@@ -11,7 +11,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * Class TranslationKey
  * @package Pronto\MobileBundle\Entity
  *
- * @ORM\Entity(repositoryClass="Pronto\MobileBundle\Repository\TranslationKeyRepository")
+ * @ORM\Entity
  * @ORM\Table(name="translation_keys")
  */
 class TranslationKey extends TimestampedEntity implements ApiEntityInterface

@@ -4,10 +4,37 @@ namespace Pronto\MobileBundle\Repository;
 
 use DateTime;
 use Pronto\MobileBundle\Entity\Application;
+use Pronto\MobileBundle\Entity\PushNotification;
+use Pronto\MobileBundle\Utils\Pagination\PaginationResponse;
 
-class PushNotificationRepository extends EntityRepository
+class PushNotificationRepository extends PaginateableRepository
 {
-	/**
+    /**
+     * @inheritDoc
+     */
+    public function getEntity(): string
+    {
+        return PushNotification::class;
+    }
+
+    /**
+     * @return PaginationResponse
+     */
+    public function paginate(): PaginationResponse
+    {
+        $query = $this->createQueryBuilder('entity')
+            ->where('entity.application = :application')
+            ->setParameter('application', $this->prontoMobile->getApplication());
+
+        if($this->filters->isSearching()) {
+            $query = $query->andWhere('entity.title LIKE :search OR entity.content LIKE :search')
+                ->setParameter('search', '%' . $this->filters->searchValue() . '%');
+        }
+
+        return $this->paginateQuery($query);
+    }
+
+    /**
 	 * Get the scheduled push notifications by date
 	 *
 	 * @param DateTime $dateTime

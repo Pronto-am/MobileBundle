@@ -7,7 +7,7 @@
       >
         <vue-form
           :model="user"
-          :url="$url('vue.register')"
+          :url="$path('vue.register')"
           @submit:success="registrated"
           @submit:error="error"
         >

@@ -2,10 +2,19 @@
 
 namespace Pronto\MobileBundle\Repository\Collection;
 
+use Pronto\MobileBundle\Entity\Collection\Entry;
 use Pronto\MobileBundle\Repository\EntityRepository;
 
 class EntryRepository extends EntityRepository
 {
+    /**
+     * @inheritDoc
+     */
+    public function getEntity(): string
+    {
+        return Entry::class;
+    }
+
 	/**
 	 * Get the entries by ID and index them by ID
 	 *

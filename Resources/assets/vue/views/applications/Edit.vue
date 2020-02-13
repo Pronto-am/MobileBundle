@@ -1,7 +1,7 @@
 <template>
     <div class="row">
-        <div class="col-sm-12">
-            <vue-form :url="url('applications')"
+        <div class="col-sm-12" v-if="item">
+            <vue-form :url="path('applications')"
                       :model="item"
                       @submit:success="submitSuccess"
                       @submit:error="submitError">
@@ -38,17 +38,17 @@
 
         data() {
             return {
-                item: {},
+                item: null,
             }
         },
 
         beforeRouteEnter(to, from, next) {
             if(!to.params.id) {
-                next();
+                next(vm => vm.item = {});
                 return;
             }
 
-            axios.get(url('applications/:id', {id: to.params.id})).then((application) => {
+            axios.get(path('applications/:id', {id: to.params.id})).then((application) => {
                 next(vm => {
                     vm.item = application;
                 });

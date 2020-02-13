@@ -7,6 +7,14 @@ use Pronto\MobileBundle\Entity\Application;
 
 class PluginRepository extends EntityRepository
 {
+    /**
+     * @inheritDoc
+     */
+    public function getEntity(): string
+    {
+        return Application\ApplicationPlugin::class;
+    }
+
 	/**
 	 * Find the applications plugins by application
 	 *
@@ -20,7 +28,6 @@ class PluginRepository extends EntityRepository
             ->getQuery()
             ->execute();
     }
-
 
 	/**
 	 * Get an applications plugin by application and plugin identifier

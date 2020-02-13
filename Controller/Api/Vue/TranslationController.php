@@ -7,6 +7,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Pronto\MobileBundle\Entity\RemoteConfig;
 use Pronto\MobileBundle\Entity\Translation;
 use Pronto\MobileBundle\Entity\TranslationKey;
+use Pronto\MobileBundle\Repository\TranslationKeyRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -20,18 +21,17 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 class TranslationController extends ApiController
 {
     /**
-     * @var EntityManagerInterface $entityManager
+     * @var TranslationKeyRepository $translationKeys
      */
-    private $entityManager;
+    private $translationKeys;
 
     /**
      * LoginController constructor.
-     * @param EntityManagerInterface $entityManager
-     * @throws \Exception
+     * @param TranslationKeyRepository $translationKeys
      */
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(TranslationKeyRepository $translationKeys)
     {
-        $this->entityManager = $entityManager;
+        $this->translationKeys = $translationKeys;
     }
 
     /**
@@ -40,11 +40,8 @@ class TranslationController extends ApiController
      */
     public function paginateAction()
     {
-        $translations = $this->entityManager->getRepository(TranslationKey::class)->findBy([
-            'application' => $this->prontoMobile->getApplication()
-        ]);
-
-        return $this->response($translations);
+        $paginated = $this->translationKeys->paginate();
+        return $this->paginatedResponse($paginated);
     }
 
     /**

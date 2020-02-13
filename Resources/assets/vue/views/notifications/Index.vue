@@ -10,15 +10,11 @@
                                    :initial-data="items">
 
                             <template slot="header" slot-scope="{sorting, clickHandler}">
-                                <vue-table-header :sorting="sorting" @click="clickHandler" label="Naam" identifier="plugin.name"></vue-table-header>
-                                <vue-table-header :sorting="sorting" @click="clickHandler" label="Actief" identifier="active"></vue-table-header>
+                                <vue-table-header :sorting="sorting" @click="clickHandler" label="Titel" identifier="title"></vue-table-header>
                             </template>
 
                             <template slot="row" slot-scope="{row}">
-                                <vue-table-column :row="row" property="plugin.name" router-link :to="{name: 'versions.edit', params: {id: row.id}}"></vue-table-column>
-                                <vue-table-column :row="row" property="active" type="custom">
-                                    {{ row.active ? 'Ja' : 'Nee' }}
-                                </vue-table-column>
+                                <vue-table-column :row="row" property="title" router-link :to="{name: 'push_notifications.edit', params: {id: row.id}}"></vue-table-column>
                             </template>
 
                         </vue-table>
@@ -42,7 +38,7 @@
         },
 
         beforeRouteEnter(to, from, next) {
-            axios.get(url('versions')).then(({data: {data: plugins}}) => {
+            axios.get(path('versions')).then(({data: {data: plugins}}) => {
                 next(vm => {
                     vm.items = plugins;
                 })

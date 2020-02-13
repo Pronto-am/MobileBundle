@@ -2,17 +2,45 @@
 
 namespace Pronto\MobileBundle\Repository;
 
+use Doctrine\ORM\NonUniqueResultException;
 use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\Customer;
+use Pronto\MobileBundle\Entity\User;
+use Pronto\MobileBundle\Utils\Pagination\PaginationResponse;
 
-class UserRepository extends EntityRepository
+class UserRepository extends PaginateableRepository
 {
+    /**
+     * @inheritDoc
+     */
+    public function getEntity(): string
+    {
+        return User::class;
+    }
+
+    /**
+     * @return PaginationResponse
+     */
+    public function paginate(): PaginationResponse
+    {
+        $query = $this->createQueryBuilder('entity')
+            ->where('entity.customer = :customer')
+            ->setParameter('customer', $this->prontoMobile->getCustomer());
+
+        if($this->filters->isSearching()) {
+            $query = $query->andWhere('entity.firstName LIKE :search OR entity.lastName LIKE :search')
+                ->setParameter('search', '%' . $this->filters->searchValue() . '%');
+        }
+
+        return $this->paginateQuery($query);
+    }
+
     /**
      * Get the user by email and active state
      *
      * @param string $email
      * @return mixed
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws NonUniqueResultException
      */
     public function findActiveByEmail(string $email)
     {
@@ -30,14 +58,14 @@ class UserRepository extends EntityRepository
      * @param string $email
      * @param Application|null $application
      * @return mixed
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws NonUniqueResultException
      */
     public function findForAuthentication(string $email, ?Application $application)
     {
         $parameters = [
-            'appUser'     => $application !== null,
-            'email'       => $email,
-            'activated'   => true,
+            'appUser'   => $application !== null,
+            'email'     => $email,
+            'activated' => true,
         ];
 
         $query = $this->createQueryBuilder('user')
@@ -45,7 +73,7 @@ class UserRepository extends EntityRepository
             ->andWhere('user.email = :email')
             ->andWhere('user.activated = :activated');
 
-        if($application !== null) {
+        if ($application !== null) {
             $query = $query->andWhere('user.application = :application');
             $parameters['application'] = $application;
         } else {

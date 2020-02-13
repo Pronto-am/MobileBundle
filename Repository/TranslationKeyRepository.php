@@ -3,9 +3,36 @@
 namespace Pronto\MobileBundle\Repository;
 
 use Pronto\MobileBundle\Entity\Application;
+use Pronto\MobileBundle\Entity\TranslationKey;
+use Pronto\MobileBundle\Utils\Pagination\PaginationResponse;
 
-class TranslationKeyRepository extends EntityRepository
+class TranslationKeyRepository extends PaginateableRepository
 {
+    /**
+     * @inheritDoc
+     */
+    public function getEntity(): string
+    {
+        return TranslationKey::class;
+    }
+
+    /**
+     * @return PaginationResponse
+     */
+    public function paginate(): PaginationResponse
+    {
+        $query = $this->createQueryBuilder('entity')
+            ->where('entity.application = :application')
+            ->setParameter('application', $this->prontoMobile->getApplication());
+
+        if($this->filters->isSearching()) {
+            $query = $query->andWhere('entity.identifier LIKE :search')
+                ->setParameter('search', '%' . $this->filters->searchValue() . '%');
+        }
+
+        return $this->paginateQuery($query);
+    }
+
     /**
      * @param Application $application
      * @param string $identifier

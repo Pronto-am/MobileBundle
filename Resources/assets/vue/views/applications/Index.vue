@@ -9,12 +9,25 @@
                                    :sorting="sorting"
                                    :initial-data="items">
 
+                            <template slot="buttons-left">
+                                <el-button type="success" v-if="$auth.userHasRole($auth.roles.SUPER_ADMIN)" @click="$router.push({name: 'applications.add'})">Toevoegen</el-button>
+                            </template>
+
                             <template slot="header" slot-scope="{sorting, clickHandler}">
                                 <vue-table-header :sorting="sorting" @click="clickHandler" label="Naam" identifier="name"></vue-table-header>
+                                <vue-table-header :sorting="sorting" @click="clickHandler" label="Label" identifier="label"></vue-table-header>
+                                <vue-table-header :sorting="sorting" @click="clickHandler" label="Versies"></vue-table-header>
                             </template>
 
                             <template slot="row" slot-scope="{row}">
                                 <vue-table-column :row="row" property="name" router-link :to="{name: 'applications.edit', params: {id: row.id}}"></vue-table-column>
+                                <vue-table-column :row="row" property="label">
+                                    <el-tag>{{ row.label }}</el-tag>
+                                </vue-table-column>
+                                <vue-table-column :row="row" type="custom">
+                                    <template v-if="row.application_versions.length === 1">1 versie</template>
+                                    <template v-else>{{ row.application_versions.length }} versies</template>
+                                </vue-table-column>
                             </template>
 
                         </vue-table>
@@ -38,7 +51,7 @@
         },
 
         beforeRouteEnter(to, from, next) {
-            axios.get(url('applications')).then(({data: applications}) => {
+            axios.get(path('applications')).then(({data: applications}) => {
                 next(vm => {
                     vm.items = applications;
                 })

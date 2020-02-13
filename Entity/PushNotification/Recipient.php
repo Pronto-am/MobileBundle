@@ -14,7 +14,7 @@ use Pronto\MobileBundle\Traits\ApiEntityTrait;
  * Class Recipient
  * @package Pronto\MobileBundle\Entity
  *
- * @ORM\Entity(repositoryClass="Pronto\MobileBundle\Repository\PushNotification\RecipientRepository")
+ * @ORM\Entity
  * @ORM\Table(name="push_notification_recipients")
  */
 class Recipient implements ApiEntityInterface

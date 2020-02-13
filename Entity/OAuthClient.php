@@ -10,7 +10,7 @@ use FOS\OAuthServerBundle\Entity\Client as BaseClient;
  * Class Application
  * @package Pronto\MobileBundle\Entity
  *
- * @ORM\Entity(repositoryClass="Pronto\MobileBundle\Repository\OAuthClientRepository")
+ * @ORM\Entity
  * @ORM\Table(name="oauth_clients")
  * @ORM\HasLifecycleCallbacks
  */

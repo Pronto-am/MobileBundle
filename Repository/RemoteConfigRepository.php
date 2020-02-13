@@ -4,9 +4,36 @@ namespace Pronto\MobileBundle\Repository;
 
 use DateTime;
 use Pronto\MobileBundle\Entity\Application;
+use Pronto\MobileBundle\Entity\RemoteConfig;
+use Pronto\MobileBundle\Utils\Pagination\PaginationResponse;
 
-class RemoteConfigRepository extends EntityRepository
+class RemoteConfigRepository extends PaginateableRepository
 {
+    /**
+     * @inheritDoc
+     */
+    public function getEntity(): string
+    {
+        return RemoteConfig::class;
+    }
+
+    /**
+     * @return PaginationResponse
+     */
+    public function paginate(): PaginationResponse
+    {
+        $query = $this->createQueryBuilder('entity')
+            ->where('entity.application = :application')
+            ->setParameter('application', $this->prontoMobile->getApplication());
+
+        if($this->filters->isSearching()) {
+            $query = $query->andWhere('entity.name LIKE :search OR entity.identifier LIKE :search OR entity.value LIKE :search')
+                ->setParameter('search', '%' . $this->filters->searchValue() . '%');
+        }
+
+        return $this->paginateQuery($query);
+    }
+
     /**
      * @param Application $application
      * @param string $identifier

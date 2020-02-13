@@ -4,9 +4,10 @@ namespace Pronto\MobileBundle\Utils\Responses;
 
 class PaginatedResponse extends BaseResponse
 {
-	/** @var array $pagination */
+	/**
+     * @var array $pagination
+     */
 	private $pagination = [];
-
 
 	/**
 	 * SuccessResponse constructor.
@@ -15,7 +16,6 @@ class PaginatedResponse extends BaseResponse
 	{
 		$this->setStatus(200);
 	}
-
 
 	/**
 	 * Set the pagination resources
@@ -29,7 +29,6 @@ class PaginatedResponse extends BaseResponse
 
 		return $this;
 	}
-
 
 	/**
 	 * Create the response object

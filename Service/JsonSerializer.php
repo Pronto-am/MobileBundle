@@ -15,88 +15,99 @@ use Symfony\Component\Serializer\Serializer;
 
 class JsonSerializer
 {
-	/**
-     * @var ClassMetadataFactory classMetadataFactory
+    /**
+     * @var ObjectNormalizer $objectNormalizer
      */
-	private $classMetadataFactory;
+    private $objectNormalizer;
 
-	/**
-	 * JsonSerializer constructor.
-	 * @throws \Doctrine\Common\Annotations\AnnotationException
-	 */
-	public function __construct()
-	{
-		$this->classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
-	}
+    /**
+     * JsonSerializer constructor.
+     * @throws \Doctrine\Common\Annotations\AnnotationException
+     */
+    public function __construct()
+    {
+        $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
+        $this->objectNormalizer = new ObjectNormalizer($classMetadataFactory, new CamelCaseToSnakeCaseNameConverter());
+    }
 
-	/**
-	 * Serialize an entity
-	 *
-	 * @param object|array $entity
-	 * @param array $normalizers
-	 * @param array $groups
-	 * @param bool $snakeCasedProperties
-	 * @return bool|float|int|string
-	 */
-	public function serialize($entity, array $normalizers = [], array $groups = [], bool $snakeCasedProperties = true)
-	{
-		// conversion of property names to snake_case instead of CamelCase
-		$objectNormalizer = $snakeCasedProperties ? new ObjectNormalizer($this->classMetadataFactory, new CamelCaseToSnakeCaseNameConverter()) : new ObjectNormalizer($this->classMetadataFactory);
+    /**
+     * Serialize an entity
+     *
+     * @param object|array $entity
+     * @param array $normalizers
+     * @param array $groups
+     * @param bool $snakeCasedProperties
+     * @return bool|float|int|string
+     */
+    public function serialize($entity, array $normalizers = [], array $groups = [], bool $snakeCasedProperties = true)
+    {
+        // Set property callbacks
+        if ($entity instanceof ApiEntityInterface) {
+            $this->objectNormalizer->setCallbacks($entity::getSerializerCallbacks());
+        }
 
-		// Set property callbacks
-		if($entity instanceof ApiEntityInterface) {
-			$objectNormalizer->setCallbacks($entity::getSerializerCallbacks());
-		}
+        $normalizers[] = $this->objectNormalizer;
 
-		$normalizers[] = $objectNormalizer;
+        $serializer = new Serializer($normalizers, [new JsonEncoder()]);
 
-		$serializer = new Serializer($normalizers, [new JsonEncoder()]);
+        $this->setGroups($entity, $groups);
 
-		$this->setGroups($entity, $groups);
+        return $serializer->serialize($entity, 'json', [
+            'groups' => $groups
+        ]);
+    }
 
-		return $serializer->serialize($entity, 'json', [
-			'groups' => $groups
-		]);
-	}
+    /**
+     * @param string $entity
+     * @param array||string $data
+     * @return array|object
+     */
+    public function deserialize(string $entity, $data)
+    {
+        $serializer = new Serializer([$this->objectNormalizer], [new JsonEncoder()]);
+        $data = is_array($data) ? json_encode($data) : $data;
 
-	/**
-	 * Set the groups of the serialization
-	 *
-	 * @param object|array $entity
-	 * @param array $groups
-	 */
-	private function setGroups($entity, array &$groups): void
-	{
-		// Get the full class namespace
-		$className = $this->getClassName($entity);
+        return $serializer->deserialize($data, $entity, 'json');
+    }
 
-		// Add the default entity groups
-		if ($className !== null) {
-			$groups[] = end($className);
-		}
+    /**
+     * Set the groups of the serialization
+     *
+     * @param object|array $entity
+     * @param array $groups
+     */
+    private function setGroups($entity, array &$groups): void
+    {
+        // Get the full class namespace
+        $className = $this->getClassName($entity);
 
-		$groups[] = 'TimestampedEntity';
-		$groups[] = 'TimestampedWithUserEntity';
-	}
+        // Add the default entity groups
+        if ($className !== null) {
+            $groups[] = end($className);
+        }
 
-	/**
-	 * Get the class name by entity or array of entities
-	 *
-	 * @param $entity
-	 * @return array|null
-	 */
-	private function getClassName($entity): ?array
-	{
-		if (is_array($entity) && count($entity) > 0) {
-			$entity = $entity[0];
-		}
+        $groups[] = 'TimestampedEntity';
+        $groups[] = 'TimestampedWithUserEntity';
+    }
 
-		try {
-			// Get the full class namespace
-			return explode('\\', get_class($entity));
+    /**
+     * Get the class name by entity or array of entities
+     *
+     * @param $entity
+     * @return array|null
+     */
+    private function getClassName($entity): ?array
+    {
+        if (is_array($entity) && count($entity) > 0) {
+            $entity = $entity[0];
+        }
 
-		} catch (Exception $exception) {
-			return null;
-		}
-	}
+        try {
+            // Get the full class namespace
+            return explode('\\', get_class($entity));
+
+        } catch (Exception $exception) {
+            return null;
+        }
+    }
 }

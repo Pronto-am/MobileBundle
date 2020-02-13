@@ -4,19 +4,35 @@
             <template v-if="items">
                 <div class="card">
                     <div class="card-table">
-                        <vue-table url="vue.finances"
-                                   :can-delete="false"
+                        <vue-table :url="path('users')"
+                                   :filters="{type: null}"
                                    :sorting="sorting"
                                    :initial-data="items">
 
+                            <template slot="filters" slot-scope="{filters}">
+                                <div class="form-group">
+                                    <el-select v-model="filters.type">
+                                        <el-option :value="null" label="Alle gebruikers"></el-option>
+                                        <el-option value="cms" label="CMS gebruikers"></el-option>
+                                        <el-option value="app" label="App gebruikers"></el-option>
+                                    </el-select>
+                                </div>
+                            </template>
+
                             <template slot="header" slot-scope="{sorting, clickHandler}">
-                                <vue-table-header :sorting="sorting" @click="clickHandler" label="Naam" identifier="name"></vue-table-header>
+                                <vue-table-header :sorting="sorting" @click="clickHandler" label="Naam" identifier="last_name"></vue-table-header>
+                                <vue-table-header :sorting="sorting" @click="clickHandler" label="Type"></vue-table-header>
+                                <vue-table-header :sorting="sorting" @click="clickHandler" label="E-mailadres" identifier="email"></vue-table-header>
                             </template>
 
                             <template slot="row" slot-scope="{row}">
-                                <vue-table-column :row="row" property="name" router-link :to="{name: 'applications.edit', params: {id: row.id}}"></vue-table-column>
+                                <vue-table-column :row="row" property="full_name" router-link :to="{name: 'users.edit', params: {id: row.id}}"></vue-table-column>
+                                <vue-table-column :row="row" type="custom">
+                                    <template v-if="row.app_user"><el-tag>App gebruiker</el-tag></template>
+                                    <template v-else><el-tag>CMS gebruiker</el-tag></template>
+                                </vue-table-column>
+                                <vue-table-column :row="row" property="email"></vue-table-column>
                             </template>
-
                         </vue-table>
                     </div>
                 </div>
@@ -38,7 +54,7 @@
         },
 
         beforeRouteEnter(to, from, next) {
-            axios.get(url('applications')).then(({data: applications}) => {
+            axios.get(path('users')).then(({data: applications}) => {
                 next(vm => {
                     vm.items = applications;
                 })

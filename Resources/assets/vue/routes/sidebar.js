@@ -49,8 +49,8 @@ export default [{
     text: 'Plugins',
     role: ROLE_SUPER_ADMIN,
 }, {
-    name: 'customer',
+    name: 'customers',
     icon: 'cogs',
-    text: 'Klantinformatie',
+    text: 'Klanten',
     role: ROLE_SUPER_ADMIN,
 }];

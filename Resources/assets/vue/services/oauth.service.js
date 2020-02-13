@@ -42,7 +42,7 @@ export default class OAuthService {
      */
     refreshToken() {
         return new Promise((resolve, reject) => {
-            axios.post('/api/vue/auth/refresh', {
+            axios.post('/api/vue/auth/token', {
                 refresh_token: this.session.get('refresh_token')
             }).then(response => {
                 this.storeSession(response.data);
@@ -85,11 +85,11 @@ export default class OAuthService {
         let time = data.expires_in / hourInMilliSeconds;
 
         this.session.set('access_token', data.access_token, {
-            expires: time,
+            expires: time * 2,
         });
 
         this.session.set('refresh_token', data.refresh_token, {
-            expires: time * 2,
+            expires: time * 4,
         });
     }
 

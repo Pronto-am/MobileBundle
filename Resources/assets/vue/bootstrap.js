@@ -26,7 +26,7 @@ try {
 window.axios = require('axios');
 
 // Helper methods
-window.url = (url, params = {}) => {
+window.path = (url, params = {}) => {
     let keys = Object.keys(params);
 
     for (let key of keys) {

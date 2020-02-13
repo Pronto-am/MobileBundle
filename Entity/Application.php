@@ -16,7 +16,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Class Application
  * @package Pronto\MobileBundle\Entity
  *
- * @ORM\Entity(repositoryClass="Pronto\MobileBundle\Repository\ApplicationRepository")
+ * @ORM\Entity
  * @ORM\Table(name="applications")
  * @ORM\HasLifecycleCallbacks
  */

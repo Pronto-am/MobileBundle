@@ -15,7 +15,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * Class User
  * @package Pronto\MobileBundle\Entity
  *
- * @ORM\Entity(repositoryClass="Pronto\MobileBundle\Repository\UserRepository")
+ * @ORM\Entity
  * @ORM\Table(name="users")
  * @ORM\HasLifecycleCallbacks
  */

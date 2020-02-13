@@ -42,7 +42,7 @@
         },
 
         beforeRouteEnter(to, from, next) {
-            axios.get(url('versions')).then(({data: {data: plugins}}) => {
+            axios.get(path('versions')).then(({data: {data: plugins}}) => {
                 next(vm => {
                     vm.items = plugins;
                 })

@@ -2,25 +2,33 @@
 
 namespace Pronto\MobileBundle\Repository\Collection\Relationship;
 
+use Doctrine\DBAL\DBALException;
 use Pronto\MobileBundle\Repository\EntityRepository;
 use Pronto\MobileBundle\Entity\Collection;
 
 class MapperRepository extends EntityRepository
 {
+    /**
+     * @inheritDoc
+     */
+    public function getEntity(): string
+    {
+        return Collection\Relationship\Mapper::class;
+    }
+
 	/**
 	 * Get the id's of entries that are related to a single entry
 	 *
 	 * @param string $entryId
 	 * @param Collection $relatedCollection
 	 * @return mixed
-	 * @throws \Doctrine\DBAL\DBALException
+	 * @throws DBALException
 	 */
 	public function getAllRelatedEntryIds(string $entryId, Collection $relatedCollection)
 	{
 		$query = 'SELECT entry_right_id FROM collection_relationship_mappers WHERE entry_left_id = ? AND related_collection_id = ?';
 
-		$entityManager = $this->getEntityManager();
-		$statement = $entityManager->getConnection()->prepare($query);
+		$statement = $this->entityManager->getConnection()->prepare($query);
 		$statement->execute([$entryId, $relatedCollection->getId()]);
 
 		// Map the ID's to a single array

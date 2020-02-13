@@ -35,7 +35,6 @@ class UserController extends ApiController
     /**
      * @Route(path="user", methods={"GET"})
      * @IsGranted("ROLE_USER")
-     * @throws AnnotationException
      */
     public function profileAction()
     {

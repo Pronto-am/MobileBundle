@@ -9,6 +9,7 @@ use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\AppVersion;
 use Pronto\MobileBundle\Entity\Device;
 use Pronto\MobileBundle\Entity\RemoteConfig;
+use Pronto\MobileBundle\Repository\RemoteConfigRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -22,18 +23,17 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 class RemoteConfigController extends ApiController
 {
     /**
-     * @var EntityManagerInterface $entityManager
+     * @var RemoteConfigRepository $remoteConfig
      */
-    private $entityManager;
+    private $remoteConfig;
 
     /**
      * LoginController constructor.
-     * @param EntityManagerInterface $entityManager
-     * @throws \Exception
+     * @param RemoteConfigRepository $remoteConfig
      */
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(RemoteConfigRepository $remoteConfig)
     {
-        $this->entityManager = $entityManager;
+        $this->remoteConfig = $remoteConfig;
     }
 
     /**
@@ -42,11 +42,8 @@ class RemoteConfigController extends ApiController
      */
     public function paginateAction()
     {
-        $configurations = $this->entityManager->getRepository(RemoteConfig::class)->findBy([
-            'application' => $this->prontoMobile->getApplication()
-        ]);
-
-        return $this->response($configurations);
+        $paginated = $this->remoteConfig->paginate();
+        return $this->paginatedResponse($paginated);
     }
 
     /**

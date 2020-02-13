@@ -56,7 +56,15 @@ abstract class BaseRequest
 	 */
 	private function handle(): void
 	{
-		$this->validatorService->validate($this->parameterBag, $this->required(), $this->rules());
+        $requiredRules = ['type' => 'string', 'minLength' => 1];
+        $rules = $this->rules();
+
+        // Update the rules array, to add some rules by the required array
+        foreach($this->required() as $requiredField) {
+            $rules[$requiredField] = array_merge($requiredRules, $rules[$requiredField] ?? []);
+        }
+
+		$this->validatorService->validate($this->parameterBag, $this->required(), $rules);
 	}
 
 	/**

@@ -8,6 +8,8 @@ use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\OAuthClient;
 use Pronto\MobileBundle\Entity\User;
 use Pronto\MobileBundle\Exception\ApiException;
+use Pronto\MobileBundle\Repository\OAuthClientRepository;
+use Pronto\MobileBundle\Repository\UserRepository;
 use Pronto\MobileBundle\Utils\Responses\ErrorResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -19,9 +21,14 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 class UserProvider implements UserProviderInterface
 {
     /**
-     * @var EntityManagerInterface $entityManager
+     * @var UserRepository $users
      */
-    protected $entityManager;
+    private $users;
+
+    /**
+     * @var OAuthClientRepository $oauthClients
+     */
+    private $oauthClients;
 
     /**
      * @var Request $request
@@ -30,12 +37,14 @@ class UserProvider implements UserProviderInterface
 
     /**
      * AppUserProvider constructor.
-     * @param EntityManagerInterface $entityManager
+     * @param UserRepository $users
+     * @param OAuthClientRepository $oauthClients
      * @param RequestStack $requestStack
      */
-    public function __construct(EntityManagerInterface $entityManager, RequestStack $requestStack)
+    public function __construct(UserRepository $users, OAuthClientRepository $oauthClients, RequestStack $requestStack)
     {
-        $this->entityManager = $entityManager;
+        $this->users = $users;
+        $this->oauthClients = $oauthClients;
         $this->request = $requestStack->getCurrentRequest();
     }
 
@@ -45,6 +54,7 @@ class UserProvider implements UserProviderInterface
      * @param string $email
      * @return UserInterface
      * @throws ApiException
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function loadUserByUsername($email): UserInterface
     {
@@ -70,7 +80,7 @@ class UserProvider implements UserProviderInterface
             return null;
         }
 
-        return $this->entityManager->getRepository(User::class)->findForAuthentication($email, $client->getApplication());
+        return $this->users->findForAuthentication($email, $client->getApplication());
     }
 
     /**
@@ -84,7 +94,7 @@ class UserProvider implements UserProviderInterface
         try {
             [, $randomId] = explode('_', $clientId);
 
-            return $this->entityManager->getRepository(OAuthClient::class)->findByCredentials($randomId, $clientSecret);
+            return $this->oauthClients->findByCredentials($randomId, $clientSecret);
         } catch (Exception $exception) {
             $this->invalidAuthorization();
         }
@@ -120,7 +130,7 @@ class UserProvider implements UserProviderInterface
             );
         }
 
-        return $this->entityManager->getRepository(User::class)->find($user->getId());
+        return $this->users->find($user->getId());
     }
 
     /**

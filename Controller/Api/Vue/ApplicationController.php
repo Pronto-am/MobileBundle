@@ -6,6 +6,7 @@ namespace Pronto\MobileBundle\Controller\Api\Vue;
 use Doctrine\ORM\EntityManagerInterface;
 use Pronto\MobileBundle\Controller\Api\Vue\ApiController;
 use Pronto\MobileBundle\Entity\Application;
+use Pronto\MobileBundle\Repository\ApplicationRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -19,18 +20,17 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 class ApplicationController extends ApiController
 {
     /**
-     * @var EntityManagerInterface $entityManager
+     * @var ApplicationRepository $applications
      */
-    private $entityManager;
+    private $applications;
 
     /**
      * LoginController constructor.
-     * @param EntityManagerInterface $entityManager
-     * @throws \Exception
+     * @param ApplicationRepository $applications
      */
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(ApplicationRepository $applications)
     {
-        $this->entityManager = $entityManager;
+        $this->applications = $applications;
     }
 
     /**
@@ -39,11 +39,9 @@ class ApplicationController extends ApiController
      */
     public function paginateAction()
     {
-        $applications = $this->entityManager->getRepository(Application::class)->findBy([
-            'customer' => $this->prontoMobile->getCustomer()
-        ]);
+        $paginated = $this->applications->paginate();
 
-        return $this->response($applications);
+        return $this->paginatedResponse($paginated);
     }
 
     /**

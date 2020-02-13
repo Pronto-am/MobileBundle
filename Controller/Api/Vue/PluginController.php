@@ -7,6 +7,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Pronto\MobileBundle\Controller\Api\Vue\ApiController;
 use Pronto\MobileBundle\Entity\Application\ApplicationPlugin;
 use Pronto\MobileBundle\Entity\Plugin;
+use Pronto\MobileBundle\Repository\Application\PluginRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -20,18 +21,17 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 class PluginController extends ApiController
 {
     /**
-     * @var EntityManagerInterface $entityManager
+     * @var PluginRepository $applicationPlugins
      */
-    private $entityManager;
+    private $applicationPlugins;
 
     /**
      * PluginController constructor.
-     * @param EntityManagerInterface $entityManager
-     * @throws \Exception
+     * @param PluginRepository $applicationPlugins
      */
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(PluginRepository $applicationPlugins)
     {
-        $this->entityManager = $entityManager;
+        $this->applicationPlugins = $applicationPlugins;
     }
 
     /**
@@ -40,7 +40,7 @@ class PluginController extends ApiController
      */
     public function listAction()
     {
-        $plugins = $this->entityManager->getRepository(ApplicationPlugin::class)->findAllByApplication($this->prontoMobile->getApplication());
+        $plugins = $this->applicationPlugins->findAllByApplication($this->prontoMobile->getApplication());
         return $this->response($plugins);
     }
 
@@ -49,10 +49,11 @@ class PluginController extends ApiController
      * @IsGranted("ROLE_SUPER_ADMIN")
      * @param int $id
      * @return JsonResponse
+     * @throws \Exception
      */
     public function getAction(int $id)
     {
-        $plugin = $this->entityManager->getRepository(Plugin::class)->findOrFail($id);
+        $plugin = $this->applicationPlugins->findOrFail($id);
         return $this->response($plugin);
     }
 

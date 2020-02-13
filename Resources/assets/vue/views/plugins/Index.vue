@@ -4,7 +4,7 @@
             <template v-if="items">
                 <div class="card">
                     <div class="card-table">
-                        <vue-table url="vue.finances"
+                        <vue-table :url="path('plugins')"
                                    :can-delete="false"
                                    :sorting="sorting"
                                    :initial-data="items">
@@ -15,7 +15,7 @@
                             </template>
 
                             <template slot="row" slot-scope="{row}">
-                                <vue-table-column :row="row" property="plugin.name" router-link :to="{name: 'plugins.edit', params: {id: row.id}}"></vue-table-column>
+                                <vue-table-column :row="row" property="plugin.name" router-link :to="{name: 'plugins.edit', params: {id: row.plugin.id}}"></vue-table-column>
                                 <vue-table-column :row="row" property="active" type="custom">
                                     {{ row.active ? 'Ja' : 'Nee' }}
                                 </vue-table-column>
@@ -42,7 +42,7 @@
         },
 
         beforeRouteEnter(to, from, next) {
-            axios.get(url('plugins')).then(({data: {data: plugins}}) => {
+            axios.get(path('plugins')).then(({data: {data: plugins}}) => {
                 next(vm => {
                     vm.items = plugins;
                 })

@@ -8,6 +8,14 @@ use Pronto\MobileBundle\Entity\PushNotification\Segment;
 
 class SegmentRepository extends EntityRepository
 {
+    /**
+     * @inheritDoc
+     */
+    public function getEntity(): string
+    {
+        return Device\DeviceSegment::class;
+    }
+
 	/**
 	 * Find the devices' segments
 	 *
@@ -24,14 +32,14 @@ class SegmentRepository extends EntityRepository
 			->execute();
 	}
 
-
-	/**
-	 * Get the device count by segment
-	 *
-	 * @param Segment $segment
-	 * @return mixed
-	 * @throws \Doctrine\ORM\NonUniqueResultException
-	 */
+    /**
+     * Get the device count by segment
+     *
+     * @param Segment $segment
+     * @return mixed
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
 	public function getDeviceCountBySegment(Segment $segment)
 	{
 		return $this->createQueryBuilder('segments')

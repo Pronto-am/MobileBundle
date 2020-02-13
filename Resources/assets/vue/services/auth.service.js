@@ -15,7 +15,7 @@ export default class AuthService {
     async init() {
         try {
             const response = await axios.all([
-                axios.get(Vue.prototype.$url('auth/user')),
+                axios.get(Vue.prototype.$path('auth/user')),
             ]);
 
             this.user = response[0].data.data;
@@ -23,6 +23,14 @@ export default class AuthService {
             this.user = {};
         }
     }
+
+    get roles() {
+        return {
+            USER: ROLE_USER,
+            ADMIN: ROLE_ADMIN,
+            SUPER_ADMIN: ROLE_SUPER_ADMIN,
+        }
+    };
 
     /**
      * Check if a user has the provided role

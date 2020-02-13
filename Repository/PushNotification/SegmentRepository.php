@@ -2,12 +2,32 @@
 
 namespace Pronto\MobileBundle\Repository\PushNotification;
 
+use Pronto\MobileBundle\Entity\PushNotification\Segment;
 use Pronto\MobileBundle\Repository\EntityRepository;
 use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\Device;
+use Pronto\MobileBundle\Repository\PaginateableRepository;
+use Pronto\MobileBundle\Utils\Pagination\PaginationResponse;
 
-class SegmentRepository extends EntityRepository
+class SegmentRepository extends PaginateableRepository
 {
+    /**
+     * @inheritDoc
+     */
+    public function getEntity(): string
+    {
+        return Segment::class;
+    }
+
+    /**
+     * @return PaginationResponse
+     */
+    public function paginate(): PaginationResponse
+    {
+        return $this->findBy([
+            'application' => $this->prontoMobile->getApplication()
+        ]);
+    }
 
 	/**
 	 * Get the number of successfully delivered notifications
@@ -28,8 +48,7 @@ class SegmentRepository extends EntityRepository
 		  FROM push_notification_segments AS segments
 		  WHERE segments.application_id = ?';
 
-		$entityManager = $this->getEntityManager();
-		$statement = $entityManager->getConnection()->prepare($query);
+		$statement = $this->entityManager->getConnection()->prepare($query);
 		$statement->execute([$device->getId(), $application->getId()]);
 
 		return $statement->fetchAll();

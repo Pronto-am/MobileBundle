@@ -8,6 +8,14 @@ use Pronto\MobileBundle\Entity\Collection;
 class PropertyRepository extends EntityRepository
 {
     /**
+     * @inheritDoc
+     */
+    public function getEntity(): string
+    {
+        return Collection\Property::class;
+    }
+
+    /**
      * Get all properties of a collection
      *
      * @param Collection $collection

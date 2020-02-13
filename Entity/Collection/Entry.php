@@ -15,7 +15,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * Class Entry
  * @package Pronto\MobileBundle\Entity
  *
- * @ORM\Entity(repositoryClass="Pronto\MobileBundle\Repository\Collection\EntryRepository")
+ * @ORM\Entity
  * @ORM\Table(name="collection_entries", indexes={@ORM\Index(name="active_entries_by_collection", columns={"collection_id", "active"})})
  * @ORM\HasLifecycleCallbacks
  */

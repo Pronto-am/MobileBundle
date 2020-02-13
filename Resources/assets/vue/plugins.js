@@ -15,6 +15,7 @@ Vue.mixin({
     },
 
     methods: {
+        path: window.path,
         submitSuccess: function () {
             this.$message({
                 type: 'success',
@@ -112,7 +113,7 @@ Vue.directive('user-has-role', function (el, bindings, vnode) {
  * @param params
  * @returns {string}
  */
-Vue.prototype.$url = (url, params = {}) => {
+Vue.prototype.$path = (url, params = {}) => {
     let keys = Object.keys(params);
 
     for (let key of keys) {

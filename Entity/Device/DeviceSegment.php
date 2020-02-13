@@ -11,7 +11,7 @@ use Pronto\MobileBundle\Entity\PushNotification\Segment;
  * Class DeviceSegment
  * @package Pronto\MobileBundle\Entity
  *
- * @ORM\Entity(repositoryClass="Pronto\MobileBundle\Repository\Device\SegmentRepository")
+ * @ORM\Entity
  * @ORM\Table(name="device_segments")
  */
 class DeviceSegment

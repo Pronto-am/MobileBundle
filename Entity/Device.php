@@ -13,7 +13,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * Class Device
  * @package Pronto\MobileBundle\Entity
  *
- * @ORM\Entity(repositoryClass="Pronto\MobileBundle\Repository\DeviceRepository")
+ * @ORM\Entity
  * @ORM\Table(name="devices", indexes={@ORM\Index(name="state_and_notifications", columns={"token_state", "push_notifications"})})
  * @ORM\HasLifecycleCallbacks
  */
@@ -46,7 +46,7 @@ class Device implements ApiEntityInterface
      *
      * @Groups({"Device"})
      */
-    private $appUser;
+    private $user;
 
 	/**
 	 * @ORM\Column(type="string", nullable=true)
@@ -194,7 +194,7 @@ class Device implements ApiEntityInterface
 	 */
 	public function getUser(): ?User
 	{
-		return $this->appUser;
+		return $this->user;
 	}
 
 	/**
@@ -202,7 +202,7 @@ class Device implements ApiEntityInterface
 	 */
 	public function setUser(?User $user): void
 	{
-		$this->appUser = $user;
+		$this->user = $user;
 	}
 
 	/**

@@ -24,55 +24,63 @@ class Customer
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      * @ORM\Column(type="integer")
-     * @Groups({"Application"})
+     * @Groups({"Application", "Customer"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string")
-	 * @Assert\NotBlank()
-     * @Groups({"Application"})
+     * @Groups({"Application", "Customer"})
      */
     private $companyName;
 
     /**
      * @ORM\Column(type="string")
-	 * @Assert\NotBlank()
-	 */
+     * @Groups({"Customer"})
+     */
     private $contactPerson;
 
     /**
      * @ORM\Column(type="string")
-	 * @Assert\NotBlank()
-	 */
+     * @Groups({"Customer"})
+     */
     private $phoneNumber;
 
     /**
      * @ORM\Column(type="string")
-	 * @Assert\NotBlank()
+     * @Groups({"Customer"})
 	 */
     private $email;
 
 	/**
 	 * @ORM\Column(type="string")
-	 * @Assert\NotBlank()
-     * @Groups({"Application"})
+     * @Groups({"Application", "Customer"})
 	 */
     private $primaryColor;
 
-	/**
-	 * @ORM\Column(type="string")
-	 * @Assert\NotBlank()
-     * @Groups({"Application"})
+    /**
+     * @ORM\Column(type="string")
+     * @Groups({"Application", "Customer"})
      */
-	private $secondaryColor;
+    private $primaryColorDark;
 
-	/**
-	 * @ORM\Column(type="string")
-	 * @Assert\NotBlank()
-     * @Groups({"Application"})
-	 */
-	private $sidebarColor;
+    /**
+     * @ORM\Column(type="string")
+     * @Groups({"Application", "Customer"})
+     */
+    private $linkColor;
+
+    /**
+     * @ORM\Column(type="string")
+     * @Groups({"Application", "Customer"})
+     */
+    private $linkColorDark;
+
+    /**
+     * @ORM\Column(type="string")
+     * @Groups({"Application", "Customer"})
+     */
+    private $contrastColor;
 
 	/**
 	 * @ORM\OneToMany(targetEntity="Pronto\MobileBundle\Entity\Application", mappedBy="customer")
@@ -90,7 +98,7 @@ class Customer
 	 *     minHeight = 120,
 	 *     maxHeight = 120
 	 * )
-     * @Groups({"Application"})
+     * @Groups({"Application", "Customer"})
      */
 	private $logo;
 
@@ -182,7 +190,6 @@ class Customer
 		return $this->primaryColor;
 	}
 
-
 	/**
 	 * @param string $primaryColor
 	 */
@@ -191,37 +198,77 @@ class Customer
 		$this->primaryColor = $primaryColor;
 	}
 
-	/**
-	 * @return string
-	 */
-	public function getSecondaryColor(): string
-	{
-		return $this->secondaryColor;
-	}
+    /**
+     * @return mixed
+     */
+    public function getPrimaryColorDark()
+    {
+        return $this->primaryColorDark;
+    }
 
-	/**
-	 * @param string $secondaryColor
-	 */
-	public function setSecondaryColor(string $secondaryColor): void
-	{
-		$this->secondaryColor = $secondaryColor;
-	}
+    /**
+     * @param mixed $primaryColorDark
+     * @return Customer
+     */
+    public function setPrimaryColorDark($primaryColorDark)
+    {
+        $this->primaryColorDark = $primaryColorDark;
+        return $this;
+    }
 
-	/**
-	 * @return string
-	 */
-	public function getSidebarColor(): string
-	{
-		return $this->sidebarColor;
-	}
-	
-	/**
-	 * @param string $sidebarColor
-	 */
-	public function setSidebarColor(string $sidebarColor): void
-	{
-		$this->sidebarColor = $sidebarColor;
-	}
+    /**
+     * @return mixed
+     */
+    public function getLinkColor()
+    {
+        return $this->linkColor;
+    }
+
+    /**
+     * @param mixed $linkColor
+     * @return Customer
+     */
+    public function setLinkColor($linkColor)
+    {
+        $this->linkColor = $linkColor;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLinkColorDark()
+    {
+        return $this->linkColorDark;
+    }
+
+    /**
+     * @param mixed $linkColorDark
+     * @return Customer
+     */
+    public function setLinkColorDark($linkColorDark)
+    {
+        $this->linkColorDark = $linkColorDark;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getContrastColor()
+    {
+        return $this->contrastColor;
+    }
+
+    /**
+     * @param mixed $contrastColor
+     * @return Customer
+     */
+    public function setContrastColor($contrastColor)
+    {
+        $this->contrastColor = $contrastColor;
+        return $this;
+    }
 
 	/**
 	 * @return string|null

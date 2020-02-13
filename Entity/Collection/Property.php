@@ -12,7 +12,7 @@ use Pronto\MobileBundle\Entity\TimestampedEntity;
  * Class Property
  * @package Pronto\MobileBundle\Entity
  *
- * @ORM\Entity(repositoryClass="Pronto\MobileBundle\Repository\Collection\PropertyRepository")
+ * @ORM\Entity
  * @ORM\Table(name="collection_properties")
  */
 class Property extends TimestampedEntity

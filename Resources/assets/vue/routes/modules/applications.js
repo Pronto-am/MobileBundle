@@ -4,12 +4,12 @@ export default [{
     path: '/applications',
     name: 'applications',
     component: require('../../views/applications/Index').default,
-    meta: {auth: true, role: ROLE_USER}
+    meta: {auth: true, role: ROLE_USER, layout: 'front'}
 }, {
     path: '/applications/select',
     name: 'applications.select',
     component: require('../../views/applications/Select').default,
-    meta: {auth: true, role: ROLE_USER}
+    meta: {auth: true, role: ROLE_USER, layout: 'front'}
 }, {
     path: '/applications/edit',
     name: 'applications.add',

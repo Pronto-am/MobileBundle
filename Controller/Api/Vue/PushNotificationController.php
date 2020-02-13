@@ -10,6 +10,7 @@ use Pronto\MobileBundle\Entity\AppVersion;
 use Pronto\MobileBundle\Entity\Device;
 use Pronto\MobileBundle\Entity\PushNotification;
 use Pronto\MobileBundle\Entity\RemoteConfig;
+use Pronto\MobileBundle\Repository\PushNotificationRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -23,18 +24,17 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 class PushNotificationController extends ApiController
 {
     /**
-     * @var EntityManagerInterface $entityManager
+     * @var PushNotificationRepository $pushNotifications
      */
-    private $entityManager;
+    private $pushNotifications;
 
     /**
      * LoginController constructor.
-     * @param EntityManagerInterface $entityManager
-     * @throws \Exception
+     * @param PushNotificationRepository $pushNotifications
      */
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(PushNotificationRepository $pushNotifications)
     {
-        $this->entityManager = $entityManager;
+        $this->pushNotifications = $pushNotifications;
     }
 
     /**
@@ -43,11 +43,8 @@ class PushNotificationController extends ApiController
      */
     public function paginateAction()
     {
-        $notifications = $this->entityManager->getRepository(PushNotification::class)->findBy([
-            'application' => $this->prontoMobile->getApplication()
-        ]);
-
-        return $this->response($notifications);
+        $paginated = $this->pushNotifications->paginate();
+        return $this->paginatedResponse($paginated);
     }
 
     /**

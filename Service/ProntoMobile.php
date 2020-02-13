@@ -61,7 +61,7 @@ class ProntoMobile
     {
         $this->request = $requestStack->getCurrentRequest();
 
-        if ($this->request->headers->has('Application-Version-Id')) {
+        if ($this->request !== null && $this->request->headers->has('Application-Version-Id')) {
             $this->applicationVersion = $this->entityManager->getRepository(Application\Version::class)->find($this->request->headers->get('Application-Version-Id'));
             $this->application = $this->applicationVersion->getApplication();
             $this->customer = $this->application->getCustomer();

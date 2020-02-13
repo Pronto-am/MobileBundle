@@ -11,7 +11,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * Class Plugin
  * @package Pronto\MobileBundle\Entity
  *
- * @ORM\Entity(repositoryClass="Pronto\MobileBundle\Repository\PluginRepository")
+ * @ORM\Entity
  * @ORM\Table(name="plugins")
  */
 class Plugin

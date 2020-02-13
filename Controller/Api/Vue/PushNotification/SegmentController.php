@@ -10,6 +10,7 @@ use Pronto\MobileBundle\Entity\AppVersion;
 use Pronto\MobileBundle\Entity\Device;
 use Pronto\MobileBundle\Entity\PushNotification;
 use Pronto\MobileBundle\Entity\RemoteConfig;
+use Pronto\MobileBundle\Repository\PushNotification\SegmentRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -23,18 +24,17 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 class SegmentController extends ApiController
 {
     /**
-     * @var EntityManagerInterface $entityManager
+     * @var SegmentRepository $segments
      */
-    private $entityManager;
+    private $segments;
 
     /**
      * LoginController constructor.
-     * @param EntityManagerInterface $entityManager
-     * @throws \Exception
+     * @param SegmentRepository $segments
      */
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(SegmentRepository $segments)
     {
-        $this->entityManager = $entityManager;
+        $this->segments = $segments;
     }
 
     /**
@@ -43,9 +43,7 @@ class SegmentController extends ApiController
      */
     public function paginateAction()
     {
-        $segments = $this->entityManager->getRepository(PushNotification\Segment::class)->findBy([
-            'application' => $this->prontoMobile->getApplication()
-        ]);
+        $segments = $this->segments->paginate();
 
         return $this->response($segments);
     }
