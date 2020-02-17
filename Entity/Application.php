@@ -28,7 +28,7 @@ class Application extends Client implements ApiEntityInterface
 	 * @ORM\Id
 	 * @ORM\GeneratedValue(strategy="AUTO")
 	 * @ORM\Column(type="integer")
-     * @Groups({"Application"})
+     * @Groups({"Application", "Customer"})
 	 */
 	protected $id;
 
@@ -42,20 +42,20 @@ class Application extends Client implements ApiEntityInterface
 	/**
 	 * @ORM\Column(type="string")
 	 * @Assert\NotBlank()
-     * @Groups({"Application"})
+     * @Groups({"Application", "Customer"})
      */
 	private $name;
 
 	/**
 	 * @ORM\Column(type="string", nullable=true)
-     * @Groups({"Application"})
+     * @Groups({"Application", "Customer"})
      */
 	private $label;
 
 	/**
 	 * @ORM\Column(type="string")
 	 * @Assert\NotBlank()
-     * @Groups({"Application"})
+     * @Groups({"Application", "Customer"})
 	 */
 	private $color;
 
@@ -104,7 +104,7 @@ class Application extends Client implements ApiEntityInterface
 
 	/**
 	 * @ORM\OneToMany(targetEntity="Pronto\MobileBundle\Entity\Application\Version", mappedBy="application")
-     * @Groups({"Application"})
+     * @Groups({"Application", "Customer"})
      */
 	private $applicationVersions;
 

@@ -84,7 +84,8 @@ class Customer
 
 	/**
 	 * @ORM\OneToMany(targetEntity="Pronto\MobileBundle\Entity\Application", mappedBy="customer")
-	 */
+     * @Groups({"Customer"})
+     */
 	private $applications;
 
 	/**

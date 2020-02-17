@@ -74,7 +74,14 @@ abstract class BaseRequest
 	 */
 	public function get(string $key, $default = null)
 	{
-		return $this->parameterBag->get($key, $default);
+        if(strpos($key, '.') === false) {
+            return $this->parameterBag->get($key, $default);
+        }
+
+        [$key, $subKey] = explode('.', $key);
+        $value = $this->parameterBag->get($key, $default);
+
+		return $value[$subKey] ?? $default;
 	}
 
 	/**

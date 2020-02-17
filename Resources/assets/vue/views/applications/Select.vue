@@ -11,7 +11,7 @@
 
 <template>
     <div class="row">
-        <div class="col-sm-12" v-if="items">
+        <div class="col-sm-12 col-md-6 offset-md-3 col-lg-4 offset-lg-4" v-if="items">
             <div class="card">
                 <div class="card-header">Selecteer een applicatie</div>
 
@@ -55,20 +55,21 @@
         },
 
         beforeRouteEnter(to, from, next) {
-            axios.get(path('applications')).then(({data: {data: applications}}) => {
+            axios.get(path('customers')).then(({data: {data: customers}}) => {
                 next(vm => {
-                    vm.items = applications.reduce((result, application) => {
-                        let customer = result[application.customer.id];
-                        if (customer === undefined) {
-                            customer = Object.assign(application.customer, {applications: []});
-                        }
-
-                        customer.applications.push(application);
-
-                        result[application.customer.id] = customer;
-
-                        return result;
-                    }, []).filter((customer) => customer !== undefined);
+                    vm.items = customers;
+                    // vm.items = applications.reduce((result, application) => {
+                    //     let customer = result[application.customer.id];
+                    //     if (customer === undefined) {
+                    //         customer = Object.assign(application.customer, {applications: []});
+                    //     }
+                    //
+                    //     customer.applications.push(application);
+                    //
+                    //     result[application.customer.id] = customer;
+                    //
+                    //     return result;
+                    // }, []).filter((customer) => customer !== undefined);
                 });
             }).catch(error => {
                 next();

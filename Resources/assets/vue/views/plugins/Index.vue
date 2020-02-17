@@ -7,6 +7,7 @@
                         <vue-table :url="path('plugins')"
                                    :can-delete="false"
                                    :sorting="sorting"
+                                   hide-checkboxes
                                    :initial-data="items">
 
                             <template slot="header" slot-scope="{sorting, clickHandler}">

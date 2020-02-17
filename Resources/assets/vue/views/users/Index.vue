@@ -6,8 +6,13 @@
                     <div class="card-table">
                         <vue-table :url="path('users')"
                                    :filters="{type: null}"
+                                   :can-delete="$auth.userHasRole($auth.roles.ADMIN)"
                                    :sorting="sorting"
                                    :initial-data="items">
+
+                            <template slot="buttons-left">
+                                <el-button type="success" v-if="$auth.userHasRole($auth.roles.ADMIN)" @click="$router.push({name: 'users.add'})">Toevoegen</el-button>
+                            </template>
 
                             <template slot="filters" slot-scope="{filters}">
                                 <div class="form-group">

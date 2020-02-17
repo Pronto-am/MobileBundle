@@ -4,7 +4,7 @@ export default [{
     path: '/applications',
     name: 'applications',
     component: require('../../views/applications/Index').default,
-    meta: {auth: true, role: ROLE_USER, layout: 'front'}
+    meta: {auth: true, role: ROLE_USER}
 }, {
     path: '/applications/select',
     name: 'applications.select',

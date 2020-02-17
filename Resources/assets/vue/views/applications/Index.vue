@@ -5,7 +5,7 @@
                 <div class="card">
                     <div class="card-table">
                         <vue-table url="vue.finances"
-                                   :can-delete="false"
+                                   :can-delete="$auth.userHasRole($auth.roles.SUPER_ADMIN)"
                                    :sorting="sorting"
                                    :initial-data="items">
 

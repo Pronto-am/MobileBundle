@@ -7,6 +7,7 @@ namespace Pronto\MobileBundle\Repository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use Exception;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 abstract class EntityRepository
 {
@@ -38,14 +39,14 @@ abstract class EntityRepository
     /**
      * @param mixed $id
      * @return object|null
-     * @throws Exception
+     * @throws NotFoundHttpException
      */
     public function findOrFail($id)
     {
         $result = $this->find($id);
 
         if ($result === null) {
-            throw new Exception('No results found for model', 404);
+            throw new NotFoundHttpException('No results found for model');
         }
 
         return $result;
@@ -55,14 +56,14 @@ abstract class EntityRepository
      * @param array $criteria
      * @param array|null $orderBy
      * @return object|null
-     * @throws Exception
+     * @throws NotFoundHttpException
      */
     public function firstOrFail(array $criteria, ?array $orderBy = null)
     {
         $result = $this->findOneBy($criteria, $orderBy);
 
         if ($result === null) {
-            throw new Exception('No results found for model', 404);
+            throw new NotFoundHttpException('No results found for model');
         }
 
         return $result;

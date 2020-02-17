@@ -24,7 +24,7 @@ class Version
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      * @ORM\Column(type="integer")
-     * @Groups({"Application"})
+     * @Groups({"Application", "Customer"})
      */
     private $id;
 
@@ -37,7 +37,7 @@ class Version
     /**
      * @ORM\Column(type="string")
 	 * @Assert\NotBlank()
-     * @Groups({"Application"})
+     * @Groups({"Application", "Customer"})
      */
     private $name;
 

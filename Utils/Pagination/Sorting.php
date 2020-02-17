@@ -27,7 +27,7 @@ class Sorting
      */
     public function column($default = 'id')
     {
-        return $this->sorting['column'] ?? $default;
+        return camel_case($this->sorting['column'] ?? $default);
     }
 
     /**

@@ -87,4 +87,15 @@ abstract class PaginateableRepository extends EntityRepository
 
         return new PaginationResponse($data, $meta);
     }
+
+    /**
+     * @return mixed
+     */
+    public function list()
+    {
+        return $this->createQueryBuilder('entity')
+            ->orderBy(sprintf('entity.%s', $this->sorting->column()), $this->sorting->direction())
+            ->getQuery()
+            ->execute();
+    }
 }

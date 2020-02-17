@@ -36,10 +36,10 @@ class CustomerController extends ApiController
      * @Route(methods={"GET"})
      * @IsGranted("ROLE_SUPER_ADMIN")
      */
-    public function paginateAction()
+    public function listAction()
     {
-        $paginated = $this->customers->paginate();
-        return $this->paginatedResponse($paginated);
+        $customers = $this->customers->list();
+        return $this->response($customers);
     }
 
     /**
