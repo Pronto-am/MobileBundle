@@ -14,7 +14,7 @@ export default class OAuthService {
      * Logout
      */
     logout() {
-        Vue.prototype.$applicationService.clear();
+        Vue.prototype.$application.clear();
 
         this.session.remove('access_token');
         this.session.remove('refresh_token');

@@ -22,295 +22,302 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Application extends Client implements ApiEntityInterface
 {
-	use ApiEntityTrait;
+    use ApiEntityTrait;
 
-	/**
-	 * @ORM\Id
-	 * @ORM\GeneratedValue(strategy="AUTO")
-	 * @ORM\Column(type="integer")
-     * @Groups({"Application", "Customer"})
-	 */
-	protected $id;
-
-	/**
-	 * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Customer")
-	 * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
-     * @Groups({"Application"})
-     */
-	private $customer;
-
-	/**
-	 * @ORM\Column(type="string")
-	 * @Assert\NotBlank()
+    /**
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(type="integer")
      * @Groups({"Application", "Customer"})
      */
-	private $name;
+    protected $id;
 
-	/**
-	 * @ORM\Column(type="string", nullable=true)
+    /**
+     * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Customer")
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
+     * @Groups({"Application"})
+     */
+    private $customer;
+
+    /**
+     * @ORM\Column(type="string")
+     * @Assert\NotBlank()
      * @Groups({"Application", "Customer"})
      */
-	private $label;
+    private $name;
 
-	/**
-	 * @ORM\Column(type="string")
-	 * @Assert\NotBlank()
-     * @Groups({"Application", "Customer"})
-	 */
-	private $color;
-
-	/**
-	 * @ORM\Column(type="string", nullable=true)
-	 * @Assert\NotBlank()
-     * @Groups({"Application"})
-     */
-	private $androidBundleIdentifier;
-
-	/**
-	 * @ORM\Column(type="string", nullable=true)
-	 * @Assert\NotBlank()
-     * @Groups({"Application"})
-     */
-	private $iosBundleIdentifier;
-
-	/**
-	 * @ORM\Column(type="string")
-	 * @Assert\NotBlank()
-     * @Groups({"Application"})
-	 */
-	private $defaultLanguage;
-
-	/**
-	 * @ORM\Column(type="json_array")
-	 * @Assert\NotBlank()
-     * @Groups({"Application"})
-	 */
-	private $availableLanguages;
-
-	/**
-	 * @ORM\Column(type="datetime")
-     */
-	private $createdAt;
-
-	/**
-	 * @ORM\Column(type="datetime")
-	 */
-	private $updatedAt;
-
-	/**
-	 * @ORM\OneToMany(targetEntity="Pronto\MobileBundle\Entity\Application\ApplicationPlugin", mappedBy="application")
-	 */
-	private $applicationPlugins;
-
-	/**
-	 * @ORM\OneToMany(targetEntity="Pronto\MobileBundle\Entity\Application\Version", mappedBy="application")
+    /**
+     * @ORM\Column(type="string", nullable=true)
      * @Groups({"Application", "Customer"})
      */
-	private $applicationVersions;
+    private $label;
 
-	/**
-	 * Application constructor.
-	 */
-	public function __construct()
-	{
-		parent::__construct();
+    /**
+     * @ORM\Column(type="string")
+     * @Assert\NotBlank()
+     * @Groups({"Application", "Customer"})
+     */
+    private $color;
 
-		$this->applicationPlugins = new ArrayCollection();
-		$this->applicationVersions = new ArrayCollection();
-	}
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     * @Assert\NotBlank()
+     * @Groups({"Application"})
+     */
+    private $androidBundleIdentifier;
 
-	/**
-	 * Triggered on pre persist
-	 *
-	 * @ORM\PrePersist
-	 */
-	public function onPrePersist() {
-		$this->createdAt = new DateTime();
-		$this->updatedAt = new DateTime();
-	}
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     * @Assert\NotBlank()
+     * @Groups({"Application"})
+     */
+    private $iosBundleIdentifier;
 
-	/**
-	 * Triggered on pre update
-	 *
-	 * @ORM\PreUpdate
-	 */
-	public function onPreUpdate() {
-		$this->updatedAt = new DateTime();
-	}
+    /**
+     * @ORM\Column(type="string")
+     * @Assert\NotBlank()
+     * @Groups({"Application"})
+     */
+    private $defaultLanguage;
 
-	/**
-	 * @return mixed
-	 */
-	public function getCustomer()
-	{
-		return $this->customer;
-	}
+    /**
+     * @ORM\Column(type="json_array")
+     * @Assert\NotBlank()
+     * @Groups({"Application"})
+     */
+    private $availableLanguages;
 
-	/**
-	 * @param mixed $customer
-	 */
-	public function setCustomer($customer): void
-	{
-		$this->customer = $customer;
-	}
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $createdAt;
 
-	/**
-	 * @return mixed
-	 */
-	public function getName()
-	{
-		return $this->name;
-	}
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $updatedAt;
 
-	/**
-	 * @param mixed $name
-	 */
-	public function setName($name): void
+    /**
+     * @ORM\OneToMany(targetEntity="Pronto\MobileBundle\Entity\Application\ApplicationPlugin", mappedBy="application")
+     */
+    private $applicationPlugins;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Pronto\MobileBundle\Entity\Application\Version", mappedBy="application")
+     * @Groups({"Application", "Customer"})
+     */
+    private $applicationVersions;
+
+    /**
+     * Application constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->applicationPlugins = new ArrayCollection();
+        $this->applicationVersions = new ArrayCollection();
+    }
+
+    /**
+     * Triggered on pre persist
+     *
+     * @ORM\PrePersist
+     */
+    public function onPrePersist()
+    {
+        $this->createdAt = new DateTime();
+        $this->updatedAt = new DateTime();
+    }
+
+    /**
+     * Triggered on pre update
+     *
+     * @ORM\PreUpdate
+     */
+    public function onPreUpdate()
+    {
+        $this->updatedAt = new DateTime();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCustomer()
+    {
+        return $this->customer;
+    }
+
+    /**
+     * @param mixed $customer
+     */
+    public function setCustomer($customer): void
+    {
+        $this->customer = $customer;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param mixed $name
+     */
+    public function setName($name): void
     {
         $this->name = $name;
     }
 
-	/**
-	 * @return string|null
-	 */
-	public function getLabel(): ?string
-	{
-		return $this->label;
-	}
+    /**
+     * @return string|null
+     */
+    public function getLabel(): ?string
+    {
+        return $this->label;
+    }
 
-	/**
-	 * @param null|string $label
-	 */
-	public function setLabel(?string $label): void
-	{
-		$this->label = $label;
-	}
+    /**
+     * @param null|string $label
+     */
+    public function setLabel(?string $label): void
+    {
+        $this->label = $label;
+    }
 
-	/**
-	 * @return DoctrineCollection
-	 */
-	public function getApplicationVersions(): DoctrineCollection
-	{
-		return $this->applicationVersions;
-	}
+    /**
+     * @return DoctrineCollection
+     */
+    public function getApplicationVersions(): DoctrineCollection
+    {
+        return $this->applicationVersions;
+    }
 
-	/**
-	 * @return string
-	 */
-	public function getColor(): string
-	{
-		return $this->color;
-	}
+    /**
+     * @return string
+     */
+    public function getColor(): string
+    {
+        return $this->color;
+    }
 
-	/**
-	 * @param string $color
-	 */
-	public function setColor(string $color): void
-	{
-		$this->color = $color;
-	}
+    /**
+     * @param string $color
+     */
+    public function setColor(string $color): void
+    {
+        $this->color = $color;
+    }
 
-	/**
-	 * @return string|null
-	 */
-	public function getAndroidBundleIdentifier(): ?string
-	{
-		return $this->androidBundleIdentifier;
-	}
+    /**
+     * @return string|null
+     */
+    public function getAndroidBundleIdentifier(): ?string
+    {
+        return $this->androidBundleIdentifier;
+    }
 
-	/**
-	 * @param null|string $androidBundleIdentifier
-	 */
-	public function setAndroidBundleIdentifier(?string $androidBundleIdentifier): void
-	{
-		$this->androidBundleIdentifier = $androidBundleIdentifier;
-	}
+    /**
+     * @param null|string $androidBundleIdentifier
+     */
+    public function setAndroidBundleIdentifier(?string $androidBundleIdentifier): void
+    {
+        $this->androidBundleIdentifier = $androidBundleIdentifier;
+    }
 
-	/**
-	 * @return string|null
-	 */
-	public function getIosBundleIdentifier(): ?string
-	{
-		return $this->iosBundleIdentifier;
-	}
+    /**
+     * @return string|null
+     */
+    public function getIosBundleIdentifier(): ?string
+    {
+        return $this->iosBundleIdentifier;
+    }
 
-	/**
-	 * @param null|string $iosBundleIdentifier
-	 */
-	public function setIosBundleIdentifier(?string $iosBundleIdentifier): void
-	{
-		$this->iosBundleIdentifier = $iosBundleIdentifier;
-	}
+    /**
+     * @param null|string $iosBundleIdentifier
+     */
+    public function setIosBundleIdentifier(?string $iosBundleIdentifier): void
+    {
+        $this->iosBundleIdentifier = $iosBundleIdentifier;
+    }
 
-	/**
-	 * @return string
-	 */
-	public function getDefaultLanguage(): string
-	{
-		return $this->defaultLanguage;
-	}
+    /**
+     * @return string
+     */
+    public function getDefaultLanguage(): string
+    {
+        return $this->defaultLanguage;
+    }
 
-	/**
-	 * @param string $defaultLanguage
-	 */
-	public function setDefaultLanguage(string $defaultLanguage): void
-	{
-		$this->defaultLanguage = $defaultLanguage;
-	}
+    /**
+     * @param string $defaultLanguage
+     */
+    public function setDefaultLanguage(string $defaultLanguage): void
+    {
+        $this->defaultLanguage = $defaultLanguage;
+    }
 
-	/**
-	 * @return array
-	 */
-	public function getAvailableLanguages(): array
-	{
-		return $this->availableLanguages;
-	}
+    /**
+     * @return array
+     */
+    public function getAvailableLanguages(): array
+    {
+        return $this->availableLanguages;
+    }
 
-	/**
-	 * @param array $availableLanguages
-	 */
-	public function setAvailableLanguages(array $availableLanguages): void
-	{
-		$this->availableLanguages = $availableLanguages;
-	}
+    /**
+     * @param array $availableLanguages
+     */
+    public function setAvailableLanguages(array $availableLanguages): void
+    {
+        $this->availableLanguages = $availableLanguages;
+    }
 
-	/**
-	 * @return DateTime
-	 */
-	public function getCreatedAt(): DateTime
-	{
-		return $this->createdAt;
-	}
+    /**
+     * @return DateTime
+     */
+    public function getCreatedAt(): DateTime
+    {
+        return $this->createdAt;
+    }
 
-	/**
-	 * @param string $createdAt
-	 */
-	public function setCreatedAt(string $createdAt): void
-	{
-		$this->createdAt = $createdAt;
-	}
+    /**
+     * @param string $createdAt
+     */
+    public function setCreatedAt(string $createdAt): void
+    {
+        $this->createdAt = $createdAt;
+    }
 
-	/**
-	 * @return DateTime
-	 */
-	public function getUpdatedAt(): DateTime
-	{
-		return $this->updatedAt;
-	}
+    /**
+     * @return DateTime
+     */
+    public function getUpdatedAt(): DateTime
+    {
+        return $this->updatedAt;
+    }
 
-	/**
-	 * @param string $updatedAt
-	 */
-	public function setUpdatedAt(string $updatedAt): void
-	{
-		$this->updatedAt = $updatedAt;
-	}
+    /**
+     * @param string $updatedAt
+     */
+    public function setUpdatedAt(string $updatedAt): void
+    {
+        $this->updatedAt = $updatedAt;
+    }
 
-	/**
-	 * @return DoctrineCollection
-	 */
-	public function getApplicationPlugins(): DoctrineCollection
-	{
-		return $this->applicationPlugins;
-	}
+    /**
+     * @return DoctrineCollection
+     */
+    public function getApplicationPlugins(): DoctrineCollection
+    {
+        return $this->applicationPlugins;
+    }
+
+    public function __toString()
+    {
+        return 'Application';
+    }
 }

@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Pronto\MobileBundle\Controller\Api\Vue\ApiController;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 
 /**
  * Class LoginController
@@ -38,6 +39,8 @@ class UserController extends ApiController
      */
     public function profileAction()
     {
-        return $this->response($this->getUser());
+        return $this->response($this->getUser(), [
+            new DateTimeNormalizer()
+        ]);
     }
 }

@@ -13,7 +13,6 @@ import './libraries/moment';
 import './libraries/progressbar';
 import router from './libraries/router';
 import './libraries/table';
-import ApplicationService from './services/application.service';
 
 window.Vue = Vue;
 window.Events = new Vue();
@@ -29,12 +28,12 @@ window.Events = new Vue();
 //     });
 // }
 
-Vue.prototype.$applicationService = new ApplicationService();
-Vue.prototype.$auth.init().then(() => {
-    /**
-     * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
-     */
-
+// Wait for the AUTH and Application services to be initialized
+Promise.all([
+    Vue.prototype.$auth.init(),
+    Vue.prototype.$application.init()
+]).then(() => {
+    // ./components/ExampleComponent.vue -> <example-component></example-component>
     const files = require.context('./components/', true, /\.vue$/i);
     files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
 

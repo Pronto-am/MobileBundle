@@ -14,11 +14,11 @@ window.axios.interceptors.request.use((config) => {
     }
 
     // Add application and version ID
-    if(Vue.prototype.$applicationService.applicationIsSet()) {
-        config.headers['Application-Id'] = Vue.prototype.$applicationService.getApplication().id;
+    if(Vue.prototype.$application.applicationIsSet()) {
+        config.headers['Application-Id'] = Vue.prototype.$application.getApplication().id;
     }
-    if(Vue.prototype.$applicationService.versionIsSet()) {
-        config.headers['Application-Version-Id'] = Vue.prototype.$applicationService.getVersion().id;
+    if(Vue.prototype.$application.versionIsSet()) {
+        config.headers['Application-Version-Id'] = Vue.prototype.$application.getVersion().id;
     }
 
     return config;

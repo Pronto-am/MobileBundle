@@ -1,6 +1,16 @@
+import Vue from 'vue';
+
 export default class ApplicationService {
-    constructor() {
-        // TODO: Retrieve an updated instance of the application from the api, to update properties
+    async init() {
+        try {
+            this.application = JSON.parse(localStorage.getItem('application'));
+            this.version = JSON.parse(localStorage.getItem('applicationVersion'));
+
+            let response = await axios.get(Vue.prototype.$path('applications/:id', {id: this.application.id}));
+            this.application = response.data.data;
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     applicationIsSet() {
@@ -8,11 +18,12 @@ export default class ApplicationService {
     }
 
     setApplication(application) {
+        this.application = application;
         localStorage.setItem('application', JSON.stringify(application));
     }
 
     getApplication() {
-        return JSON.parse(localStorage.getItem('application'));
+        return this.application;
     }
 
     clearApplication() {
@@ -24,11 +35,12 @@ export default class ApplicationService {
     }
 
     setVersion(version) {
+        this.version = version;
         localStorage.setItem('applicationVersion', JSON.stringify(version));
     }
 
     getVersion() {
-        return JSON.parse(localStorage.getItem('applicationVersion'));
+        return this.version;
     }
 
     clearVersion() {

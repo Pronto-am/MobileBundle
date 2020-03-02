@@ -80,17 +80,18 @@ class PluginController extends ApiController
      */
     public function saveAction(PluginRequest $request)
     {
+        /** @var ApplicationPlugin $plugin */
         $plugin = $this->applicationPlugins->findByApplication($this->prontoMobile->getApplication(), $request->get('plugin.id'));
 
         if ($plugin === null) {
             throw new NotFoundHttpException('No results found for model');
         }
 
-        $content = $request->all();
+        $content = $request->get('config');
         $plugin->setActive($request->get('active') === true);
 
         // Get the default config as a template for the fields that are required
-        $config = $plugin->getDefaultConfig();
+        $config = $plugin->getPlugin()->getDefaultConfig();
 
         foreach($config as $key => &$value) {
             switch($value['type']) {

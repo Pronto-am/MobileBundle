@@ -52,7 +52,7 @@ class ApplicationController extends ApiController
      */
     public function getAction(int $id)
     {
-        return JsonResponse::create(['data' => []]);
+        return $this->response($this->applications->findOrFail($id));
     }
 
     /**

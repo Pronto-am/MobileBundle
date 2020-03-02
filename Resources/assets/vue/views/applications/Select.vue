@@ -25,7 +25,7 @@
                             </div>
 
                             <template v-for="application of company.applications">
-                                <div class="row" v-for="version of application.application_versions" @click="select(version)">
+                                <div class="row" v-for="version of application.application_versions" @click="select(application, version)">
                                     <div class="col-auto">
                                         <h2 v-html="application.name"></h2>
                                     </div>
@@ -58,18 +58,6 @@
             axios.get(path('customers')).then(({data: {data: customers}}) => {
                 next(vm => {
                     vm.items = customers;
-                    // vm.items = applications.reduce((result, application) => {
-                    //     let customer = result[application.customer.id];
-                    //     if (customer === undefined) {
-                    //         customer = Object.assign(application.customer, {applications: []});
-                    //     }
-                    //
-                    //     customer.applications.push(application);
-                    //
-                    //     result[application.customer.id] = customer;
-                    //
-                    //     return result;
-                    // }, []).filter((customer) => customer !== undefined);
                 });
             }).catch(error => {
                 next();
@@ -77,8 +65,11 @@
         },
 
         methods: {
-            select(version) {
-                this.$applicationService.setVersion(version);
+            select(application, version) {
+                this.$application.setApplication(application);
+                this.$application.setVersion(version);
+
+                this.$router.push({name: 'dashboard'});
             }
         }
     }

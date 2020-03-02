@@ -2,6 +2,18 @@ import Vue from 'vue';
 import helpers from './helpers';
 
 Vue.mixin({
+    computed: {
+        languages: function() {
+            let application = Vue.prototype.$application.getApplication();
+
+            if(application === null) {
+                return [];
+            }
+
+            return application.available_languages;
+        }
+    },
+
     filters: {
         capitalize: function (value) {
             if (!value) {

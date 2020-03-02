@@ -4,21 +4,25 @@
             <template v-if="items">
                 <div class="card">
                     <div class="card-table">
-                        <vue-table url="vue.finances"
-                                   :can-delete="false"
+                        <vue-table :url="path('versions')"
+                                   :can-delete="$auth.userHasRole($auth.roles.SUPER_ADMIN)"
                                    :sorting="sorting"
                                    :initial-data="items">
 
+                            <template slot="buttons-left">
+                                <el-button type="success" v-if="$auth.userHasRole($auth.roles.SUPER_ADMIN)" @click="$router.push({name: 'app_versions.add'})">Toevoegen</el-button>
+                            </template>
+
                             <template slot="header" slot-scope="{sorting, clickHandler}">
-                                <vue-table-header :sorting="sorting" @click="clickHandler" label="Naam" identifier="plugin.name"></vue-table-header>
-                                <vue-table-header :sorting="sorting" @click="clickHandler" label="Actief" identifier="active"></vue-table-header>
+                                <vue-table-header :sorting="sorting" @click="clickHandler" label="Versie" identifier="version"></vue-table-header>
+                                <vue-table-header :sorting="sorting" @click="clickHandler" label="Release datum" identifier="release_date"></vue-table-header>
+                                <vue-table-header :sorting="sorting" @click="clickHandler" label="Platform" identifier="platform"></vue-table-header>
                             </template>
 
                             <template slot="row" slot-scope="{row}">
-                                <vue-table-column :row="row" property="plugin.name" router-link :to="{name: 'versions.edit', params: {id: row.id}}"></vue-table-column>
-                                <vue-table-column :row="row" property="active" type="custom">
-                                    {{ row.active ? 'Ja' : 'Nee' }}
-                                </vue-table-column>
+                                <vue-table-column :row="row" property="version" router-link :to="{name: 'app_versions.edit', params: {id: row.id}}"></vue-table-column>
+                                <vue-table-column :row="row" property="release_date" type="date"></vue-table-column>
+                                <vue-table-column :row="row" property="platform"></vue-table-column>
                             </template>
 
                         </vue-table>

@@ -3,13 +3,9 @@
 namespace Pronto\MobileBundle\Controller\Api\Vue;
 
 
-use Doctrine\ORM\EntityManagerInterface;
-use Pronto\MobileBundle\Controller\Api\Vue\ApiController;
-use Pronto\MobileBundle\Entity\Application;
-use Pronto\MobileBundle\Entity\AppVersion;
-use Pronto\MobileBundle\Entity\Device;
-use Pronto\MobileBundle\Entity\RemoteConfig;
 use Pronto\MobileBundle\Repository\RemoteConfigRepository;
+use Pronto\MobileBundle\Serializer\EnumNormalizer;
+use Pronto\MobileBundle\Serializer\RemoteConfigNormalizer;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -37,12 +33,16 @@ class RemoteConfigController extends ApiController
     }
 
     /**
-     * @Route(path="", methods={"GET"})
+     * @Route(methods={"GET"})
      * @IsGranted("ROLE_SUPER_ADMIN")
      */
     public function paginateAction()
     {
         $paginated = $this->remoteConfig->paginate();
+        $paginated->withNormalizers([
+            new RemoteConfigNormalizer(),
+            new EnumNormalizer(),
+        ]);
         return $this->paginatedResponse($paginated);
     }
 
@@ -58,7 +58,7 @@ class RemoteConfigController extends ApiController
     }
 
     /**
-     * @Route(path="/", methods={"POST"})
+     * @Route(methods={"POST"})
      * @IsGranted("ROLE_SUPER_ADMIN")
      * @return JsonResponse
      */

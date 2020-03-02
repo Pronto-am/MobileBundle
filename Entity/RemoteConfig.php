@@ -4,11 +4,9 @@ namespace Pronto\MobileBundle\Entity;
 
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
-use Pronto\MobileBundle\Entity\Application\Version;
 use Pronto\MobileBundle\Enum\RemoteConfigType;
 use Pronto\MobileBundle\Traits\ApiEntityTrait;
 use Symfony\Component\Serializer\Annotation\Groups;
-
 
 /**
  * Class RemoteConfig

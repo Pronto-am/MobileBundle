@@ -9,6 +9,7 @@ use Pronto\MobileBundle\Request\CustomerRequest;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 
 /**
  * Class CustomerController
@@ -39,7 +40,9 @@ class CustomerController extends ApiController
     public function listAction()
     {
         $customers = $this->customers->list();
-        return $this->response($customers);
+        return $this->response($customers, [
+            new DateTimeNormalizer()
+        ]);
     }
 
     /**
@@ -52,7 +55,9 @@ class CustomerController extends ApiController
     public function getAction(int $id)
     {
         $customer = $this->customers->findOrFail($id);
-        return $this->response($customer);
+        return $this->response($customer, [
+            new DateTimeNormalizer()
+        ]);
     }
 
     /**
@@ -63,10 +68,13 @@ class CustomerController extends ApiController
      */
     public function saveAction(CustomerRequest $request)
     {
-        $customer = $this->serializer->deserialize(Customer::class, $request->all());
+        $customer = $this->customers->findOrNew($request->get('id'));
+        $customer = $this->serializer->deserialize(Customer::class, $request->all(), $customer);
         $this->customers->save($customer);
 
-        return $this->response($customer);
+        return $this->response($customer, [
+            new DateTimeNormalizer()
+        ]);
     }
 
     /**

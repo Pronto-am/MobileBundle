@@ -17,6 +17,11 @@ class PaginationResponse
     private $meta;
 
     /**
+     * @var array $normalizers
+     */
+    private $normalizers;
+
+    /**
      * PaginationResponse constructor.
      * @param $data
      * @param array $meta
@@ -54,5 +59,21 @@ class PaginationResponse
     public function getMeta(): array
     {
         return $this->meta;
+    }
+
+    /**
+     * @param array $normalizers
+     */
+    public function withNormalizers(array $normalizers)
+    {
+        $this->normalizers = $normalizers;
+    }
+
+    /**
+     * @return array
+     */
+    public function getNormalizers(): array
+    {
+        return $this->normalizers ?? [];
     }
 }

@@ -88,12 +88,12 @@
              * Determine whether the current route has an active subroute
              */
             routerLinkActive(route) {
-                if (this.$router.currentRoute.name === null) {
+                if (this.$route.name === null) {
                     return false;
                 }
 
                 // Also open the submenu
-                if (this.$router.currentRoute.name.includes(route.name)) {
+                if (this.$route.name.includes(route.name)) {
                     if (route.children !== undefined && route.children.length > 0 && !route.submenuOpen) {
                         route.submenuOpen = true;
                     }
@@ -108,11 +108,11 @@
              * Determine whether the current route is active
              */
             routerLinkExactActive(route) {
-                if (this.$router.currentRoute.name === null) {
+                if (this.$route.name === null) {
                     return false;
                 }
 
-                return this.$router.currentRoute.name === route.name;
+                return this.$route.name === route.name;
             },
 
             navigate(route) {

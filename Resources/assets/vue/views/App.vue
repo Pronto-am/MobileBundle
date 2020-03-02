@@ -1,14 +1,15 @@
-<style lang="scss">
-    :root {
-        --primary-color: red;
-        --primary-color-dark: red;
-        --link-color: red;
-        --link-color-dark: red;
-    }
-</style>
+<!--<style lang="scss">-->
+<!--    :root {-->
+<!--        &#45;&#45;primary-color: red;-->
+<!--        &#45;&#45;primary-color-dark: red;-->
+<!--        &#45;&#45;link-color: red;-->
+<!--        &#45;&#45;link-color-dark: red;-->
+<!--        &#45;&#45;contrast-color: #ffffff;-->
+<!--    }-->
+<!--</style>-->
 
 <template>
-    <div>
+    <div :style="cssVariables">
         <template v-if="$route.meta.layout !== 'front'">
             <header/>
 
@@ -97,6 +98,16 @@
                     return this.$auth.user !== null;
                 } else {
                     return this.appMounted;
+                }
+            },
+
+            cssVariables: function() {
+                return {
+                    '--primary-color': this.$application.getApplication().customer.primary_color,
+                    '--primary-color-dark': this.$application.getApplication().customer.primary_color_dark,
+                    '--link-color': this.$application.getApplication().customer.link_color,
+                    '--link-color-dark': this.$application.getApplication().customer.link_color_dark,
+                    '--contrast-color': this.$application.getApplication().customer.contrast_color,
                 }
             }
         },

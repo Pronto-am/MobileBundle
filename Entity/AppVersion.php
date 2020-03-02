@@ -2,7 +2,7 @@
 
 namespace Pronto\MobileBundle\Entity;
 
-use DateTime;
+use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Pronto\MobileBundle\Traits\ApiEntityTrait;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -16,7 +16,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ORM\Entity
  * @ORM\Table(name="app_versions")
  */
-class AppVersion extends TimestampedEntity implements ApiEntityInterface
+class AppVersion extends TimestampedEntity implements ApiEntityInterface, BelongsToApplicationInterface
 {
 	use ApiEntityTrait;
 
@@ -45,13 +45,15 @@ class AppVersion extends TimestampedEntity implements ApiEntityInterface
 	 * @var string $version
 	 *
 	 * @ORM\Column(type="string")
+     * @Groups({"AppVersion"})
 	 */
 	private $version;
 
 	/**
-	 * @var DateTime $releaseDate
+	 * @var DateTimeInterface $releaseDate
 	 *
 	 * @ORM\Column(type="date")
+     * @Groups({"AppVersion"})
 	 */
 	private $releaseDate;
 
@@ -59,6 +61,7 @@ class AppVersion extends TimestampedEntity implements ApiEntityInterface
 	 * @var string $platform
 	 *
 	 * @ORM\Column(type="string")
+     * @Groups({"AppVersion"})
 	 */
 	private $platform;
 
@@ -66,6 +69,7 @@ class AppVersion extends TimestampedEntity implements ApiEntityInterface
 	 * @var bool $required
 	 *
 	 * @ORM\Column(type="boolean")
+     * @Groups({"AppVersion"})
 	 */
 	private $required = false;
 
@@ -73,13 +77,15 @@ class AppVersion extends TimestampedEntity implements ApiEntityInterface
 	 * @var array $description
 	 *
 	 * @ORM\Column(type="json_array", nullable=true)
-	 */
+     * @Groups({"AppVersion"})
+     */
 	private $description;
 
 	/**
 	 * @var string $url
 	 *
 	 * @ORM\Column(type="string", nullable=true)
+     * @Groups({"AppVersion"})
 	 */
 	private $url;
 
@@ -110,7 +116,7 @@ class AppVersion extends TimestampedEntity implements ApiEntityInterface
 	 * @param Application $application
 	 * @return AppVersion
 	 */
-	public function setApplication(Application $application): AppVersion
+	public function setApplication(Application $application): BelongsToApplicationInterface
 	{
 		$this->application = $application;
 		return $this;
@@ -135,18 +141,18 @@ class AppVersion extends TimestampedEntity implements ApiEntityInterface
 	}
 
 	/**
-	 * @return DateTime
+	 * @return DateTimeInterface
 	 */
-	public function getReleaseDate(): DateTime
+	public function getReleaseDate(): DateTimeInterface
 	{
 		return $this->releaseDate;
 	}
 
 	/**
-	 * @param DateTime $releaseDate
+	 * @param DateTimeInterface $releaseDate
 	 * @return AppVersion
 	 */
-	public function setReleaseDate(DateTime $releaseDate): AppVersion
+	public function setReleaseDate(DateTimeInterface $releaseDate): AppVersion
 	{
 		$this->releaseDate = $releaseDate;
 		return $this;
@@ -207,9 +213,9 @@ class AppVersion extends TimestampedEntity implements ApiEntityInterface
 	}
 
 	/**
-	 * @return string
+	 * @return string|null
 	 */
-	public function getUrl(): string
+	public function getUrl(): ?string
 	{
 		return $this->url;
 	}

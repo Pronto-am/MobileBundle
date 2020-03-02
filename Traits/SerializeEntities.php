@@ -27,14 +27,15 @@ trait SerializeEntities
 
     /**
      * @param $data
+     * @param array $normalizers
      * @param int $statusCode
      * @param array $headers
      * @return JsonResponse
      */
-    public function response($data, int $statusCode = 200, array $headers = []): JsonResponse
+    public function response($data, array $normalizers = [], int $statusCode = 200, array $headers = []): JsonResponse
     {
         return JsonResponse::create([
-            'data' => $this->serializeData($data)
+            'data' => $this->serializeData($data, $normalizers)
         ], $statusCode, $headers);
     }
 
@@ -47,7 +48,7 @@ trait SerializeEntities
     public function paginatedResponse(PaginationResponse $pagination, int $statusCode = 200, array $headers = []): JsonResponse
     {
         return JsonResponse::create([
-            'data'  => $this->serializeData($pagination->getData()),
+            'data'  => $this->serializeData($pagination->getData(), $pagination->getNormalizers()),
             'meta'  => $pagination->getMeta(),
             'links' => $pagination->getLinks(),
         ], $statusCode, $headers);
@@ -55,12 +56,11 @@ trait SerializeEntities
 
     /**
      * @param $data
+     * @param array $normalizers
      * @return mixed
      */
-    private function serializeData($data)
+    private function serializeData($data, array $normalizers = [])
     {
-        return json_decode($this->serializer->serialize($data, [
-            new DateTimeNormalizer()
-        ]));
+        return json_decode($this->serializer->serialize($data, $normalizers));
     }
 }

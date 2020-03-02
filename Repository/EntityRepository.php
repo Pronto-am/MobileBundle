@@ -53,6 +53,27 @@ abstract class EntityRepository
     }
 
     /**
+     * @param $id
+     * @return object|null
+     */
+    public function findOrNew($id)
+    {
+        if ($id === null) {
+            $class = $this->getEntity();
+            return new $class;
+        }
+
+        $result = $this->find($id);
+
+        if ($result === null) {
+            $class = $this->getEntity();
+            return new $class;
+        }
+
+        return $result;
+    }
+
+    /**
      * @param array $criteria
      * @param array|null $orderBy
      * @return object|null
@@ -129,5 +150,19 @@ abstract class EntityRepository
         if ($flush) {
             $this->entityManager->flush();
         }
+    }
+
+    /**
+     * @param array $items
+     */
+    public function delete(array $items)
+    {
+        $items = $this->repository->findBy(['id' => $items]);
+
+        foreach ($items as $item) {
+            $this->entityManager->remove($item);
+        }
+
+        $this->entityManager->flush();
     }
 }

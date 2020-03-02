@@ -3,17 +3,21 @@
 namespace Pronto\MobileBundle\Controller\Api\Vue;
 
 
+use Carbon\Carbon;
 use Doctrine\ORM\EntityManagerInterface;
-use Pronto\MobileBundle\Controller\Api\Vue\ApiController;
-use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\AppVersion;
 use Pronto\MobileBundle\Repository\AppVersionRepository;
+use Pronto\MobileBundle\Request\AppVersionRequest;
+use Pronto\MobileBundle\Request\AppVersion\FileRequest;
+use Pronto\MobileBundle\Request\BaseRequest;
+use Pronto\MobileBundle\Request\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 
 /**
- * Class ApplicationController
+ * Class AppVersionController
  * @package Pronto\MobileBundle\Controller\Api\Vue
  * @Route(path="versions")
  * @IsGranted("IS_AUTHENTICATED_FULLY")
@@ -26,12 +30,19 @@ class AppVersionController extends ApiController
     private $appVersions;
 
     /**
-     * LoginController constructor.
-     * @param AppVersionRepository $appVersions
+     * @var EntityManagerInterface $entityManager
      */
-    public function __construct(AppVersionRepository $appVersions)
+    private $entityManager;
+
+    /**
+     * AppVersionController constructor.
+     * @param AppVersionRepository $appVersions
+     * @param EntityManagerInterface $entityManager
+     */
+    public function __construct(AppVersionRepository $appVersions, EntityManagerInterface $entityManager)
     {
         $this->appVersions = $appVersions;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -52,26 +63,63 @@ class AppVersionController extends ApiController
      */
     public function getAction(int $id)
     {
-        return JsonResponse::create(['data' => []]);
+        return $this->response($this->appVersions->findOrFail($id), [
+            new DateTimeNormalizer()
+        ]);
     }
 
     /**
-     * @Route(path="/", methods={"POST"})
+     * @Route(methods={"POST"})
      * @IsGranted("ROLE_SUPER_ADMIN")
+     * @param AppVersionRequest $request
      * @return JsonResponse
+     * @throws \Exception
      */
-    public function saveAction()
+    public function saveAction(AppVersionRequest $request)
     {
-        return JsonResponse::create(['data' => []]);
+        $version = $this->appVersions->findOrNew($request->get('id'));
+        /** @var AppVersion $version */
+        $version = $this->serializer->deserialize(AppVersion::class, $request->except(['description', 'release_date', 'created_at', 'updated_at']), $version);
+        $version->setReleaseDate(new Carbon($request->get('release_date')));
+        $version->setDescription($request->get('description'));
+        $this->appVersions->save($version);
+
+        return $this->response($version, [
+            new DateTimeNormalizer()
+        ]);
     }
 
     /**
-     * @Route(path="/delete", methods={"POST"})
+     * @Route(path="/file", methods={"POST"})
      * @IsGranted("ROLE_SUPER_ADMIN")
+     * @param FileRequest $request
+     * @return JsonResponse
+     * @throws \Exception
+     */
+    public function uploadAction(FileRequest $request)
+    {
+        /** @var AppVersion $version */
+        $version = $this->appVersions->findOrFail($request->get('version_id'));
+
+        // Upload the file by saving it as UploadedFile
+        $version->setFileName($request->file('file'));
+        $this->appVersions->save($version);
+
+        return $this->response($version, [
+            new DateTimeNormalizer()
+        ]);
+    }
+
+    /**
+     * @Route(path="/actions/delete", methods={"POST"})
+     * @IsGranted("ROLE_SUPER_ADMIN")
+     * @param Request $request
      * @return JsonResponse
      */
-    public function deleteAction()
+    public function deleteAction(Request $request)
     {
-        return JsonResponse::create(['data' => []]);
+        $this->appVersions->delete($request->get('items'));
+
+        return JsonResponse::create();
     }
 }

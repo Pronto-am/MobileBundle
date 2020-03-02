@@ -3,13 +3,18 @@
 namespace Pronto\MobileBundle\Service;
 
 
+use Doctrine\Common\Annotations\AnnotationException;
 use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Pronto\MobileBundle\Entity\ApiEntityInterface;
+use Pronto\MobileBundle\Entity\Application;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
 use Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader;
 use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 
@@ -21,11 +26,18 @@ class JsonSerializer
     private $objectNormalizer;
 
     /**
-     * JsonSerializer constructor.
-     * @throws \Doctrine\Common\Annotations\AnnotationException
+     * @var EntityManagerInterface $entityManager
      */
-    public function __construct()
+    private $entityManager;
+
+    /**
+     * JsonSerializer constructor.
+     * @param EntityManagerInterface $entityManager
+     * @throws AnnotationException
+     */
+    public function __construct(EntityManagerInterface $entityManager)
     {
+        $this->entityManager = $entityManager;
         $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
         $this->objectNormalizer = new ObjectNormalizer($classMetadataFactory, new CamelCaseToSnakeCaseNameConverter());
     }
@@ -43,7 +55,7 @@ class JsonSerializer
     {
         // Set property callbacks
         if ($entity instanceof ApiEntityInterface) {
-            $this->objectNormalizer->setCallbacks($entity::getSerializerCallbacks());
+            //$this->objectNormalizer->setCallbacks($entity::getSerializerCallbacks());
         }
 
         $normalizers[] = $this->objectNormalizer;
@@ -59,15 +71,18 @@ class JsonSerializer
 
     /**
      * @param string $entity
-     * @param array||string $data
+     * @param $data
+     * @param $object
      * @return array|object
      */
-    public function deserialize(string $entity, $data)
+    public function deserialize(string $entity, $data, $object)
     {
-        $serializer = new Serializer([$this->objectNormalizer], [new JsonEncoder()]);
+        $serializer = new Serializer([new DateTimeNormalizer(), $this->objectNormalizer], [new JsonEncoder()]);
         $data = is_array($data) ? json_encode($data) : $data;
 
-        return $serializer->deserialize($data, $entity, 'json');
+        return $serializer->deserialize($data, $entity, 'json', [
+            AbstractNormalizer::OBJECT_TO_POPULATE => $object
+        ]);
     }
 
     /**

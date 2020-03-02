@@ -20,10 +20,10 @@
     }
   },
   "integrity": {
-    "/build/vendors~js/app.css": "sha384-1PisPfZDk4CRpdNMYijOlKd0XrOSn2DpyMo/M445GhzyR7KNd75nwCpAIWOqTGNU",
-    "/build/js/app.css": "sha384-Khhf5meUHF0kwO33U887Xf4T0DHhIHG4zoPtILzlIUQT5hLDmFnQMevRxXNQcNFP",
-    "/build/vendors~js/app.js": "sha384-aeDC6YDikiGtyazgrnmq0MeAmlhzOXBvRtOw0J+lyEb87FgE1xSRIV+VESZt25lg",
-    "/build/js/app.js": "sha384-sFklk2uJgNRPPUDGYrv3WMqAWWFAaXZahC4qLmkhM+10dbCV9lb/zPXTVUL/QjAb",
+    "/build/vendors~js/app.css": "sha384-pMSNI8irkxfwqRlELeuJNHek1AxaVNKiSyJN7GlvwpxyX3P0TnJqdfIP/mRHg3r8",
+    "/build/js/app.css": "sha384-GQ1V5qmie+0ZPu0phF+gfoWvzJwe5BetipFm6S68x0orQcYarTr9UrHkEdGn3CNA",
+    "/build/vendors~js/app.js": "sha384-f2g9330T0A9ualUjXos2U33ONLXBEwA3FCZgP1UQiQobFyXrbFDEWeGlEUAlLrIJ",
+    "/build/js/app.js": "sha384-s+8cd099zIfdFYHCtTGlAfH4NVX9BMdrLolamainnNMUZi9YYE4P8qNLGH1LtE+Y",
     "/build/css/app.css": "sha384-OoGmpGVZZyZ1kKZa1616AECxHvRdCM9SxF2JgcYaRW8WoyOpSP9XbV6CgtoN5qHw",
     "/build/css/app.js": "sha384-xbfWpqIIeaTxu2KhDPLHO8MK/lNqxmd7fwRxyqfoCMxgcdUbJXa/3K1+geV8eRgO"
   }

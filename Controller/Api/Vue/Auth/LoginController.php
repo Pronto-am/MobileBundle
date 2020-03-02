@@ -51,7 +51,7 @@ class LoginController extends ApiController
      */
     public function refreshTokenAction(RefreshTokenRequest $request)
     {
-        $response = $this->client->login($request->get('email'), $request->get('password'));
+        $response = $this->client->refresh($request->get('refresh_token'));
 
         return new JsonResponse(json_decode($response->getBody()->getContents()), $response->getStatusCode());
     }

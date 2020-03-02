@@ -26,7 +26,7 @@ class RemoteConfigNormalizer implements ContextAwareNormalizerInterface
      *                                    reference handler can fix it
      * @throws LogicException             Occurs when the normalizer is not called in an expected context
      */
-    public function normalize($object, $format = null, array $context = [])
+    public function normalize($object, string $format = null, array $context = [])
     {
         /** @var RemoteConfig $object */
         $data = [
@@ -61,7 +61,7 @@ class RemoteConfigNormalizer implements ContextAwareNormalizerInterface
      *
      * @param array $context options that normalizers have access to
      */
-    public function supportsNormalization($data, $format = null, array $context = [])
+    public function supportsNormalization($data, string $format = null, array $context = [])
     {
         return $data instanceof RemoteConfig;
     }

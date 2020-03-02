@@ -28,33 +28,38 @@ services:
         tags: ['twig.extension']
 
     #### PRONTO MOBILE DOCTRINE EVENT SUBSCRIBERS ####
-    Pronto\MobileBundle\EventListener\HashPasswordSubscriber:
+    Pronto\MobileBundle\EventListener\:
+        resource: '../../EventListener'
         tags:
             - { name: doctrine.event_subscriber, connection: default }
 
-    Pronto\MobileBundle\EventListener\CustomerSubscriber:
-        tags:
-            - { name: doctrine.event_subscriber, connection: default }
-
-    Pronto\MobileBundle\EventListener\AppVersionSubscriber:
-        tags:
-            - { name: doctrine.event_subscriber, connection: default }
-
-    Pronto\MobileBundle\EventListener\NotificationSubscriber:
-        tags:
-            - { name: doctrine.event_subscriber, connection: default }
-
-    Pronto\MobileBundle\EventListener\AccessTokenSubscriber:
-        tags:
-            - { name: doctrine.event_subscriber, connection: default }
-
-    Pronto\MobileBundle\EventListener\ApplicationVersionSubscriber:
-        tags:
-            - { name: doctrine.event_subscriber, connection: default }
-
-    Pronto\MobileBundle\EventListener\PluginSubscriber:
-        tags:
-            - { name: doctrine.event_subscriber, connection: default }
+#    Pronto\MobileBundle\EventListener\CustomerSubscriber:
+#        tags:
+#            - { name: doctrine.event_subscriber, connection: default }
+#
+#    Pronto\MobileBundle\EventListener\BelongsToApplicationSubscriber:
+#        tags:
+#            - { name: doctrine.event_subscriber, connection: default }
+#
+#    Pronto\MobileBundle\EventListener\AppVersionSubscriber:
+#        tags:
+#            - { name: doctrine.event_subscriber, connection: default }
+#
+#    Pronto\MobileBundle\EventListener\NotificationSubscriber:
+#        tags:
+#            - { name: doctrine.event_subscriber, connection: default }
+#
+#    Pronto\MobileBundle\EventListener\AccessTokenSubscriber:
+#        tags:
+#            - { name: doctrine.event_subscriber, connection: default }
+#
+#    Pronto\MobileBundle\EventListener\ApplicationVersionSubscriber:
+#        tags:
+#            - { name: doctrine.event_subscriber, connection: default }
+#
+#    Pronto\MobileBundle\EventListener\PluginSubscriber:
+#        tags:
+#            - { name: doctrine.event_subscriber, connection: default }
 
     #### PRONTO MOBILE DATA FIXTURES ####
     Pronto\MobileBundle\DataFixtures\:

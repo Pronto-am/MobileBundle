@@ -3,13 +3,13 @@
         <div class="col-sm-12">
             <div class="form-row">
                 <div class="col-sm-12">
-                    <input-checkbox id="registrationEnabled" name="registrationEnabled" text="Registratie voor nieuwe gebruikers is toegestaan" :form="form" :model="model"/>
+                    <input-checkbox id="registrationEnabled" name="registrationEnabled" text="Registratie voor nieuwe gebruikers is toegestaan" :form="form" :model="model.config"/>
                 </div>
             </div>
 
             <div class="form-row">
                 <div class="col-sm-12">
-                    <input-checkbox id="accountActivationViaEmail" name="accountActivationViaEmail" text="Activatie van gebruikersaccount via e-mail vereist" :form="form" :model="model"/>
+                    <input-checkbox id="accountActivationViaEmail" name="accountActivationViaEmail" text="Activatie van gebruikersaccount via e-mail vereist" :form="form" :model="model.config"/>
                 </div>
             </div>
         </div>

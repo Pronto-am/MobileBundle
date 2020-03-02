@@ -4,21 +4,34 @@
             <template v-if="items">
                 <div class="card">
                     <div class="card-table">
-                        <vue-table url="vue.finances"
-                                   :can-delete="false"
+                        <vue-table :url="path('configurations')"
+                                   :can-delete="$auth.userHasRole($auth.roles.SUPER_ADMIN)"
                                    :sorting="sorting"
                                    :initial-data="items">
 
+                            <template slot="buttons-left">
+                                <el-button type="success" v-if="$auth.userHasRole($auth.roles.SUPER_ADMIN)" @click="$router.push({name: 'remote_config.add'})">Toevoegen</el-button>
+                            </template>
+
                             <template slot="header" slot-scope="{sorting, clickHandler}">
-                                <vue-table-header :sorting="sorting" @click="clickHandler" label="Naam" identifier="plugin.name"></vue-table-header>
-                                <vue-table-header :sorting="sorting" @click="clickHandler" label="Actief" identifier="active"></vue-table-header>
+                                <vue-table-header></vue-table-header>
+                                <vue-table-header :sorting="sorting" @click="clickHandler" label="Naam" identifier="name"></vue-table-header>
+                                <vue-table-header :sorting="sorting" @click="clickHandler" label="Key" identifier="key"></vue-table-header>
+                                <vue-table-header :sorting="sorting" @click="clickHandler" label="Type" identifier="type"></vue-table-header>
+                                <vue-table-header :sorting="sorting" @click="clickHandler" label="Waarde" identifier="value"></vue-table-header>
+                                <vue-table-header :sorting="sorting" @click="clickHandler" label="Release datum" identifier="release_date"></vue-table-header>
                             </template>
 
                             <template slot="row" slot-scope="{row}">
-                                <vue-table-column :row="row" property="plugin.name" router-link :to="{name: 'versions.edit', params: {id: row.id}}"></vue-table-column>
-                                <vue-table-column :row="row" property="active" type="custom">
-                                    {{ row.active ? 'Ja' : 'Nee' }}
+                                <vue-table-column :row="row" type="custom">
+                                    <a href="#!" class="platform" :class="{'active': row.android}"><i class="fa fa-android"></i></a>
+                                    <a href="#!" class="platform" :class="{'active': row.ios}"><i class="fa fa-apple"></i></a>
                                 </vue-table-column>
+                                <vue-table-column :row="row" property="name" router-link :to="{name: 'remote_config.edit', params: {id: row.id}}"></vue-table-column>
+                                <vue-table-column :row="row" property="identifier"></vue-table-column>
+                                <vue-table-column :row="row" property="type"></vue-table-column>
+                                <vue-table-column :row="row" property="value"></vue-table-column>
+                                <vue-table-column :row="row" property="release_date" type="date"></vue-table-column>
                             </template>
 
                         </vue-table>
@@ -42,7 +55,7 @@
         },
 
         beforeRouteEnter(to, from, next) {
-            axios.get(path('versions')).then(({data: {data: plugins}}) => {
+            axios.get(path('configurations')).then(({data: {data: plugins}}) => {
                 next(vm => {
                     vm.items = plugins;
                 })

@@ -34,7 +34,7 @@ router.beforeEach((to, from, next) => {
     // Logged in and visiting a protected route
     if(to.meta.auth && oAuth.isAuthenticated()) {
         // Check if the user has selected an application version
-        if(!Vue.prototype.$applicationService.versionIsSet() && to.name !== 'applications.select') {
+        if((!Vue.prototype.$application.versionIsSet() || !Vue.prototype.$application.applicationIsSet()) && to.name !== 'applications.select') {
             return next({
                 name: 'applications.select'
             });
