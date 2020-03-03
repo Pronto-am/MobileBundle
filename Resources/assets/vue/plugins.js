@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import Cookies from 'js-cookie';
 import helpers from './helpers';
 
 Vue.mixin({
@@ -104,8 +105,24 @@ Vue.filter('round', function (value) {
 });
 
 Vue.filter('translatable', function (value) {
-    console.log(value, value.nl)
-    return value.nl;
+    const selectedLocale = Cookies.get('selected_locale') ? Cookies.get('selected_locale') : 'en';
+    const keys = Object.keys(value);
+
+    if(keys.length === 0) {
+        return '';
+    }
+
+    if(value[selectedLocale] != null && value[selectedLocale] !== '') {
+        return value[selectedLocale];
+    }
+
+    let application = Vue.prototype.$application.getApplication();
+
+    if(application != null && value[application.default_language] != null && value[application.default_language] !== '') {
+        return value[application.default_language];
+    }
+
+    return value[keys[0]];
 });
 
 Vue.directive('user-has-role', function (el, bindings, vnode) {

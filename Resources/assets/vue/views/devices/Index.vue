@@ -11,13 +11,13 @@
                                    :initial-data="items">
 
                             <template slot="header" slot-scope="{sorting, clickHandler}">
-                                <vue-table-header :sorting="sorting" @click="clickHandler" label="Naam" identifier="name"></vue-table-header>
-                                <vue-table-header :sorting="sorting" @click="clickHandler" label="Model" identifier="model"></vue-table-header>
-                                <vue-table-header :sorting="sorting" @click="clickHandler" label="Fabrikant" identifier="manufacturer"></vue-table-header>
-                                <vue-table-header :sorting="sorting" @click="clickHandler" label="Platform" identifier="platform"></vue-table-header>
-                                <vue-table-header :sorting="sorting" @click="clickHandler" label="Systeemversie" identifier="os_version"></vue-table-header>
-                                <vue-table-header :sorting="sorting" @click="clickHandler" label="App versie" identifier="app_version"></vue-table-header>
-                                <vue-table-header :sorting="sorting" @click="clickHandler" label="Laatst ingelogd" identifier="last_login"></vue-table-header>
+                                <vue-table-header :sorting="sorting" @click="clickHandler" :label="$t('labels.name')" identifier="name"></vue-table-header>
+                                <vue-table-header :sorting="sorting" @click="clickHandler" :label="$t('labels.model')" identifier="model"></vue-table-header>
+                                <vue-table-header :sorting="sorting" @click="clickHandler" :label="$t('labels.manufacturer')" identifier="manufacturer"></vue-table-header>
+                                <vue-table-header :sorting="sorting" @click="clickHandler" :label="$t('labels.platform')" identifier="platform"></vue-table-header>
+                                <vue-table-header :sorting="sorting" @click="clickHandler" :label="$t('labels.system_version')" identifier="os_version"></vue-table-header>
+                                <vue-table-header :sorting="sorting" @click="clickHandler" :label="$t('labels.app_version')" identifier="app_version"></vue-table-header>
+                                <vue-table-header :sorting="sorting" @click="clickHandler" :label="$t('labels.logged_in')" identifier="last_login"></vue-table-header>
                             </template>
 
                             <template slot="row" slot-scope="{row}">

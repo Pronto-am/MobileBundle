@@ -14,7 +14,7 @@
                             </template>
 
                             <template slot="header" slot-scope="{sorting, clickHandler}">
-                                <vue-table-header :sorting="sorting" @click="clickHandler" label="Naam" identifier="company_name"></vue-table-header>
+                                <vue-table-header :sorting="sorting" @click="clickHandler" :label="$t('labels.name')" identifier="company_name"></vue-table-header>
                             </template>
 
                             <template slot="row" slot-scope="{row}">

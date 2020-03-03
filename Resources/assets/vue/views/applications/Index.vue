@@ -14,9 +14,9 @@
                             </template>
 
                             <template slot="header" slot-scope="{sorting, clickHandler}">
-                                <vue-table-header :sorting="sorting" @click="clickHandler" label="Naam" identifier="name"></vue-table-header>
-                                <vue-table-header :sorting="sorting" @click="clickHandler" label="Label" identifier="label"></vue-table-header>
-                                <vue-table-header :sorting="sorting" @click="clickHandler" label="Versies"></vue-table-header>
+                                <vue-table-header :sorting="sorting" @click="clickHandler" :label="$t('labels.name')" identifier="name"></vue-table-header>
+                                <vue-table-header :sorting="sorting" @click="clickHandler" :label="$t('labels.label')" identifier="label"></vue-table-header>
+                                <vue-table-header :sorting="sorting" @click="clickHandler" :label="$t('labels.versions')"></vue-table-header>
                             </template>
 
                             <template slot="row" slot-scope="{row}">

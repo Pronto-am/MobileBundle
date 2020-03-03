@@ -14,15 +14,17 @@
                             </template>
 
                             <template slot="header" slot-scope="{sorting, clickHandler}">
-                                <vue-table-header :sorting="sorting" @click="clickHandler" label="Titel" identifier="title"></vue-table-header>
-                                <vue-table-header :sorting="sorting" @click="clickHandler" label="Verzonden op" identifier="sent"></vue-table-header>
-                                <vue-table-header :sorting="sorting" @click="clickHandler" label="Apparaten" identifier="recipient_count"></vue-table-header>
-                                <vue-table-header :sorting="sorting" @click="clickHandler" label="Statistieken"></vue-table-header>
-                                <vue-table-header :sorting="sorting" @click="clickHandler" label="Geopend"></vue-table-header>
+                                <vue-table-header :sorting="sorting" @click="clickHandler" :label="$t('labels.title')" identifier="title"></vue-table-header>
+                                <vue-table-header :sorting="sorting" @click="clickHandler" :label="$t('labels.sent')" identifier="sent"></vue-table-header>
+                                <vue-table-header :sorting="sorting" @click="clickHandler" :label="$t('labels.devices')" identifier="recipient_count"></vue-table-header>
+                                <vue-table-header :sorting="sorting" @click="clickHandler" :label="$t('labels.statistics')"></vue-table-header>
+                                <vue-table-header :sorting="sorting" @click="clickHandler" :label="$t('labels.opened')"></vue-table-header>
                             </template>
 
                             <template slot="row" slot-scope="{row}">
-                                <vue-table-column :row="row" property="title" router-link :to="{name: 'push_notifications.edit', params: {id: row.id}}"></vue-table-column>
+                                <vue-table-column :row="row" type="custom">
+                                    <router-link :to="{name: 'push_notifications.edit', params: {id: row.id}}" v-html="$options.filters.translatable(row.title)"/>
+                                </vue-table-column>
                                 <vue-table-column :row="row" property="sent" type="datetime"></vue-table-column>
                                 <vue-table-column :row="row" property="recipient_count"></vue-table-column>
                                 <vue-table-column :row="row" type="custom">

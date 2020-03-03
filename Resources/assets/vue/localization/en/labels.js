@@ -26,6 +26,7 @@ export default {
     model: 'Model',
     name: 'Name',
     notification_html_template: 'Notification HTML template',
+    password: 'Password',
     phone_number: 'Phone number',
     platform: 'Platform',
     primary_color: 'Primary color',

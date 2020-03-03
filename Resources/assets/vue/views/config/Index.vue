@@ -15,11 +15,11 @@
 
                             <template slot="header" slot-scope="{sorting, clickHandler}">
                                 <vue-table-header></vue-table-header>
-                                <vue-table-header :sorting="sorting" @click="clickHandler" label="Naam" identifier="name"></vue-table-header>
-                                <vue-table-header :sorting="sorting" @click="clickHandler" label="Key" identifier="key"></vue-table-header>
-                                <vue-table-header :sorting="sorting" @click="clickHandler" label="Type" identifier="type"></vue-table-header>
-                                <vue-table-header :sorting="sorting" @click="clickHandler" label="Waarde" identifier="value"></vue-table-header>
-                                <vue-table-header :sorting="sorting" @click="clickHandler" label="Release datum" identifier="release_date"></vue-table-header>
+                                <vue-table-header :sorting="sorting" @click="clickHandler" :label="$t('labels.name')" identifier="name"></vue-table-header>
+                                <vue-table-header :sorting="sorting" @click="clickHandler" :label="$t('labels.key')" identifier="key"></vue-table-header>
+                                <vue-table-header :sorting="sorting" @click="clickHandler" :label="$t('labels.type')" identifier="type"></vue-table-header>
+                                <vue-table-header :sorting="sorting" @click="clickHandler" :label="$t('labels.value')" identifier="value"></vue-table-header>
+                                <vue-table-header :sorting="sorting" @click="clickHandler" :label="$t('labels.release_date')" identifier="release_date"></vue-table-header>
                             </template>
 
                             <template slot="row" slot-scope="{row}">
