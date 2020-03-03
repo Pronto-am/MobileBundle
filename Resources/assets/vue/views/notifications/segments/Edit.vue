@@ -18,7 +18,7 @@
                         </div>
 
                         <div class="card-footer has-buttons">
-                            <el-button type="primary" native-type="submit">Opslaan</el-button>
+                            <el-button type="primary" native-type="submit">{{ $t('buttons.save') }}</el-button>
                         </div>
                     </div>
                 </template>

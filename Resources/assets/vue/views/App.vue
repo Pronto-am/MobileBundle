@@ -1,17 +1,15 @@
-<!--<style lang="scss">-->
-<!--    :root {-->
-<!--        &#45;&#45;primary-color: red;-->
-<!--        &#45;&#45;primary-color-dark: red;-->
-<!--        &#45;&#45;link-color: red;-->
-<!--        &#45;&#45;link-color-dark: red;-->
-<!--        &#45;&#45;contrast-color: #ffffff;-->
-<!--    }-->
-<!--</style>-->
-
 <template>
     <div :style="cssVariables">
         <template v-if="$route.meta.layout !== 'front'">
-            <header/>
+            <header>
+                <div class="row">
+                    <div class="col"></div>
+
+                    <div class="col-auto">
+                        <locale-changer></locale-changer>
+                    </div>
+                </div>
+            </header>
 
             <main>
                 <aside>
@@ -101,13 +99,21 @@
                 }
             },
 
+            application: function() {
+                return this.$application.getApplication();
+            },
+
             cssVariables: function() {
+                if(this.application === null) {
+                    return {};
+                }
+
                 return {
-                    '--primary-color': this.$application.getApplication().customer.primary_color,
-                    '--primary-color-dark': this.$application.getApplication().customer.primary_color_dark,
-                    '--link-color': this.$application.getApplication().customer.link_color,
-                    '--link-color-dark': this.$application.getApplication().customer.link_color_dark,
-                    '--contrast-color': this.$application.getApplication().customer.contrast_color,
+                    '--primary-color': this.application.customer.primary_color,
+                    '--primary-color-dark': this.application.customer.primary_color_dark,
+                    '--link-color': this.application.customer.link_color,
+                    '--link-color-dark': this.application.customer.link_color_dark,
+                    '--contrast-color': this.application.customer.contrast_color,
                 }
             }
         },

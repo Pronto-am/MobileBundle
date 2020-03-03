@@ -9,16 +9,15 @@
                           @submit:error="submitError">
                     <template slot-scope="{ form, model }">
                         <div v-loading="form.submitting" class="card" element-loading-background="rgba(248,250,252,0.6)">
-                            <div class="card-header">
-                                Wachtwoord vergeten
-                            </div>
+                            <div class="card-header">{{ $t('titles.forgot_password') }}</div>
 
                             <div class="card-body">
                                 <div class="form-row">
                                     <div class="col-sm-12">
                                         <div class="form-group">
                                             <input-text name="email"
-                                                        placeholder="E-mailadres"
+                                                        :label="$t('labels.email')"
+                                                        :placeholder="$t('labels.email')"
                                                         :model="model"
                                                         :form="form"/>
                                         </div>
@@ -27,9 +26,7 @@
                             </div>
 
                             <div class="card-footer has-buttons">
-                                <el-button type="primary" native-type="submit">
-                                    Wachtwoord resetten
-                                </el-button>
+                                <el-button type="primary" native-type="submit">{{ $t('buttons.reset_password') }}</el-button>
                             </div>
                         </div>
                     </template>
@@ -51,7 +48,7 @@
         methods: {
             success() {
                 this.$message({
-                    message: 'U heeft een e-mail ontvangen om uw wachtwoord te resetten',
+                    message: this.$t('messages.password_reset_email_sent'),
                     type: 'success'
                 });
 

@@ -3,7 +3,7 @@ import helpers from './helpers';
 
 Vue.mixin({
     computed: {
-        languages: function() {
+        availableLanguages: function() {
             let application = Vue.prototype.$application.getApplication();
 
             if(application === null) {
@@ -99,10 +99,17 @@ Vue.filter('capitalize', function (value) {
     return value.charAt(0).toUpperCase() + value.slice(1);
 });
 
+Vue.filter('round', function (value) {
+    return Math.round(value * 100) / 100;
+});
+
+Vue.filter('translatable', function (value) {
+    console.log(value, value.nl)
+    return value.nl;
+});
+
 Vue.directive('user-has-role', function (el, bindings, vnode) {
     const behaviour = bindings.modifiers.disable ? 'disable' : 'hide';
-
-    console.log(Vue.prototype.$auth.userHasRole(bindings.value));
 
     if (!Vue.prototype.$auth.userHasRole(bindings.value)) {
         if (behaviour === 'hide') {

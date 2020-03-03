@@ -8,6 +8,7 @@ use Pronto\MobileBundle\Entity\RemoteConfig;
 use Pronto\MobileBundle\Entity\Translation;
 use Pronto\MobileBundle\Entity\TranslationKey;
 use Pronto\MobileBundle\Repository\TranslationKeyRepository;
+use Pronto\MobileBundle\Request\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -68,10 +69,13 @@ class TranslationController extends ApiController
     /**
      * @Route(path="/delete", methods={"POST"})
      * @IsGranted("ROLE_SUPER_ADMIN")
+     * @param Request $request
      * @return JsonResponse
      */
-    public function deleteAction()
+    public function deleteAction(Request $request)
     {
-        return JsonResponse::create(['data' => []]);
+        $this->translationKeys->delete($request->get('items'));
+
+        return JsonResponse::create();
     }
 }

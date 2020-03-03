@@ -6,6 +6,7 @@ namespace Pronto\MobileBundle\Controller\Api\Vue;
 use Pronto\MobileBundle\Entity\Customer;
 use Pronto\MobileBundle\Repository\CustomerRepository;
 use Pronto\MobileBundle\Request\CustomerRequest;
+use Pronto\MobileBundle\Request\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -15,7 +16,7 @@ use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
  * Class CustomerController
  * @package Pronto\MobileBundle\Controller\Api\Vue
  * @Route(path="customers")
- * @IsGranted("ROLE_SUPER_ADMIN")
+ * @IsGranted("ROLE_USER")
  */
 class CustomerController extends ApiController
 {
@@ -35,7 +36,7 @@ class CustomerController extends ApiController
 
     /**
      * @Route(methods={"GET"})
-     * @IsGranted("ROLE_SUPER_ADMIN")
+     * @IsGranted("ROLE_USER")
      */
     public function listAction()
     {
@@ -80,10 +81,13 @@ class CustomerController extends ApiController
     /**
      * @Route(path="/delete", methods={"POST"})
      * @IsGranted("ROLE_SUPER_ADMIN")
+     * @param Request $request
      * @return JsonResponse
      */
-    public function deleteAction()
+    public function deleteAction(Request $request)
     {
-        return JsonResponse::create(['data' => []]);
+        $this->customers->delete($request->get('items'));
+
+        return JsonResponse::create();
     }
 }

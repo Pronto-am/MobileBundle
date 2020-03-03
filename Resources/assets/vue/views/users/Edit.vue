@@ -1,7 +1,7 @@
 <template>
     <div class="row">
-        <div class="col-sm-12">
-            <vue-form :url="url('users')"
+        <div class="col-sm-12" v-if="item">
+            <vue-form :url="path('users')"
                       :model="item"
                       @submit:success="submitSuccess"
                       @submit:error="submitError">
@@ -12,13 +12,38 @@
 
                         <div class="card-body">
                             <div class="form-row">
+                                <div class="col-sm-8">
+                                    <input-text name="first_name" :label="$t('labels.first_name')" :form="form" :model="model"/>
+                                </div>
+
+                                <div class="col-sm-4">
+                                    <input-text name="insertion" :label="$t('labels.insertion')" :form="form" :model="model"/>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="col-sm-12 col-md-12 col-lg-6">
+                                    <input-text name="last_name" :label="$t('labels.last_name')" :form="form" :model="model"/>
+                                </div>
+
+                                <div class="col-sm-12 col-md-12 col-lg-6">
+                                    <input-text name="email" :label="$t('labels.email')" :form="form" :model="model"/>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
                                 <div class="col-sm-12">
+                                    <input-select name="role" :label="$t('labels.role')" :form="form" :model="model">
+                                        <el-option label="Reguliere gebruiker" value="ROLE_USER"></el-option>
+                                        <el-option label="Administrator" value="ROLE_ADMIN"></el-option>
+                                        <el-option label="Super administrator" value="ROLE_SUPER_ADMIN"></el-option>
+                                    </input-select>
                                 </div>
                             </div>
                         </div>
 
                         <div class="card-footer has-buttons">
-                            <el-button type="primary" native-type="submit">Opslaan</el-button>
+                            <el-button type="primary" native-type="submit">{{ $t('buttons.save') }}</el-button>
                         </div>
                     </div>
                 </template>
@@ -38,19 +63,29 @@
 
         data() {
             return {
-                item: {},
+                item: null,
             }
         },
 
         beforeRouteEnter(to, from, next) {
             if(!to.params.id) {
-                next();
+                next(vm => vm.item = {});
                 return;
             }
             
-            axios.get(url('users/:id', {id: to.params.id})).then((application) => {
+            axios.get(path('users/:id', {id: to.params.id})).then(({data: {data: user}}) => {
                 next(vm => {
-                    vm.item = application;
+                    vm.item = user;
+
+                    if (user.roles.includes('ROLE_SUPER_ADMIN')) {
+                        vm.item.role = 'ROLE_SUPER_ADMIN';
+
+                    } else if (user.roles.includes('ROLE_ADMIN')) {
+                        vm.item.role = 'ROLE_ADMIN';
+
+                    } else {
+                        vm.item.role = 'ROLE_USER';
+                    }
                 });
             }).catch(error => {
                 next();

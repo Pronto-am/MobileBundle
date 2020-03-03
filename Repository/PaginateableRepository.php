@@ -63,11 +63,12 @@ abstract class PaginateableRepository extends EntityRepository
 
     /**
      * @param QueryBuilder $queryBuilder
+     * @param string|null $sortColumn
      * @return PaginationResponse
      */
-    public function paginateQuery(QueryBuilder $queryBuilder): PaginationResponse
+    public function paginateQuery(QueryBuilder $queryBuilder, string $sortColumn = null): PaginationResponse
     {
-        $query = $queryBuilder->orderBy(sprintf('entity.%s', $this->sorting->column()), $this->sorting->direction())->getQuery();
+        $query = $queryBuilder->orderBy(sprintf('entity.%s', $sortColumn ?? $this->sorting->column()), $this->sorting->direction())->getQuery();
 
         $paginator = new Paginator($query);
         $totalItems = count($paginator);

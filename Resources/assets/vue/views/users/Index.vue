@@ -7,11 +7,12 @@
                         <vue-table :url="path('users')"
                                    :filters="{type: null}"
                                    :can-delete="$auth.userHasRole($auth.roles.ADMIN)"
+                                   :deletable-row="canDeleteUser"
                                    :sorting="sorting"
                                    :initial-data="items">
 
                             <template slot="buttons-left">
-                                <el-button type="success" v-if="$auth.userHasRole($auth.roles.ADMIN)" @click="$router.push({name: 'users.add'})">Toevoegen</el-button>
+                                <el-button type="success" v-if="$auth.userHasRole($auth.roles.ADMIN)" @click="$router.push({name: 'users.add'})">{{ $t('base.add') }}</el-button>
                             </template>
 
                             <template slot="filters" slot-scope="{filters}">
@@ -33,8 +34,10 @@
                             <template slot="row" slot-scope="{row}">
                                 <vue-table-column :row="row" property="full_name" router-link :to="{name: 'users.edit', params: {id: row.id}}"></vue-table-column>
                                 <vue-table-column :row="row" type="custom">
-                                    <template v-if="row.app_user"><el-tag>App gebruiker</el-tag></template>
-                                    <template v-else><el-tag>CMS gebruiker</el-tag></template>
+                                    <template v-if="row.app_user"><el-tag type="info">App gebruiker</el-tag></template>
+                                    <template v-else-if="row.roles.includes($auth.roles.SUPER_ADMIN)"><el-tag type="danger">Super administrator</el-tag></template>
+                                    <template v-else-if="row.roles.includes($auth.roles.ADMIN)"><el-tag type="warning">Administrator</el-tag></template>
+                                    <template v-else><el-tag>Reguliere gebruiker</el-tag></template>
                                 </vue-table-column>
                                 <vue-table-column :row="row" property="email"></vue-table-column>
                             </template>
@@ -68,6 +71,20 @@
             });
         },
 
-        methods: {},
+        methods: {
+            canDeleteUser(user) {
+                // Super admin can delete everyone
+                if (this.$auth.userHasRole(this.$auth.roles.SUPER_ADMIN)) {
+                    return true;
+                }
+
+                // Admin cannot delete super admin
+                if (this.$auth.userHasRole(this.$auth.roles.ADMIN)) {
+                    return !user.roles.includes(this.$auth.roles.SUPER_ADMIN);
+                }
+
+                return false;
+            }
+        },
     }
 </script>

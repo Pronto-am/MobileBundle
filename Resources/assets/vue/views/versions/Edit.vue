@@ -13,11 +13,11 @@
                         <div class="card-body">
                             <div class="form-row">
                                 <div class="col-sm-12 col-md-6">
-                                    <input-text name="version" label="Versie" :form="form" :model="model"/>
+                                    <input-text name="version" :label="$t('labels.version')" :form="form" :model="model"/>
                                 </div>
 
                                 <div class="col-sm-12 col-md-6">
-                                    <input-select name="platform" label="platform" :form="form" :model="model">
+                                    <input-select name="platform" :label="$t('labels.platform')" :form="form" :model="model">
                                         <el-option label="Android" value="android"></el-option>
                                         <el-option label="iOS" value="ios"></el-option>
                                     </input-select>
@@ -30,7 +30,7 @@
                                                     type="date"
                                                     value-format="yyyy-MM-dd"
                                                     name="release_date"
-                                                    label="Releasedatum"
+                                                    :label="$t('labels.release_date')"
                                                     :form="form"
                                                     :model="model"/>
                                 </div>
@@ -45,7 +45,7 @@
                             <div class="form-row">
                                 <div class="col-sm-12">
                                     <el-tabs v-model="activeLanguageTab">
-                                        <el-tab-pane :label="language.name" :name="language.code" :key="language.code" v-for="language of languages">
+                                        <el-tab-pane :label="language.name" :name="language.code" :key="language.code" v-for="language of availableLanguages">
                                             <input-editor :name="language.code" error-key="description" :form="form" :model="model.description"/>
                                         </el-tab-pane>
                                     </el-tabs>
@@ -54,7 +54,7 @@
 
                             <div class="form-row">
                                 <div class="col-sm-12">
-                                    <input-text type="url" name="url" label="URL" :form="form" :model="model"/>
+                                    <input-text type="url" name="url" :label="$t('labels.url')" :form="form" :model="model"/>
                                 </div>
                             </div>
 
@@ -75,13 +75,13 @@
 
                             <div class="form-row">
                                 <div class="col-sm-12">
-                                    <input-checkbox id="required" name="required" text="Deze versie is verplicht" :form="form" :model="model"/>
+                                    <input-checkbox id="required" name="required" :label="$t('labels.version_is_required')" :form="form" :model="model"/>
                                 </div>
                             </div>
                         </div>
 
                         <div class="card-footer has-buttons">
-                            <el-button type="primary" native-type="submit">Opslaan</el-button>
+                            <el-button type="primary" native-type="submit">{{ $t('buttons.save') }}</el-button>
                         </div>
                     </div>
                 </template>

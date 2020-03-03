@@ -4,6 +4,7 @@ namespace Pronto\MobileBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use FOS\OAuthServerBundle\Entity\Client as BaseClient;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 
 /**
@@ -20,8 +21,21 @@ class OAuthClient extends BaseClient
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      * @ORM\Column(type="integer")
+     * @Groups({"Application"})
      */
     protected $id;
+
+    /**
+     * @var string $randomId
+     * @Groups({"Application"})
+     */
+    protected $randomId;
+
+    /**
+     * @var string $secret
+     * @Groups({"Application"})
+     */
+    protected $secret;
 
     /**
      * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Application")

@@ -10,7 +10,7 @@
                                    :initial-data="items">
 
                             <template slot="buttons-left">
-                                <el-button type="success" v-if="$auth.userHasRole($auth.roles.SUPER_ADMIN)" @click="$router.push({name: 'remote_config.add'})">Toevoegen</el-button>
+                                <el-button type="success" v-if="$auth.userHasRole($auth.roles.SUPER_ADMIN)" @click="$router.push({name: 'remote_config.add'})">{{ $t('base.add') }}</el-button>
                             </template>
 
                             <template slot="header" slot-scope="{sorting, clickHandler}">

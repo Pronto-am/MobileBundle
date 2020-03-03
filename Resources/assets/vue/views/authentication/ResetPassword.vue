@@ -5,30 +5,24 @@
                 <vue-form ref="form" :url="$path('vue.password.reset')" @submit:success="login" @submit:error="submitError">
                     <template slot-scope="{ form, model }">
                         <div v-loading="form.submitting" class="card" element-loading-background="rgba(248,250,252,0.6)">
-                            <div class="card-header">
-                                Wachtwoord resetten
-                            </div>
+                            <div class="card-header">{{ $t('titles.reset_password') }}</div>
 
                             <div class="card-body">
-                                <el-alert v-if="appPasswordChanged" title="Uw wachtwoord is gewijzigd, u kunt nu inloggen in de app" type="success" show-icon/>
-
                                 <div class="form-row">
                                     <div class="col-sm-12">
-                                        <input-password name="password" placeholder="Wachtwoord" :model="model" :form="form"/>
+                                        <input-password name="password" :placeholder="$t('labels.password')" :model="model" :form="form"/>
                                     </div>
                                 </div>
 
                                 <div class="form-row">
                                     <div class="col-sm-12">
-                                        <input-password name="password_confirmation" placeholder="Wachtwoord bevestigen" :model="model" :form="form"/>
+                                        <input-password name="password_confirmation" :placeholder="$t('labels.password_confirmation')" :model="model" :form="form"/>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="card-footer has-buttons">
-                                <el-button type="primary" native-type="submit">
-                                    Wachtwoord resetten
-                                </el-button>
+                                <el-button type="primary" native-type="submit">{{ $t('buttons.reset_password') }}</el-button>
                             </div>
                         </div>
                     </template>
@@ -82,7 +76,7 @@
                     this.$router.push('dashboard');
 
                     this.$message({
-                        message: 'Uw wachtwoord is gewijzigd',
+                        message: this.$t('messages.password_changed'),
                         type: 'success'
                     });
 

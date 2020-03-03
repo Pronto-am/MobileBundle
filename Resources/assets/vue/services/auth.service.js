@@ -46,8 +46,6 @@ export default class AuthService {
             return true;
         }
 
-        console.log(this.user);
-
         try {
             return this.user.roles.indexOf(role) !== -1;
         } catch (error) {

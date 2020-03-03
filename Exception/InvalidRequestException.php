@@ -48,7 +48,7 @@ class InvalidRequestException extends Exception
      */
     public function getJsonResponse()
     {
-        return new JsonResponse([
+        $responseData = [
             'message' => 'The provided data is invalid',
             'errors'  => array_reduce($this->getErrors(), function ($result, ValidationError $error) {
                 // Data is present, but invalid
@@ -63,9 +63,13 @@ class InvalidRequestException extends Exception
                         // Take the first subError and determine the error
                         $subError = $error->subErrors()[0];
 
-                        if($subError->keyword() === 'format') {
+                        if ($subError->keyword() === 'format') {
                             $message = $this->determineFormatError($subError);
                         }
+
+                    } else if($error->keyword() === 'minLength') {
+                        [$minLength] = array_values($error->keywordArgs());
+                        $message = 'Dit veld dient minimaal ' . $minLength . ' karakters te bevatten';
                     }
 
                     $result[$key] = $result[$key] ?? [];
@@ -80,7 +84,19 @@ class InvalidRequestException extends Exception
                 }
                 return $result;
             }, []),
-        ], 422);
+        ];
+
+        if (getenv('APP_ENV') === 'dev') {
+            $responseData['raw_errors'] = array_map(function (ValidationError $error) {
+                return [
+                    'keyword'      => $error->keyword(),
+                    'data_pointer' => $error->dataPointer(),
+                    'keyword_args' => $error->keywordArgs(),
+                ];
+            }, $this->getErrors());
+        }
+
+        return new JsonResponse($responseData, 422);
     }
 
     /**
@@ -95,7 +111,7 @@ class InvalidRequestException extends Exception
         /** @var ValidationFormat $formatter */
         $formatter = $this->formatContainer->get('string', $formatterName);
 
-        if($formatterName instanceof ValidationFormat) {
+        if ($formatter instanceof ValidationFormat) {
             return $formatter->message();
         }
 

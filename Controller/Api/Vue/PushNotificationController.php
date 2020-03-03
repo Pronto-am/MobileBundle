@@ -11,9 +11,12 @@ use Pronto\MobileBundle\Entity\Device;
 use Pronto\MobileBundle\Entity\PushNotification;
 use Pronto\MobileBundle\Entity\RemoteConfig;
 use Pronto\MobileBundle\Repository\PushNotificationRepository;
+use Pronto\MobileBundle\Request\PushNotificationRequest;
+use Pronto\MobileBundle\Request\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 
 /**
  * Class PushNotificationController
@@ -44,37 +47,52 @@ class PushNotificationController extends ApiController
     public function paginateAction()
     {
         $paginated = $this->pushNotifications->paginate();
+        $paginated->withNormalizers([
+            new DateTimeNormalizer()
+        ]);
         return $this->paginatedResponse($paginated);
     }
 
     /**
      * @Route(path="/{id}", methods={"GET"})
      * @IsGranted("ROLE_SUPER_ADMIN")
-     * @param int $id
+     * @param string $id
      * @return JsonResponse
      */
-    public function getAction(int $id)
+    public function getAction(string $id)
     {
-        return JsonResponse::create(['data' => []]);
+        $notification = $this->pushNotifications->findOrFail($id);
+        return $this->response($notification, [
+            new DateTimeNormalizer()
+        ]);
     }
 
     /**
      * @Route(path="/", methods={"POST"})
      * @IsGranted("ROLE_SUPER_ADMIN")
+     * @param PushNotificationRequest $request
      * @return JsonResponse
      */
-    public function saveAction()
+    public function saveAction(PushNotificationRequest $request)
     {
-        return JsonResponse::create(['data' => []]);
+        $notification = $this->pushNotifications->findOrFail($request->get('id'));
+
+        // TODO: save
+
+        return $this->response($notification, [
+            new DateTimeNormalizer()
+        ]);
     }
 
     /**
      * @Route(path="/delete", methods={"POST"})
      * @IsGranted("ROLE_SUPER_ADMIN")
+     * @param Request $request
      * @return JsonResponse
      */
-    public function deleteAction()
+    public function deleteAction(Request $request)
     {
-        return JsonResponse::create(['data' => []]);
+        $this->pushNotifications->delete($request->get('items'));
+        return JsonResponse::create();
     }
 }

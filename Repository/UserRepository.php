@@ -24,7 +24,7 @@ class UserRepository extends PaginateableRepository
     public function paginate(): PaginationResponse
     {
         $query = $this->createQueryBuilder('entity')
-            ->where('entity.customer = :customer')
+            ->where('entity.customer = :customer OR entity.customer IS NULL')
             ->setParameter('customer', $this->prontoMobile->getCustomer());
 
         if($this->filters->isSearching()) {
@@ -32,7 +32,10 @@ class UserRepository extends PaginateableRepository
                 ->setParameter('search', '%' . $this->filters->searchValue() . '%');
         }
 
-        return $this->paginateQuery($query);
+        $sortColumn = $this->sorting->column();
+        $sortColumn = $sortColumn === 'name' ? 'lastName' : $sortColumn;
+
+        return $this->paginateQuery($query, $sortColumn);
     }
 
     /**

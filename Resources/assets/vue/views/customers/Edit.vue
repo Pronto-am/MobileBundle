@@ -13,25 +13,25 @@
                         <div class="card-body">
                             <div class="form-row">
                                 <div class="col-sm-12">
-                                    <input-text name="company_name" label="Naam" :form="form" :model="model"/>
+                                    <input-text name="company_name" :label="$t('labels.name')" :form="form" :model="model"/>
                                 </div>
                             </div>
 
                             <div class="form-row">
                                 <div class="col-sm-12">
-                                    <input-text name="contact_person" label="Contactpersoon" :form="form" :model="model"/>
+                                    <input-text name="contact_person" :label="$t('labels.contact_person')" :form="form" :model="model"/>
                                 </div>
                             </div>
 
                             <div class="form-row">
                                 <div class="col-sm-12">
-                                    <input-text name="phone_number" label="Telefoonnummer" :form="form" :model="model"/>
+                                    <input-text name="phone_number" :label="$t('labels.phone_number')" :form="form" :model="model"/>
                                 </div>
                             </div>
 
                             <div class="form-row">
                                 <div class="col-sm-12">
-                                    <input-text name="email" label="E-mailadres" :form="form" :model="model"/>
+                                    <input-text name="email" :label="$t('labels.email')" :form="form" :model="model"/>
                                 </div>
                             </div>
 
@@ -39,7 +39,7 @@
                                 <div class="col-sm-12 col-md-6">
                                     <div class="form-row">
                                         <div class="col">
-                                            <b>Primaire kleur</b>
+                                            <b v-html="$t('labels.primary_color')"></b>
                                         </div>
                                         <div class="col-auto">
                                             <input-color-picker name="primary_color" :form="form" :model="model"/>
@@ -50,7 +50,7 @@
                                 <div class="col-sm-12 col-md-6">
                                     <div class="form-row">
                                         <div class="col">
-                                            <b>Donkere primaire kleur</b>
+                                            <b v-html="$t('labels.primary_color_dark')"></b>
                                         </div>
                                         <div class="col-auto">
                                             <input-color-picker name="primary_color_dark" :form="form" :model="model"/>
@@ -61,7 +61,7 @@
                                 <div class="col-sm-12 col-md-6">
                                     <div class="form-row">
                                         <div class="col">
-                                            <b>Link kleur</b>
+                                            <b v-html="$t('labels.link_color')"></b>
                                         </div>
                                         <div class="col-auto">
                                             <input-color-picker name="link_color" :form="form" :model="model"/>
@@ -72,7 +72,7 @@
                                 <div class="col-sm-12 col-md-6">
                                     <div class="form-row">
                                         <div class="col">
-                                            <b>Donkere link kleur</b>
+                                            <b v-html="$t('labels.link_color_dark')"></b>
                                         </div>
                                         <div class="col-auto">
                                             <input-color-picker name="link_color_dark" :form="form" :model="model"/>
@@ -83,7 +83,7 @@
                                 <div class="col-sm-12 col-md-6">
                                     <div class="form-row">
                                         <div class="col">
-                                            <b>Contrast kleur</b>
+                                            <b v-html="$t('labels.contrast_color')"></b>
                                         </div>
                                         <div class="col-auto">
                                             <input-color-picker name="contrast_color" :form="form" :model="model"/>
@@ -94,7 +94,7 @@
                         </div>
 
                         <div class="card-footer has-buttons">
-                            <el-button type="primary" native-type="submit">Opslaan</el-button>
+                            <el-button type="primary" native-type="submit">{{ $t('buttons.save') }}</el-button>
                         </div>
                     </div>
                 </template>

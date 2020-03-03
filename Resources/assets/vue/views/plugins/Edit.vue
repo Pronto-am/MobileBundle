@@ -13,7 +13,7 @@
                         <div class="card-body">
                             <div class="form-row">
                                 <div class="col-sm-12">
-                                    <input-checkbox id="active" name="active" text="Is actief" :form="form" :model="model"/>
+                                    <input-checkbox id="active" name="active" :text="$t('labels.is_active')" :form="form" :model="model"/>
                                 </div>
                             </div>
 
@@ -21,7 +21,7 @@
                         </div>
 
                         <div class="card-footer has-buttons">
-                            <el-button type="primary" native-type="submit">Opslaan</el-button>
+                            <el-button type="primary" native-type="submit">{{ $t('buttons.save') }}</el-button>
                         </div>
                     </div>
                 </template>

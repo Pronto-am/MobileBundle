@@ -9,6 +9,8 @@ use Pronto\MobileBundle\Controller\Api\Vue\ApiController;
 use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\PasswordReset;
 use Pronto\MobileBundle\Entity\User;
+use Pronto\MobileBundle\Repository\UserRepository;
+use Pronto\MobileBundle\Request\Auth\CreatePasswordRequest;
 use Pronto\MobileBundle\Request\Auth\ResetPasswordRequest;
 use Pronto\MobileBundle\Service\OAuthClient;
 use Swift_Mailer;
@@ -31,12 +33,65 @@ class PasswordController extends ApiController
     private $client;
 
     /**
+     * @var UserRepository $users
+     */
+    private $users;
+
+    /**
      * LoginController constructor.
      * @param OAuthClient $client
+     * @param UserRepository $users
      */
-    public function __construct(OAuthClient $client)
+    public function __construct(OAuthClient $client, UserRepository $users)
     {
         $this->client = $client;
+        $this->users = $users;
+    }
+
+    /**
+     * @param string $token
+     * @return string
+     * @Route(path="activation/{token}", methods={"GET"})
+     * @throws \Exception
+     */
+    public function getActivationAction(string $token)
+    {
+        $user = $this->users->findOneBy([
+            'activationToken' => $token
+        ]);
+
+        if($user === null) {
+            abort(404);
+        }
+
+        return $this->response($user);
+    }
+
+    /**
+     * @param CreatePasswordRequest $request
+     * @Route(path="password/create", methods={"POST"})
+     * @return JsonResponse
+     * @throws \Exception
+     */
+    public function createPasswordAction(CreatePasswordRequest $request)
+    {
+        /** @var User $user */
+        $user = $this->users->findOneBy([
+            'activationToken' => $request->get('token')
+        ]);
+
+        if($user === null) {
+            abort(404);
+        }
+
+        $user->setPlainPassword($request->get('password'));
+//        $user->setActivationToken(null);
+        $user->setActivated(true);
+        $this->users->save($user);
+
+        // Log the user in
+        $response = $this->client->login($user->getEmail(), $request->get('password'));
+        return new JsonResponse(json_decode($response->getBody()->getContents()), $response->getStatusCode());
     }
 
     /**
@@ -45,7 +100,7 @@ class PasswordController extends ApiController
      * @param TranslatorInterface $translator
      * @param Swift_Mailer $mailer
      * @return string
-     * @Route(path="password")
+     * @Route(path="password/reset", methods={"POST"})
      */
     public function resetPasswordAction(ResetPasswordRequest $request, EntityManagerInterface $entityManager, TranslatorInterface $translator, Swift_Mailer $mailer)
     {

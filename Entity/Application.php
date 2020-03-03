@@ -109,6 +109,12 @@ class Application extends Client implements ApiEntityInterface
     private $applicationVersions;
 
     /**
+     * @ORM\OneToMany(targetEntity="Pronto\MobileBundle\Entity\OAuthClient", mappedBy="application")
+     * @Groups({"Application"})
+     */
+    private $oauthClients;
+
+    /**
      * Application constructor.
      */
     public function __construct()
@@ -316,8 +322,11 @@ class Application extends Client implements ApiEntityInterface
         return $this->applicationPlugins;
     }
 
-    public function __toString()
+    /**
+     * @return mixed
+     */
+    public function getOauthClients()
     {
-        return 'Application';
+        return $this->oauthClients;
     }
 }

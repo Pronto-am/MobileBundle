@@ -13,7 +13,7 @@
                                 <font-awesome-icon :icon="route.icon"/>
                             </span>
 
-                            <span @click="navigate(route)" v-html="route.text"></span>
+                            <span @click="navigate(route)" v-html="$t(route.locKey)"></span>
 
                             <span @click="route.submenuOpen = !route.submenuOpen" v-if="route.children !== undefined && route.children.length > 0">
                                 <font-awesome-icon icon="angle-left" :class="{'rotate': route.submenuOpen}"/>

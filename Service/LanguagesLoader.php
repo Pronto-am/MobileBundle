@@ -8,10 +8,10 @@ use Symfony\Component\HttpKernel\Config\FileLocator;
 
 class LanguagesLoader
 {
-
-	/** @var array $languages */
+	/**
+     * @var array $languages
+     */
 	private $languages;
-
 
 	/**
 	 * FontAwesomeLoader constructor.
@@ -28,7 +28,6 @@ class LanguagesLoader
 		}
 	}
 
-
 	/**
 	 * Get an array of languages
 	 *
@@ -38,7 +37,6 @@ class LanguagesLoader
 	{
 		return $this->languages;
 	}
-
 
 	/**
 	 * Get the language by code

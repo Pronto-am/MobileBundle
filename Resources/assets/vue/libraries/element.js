@@ -18,6 +18,7 @@ import {
     MessageBox,
     Option,
     OptionGroup,
+    Progress,
     Radio,
     Select,
     TabPane,
@@ -49,6 +50,7 @@ Vue.component(Tooltip.name, Tooltip);
 Vue.component(Dropdown.name, Dropdown);
 Vue.component(DropdownMenu.name, DropdownMenu);
 Vue.component(DropdownItem.name, DropdownItem);
+Vue.component(Progress.name, Progress);
 Vue.component(Upload.name, Upload);
 Vue.component(TabPane.name, TabPane);
 Vue.component(Tabs.name, Tabs);

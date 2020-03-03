@@ -5,6 +5,7 @@ import './interceptors/axios';
 import App from './views/App';
 
 import './libraries/auth';
+import i18n from './libraries/i18n';
 import './libraries/draggable';
 import './libraries/element';
 import './libraries/fontawesome';
@@ -41,5 +42,6 @@ Promise.all([
         el: '#app',
         components: {App},
         router,
+        i18n,
     });
 });

@@ -7,6 +7,9 @@ use Doctrine\ORM\EntityManagerInterface;
 use Pronto\MobileBundle\Controller\Api\Vue\ApiController;
 use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Repository\ApplicationRepository;
+use Pronto\MobileBundle\Request\ApplicationRequest;
+use Pronto\MobileBundle\Request\Request;
+use Pronto\MobileBundle\Service\LanguagesLoader;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -45,8 +48,8 @@ class ApplicationController extends ApiController
     }
 
     /**
-     * @Route(path="/{id}", methods={"GET"})
-     * @IsGranted("ROLE_SUPER_ADMIN")
+     * @Route(path="/{id}", methods={"GET"}, requirements={"id"="\d+"})
+     * @IsGranted("ROLE_USER")
      * @param int $id
      * @return JsonResponse
      */
@@ -56,22 +59,62 @@ class ApplicationController extends ApiController
     }
 
     /**
-     * @Route(path="/", methods={"POST"})
+     * @Route(path="/languages", methods={"GET"})
      * @IsGranted("ROLE_SUPER_ADMIN")
+     * @param LanguagesLoader $languagesLoader
      * @return JsonResponse
      */
-    public function saveAction()
+    public function languagesAction(LanguagesLoader $languagesLoader)
     {
-        return JsonResponse::create(['data' => []]);
+        return JsonResponse::create([
+            'data' => $languagesLoader->getArray()
+        ]);
+    }
+
+    /**
+     * @Route(methods={"POST"})
+     * @IsGranted("ROLE_SUPER_ADMIN")
+     * @param ApplicationRequest $request
+     * @param LanguagesLoader $languagesLoader
+     * @return JsonResponse
+     */
+    public function saveAction(ApplicationRequest $request, LanguagesLoader $languagesLoader)
+    {
+        $application = $this->applications->findOrNew($request->get('id'));
+
+        $defaultLanguage = $request->get('default_language');
+        $languages = $request->get('languages', []);
+
+        // Get al language objects, besides the default language
+        $availableLanguages = array_filter($languagesLoader->getArray(), function($language) use ($defaultLanguage, $languages) {
+            return $language->code !== $defaultLanguage && in_array($language->code, $languages);
+        });
+
+        // Prepend the default language to the list
+        $defaultLanguage = array_filter($languagesLoader->getArray(), function($language) use ($defaultLanguage) {
+            return $language->code === $defaultLanguage;
+        });
+
+        $availableLanguages = array_merge($defaultLanguage, $availableLanguages);
+
+        /** @var Application $application */
+        $application = $this->serializer->deserialize(Application::class, $request->except(['customer', 'created_at', 'updated_at']), $application);
+        $application->setAvailableLanguages($availableLanguages);
+        $this->applications->save($application);
+
+        return $this->response($application);
     }
 
     /**
      * @Route(path="/delete", methods={"POST"})
      * @IsGranted("ROLE_SUPER_ADMIN")
+     * @param Request $request
      * @return JsonResponse
      */
-    public function deleteAction()
+    public function deleteAction(Request $request)
     {
-        return JsonResponse::create(['data' => []]);
+        $this->applications->delete($request->get('items'));
+
+        return JsonResponse::create();
     }
 }

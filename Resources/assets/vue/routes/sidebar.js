@@ -1,56 +1,57 @@
 import {ROLE_USER, ROLE_ADMIN, ROLE_SUPER_ADMIN} from '../services/auth.service';
+import Vue from 'vue';
 
 export default [{
     name: 'applications',
     icon: 'list-alt',
-    text: 'Applicaties',
+    locKey: 'menu.applications',
     role: ROLE_SUPER_ADMIN,
 }, {
     name: 'collections',
     icon: 'file-alt',
-    text: 'Collecties',
+    locKey: 'menu.collections',
     submenuOpen: false,
     role: ROLE_USER,
     children: [],
 }, {
     name: 'push_notifications',
     icon: 'bell',
-    text: 'Push notificaties',
+    locKey: 'menu.push_notifications',
     submenuOpen: false,
     role: ROLE_USER,
     children: [{
         name: 'push_notifications.segments',
-        text: 'Segmenten',
+        locKey: 'menu.segments',
         role: ROLE_SUPER_ADMIN,
     }],
 }, {
     name: 'devices',
     icon: 'mobile-alt',
-    text: 'Apparaten',
+    locKey: 'menu.devices',
     role: ROLE_USER,
 }, {
     name: 'app_versions',
     icon: 'code-branch',
-    text: 'App versies',
+    locKey: 'menu.app_versions',
     role: ROLE_SUPER_ADMIN,
 }, {
     name: 'remote_config',
     icon: 'list',
-    text: 'Remote config',
+    locKey: 'menu.remote_config',
     role: ROLE_USER,
 }, {
     name: 'users',
     icon: 'list',
-    text: 'Gebruikers',
+    locKey: 'menu.users',
     role: ROLE_USER,
 }, {
     name: 'plugins',
     icon: 'plug',
-    text: 'Plugins',
+    locKey: 'menu.plugins',
     role: ROLE_SUPER_ADMIN,
 }, {
     name: 'customers',
     icon: 'cogs',
-    text: 'Klanten',
+    locKey: 'menu.customers',
     role: ROLE_SUPER_ADMIN,
 }];

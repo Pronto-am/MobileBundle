@@ -3,13 +3,13 @@
         <div class="col-sm-12">
             <div class="form-row margin-bottom-md">
                 <div class="col-sm-12">
-                    <input-text name="firebaseAccessToken" label="Firebase access token" :form="form" :model="model.config"/>
+                    <input-text name="firebaseAccessToken" :label="$t('labels.firebase_access_tokens')" :form="form" :model="model.config"/>
                 </div>
             </div>
 
             <div class="form-row">
                 <div class="col-sm-12">
-                    <b>Notificatie HTML template</b>
+                    <b v-html="$t('labels.notification_html_template')"></b>
                 </div>
             </div>
 

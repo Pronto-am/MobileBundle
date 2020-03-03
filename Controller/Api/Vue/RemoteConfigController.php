@@ -4,6 +4,7 @@ namespace Pronto\MobileBundle\Controller\Api\Vue;
 
 
 use Pronto\MobileBundle\Repository\RemoteConfigRepository;
+use Pronto\MobileBundle\Request\Request;
 use Pronto\MobileBundle\Serializer\EnumNormalizer;
 use Pronto\MobileBundle\Serializer\RemoteConfigNormalizer;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -70,10 +71,13 @@ class RemoteConfigController extends ApiController
     /**
      * @Route(path="/delete", methods={"POST"})
      * @IsGranted("ROLE_SUPER_ADMIN")
+     * @param Request $request
      * @return JsonResponse
      */
-    public function deleteAction()
+    public function deleteAction(Request $request)
     {
-        return JsonResponse::create(['data' => []]);
+        $this->remoteConfig->delete($request->get('items'));
+
+        return JsonResponse::create();
     }
 }

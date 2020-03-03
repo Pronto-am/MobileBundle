@@ -6,8 +6,10 @@ export default class ApplicationService {
             this.application = JSON.parse(localStorage.getItem('application'));
             this.version = JSON.parse(localStorage.getItem('applicationVersion'));
 
-            let response = await axios.get(Vue.prototype.$path('applications/:id', {id: this.application.id}));
-            this.application = response.data.data;
+            if(this.application !== null) {
+                let response = await axios.get(Vue.prototype.$path('applications/:id', {id: this.application.id}));
+                this.application = response.data.data;
+            }
         } catch (error) {
             console.error(error);
         }
