@@ -12,7 +12,7 @@
                                    :initial-data="items">
 
                             <template slot="buttons-left">
-                                <el-button type="success" v-if="$auth.userHasRole($auth.roles.ADMIN)" @click="$router.push({name: 'users.add'})">{{ $t('base.add') }}</el-button>
+                                <el-button type="success" v-if="$auth.userHasRole($auth.roles.ADMIN)" @click="$router.push({name: 'users.add'})">{{ $t('buttons.add') }}</el-button>
                             </template>
 
                             <template slot="filters" slot-scope="{filters}">

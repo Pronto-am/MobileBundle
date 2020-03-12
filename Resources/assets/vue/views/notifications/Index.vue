@@ -10,7 +10,7 @@
                                    :initial-data="items">
 
                             <template slot="buttons-left">
-                                <el-button type="success" @click="$router.push({name: 'push_notifications.add'})">{{ $t('base.add') }}</el-button>
+                                <el-button type="success" @click="$router.push({name: 'push_notifications.add'})">{{ $t('buttons.add') }}</el-button>
                             </template>
 
                             <template slot="header" slot-scope="{sorting, clickHandler}">
@@ -23,7 +23,8 @@
 
                             <template slot="row" slot-scope="{row}">
                                 <vue-table-column :row="row" type="custom">
-                                    <router-link :to="{name: 'push_notifications.edit', params: {id: row.id}}" v-html="$options.filters.translatable(row.title)"/>
+                                    <router-link :to="{name: 'push_notifications.statistics', params: {id: row.id}}" v-html="$options.filters.translatable(row.title)" v-if="$moment(row.sent).isBefore()"/>
+                                    <router-link :to="{name: 'push_notifications.edit', params: {id: row.id}}" v-html="$options.filters.translatable(row.title)" v-else/>
                                 </vue-table-column>
                                 <vue-table-column :row="row" property="sent" type="datetime"></vue-table-column>
                                 <vue-table-column :row="row" property="recipient_count"></vue-table-column>

@@ -23,6 +23,8 @@ import {
     Select,
     TabPane,
     Tabs,
+    Table,
+    TableColumn,
     Tag,
     TimeSelect,
     Tooltip,
@@ -31,7 +33,8 @@ import {
 } from 'element-ui';
 import lang from 'element-ui/lib/locale/lang/nl';
 import locale from 'element-ui/lib/locale';
-import 'element-ui/lib/theme-chalk/index.css';
+import '../../scss/libraries/_element.scss';
+// import 'element-ui/lib/theme-chalk/index.css';
 
 locale.use(lang);
 Vue.component(Alert.name, Alert);
@@ -58,6 +61,8 @@ Vue.component(DatePicker.name, DatePicker);
 Vue.component(Transfer.name, Transfer);
 Vue.component(Dialog.name, Dialog);
 Vue.component(TimeSelect.name, TimeSelect);
+Vue.component(Table.name, Table);
+Vue.component(TableColumn.name, TableColumn);
 Vue.component(ColorPicker.name, ColorPicker);
 
 Vue.use(Loading.directive);

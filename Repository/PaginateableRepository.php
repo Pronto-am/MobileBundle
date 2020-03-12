@@ -94,9 +94,19 @@ abstract class PaginateableRepository extends EntityRepository
      */
     public function list()
     {
-        return $this->createQueryBuilder('entity')
-            ->orderBy(sprintf('entity.%s', $this->sorting->column()), $this->sorting->direction())
-            ->getQuery()
-            ->execute();
+        $query = $this->createQueryBuilder('entity')
+            ->where('entity.application = :application')
+            ->setParameter('application', $this->prontoMobile->getApplication());
+
+        return $this->listQuery($query);
+    }
+
+    /**
+     * @param QueryBuilder $queryBuilder
+     * @return mixed
+     */
+    public function listQuery(QueryBuilder $queryBuilder)
+    {
+        return $queryBuilder->orderBy(sprintf('entity.%s', $this->sorting->column()), $this->sorting->direction())->getQuery()->execute();
     }
 }

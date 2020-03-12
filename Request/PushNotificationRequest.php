@@ -13,7 +13,7 @@ class PushNotificationRequest extends BaseRequest
      */
     public function required(): array
     {
-        return [];
+        return ['title', 'segment_id'];
     }
 
     /**
@@ -21,6 +21,22 @@ class PushNotificationRequest extends BaseRequest
      */
     public function rules(): array
     {
-        return [];
+        return [
+            'title' => [
+                'type'              => 'object',
+                'patternProperties' => [
+                    '[a-zA-Z]+' => ['type' => 'string', 'format' => 'editor_required']
+                ],
+            ],
+            'segment_id' => ['type' => ['number', 'null']],
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function formats(): array
+    {
+        return [new EditorRequiredFormat()];
     }
 }

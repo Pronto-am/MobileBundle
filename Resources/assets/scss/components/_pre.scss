@@ -1,4 +1,10 @@
 pre {
   white-space: normal;
-  margin: 0;
+  padding: 15px;
+  border-left: 3px solid var(--primary-color);
+  background-color: #f8f9fa;
+
+  code {
+    word-break: break-all;
+  }
 }

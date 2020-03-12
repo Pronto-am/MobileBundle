@@ -108,6 +108,7 @@ class PushNotification implements ApiEntityInterface
 
     /**
      * @ORM\Column(type="json_array")
+     * @Groups({"PushNotification"})
      */
     private $testDevices;
 
@@ -120,6 +121,7 @@ class PushNotification implements ApiEntityInterface
     /**
      * @var ArrayCollection $pushNotificationRecipients
      * @ORM\OneToMany(targetEntity="Pronto\MobileBundle\Entity\PushNotification\Recipient", mappedBy="pushNotification")
+     * @Groups({"PushNotificationDetailed"})
      */
     private $pushNotificationRecipients;
 

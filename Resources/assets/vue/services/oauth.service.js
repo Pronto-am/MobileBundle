@@ -84,13 +84,8 @@ export default class OAuthService {
         let hourInMilliSeconds = 86400;
         let time = data.expires_in / hourInMilliSeconds;
 
-        this.session.set('access_token', data.access_token, {
-            expires: time * 2,
-        });
-
-        this.session.set('refresh_token', data.refresh_token, {
-            expires: time * 4,
-        });
+        this.session.set('access_token', data.access_token);
+        this.session.set('refresh_token', data.refresh_token);
     }
 
 }

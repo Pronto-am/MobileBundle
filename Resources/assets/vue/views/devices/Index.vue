@@ -21,7 +21,7 @@
                             </template>
 
                             <template slot="row" slot-scope="{row}">
-                                <vue-table-column :row="row" property="name" router-link :to="{name: 'devices.details', params: {id: row.id}}"></vue-table-column>
+                                <vue-table-column :row="row" property="name" router-link :to="{name: 'devices.edit', params: {id: row.id}}"></vue-table-column>
                                 <vue-table-column :row="row" property="model"></vue-table-column>
                                 <vue-table-column :row="row" property="manufacturer"></vue-table-column>
                                 <vue-table-column :row="row" property="platform"></vue-table-column>

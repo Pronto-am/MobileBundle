@@ -6,8 +6,9 @@ export default [{
     component: require('../../views/devices/Index').default,
     meta: {auth: true, role: ROLE_USER}
 }, {
-    path: '/devices/details',
-    name: 'devices.details',
-    component: require('../../views/devices/Details').default,
+    path: '/devices/edit/:id',
+    name: 'devices.edit',
+    component: require('../../views/devices/Edit').default,
+    props: true,
     meta: {auth: true, role: ROLE_USER}
 }];

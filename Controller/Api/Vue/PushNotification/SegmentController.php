@@ -11,6 +11,7 @@ use Pronto\MobileBundle\Entity\Device;
 use Pronto\MobileBundle\Entity\PushNotification;
 use Pronto\MobileBundle\Entity\RemoteConfig;
 use Pronto\MobileBundle\Repository\PushNotification\SegmentRepository;
+use Pronto\MobileBundle\Request\SegmentRequest;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -44,7 +45,16 @@ class SegmentController extends ApiController
     public function paginateAction()
     {
         $segments = $this->segments->paginate();
+        return $this->paginatedResponse($segments);
+    }
 
+    /**
+     * @Route(path="/list", methods={"GET"})
+     * @IsGranted("ROLE_USER")
+     */
+    public function listAction()
+    {
+        $segments = $this->segments->list();
         return $this->response($segments);
     }
 
@@ -56,17 +66,22 @@ class SegmentController extends ApiController
      */
     public function getAction(int $id)
     {
-        return JsonResponse::create(['data' => []]);
+        return $this->response($this->segments->findOrNew($id));
     }
 
     /**
-     * @Route(path="/", methods={"POST"})
+     * @Route(methods={"POST"})
      * @IsGranted("ROLE_SUPER_ADMIN")
+     * @param SegmentRequest $request
      * @return JsonResponse
      */
-    public function saveAction()
+    public function saveAction(SegmentRequest $request)
     {
-        return JsonResponse::create(['data' => []]);
+        $segment = $this->segments->findOrFail($request->get('id'));
+
+        // TODO: save
+
+        return $this->response($segment);
     }
 
     /**

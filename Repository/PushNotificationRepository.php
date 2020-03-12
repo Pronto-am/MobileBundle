@@ -35,6 +35,21 @@ class PushNotificationRepository extends PaginateableRepository
     }
 
     /**
+     * @return mixed
+     */
+    public function list()
+    {
+        $query = $this->createQueryBuilder('entity')
+            ->where('entity.application = :application')
+            ->setParameter('application', $this->prontoMobile->getApplication())
+            ->leftJoin('entity.pushNotificationRecipients', 'recipient')
+            ->where('recipient.device = :device')
+            ->setParameter('device', $this->filters->get('device_id'));
+
+        return $this->listQuery($query);
+    }
+
+    /**
 	 * Get the scheduled push notifications by date
 	 *
 	 * @param DateTime $dateTime

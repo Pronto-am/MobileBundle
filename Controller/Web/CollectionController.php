@@ -112,7 +112,6 @@ class CollectionController extends BaseController implements ValidatePluginState
         ]);
 	}
 
-
     /**
      * Delete a collection
      *

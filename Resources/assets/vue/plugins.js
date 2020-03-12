@@ -105,6 +105,10 @@ Vue.filter('round', function (value) {
 });
 
 Vue.filter('translatable', function (value) {
+    if(value == null) {
+        return '';
+    }
+
     const selectedLocale = Cookies.get('selected_locale') ? Cookies.get('selected_locale') : 'en';
     const keys = Object.keys(value);
 

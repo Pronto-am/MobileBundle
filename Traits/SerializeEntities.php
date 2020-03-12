@@ -28,14 +28,15 @@ trait SerializeEntities
     /**
      * @param $data
      * @param array $normalizers
+     * @param array $groups
      * @param int $statusCode
      * @param array $headers
      * @return JsonResponse
      */
-    public function response($data, array $normalizers = [], int $statusCode = 200, array $headers = []): JsonResponse
+    public function response($data, array $normalizers = [], array $groups = [], int $statusCode = 200, array $headers = []): JsonResponse
     {
         return JsonResponse::create([
-            'data' => $this->serializeData($data, $normalizers)
+            'data' => $this->serializeData($data, $normalizers, $groups)
         ], $statusCode, $headers);
     }
 
@@ -57,10 +58,11 @@ trait SerializeEntities
     /**
      * @param $data
      * @param array $normalizers
+     * @param array $groups
      * @return mixed
      */
-    private function serializeData($data, array $normalizers = [])
+    private function serializeData($data, array $normalizers = [], array $groups = [])
     {
-        return json_decode($this->serializer->serialize($data, $normalizers));
+        return json_decode($this->serializer->serialize($data, $normalizers, $groups));
     }
 }

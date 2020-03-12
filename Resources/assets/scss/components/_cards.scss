@@ -41,6 +41,25 @@
     }
   }
 
+  h2 {
+    font-family: Helvetica Neue, Nunito, sans-serif;
+    font-size: 15px;
+    letter-spacing: 1px;
+    margin: 10px 0;
+    color: var(--primary-color-dark);
+    position: relative;
+
+    &:after {
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      content: '';
+      width: 20px;
+      height: 2px;
+      background-color: var(--primary-color-dark);
+    }
+  }
+
   h3 {
     font-size: 14px;
     color: var(--primary-color-dark);

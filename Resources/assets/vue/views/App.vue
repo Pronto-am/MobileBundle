@@ -2,11 +2,13 @@
     <div :style="cssVariables">
         <template v-if="$route.meta.layout !== 'front'">
             <header>
-                <div class="row">
-                    <div class="col"></div>
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col"></div>
 
-                    <div class="col-auto">
-                        <locale-changer></locale-changer>
+                        <div class="col-auto center-content">
+                            <locale-changer></locale-changer>
+                        </div>
                     </div>
                 </div>
             </header>
@@ -104,7 +106,7 @@
             },
 
             cssVariables: function() {
-                if(this.application === null) {
+                if(this.application == null || this.application.customer == null) {
                     return {};
                 }
 

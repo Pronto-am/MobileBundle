@@ -17,6 +17,12 @@ export default [{
     component: require('../../views/notifications/Edit').default,
     meta: {auth: true, role: ROLE_USER}
 }, {
+    path: '/notifications/statistics/:id',
+    name: 'push_notifications.statistics',
+    props: true,
+    component: require('../../views/notifications/statistics/Index').default,
+    meta: {auth: true, role: ROLE_USER}
+}, {
     path: '/notifications/segments',
     name: 'push_notifications.segments',
     component: require('../../views/notifications/segments/Index').default,

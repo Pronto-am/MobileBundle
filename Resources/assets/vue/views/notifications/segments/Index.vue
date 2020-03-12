@@ -4,21 +4,25 @@
             <template v-if="items">
                 <div class="card">
                     <div class="card-table">
-                        <vue-table url="vue.finances"
-                                   :can-delete="false"
+                        <vue-table :url="path('notifications/segments')"
+                                   :can-delete="$auth.userHasRole($auth.roles.SUPER_ADMIN)"
                                    :sorting="sorting"
                                    :initial-data="items">
 
+                            <template slot="buttons-left">
+                                <el-button type="success" v-if="$auth.userHasRole($auth.roles.SUPER_ADMIN)" @click="$router.push({name: 'push_notifications.segments.add'})">{{ $t('buttons.add') }}</el-button>
+                            </template>
+
                             <template slot="header" slot-scope="{sorting, clickHandler}">
-                                <vue-table-header :sorting="sorting" @click="clickHandler" label="Naam" identifier="plugin.name"></vue-table-header>
-                                <vue-table-header :sorting="sorting" @click="clickHandler" label="Actief" identifier="active"></vue-table-header>
+                                <vue-table-header :sorting="sorting" @click="clickHandler" :label="$t('labels.name')" identifier="name"></vue-table-header>
+                                <vue-table-header :sorting="sorting" @click="clickHandler" :label="$t('labels.devices')" identifier="device_count"></vue-table-header>
                             </template>
 
                             <template slot="row" slot-scope="{row}">
-                                <vue-table-column :row="row" property="plugin.name" router-link :to="{name: 'versions.edit', params: {id: row.id}}"></vue-table-column>
-                                <vue-table-column :row="row" property="active" type="custom">
-                                    {{ row.active ? 'Ja' : 'Nee' }}
+                                <vue-table-column :row="row" type="custom">
+                                    <router-link :to="{name: 'push_notifications.segments.edit', params: {id: row.id}}" v-html="$options.filters.translatable(row.name)"/>
                                 </vue-table-column>
+                                <vue-table-column :row="row" property="device_count"></vue-table-column>
                             </template>
 
                         </vue-table>
@@ -42,9 +46,9 @@
         },
 
         beforeRouteEnter(to, from, next) {
-            axios.get(url('versions')).then(({data: {data: plugins}}) => {
+            axios.get(path('notifications/segments')).then(({data: {data: segments}}) => {
                 next(vm => {
-                    vm.items = plugins;
+                    vm.items = segments;
                 })
             }).catch(error => {
                 next();

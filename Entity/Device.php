@@ -29,8 +29,7 @@ class Device implements ApiEntityInterface
 	/**
 	 * @ORM\Id
 	 * @ORM\Column(type="string", unique=true)
-	 *
-	 * @Groups({"Device"})
+	 * @Groups({"Device", "PushNotificationDetailed"})
 	 */
 	private $id;
 
@@ -43,98 +42,84 @@ class Device implements ApiEntityInterface
     /**
      * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\User", inversedBy="devices")
      * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
-     *
      * @Groups({"Device"})
      */
     private $user;
 
 	/**
 	 * @ORM\Column(type="string", nullable=true)
-	 *
 	 * @Groups({"Device"})
 	 */
 	private $firebaseToken;
 
 	/**
 	 * @ORM\Column(type="string", nullable=true)
-	 *
 	 * @Groups({"Device"})
 	 */
 	private $apnsToken;
 
 	/**
 	 * @ORM\Column(type="string")
-	 *
 	 * @Groups({"Device"})
 	 */
 	private $name;
 
 	/**
 	 * @ORM\Column(type="string")
-	 *
 	 * @Groups({"Device"})
 	 */
 	private $model;
 
 	/**
 	 * @ORM\Column(type="string")
-	 *
 	 * @Groups({"Device"})
 	 */
 	private $manufacturer;
 
 	/**
 	 * @ORM\Column(type="string")
-	 *
 	 * @Groups({"Device"})
 	 */
 	private $platform;
 
 	/**
 	 * @ORM\Column(type="string")
-	 *
 	 * @Groups({"Device"})
 	 */
 	private $osVersion;
 
 	/**
 	 * @ORM\Column(type="string")
-	 *
 	 * @Groups({"Device"})
 	 */
 	private $appVersion;
 
 	/**
 	 * @ORM\Column(type="boolean")
-	 *
 	 * @Groups({"Device"})
 	 */
 	private $testDevice = false;
 
 	/**
 	 * @ORM\Column(type="boolean")
-	 *
 	 * @Groups({"Device"})
 	 */
 	private $tokenState = true;
 
 	/**
 	 * @ORM\Column(type="boolean")
-	 *
 	 * @Groups({"Device"})
 	 */
 	private $pushNotifications = true;
 
 	/**
 	 * @ORM\Column(type="datetime", nullable=true)
-	 *
 	 * @Groups({"Device"})
 	 */
 	private $lastLogin;
 
 	/**
 	 * @ORM\Column(type="string")
-	 *
 	 * @Groups({"Device"})
 	 */
 	private $language;

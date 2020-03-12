@@ -28,4 +28,13 @@ class CustomerRepository extends PaginateableRepository
 
         return $this->paginateQuery($query);
     }
+
+    /**
+     * @return mixed
+     */
+    public function list()
+    {
+        $query = $this->createQueryBuilder('entity');
+        return $this->listQuery($query);
+    }
 }

@@ -54,9 +54,9 @@ class AssetVersioning extends AbstractExtension
         // Return basic tags
         if ($this->manifest['entrypoints'][$fileName] === null) {
             if($this->isJavascriptFile($fileName)) {
-                return sprintf('<script src="/bundles/prontomobile/build/%s.js" type="text/javascript"></script>', $fileName);
+                return sprintf('<script src="/build/%s.js" type="text/javascript"></script>', $fileName);
             } else if($this->isStyleFile($fileName)) {
-                return sprintf('<link rel="stylesheet" href="/bundles/prontomobile/build/%s.css" />', $fileName);
+                return sprintf('<link rel="stylesheet" href="/build/%s.css" />', $fileName);
             }
             return '';
         }
@@ -66,11 +66,11 @@ class AssetVersioning extends AbstractExtension
         foreach($this->manifest['entrypoints'][$fileName] as $type => $files) {
             if($this->isJavascriptFile($type)) {
                 foreach($files as $file) {
-                    $tags[] = sprintf('<script src="/bundles/prontomobile/%s" type="text/javascript"></script>', ltrim($file, '/'));
+                    $tags[] = sprintf('<script src="/%s" type="text/javascript"></script>', ltrim($file, '/'));
                 }
             } else if($this->isStyleFile($type)) {
                 foreach($files as $file) {
-                    $tags[] = sprintf('<link rel="stylesheet" href="/bundles/prontomobile/%s" />', ltrim($file, '/'));
+                    $tags[] = sprintf('<link rel="stylesheet" href="/%s" />', ltrim($file, '/'));
                 }
             }
         }

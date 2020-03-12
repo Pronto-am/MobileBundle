@@ -10,7 +10,7 @@
                                    :initial-data="items">
 
                             <template slot="buttons-left">
-                                <el-button type="success" v-if="$auth.userHasRole($auth.roles.SUPER_ADMIN)" @click="$router.push({name: 'remote_config.add'})">{{ $t('base.add') }}</el-button>
+                                <el-button type="success" v-if="$auth.userHasRole($auth.roles.SUPER_ADMIN)" @click="$router.push({name: 'remote_config.add'})">{{ $t('buttons.add') }}</el-button>
                             </template>
 
                             <template slot="header" slot-scope="{sorting, clickHandler}">
@@ -24,8 +24,12 @@
 
                             <template slot="row" slot-scope="{row}">
                                 <vue-table-column :row="row" type="custom">
-                                    <a href="#!" class="platform" :class="{'active': row.android}"><i class="fa fa-android"></i></a>
-                                    <a href="#!" class="platform" :class="{'active': row.ios}"><i class="fa fa-apple"></i></a>
+                                    <a href="#" class="platform" :class="{'active': row.android}">
+                                        <font-awesome-icon :icon="['fab', 'android']" />
+                                    </a>
+                                    <a href="#" class="platform" :class="{'active': row.ios}">
+                                        <font-awesome-icon :icon="['fab', 'apple']" />
+                                    </a>
                                 </vue-table-column>
                                 <vue-table-column :row="row" property="name" router-link :to="{name: 'remote_config.edit', params: {id: row.id}}"></vue-table-column>
                                 <vue-table-column :row="row" property="identifier"></vue-table-column>

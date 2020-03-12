@@ -1,10 +1,10 @@
 {
-  "build/css/app.css": "/build/css/app.css",
-  "build/css/app.js": "/build/css/app.js",
-  "build/js/app.css": "/build/js/app.css",
-  "build/js/app.js": "/build/js/app.js",
-  "build/vendors~js/app.css": "/build/vendors~js/app.css",
-  "build/vendors~js/app.js": "/build/vendors~js/app.js",
-  "build/fonts/element-icons.woff": "/build/fonts/element-icons.535877f5.woff",
-  "build/fonts/element-icons.ttf": "/build/fonts/element-icons.732389de.ttf"
+  "build/css/app.css": "/bundles/prontomobile/build/css/app.css",
+  "build/css/app.js": "/bundles/prontomobile/build/css/app.js",
+  "build/js/app.css": "/bundles/prontomobile/build/js/app.css",
+  "build/js/app.js": "/bundles/prontomobile/build/js/app.js",
+  "build/vendors~js/app.css": "/bundles/prontomobile/build/vendors~js/app.css",
+  "build/vendors~js/app.js": "/bundles/prontomobile/build/vendors~js/app.js",
+  "build/fonts/element-icons.woff": "/bundles/prontomobile/build/fonts/element-icons.535877f5.woff",
+  "build/fonts/element-icons.ttf": "/bundles/prontomobile/build/fonts/element-icons.732389de.ttf"
 }

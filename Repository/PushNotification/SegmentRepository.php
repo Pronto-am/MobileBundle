@@ -24,9 +24,16 @@ class SegmentRepository extends PaginateableRepository
      */
     public function paginate(): PaginationResponse
     {
-        return $this->findBy([
-            'application' => $this->prontoMobile->getApplication()
-        ]);
+        $query = $this->createQueryBuilder('entity')
+            ->where('entity.application = :application')
+            ->setParameter('application', $this->prontoMobile->getApplication());
+
+        if($this->filters->isSearching()) {
+            $query = $query->andWhere('entity.name LIKE :search LIKE :search')
+                ->setParameter('search', '%' . $this->filters->searchValue() . '%');
+        }
+
+        return $this->paginateQuery($query);
     }
 
 	/**

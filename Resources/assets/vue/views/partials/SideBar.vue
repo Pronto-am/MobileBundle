@@ -3,43 +3,35 @@
 </style>
 
 <template>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-sm-12">
-                <ul>
-                    <li v-for="route of availableRoutes" :key="route.name" v-user-has-role="route.role">
-                        <div :class="{'router-link-active': routerLinkActive(route), 'router-link-exact-active': routerLinkExactActive(route)}">
-                            <span @click="navigate(route)">
-                                <font-awesome-icon :icon="route.icon"/>
-                            </span>
+    <ul class="menu">
+        <li v-for="route of availableRoutes" :key="route.name" v-user-has-role="route.role">
+            <div :class="{'router-link-active': routerLinkActive(route), 'router-link-exact-active': routerLinkExactActive(route)}">
+                <span @click="navigate(route)"><font-awesome-icon :icon="route.icon"/></span>
 
-                            <span @click="navigate(route)" v-html="$t(route.locKey)"></span>
+                <span @click="navigate(route)" v-html="$t(route.locKey)"></span>
 
-                            <span @click="route.submenuOpen = !route.submenuOpen" v-if="route.children !== undefined && route.children.length > 0">
-                                <font-awesome-icon icon="angle-left" :class="{'rotate': route.submenuOpen}"/>
-                            </span>
-                        </div>
-
-                        <ul v-if="route.children !== undefined && route.children.length > 0 && route.submenuOpen" :class="{'open': route.submenuOpen}">
-                            <li v-for="child in route.children" :key="child.name" v-user-has-role="child.role">
-                                <div :class="{'router-link-active': routerLinkActive(child), 'router-link-exact-active': routerLinkExactActive(child)}">
-                                    <span @click="navigate(child)" v-html="child.text"></span>
-
-                                    <span @click="child.submenuOpen = !child.submenuOpen" v-if="child.children !== undefined && child.children.length > 0">
-                                        <font-awesome-icon icon="angle-left" :class="{'rotate': child.submenuOpen}"/>
-                                    </span>
-                                </div>
-
-                                <ul v-if="child.children !== undefined && child.children.length > 0 && child.submenuOpen" :class="{'open': child.submenuOpen}">
-                                    <router-link :to="{name: subChild.name}" tag="li" v-for="subChild in child.children" :key="subChild.name" v-html="subChild.text"></router-link>
-                                </ul>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
+                <span @click="route.submenuOpen = !route.submenuOpen" v-if="route.children !== undefined && route.children.length > 0">
+                    <font-awesome-icon icon="angle-left" :class="{'rotate': route.submenuOpen}"/>
+                </span>
             </div>
-        </div>
-    </div>
+
+            <ul v-if="route.children !== undefined && route.children.length > 0 && route.submenuOpen" :class="{'open': route.submenuOpen}">
+                <li v-for="child in route.children" :key="child.name" v-user-has-role="child.role">
+                    <div :class="{'router-link-active': routerLinkActive(child), 'router-link-exact-active': routerLinkExactActive(child)}">
+                        <span @click="navigate(child)" v-html="$t(child.locKey)"></span>
+
+                        <span @click="child.submenuOpen = !child.submenuOpen" v-if="child.children !== undefined && child.children.length > 0">
+                            <font-awesome-icon icon="angle-left" :class="{'rotate': child.submenuOpen}"/>
+                        </span>
+                    </div>
+
+                    <ul v-if="child.children !== undefined && child.children.length > 0 && child.submenuOpen" :class="{'open': child.submenuOpen}">
+                        <router-link :to="{name: subChild.name}" tag="li" v-for="subChild in child.children" :key="subChild.name" v-html="$t(subChild.locKey)"></router-link>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+    </ul>
 </template>
 
 <script>

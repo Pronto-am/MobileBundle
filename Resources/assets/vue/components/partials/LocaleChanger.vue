@@ -1,3 +1,9 @@
+<style scoped lang="scss">
+    .el-dropdown-link {
+        cursor: pointer;
+    }
+</style>
+
 <template>
     <el-dropdown trigger="click" @command="changeLocale">
         <span class="el-dropdown-link"><span v-html="$i18n.locale.toUpperCase()"></span><i class="el-icon-arrow-down el-icon--right"></i></span>

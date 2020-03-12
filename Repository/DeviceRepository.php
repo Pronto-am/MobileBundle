@@ -35,6 +35,30 @@ class DeviceRepository extends PaginateableRepository
     }
 
     /**
+     * @return mixed
+     */
+    public function list()
+    {
+        $query = $this->createQueryBuilder('entity')
+            ->where('entity.application = :application')
+            ->setParameter('application', $this->prontoMobile->getApplication());
+
+        // Filter on segment
+        if($this->filters->get('segment_id') !== null) {
+            $query->leftJoin('entity.deviceSegments', 'segment')
+                ->andWhere('segment.segment = :segment')
+                ->setParameter('segment', $this->filters->get('segment_id'));
+        }
+
+        // Filter based on test value
+        if($this->filters->get('test') !== null) {
+            $query->andWhere('entity.testDevice = :test')->setParameter('test', $this->filters->get('test'));
+        }
+
+        return $this->listQuery($query);
+    }
+
+    /**
      * @param Application $application
      * @param $isTest
      * @return mixed

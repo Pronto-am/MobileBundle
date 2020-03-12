@@ -8,19 +8,18 @@ use Pronto\MobileBundle\Entity\ApiEntityInterface;
 use Pronto\MobileBundle\Entity\Device;
 use Pronto\MobileBundle\Entity\PushNotification;
 use Pronto\MobileBundle\Traits\ApiEntityTrait;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 
 /**
  * Class Recipient
  * @package Pronto\MobileBundle\Entity
- *
  * @ORM\Entity
  * @ORM\Table(name="push_notification_recipients")
  */
 class Recipient implements ApiEntityInterface
 {
 	use ApiEntityTrait;
-
 
 	/**
 	 * @ORM\Id
@@ -29,48 +28,50 @@ class Recipient implements ApiEntityInterface
 	 */
 	private $pushNotification;
 
-
 	/**
 	 * @ORM\Id
 	 * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Device", inversedBy="pushNotificationRecipients")
 	 * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
-	 */
+     * @Groups({"PushNotificationDetailed"})
+     */
 	private $device;
-
 
 	/**
 	 * @ORM\Column(type="boolean")
+     * @Groups({"PushNotificationDetailed"})
 	 */
 	private $sent = true;
 
-
 	/**
 	 * @ORM\Column(type="string", nullable=true)
-	 */
+     * @Groups({"PushNotificationDetailed"})
+     */
 	private $description;
-
 
 	/**
 	 * @ORM\Column(type="datetime", nullable=true)
-	 */
+     * @Groups({"PushNotificationDetailed"})
+     */
 	private $opened;
 
-
+    /**
+     * Recipient constructor.
+     * @param PushNotification $pushNotification
+     * @param Device $device
+     */
 	public function __construct(PushNotification $pushNotification, Device $device)
 	{
 		$this->pushNotification = $pushNotification;
 		$this->device = $device;
 	}
 
-
 	/**
 	 * @return PushNotification
 	 */
 	public function getPushNotification(): PushNotification
-	{
-		return $this->pushNotification;
-	}
-
+    {
+        return $this->pushNotification;
+    }
 
 	/**
 	 * @param PushNotification $pushNotification
@@ -80,7 +81,6 @@ class Recipient implements ApiEntityInterface
 		$this->pushNotification = $pushNotification;
 	}
 
-
 	/**
 	 * @return Device
 	 */
@@ -88,7 +88,6 @@ class Recipient implements ApiEntityInterface
 	{
 		return $this->device;
 	}
-
 
 	/**
 	 * @return bool
@@ -98,7 +97,6 @@ class Recipient implements ApiEntityInterface
 		return $this->sent;
 	}
 
-
 	/**
 	 * @param bool $sent
 	 */
@@ -106,7 +104,6 @@ class Recipient implements ApiEntityInterface
 	{
 		$this->sent = $sent;
 	}
-
 
 	/**
 	 * @return string|null
@@ -116,7 +113,6 @@ class Recipient implements ApiEntityInterface
 		return $this->description;
 	}
 
-
 	/**
 	 * @param null|string $description
 	 */
@@ -125,7 +121,6 @@ class Recipient implements ApiEntityInterface
 		$this->description = $description;
 	}
 
-
 	/**
 	 * @return DateTime|null
 	 */
@@ -133,7 +128,6 @@ class Recipient implements ApiEntityInterface
 	{
 		return $this->opened;
 	}
-
 
 	/**
 	 * @param DateTime|string $opened

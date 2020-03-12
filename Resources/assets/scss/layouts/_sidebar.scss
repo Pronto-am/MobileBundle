@@ -1,4 +1,4 @@
-ul {
+ul.menu {
   list-style-type: none;
   margin: 20px 0 10px 0;
   padding: 0;
@@ -63,7 +63,8 @@ ul {
       list-style-type: none;
       opacity: 0;
       transition: height 0.1s, opacity 0.2s ease;
-      //background-color: $gray-100;
+      background-color: #f8f9fa;
+      font-size: 14px;
 
       li {
         line-height: 45px;

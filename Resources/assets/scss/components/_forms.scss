@@ -1,92 +1,162 @@
-input, .vue-editor {
-  transition: box-shadow .15s ease;
-  border: 0 !important;
-  box-shadow: 0 1px 3px rgba(50,50,93,.15), 0 1px 0 rgba(0,0,0,.02) !important;
-  background-color: #f7fafc !important;
-
-  &:focus, &.vue-editor-focused {
-    box-shadow: 0 4px 6px rgba(50,50,93,.11), 0 1px 3px rgba(0,0,0,.08) !important;
-  }
-}
-
 .el-select-dropdown__item.is-disabled.cursor-default {
   cursor: default !important;
 }
 
+@mixin input-style() {
+  transition: all .2s ease;
+  border: 1px solid #EBEEF5;
+  box-shadow: 0 1px 3px rgba(50, 50, 93, .15), 0 1px 0 rgba(0, 0, 0, .02) !important;
+  background-color: #f7fafc !important;
+  border-radius: 2px !important;
+}
+
+@mixin input-style-hover() {
+  border-color: #C0C4CC;
+}
+
+@mixin input-style-focused() {
+  box-shadow: 0 4px 6px rgba(50, 50, 93, .11), 0 1px 3px rgba(0, 0, 0, .08) !important;
+  border-color: var(--primary-color) !important;
+}
+
+@mixin input-style-invalid() {
+  border-color: var(--danger);
+}
+
+@mixin with-checkbox-background() {
+  background-image: url("data:image/svg+xml;charset=utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><path fill='%23fff' d='M504.5 75.5c-10-10-26.2-10-36.2 0L161.6 382.2 43.7 264.3c-10-10-26.2-10-36.2 0 -10 10-10 26.2 0 36.2l136 136c10 10 26.2 10 36.2 0L504.5 111.7C514.5 101.7 514.5 85.5 504.5 75.5z'/></svg>") !important;
+}
+
 label {
   font-weight: 600;
+}
 
-  &.form-check-label {
-    display: inline-block;
-    position: relative;
-    cursor: pointer;
-    padding-left: 30px;
-    line-height: 18px;
-    height: 18px;
-    margin-bottom: 0;
-    transition: color 0.2s linear;
+.form-group {
 
-    &.disabled {
-      cursor: not-allowed;
-    }
+  label {
+    font-weight: 500;
 
-    input[type="checkbox"] {
-      opacity: 0;
-      position: absolute;
-      visibility: hidden;
-    }
+    &.form-check-label {
+      display: inline-block;
+      position: relative;
+      cursor: pointer;
+      padding-left: 30px;
+      line-height: 18px;
+      height: 18px;
+      margin-bottom: 0;
+      transition: color 0.2s linear;
 
-    span.form-check-sign {
-      &:before {
-        border-radius: .25rem;
-        transition: all .2s cubic-bezier(.68,-.55,.265,1.55);
-        box-shadow: 0 1px 3px rgba(50, 50, 93, .15), 0 1px 0 rgba(0, 0, 0, .02);
+      &.disabled {
+        cursor: not-allowed;
+      }
+
+      input[type="checkbox"] {
+        opacity: 0;
         position: absolute;
-        top: 0;
-        left: 0;
-        display: block;
-        width: 1.25rem;
-        height: 1.25rem;
-        content: '';
-        background-color: #f7fafc;
+        visibility: hidden;
       }
 
-      &:after {
-        position: absolute;
-        top: 0.25rem;
-        left: 0.25rem;
-        display: block;
-        width: 0.75rem;
-        height: 0.75rem;
-        font-size: 12px;
-        content: '';
+      span.form-check-sign {
+        &:before {
+          border-radius: 2px !important;
+          transition: all .2s ease !important;
+          box-shadow: none !important;
+          position: absolute;
+          top: 0;
+          left: 0;
+          display: block;
+          width: 18px !important;
+          height: 18px !important;
+          content: '';
+          background-color: #f7fafc;
+          border: 1px solid #EBEEF5;
+        }
+
+        &:after {
+          position: absolute;
+          top: 4px !important;
+          left: 4px !important;
+          display: block;
+          width: 11px !important;
+          height: 11px !important;
+          content: '';
+        }
+      }
+
+      input[type="checkbox"]:checked + span.form-check-sign {
+        &::before {
+          border-color: var(--primary-color) !important;
+          background-color: var(--primary-color) !important;
+          color: #fff;
+        }
+
+        &:after {
+          @include with-checkbox-background();
+        }
+      }
+
+      input[type="checkbox"]:disabled + span.form-check-sign {
+        &::before {
+          border-color: #e4e7ed;
+          background-color: #f5f7fa;
+        }
+      }
+
+      input[type="checkbox"]:disabled:checked + span.form-check-sign {
+        &:after {
+          @include with-checkbox-background();
+        }
       }
     }
 
-    input[type="checkbox"]:checked + span.form-check-sign {
-      &::before {
-        border-color: var(--primary-color) !important;
-        background-color: var(--primary-color) !important;
-        color: #fff;
-        box-shadow: 0 4px 6px rgba(50,50,93,.11), 0 1px 3px rgba(0,0,0,.08);
+    &:hover {
+      &.form-check-label:not(.disabled) {
+        span.form-check-sign {
+          &:before {
+            border-color: var(--primary-color);
+          }
+        }
       }
+    }
+  }
 
-      &:after {
-        background-image: url("data:image/svg+xml;charset=utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'><path fill='%23fff' d='M6.564.75l-3.59 3.612-1.538-1.55L0 4.26 2.974 7.25 8 2.193z'/></svg>");
+  .el-input, .el-select, {
+    .el-input__inner {
+      @include input-style();
+
+      &:focus {
+        @include input-style-focused();
       }
     }
 
-    input[type="checkbox"]:disabled + span.form-check-sign {
-      &::before {
-        border-color: #e4e7ed;
-        background-color: #f5f7fa;
+    &.is-invalid {
+      .el-input__inner {
+        &.is-invalid {
+          @include input-style-invalid();
+        }
       }
     }
 
-    input[type="checkbox"]:disabled:checked + span.form-check-sign {
-      &:after {
-        background-image: url("data:image/svg+xml;charset=utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'><path fill='%235e72e4' d='M6.564.75l-3.59 3.612-1.538-1.55L0 4.26 2.974 7.25 8 2.193z'/></svg>");
+    &:hover {
+      .el-input__inner {
+        @include input-style-hover();
       }
+    }
+  }
+
+  .vue-editor {
+    @include input-style();
+
+    &.vue-editor-focused {
+      @include input-style-focused();
+    }
+
+    &.is-invalid {
+      @include input-style-invalid();
+    }
+
+    &:hover {
+      @include input-style-hover();
     }
   }
 }
