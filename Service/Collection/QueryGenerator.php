@@ -376,7 +376,7 @@ class QueryGenerator
             $relationship = $this->collectionRelationships[$identifier];
 
             $query .= 'AND ';
-            $query .= sprintf('EXISTS (SELECT id FROM collection_relationshimappers AS mappers WHERE mappers.entry_left_id = entries.id AND mappers.related_collection_id = :p%s AND mappers.entry_right_id = :p%s ) ', $parameterIndex, $parameterIndex + 1);
+            $query .= sprintf('EXISTS (SELECT id FROM collection_relationship_mappers AS mappers WHERE mappers.entry_left_id = entries.id AND mappers.related_collection_id = :p%s AND mappers.entry_right_id = :p%s ) ', $parameterIndex, $parameterIndex + 1);
 
             $queryParameters[] = new Parameter('p' . $parameterIndex, $relationship->getRelatedCollection()->getId(), Types::STRING);
             $queryParameters[] = new Parameter('p' . ($parameterIndex + 1), $entryId, Types::STRING);
