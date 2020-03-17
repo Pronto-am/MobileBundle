@@ -66,13 +66,14 @@ class EntryParser
 		$this->setUsers();
 	}
 
-	/**
-	 * Parse the entries to the correct format to return as an API response
-	 *
-	 * @param array $entries
-	 * @param array $mappedRelationships
-	 * @return array
-	 */
+    /**
+     * Parse the entries to the correct format to return as an API response
+     *
+     * @param array $entries
+     * @param array $mappedRelationships
+     * @return array
+     * @throws Exception
+     */
 	public function parse(array $entries, array $mappedRelationships = []): array
 	{
 		$this->parseEntries($entries, $mappedRelationships);
@@ -80,11 +81,12 @@ class EntryParser
 		return $entries;
 	}
 
-	/**
-	 * Parse the entries
-	 * @param array $entries
-	 * @param array $mappedRelationships
-	 */
+    /**
+     * Parse the entries
+     * @param array $entries
+     * @param array $mappedRelationships
+     * @throws Exception
+     */
 	private function parseEntries(array &$entries, array $mappedRelationships): void
 	{
 		// Parse the entry
@@ -261,6 +263,25 @@ class EntryParser
 
 				$entry[$identifier] = $related;
 			}
+
+            /** @var Collection\Relationship $relationship */
+            foreach ($this->collection->getInversedRelationships() as $relationship) {
+                $identifier = $relationship->getCollection()->getIdentifier();
+
+                // The relationship may not be set when it shouldn't be shown in the listview response
+                if (!isset($mappedRelationships[$entry['id']][$identifier])) {
+                    continue;
+                }
+
+                $related = array_values($mappedRelationships[$entry['id']][$identifier]);
+
+                // Return only one record when it's a one to one relationship
+                if (!$relationship->getType()->hasMany()) {
+                    $related = $related[0] ?? null;
+                }
+
+                $entry[$identifier] = $related;
+            }
 		}
 	}
 }

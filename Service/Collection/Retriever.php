@@ -115,8 +115,11 @@ class Retriever
 	private function loadRelationships(array $results, $singleResult = false): void
 	{
 		$relationships = $this->collection->getRelationships();
+		$inversedRelationships = $this->collection->getInversedRelationships();
 
-		if (\count($relationships) > 0) {
+		dump($this->collection->getInversedRelationships()->toArray());
+
+		if (count($relationships) > 0 || count($inversedRelationships) > 0) {
 			// Get the ids of the results
 			$entries = array_map(function ($entry) {
 				return $entry['id'];
@@ -158,6 +161,40 @@ class Retriever
 					});
 				}
 			}
+
+            /** @var Collection\Relationship $relationship */
+            foreach ($inversedRelationships as $relationship) {
+                // TODO: Check if this relationship is included in the query
+
+                $relatedCollection = $relationship->getCollection();
+
+                // Change the collection for the query generation
+                $this->queryGenerator->setCollection($relatedCollection);
+                $this->entryParser->setCollection($relatedCollection);
+
+                foreach ($entries as $entryId) {
+                    $relatedEntries = $this->mapperRepository->getAllRelatedEntryIds($entryId, $relationship->getRelatedCollection(), false);
+
+                    // Get the keys from above result that aren't yet locally cached
+                    $toRetrieve = array_diff($relatedEntries, array_keys($this->cachedEntries));
+
+                    // Retrieve the full entries that are missing
+                    $toCache = $this->queryGenerator->getRelatedEntries($toRetrieve);
+
+                    // Parse the related entries so that the ID becomes key
+                    $parsed = Collect::keyBy($this->parseEntries($toCache), 'id');
+
+                    // Add the retrieved entries to the local cache
+                    $this->cachedEntries = array_merge($this->cachedEntries, $parsed);
+
+                    // Add the Entry objects to the relationship array
+                    $this->mappedRelationships[$entryId][$relatedCollection->getIdentifier()] = array_filter($this->cachedEntries, function ($entry) use ($relatedEntries) {
+                        return \in_array($entry['id'], $relatedEntries, true);
+                    });
+
+                    dump($this->mappedRelationships);
+                }
+            }
 		}
 
 		// Reset the collection for the entry parser and query generator
