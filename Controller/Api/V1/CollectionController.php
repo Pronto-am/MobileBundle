@@ -10,6 +10,7 @@ use Pronto\MobileBundle\Entity\Collection;
 use Pronto\MobileBundle\Entity\Collection\Entry;
 use Pronto\MobileBundle\Service\Collection\Retriever;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class CollectionController extends BaseApiController
 {
@@ -165,6 +166,10 @@ class CollectionController extends BaseApiController
 			'identifier'         => $identifier,
 			'applicationVersion' => $applicationVersion
 		]);
+
+		if($collection === null) {
+		    throw new NotFoundHttpException();
+        }
 
 		return $collection;
 	}

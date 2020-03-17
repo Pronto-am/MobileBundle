@@ -116,6 +116,9 @@ class Retriever
 	{
 		$relationships = $this->collection->getRelationships();
 
+		dump($relationships);
+		dump($this->collection->getInversedRelationships());
+
 		if (\count($relationships) > 0) {
 			// Get the ids of the results
 			$entries = array_map(function ($entry) {

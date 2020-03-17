@@ -3,6 +3,7 @@
 namespace Pronto\MobileBundle\Controller\Web\Collection;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Pronto\MobileBundle\Controller\BaseController;
 use Pronto\MobileBundle\Entity\Collection;
 use Pronto\MobileBundle\Entity\Plugin;
@@ -124,11 +125,15 @@ class EntryController extends BaseController implements ValidatePluginStateInter
 				// Get the full entry objects by id's
 				$relatedEntries = $entityManager->getRepository(Collection\Entry::class)->getWhereIdIn($mappedRelationships);
 
-				// Get the entry title property of the collection
-				[$entryTitleProperty] = array_filter($relationship->getRelatedCollection()->getProperties()->getValues(), function ($property) {
-					/** @var Collection\Property $property */
-					return $property->getEntryTitle();
-				});
+				try {
+                    // Get the entry title property of the collection
+                    [$entryTitleProperty] = array_filter($relationship->getRelatedCollection()->getProperties()->getValues(), function ($property) {
+                        /** @var Collection\Property $property */
+                        return $property->getEntryTitle();
+                    });
+                } catch(Exception $exception) {
+				    continue;
+                }
 
 				$related = array_reduce($relatedEntries, function ($result, $entry) use ($relationship, $entryTitleProperty, $entryValueParser) {
 					/**

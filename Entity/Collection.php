@@ -64,10 +64,15 @@ class Collection extends TimestampedEntity implements ApiEntityInterface
 	 */
 	private $entries;
 
-	/**
-	 * @ORM\OneToMany(targetEntity="Pronto\MobileBundle\Entity\Collection\Relationship", mappedBy="collection")
-	 */
-	private $relationships;
+    /**
+     * @ORM\OneToMany(targetEntity="Pronto\MobileBundle\Entity\Collection\Relationship", mappedBy="collection")
+     */
+    private $relationships;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Pronto\MobileBundle\Entity\Collection\Relationship", mappedBy="relatedCollection")
+     */
+    private $inversedRelationships;
 
     public function __construct()
     {
@@ -180,4 +185,12 @@ class Collection extends TimestampedEntity implements ApiEntityInterface
 	{
 		return $this->relationships;
 	}
+
+    /**
+     * @return DoctrineCollection
+     */
+	public function getInversedRelationships(): DoctrineCollection
+    {
+        return $this->inversedRelationships;
+    }
 }
