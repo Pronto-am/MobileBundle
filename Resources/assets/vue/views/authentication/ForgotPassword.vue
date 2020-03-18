@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-sm-12 col-md-6 offset-md-3 col-lg-4 offset-lg-4">
                 <vue-form ref="form"
-                          :url="$path('auth/password')"
+                          :url="path('auth/password/reset')"
                           :model="user"
                           @submit:success="success"
                           @submit:error="submitError">

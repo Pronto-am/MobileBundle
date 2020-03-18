@@ -28,7 +28,15 @@
     }
   }
 
-  .el-button--sm {
+  &.el-button--text {
+    color: var(--link-color);
+
+    &:hover {
+      color: var(--link-color-dark);
+    }
+  }
+
+  &.el-button--sm {
     padding: .25rem .5rem;
   }
 }
