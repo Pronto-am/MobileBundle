@@ -3,7 +3,7 @@
         <div class="col-sm-12" v-if="item">
             <vue-form :url="path('users')"
                       :model="item"
-                      @submit:success="submitSuccess"
+                      @submit:success="saved"
                       @submit:error="submitError">
 
                 <template slot-scope="{form, model}">
@@ -34,9 +34,10 @@
                             <div class="form-row">
                                 <div class="col-sm-12">
                                     <input-select name="role" :label="$t('labels.role')" :form="form" :model="model">
-                                        <el-option label="Reguliere gebruiker" value="ROLE_USER"></el-option>
-                                        <el-option label="Administrator" value="ROLE_ADMIN"></el-option>
-                                        <el-option label="Super administrator" value="ROLE_SUPER_ADMIN"></el-option>
+                                        <el-option :label="$t('labels.role_app_user')" value="ROLE_APP_USER"></el-option>
+                                        <el-option :label="$t('labels.role_user')" value="ROLE_USER"></el-option>
+                                        <el-option :label="$t('labels.role_admin')" value="ROLE_ADMIN"></el-option>
+                                        <el-option :label="$t('labels.role_super_admin')" value="ROLE_SUPER_ADMIN"></el-option>
                                     </input-select>
                                 </div>
                             </div>
@@ -83,6 +84,9 @@
                     } else if (user.roles.includes('ROLE_ADMIN')) {
                         vm.item.role = 'ROLE_ADMIN';
 
+                    } else if (user.roles.includes('ROLE_APP_USER')) {
+                        vm.item.role = 'ROLE_APP_USER';
+
                     } else {
                         vm.item.role = 'ROLE_USER';
                     }
@@ -93,6 +97,13 @@
         },
 
         methods: {
+            saved({data: user}) {
+                this.submitSuccess();
+
+                if(!this.id) {
+                    this.$router.replace({name: 'users.edit', params: {id: user.id}});
+                }
+            }
         }
     }
 </script>

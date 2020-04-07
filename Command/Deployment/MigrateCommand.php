@@ -12,6 +12,7 @@ use Pronto\MobileBundle\Entity\OAuthClient;
 use Pronto\MobileBundle\Entity\Device;
 use Pronto\MobileBundle\Entity\RefreshToken;
 use Pronto\MobileBundle\Entity\User;
+use Pronto\MobileBundle\EventListener\UserSubscriber;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -53,6 +54,7 @@ class MigrateCommand extends Command
      * MigrateCommand constructor.
      * @param EntityManagerInterface $entityManager
      * @param KernelInterface $kernel
+     * @param ClientManagerInterface $clientManager
      * @param ContainerInterface $container
      * @param null $name
      */
@@ -93,39 +95,12 @@ class MigrateCommand extends Command
         $output->writeLn(['Creating OAuth clients', '']);
         $this->createOAuthClients();
 
+        // Set all users to active
+        $output->writeLn(['Activating current user accounts', '']);
+        $this->activateUserAccounts();
+
         $output->writeLn(['Migrating the users', '']);
-
-        // Migrate app users to users table
-        $appUsers = $this->entityManager->getRepository(AppUser::class)->findAll();
-
-        foreach ($appUsers as $appUser) {
-            $user = new User();
-            $user->setFormerAppUser($appUser);
-            $user->setActivated($appUser->getActivated());
-            $user->setActivationToken($appUser->getActivationToken());
-            $user->setApplication($appUser->getApplication());
-            $user->setCreatedAt($appUser->getCreatedAt());
-            $user->setCustomer($appUser->getApplication()->getCustomer());
-            $user->setEmail($appUser->getEmail());
-            $user->setFirstName($appUser->getFirstName());
-            $user->setLastName($appUser->getLastName());
-            $user->setExtraData($appUser->getExtraData());
-            $user->setLastLogin($appUser->getLastLogin());
-            $user->setRoles(['ROLE_APP_USER']);
-            $user->setPassword($appUser->getPassword());
-            $user->setUpdatedAt($appUser->getUpdatedAt());
-            $this->entityManager->persist($user);
-            $this->entityManager->flush();
-
-            /** @var Device $device */
-            foreach ($appUser->getDevices() as $device) {
-                $device->setUser($user);
-            }
-
-            $this->userMapping[$appUser->getId()] = $user;
-        }
-
-        file_put_contents('users.json', json_encode($this->userMapping));
+        $this->migrateAppUsers();
 
         $output->writeLn(['Reattaching the access tokens to the new user', '']);
 
@@ -158,6 +133,54 @@ class MigrateCommand extends Command
             if ($user = $this->userMapping[$this->deviceMapping[$device->getId()]]) {
                 $refreshToken->setUser($user);
             }
+        }
+
+        $this->entityManager->flush();
+    }
+
+    private function migrateAppUsers()
+    {
+        // Migrate app users to users table
+        $appUsers = $this->entityManager->getRepository(AppUser::class)->findAll();
+
+        foreach ($appUsers as $appUser) {
+            $user = new User();
+            $user->setFormerAppUser($appUser);
+            $user->setActivated($appUser->getActivated());
+            $user->setActivationToken($appUser->getActivationToken());
+            $user->setApplication($appUser->getApplication());
+            $user->setCreatedAt($appUser->getCreatedAt());
+            $user->setCustomer($appUser->getApplication()->getCustomer());
+            $user->setEmail($appUser->getEmail());
+            $user->setFirstName($appUser->getFirstName());
+            $user->setLastName($appUser->getLastName());
+            $user->setExtraData($appUser->getExtraData());
+            $user->setLastLogin($appUser->getLastLogin());
+            $user->setRoles(['ROLE_APP_USER']);
+            $user->setPassword($appUser->getPassword());
+            $user->setUpdatedAt($appUser->getUpdatedAt());
+            $this->entityManager->persist($user);
+            $this->entityManager->flush();
+
+            /** @var Device $device */
+            foreach ($appUser->getDevices() as $device) {
+                $device->setUser($user);
+            }
+
+            $this->userMapping[$appUser->getId()] = $user;
+        }
+
+        file_put_contents('users.json', json_encode($this->userMapping));
+    }
+
+    private function activateUserAccounts()
+    {
+        // Migrate app users to users table
+        $users = $this->entityManager->getRepository(User::class)->findAll();
+
+        foreach ($users as $user) {
+            $user->setActivated(true);
+            $this->entityManager->persist($user);
         }
 
         $this->entityManager->flush();
@@ -197,11 +220,13 @@ class MigrateCommand extends Command
         // Delete the clients without application ID
         $clients = $this->entityManager->getRepository(OAuthClient::class)->findAll();
 
-        foreach($clients as $client) {
-            if($client->getApplication() === null) {
+        foreach ($clients as $client) {
+            if ($client->getApplication() === null) {
                 $this->entityManager->remove($client);
             }
         }
+
+        $this->entityManager->flush();
 
         $client = $this->clientManager->createClient();
         $client->setRedirectUris(['https://pronto.am']);
@@ -216,6 +241,8 @@ class MigrateCommand extends Command
      */
     private function schemaUpdate()
     {
+        $this->entityManager->getConnection()->executeQuery('SET FOREIGN_KEY_CHECKS=0;');
+
         $application = new Application($this->kernel);
         $application->setAutoExit(false);
 
@@ -228,6 +255,8 @@ class MigrateCommand extends Command
         // You can use NullOutput() if you don't need the output
         $output = new BufferedOutput();
         $application->run($input, $output);
+
+        $this->entityManager->getConnection()->executeQuery('SET FOREIGN_KEY_CHECKS=1;');
     }
 
     /**
@@ -240,6 +269,7 @@ class MigrateCommand extends Command
 
         $appUsers = $this->entityManager->getRepository(AppUser::class)->findAll();
 
+        /** @var AppUser $appUser */
         foreach ($appUsers as $appUser) {
             /** @var AccessToken $accessToken */
             foreach ($appUser->getAccessTokens() as $accessToken) {
@@ -263,9 +293,9 @@ class MigrateCommand extends Command
             }
         }
 
-        file_put_contents('/Users/thomasroovers/Developer/Sites/pronto.dev/access_tokens.json', json_encode($this->accessTokenUserCombinations));
-        file_put_contents('/Users/thomasroovers/Developer/Sites/pronto.dev/refresh_tokens.json', json_encode($this->refreshTokenUserCombinations));
-        file_put_contents('/Users/thomasroovers/Developer/Sites/pronto.dev/devices.json', json_encode($this->deviceMapping));
+        file_put_contents($this->kernel->getProjectDir() . '/access_tokens.json', json_encode($this->accessTokenUserCombinations));
+        file_put_contents($this->kernel->getProjectDir() . '/refresh_tokens.json', json_encode($this->refreshTokenUserCombinations));
+        file_put_contents($this->kernel->getProjectDir() . '/devices.json', json_encode($this->deviceMapping));
 
         $this->entityManager->flush();
     }

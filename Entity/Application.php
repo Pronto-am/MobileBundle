@@ -99,6 +99,7 @@ class Application extends Client implements ApiEntityInterface
 
     /**
      * @ORM\OneToMany(targetEntity="Pronto\MobileBundle\Entity\Application\ApplicationPlugin", mappedBy="application")
+     * @Groups({"Application"})
      */
     private $applicationPlugins;
 

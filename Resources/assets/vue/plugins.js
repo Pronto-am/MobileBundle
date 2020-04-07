@@ -12,6 +12,16 @@ Vue.mixin({
             }
 
             return application.available_languages;
+        },
+
+        availablePlugins: function() {
+            let application = Vue.prototype.$application.getApplication();
+
+            if(application === null) {
+                return [];
+            }
+
+            return application.application_plugins.filter(plugin => plugin.active).map(plugin => plugin.plugin.identifier);
         }
     },
 
@@ -145,6 +155,9 @@ Vue.directive('user-has-role', function (el, bindings, vnode) {
 /**
  * PROTOTYPES
  */
+
+// Events prototype
+Vue.prototype.$events = new Vue();
 
 
 /**

@@ -14,6 +14,7 @@ import './libraries/moment';
 import './libraries/progressbar';
 import router from './libraries/router';
 import './libraries/table';
+import './libraries/fixedheader';
 
 window.Vue = Vue;
 window.Events = new Vue();

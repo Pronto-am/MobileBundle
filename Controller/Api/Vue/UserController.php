@@ -3,12 +3,12 @@
 namespace Pronto\MobileBundle\Controller\Api\Vue;
 
 
-use Doctrine\ORM\EntityManagerInterface;
-use Pronto\MobileBundle\Entity\TranslationKey;
 use Pronto\MobileBundle\Entity\User;
+use Pronto\MobileBundle\Event\UserCreated;
 use Pronto\MobileBundle\Repository\UserRepository;
 use Pronto\MobileBundle\Request\Request;
 use Pronto\MobileBundle\Request\UserRequest;
+use Pronto\MobileBundle\Service\EventDispatcher;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -27,12 +27,19 @@ class UserController extends ApiController
     private $users;
 
     /**
+     * @var EventDispatcher $dispatcher
+     */
+    private $dispatcher;
+
+    /**
      * LoginController constructor.
      * @param UserRepository $users
+     * @param EventDispatcher $dispatcher
      */
-    public function __construct(UserRepository $users)
+    public function __construct(UserRepository $users, EventDispatcher $dispatcher)
     {
         $this->users = $users;
+        $this->dispatcher = $dispatcher;
     }
 
     /**
@@ -66,6 +73,7 @@ class UserController extends ApiController
     public function saveAction(UserRequest $request)
     {
         $user = $this->users->findOrNew($request->get('id'));
+        $isNew = $user->getId() === null;
 
         if($request->get('role') === 'ROLE_USER') {
             $roles = [$request->get('role')];
@@ -75,10 +83,20 @@ class UserController extends ApiController
 
         /** @var User $user */
         $user = $this->serializer->deserialize(User::class, $request->except(['created_at', 'updated_at']), $user);
+
+        if ($request->get('role') !== 'ROLE_SUPER_ADMIN') {
+            $user->setCustomer($this->prontoMobile->getCustomer());
+        }
+
         $user->setRoles($roles);
         $user->setActivated(false);
-        $user->setAppUser(false);
+        $user->setAppUser($request->get('role') === 'ROLE_APP_USER');
         $this->users->save($user);
+
+        if($isNew) {
+            $event = new UserCreated($user);
+            $this->dispatcher->dispatch($event);
+        }
 
         return $this->response($user);
     }

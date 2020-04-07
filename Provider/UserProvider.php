@@ -13,6 +13,7 @@ use Pronto\MobileBundle\Repository\UserRepository;
 use Pronto\MobileBundle\Utils\Responses\ErrorResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -72,15 +73,21 @@ class UserProvider implements UserProviderInterface
                 $client = $this->determineOAuthClient($clientId, $clientSecret);
 
             } catch (Exception $exception) {
-                return null;
+                throw new AccessDeniedException();
             }
         }
 
-        if($client === null) {
-            return null;
+        if ($client === null) {
+            throw new AccessDeniedException();
         }
 
-        return $this->users->findForAuthentication($email, $client->getApplication());
+        $user = $this->users->findForAuthentication($email, $client->getApplication());
+
+        if ($user === null) {
+            throw new AccessDeniedException();
+        }
+
+        return $user;
     }
 
     /**

@@ -52,6 +52,18 @@
                 let routes = this.routes.filter(item => {
                     return this.$auth.userHasRole(item.role);
 
+                }).filter(item => {
+                    if(!item.plugins) {
+                        return true;
+                    }
+
+                    console.debug(this.availablePlugins);
+                    console.debug(item.plugins);
+                    console.log(this.availablePlugins.filter(plugin => item.plugins.includes(plugin)));
+
+                    // Filter out non-active plugins
+                    return this.availablePlugins.filter(plugin => item.plugins.includes(plugin)).length > 0;
+
                 }).map(item => {
                     if (item.children !== undefined) {
                         item.children = item.children.filter(subItem => {

@@ -25,7 +25,7 @@ class AccessToken extends BaseAccessToken
 
     /**
      * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\OAuthClient")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     protected $client;
 

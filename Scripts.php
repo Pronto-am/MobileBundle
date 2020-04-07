@@ -18,6 +18,7 @@ class Scripts
 
         // Modify the contents of the YAML files
         self::modifyProntoMobileConfiguration($packagesDir);
+        self::modifyDoctrineMigrationsConfiguration($packagesDir);
         self::modifyFosOauthServerConfiguration($packagesDir);
         self::modifySecurityConfiguration($packagesDir);
         self::modifyTwigConfiguration($packagesDir);
@@ -43,6 +44,26 @@ class Scripts
         ];
 
         file_put_contents($fileName, Yaml::dump($prontoMobile, 4));
+    }
+
+    /**
+     * @param array $packagesDir
+     */
+    private static function modifyDoctrineMigrationsConfiguration(array $packagesDir): void
+    {
+        $fileName = $packagesDir . '/doctrine_migrations.yaml';
+
+        $fosOAuth = [
+            'doctrine_migrations' => [
+                'name'             => 'Application Migrations',
+                'migrations_paths' => [
+                    'Pronto\MobileBundle\Migrations' => '/vendor/pronto/mobilebundle/Migrations',
+                ],
+                'all_or_nothing'   => true
+            ]
+        ];
+
+        file_put_contents($fileName, Yaml::dump($fosOAuth, 4));
     }
 
     /**
@@ -125,8 +146,8 @@ class Scripts
         ];
 
         $security['security']['encoders'] = [
-            'Pronto\MobileBundle\Entity\User'    => 'bcrypt',
-//            'Pronto\MobileBundle\Entity\AppUser' => 'bcrypt'
+            'Pronto\MobileBundle\Entity\User' => 'bcrypt',
+            //            'Pronto\MobileBundle\Entity\AppUser' => 'bcrypt'
         ];
 
         $security['security']['firewalls'] = [

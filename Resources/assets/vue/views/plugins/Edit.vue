@@ -3,7 +3,7 @@
         <div class="col-sm-12" v-if="item">
             <vue-form :url="path('plugins')"
                       :model="item"
-                      @submit:success="submitSuccess"
+                      @submit:success="saved"
                       @submit:error="submitError">
 
                 <template slot-scope="{form, model}">
@@ -72,6 +72,13 @@
         },
 
         methods: {
+            async saved() {
+
+                this.submitSuccess();
+
+                // Refresh active plugins
+                await this.$application.init();
+            }
         }
     }
 </script>

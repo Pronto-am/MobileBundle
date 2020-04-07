@@ -8,7 +8,9 @@ export default class ApplicationService {
 
             if(this.application !== null) {
                 let response = await axios.get(Vue.prototype.$path('applications/:id', {id: this.application.id}));
-                this.application = response.data.data;
+                let application = response.data.data;
+
+                this.setApplication(application);
             }
         } catch (error) {
             console.error(error);
@@ -20,6 +22,9 @@ export default class ApplicationService {
     }
 
     setApplication(application) {
+        // delete application['customer'];
+        delete application['oauth_clients'];
+
         this.application = application;
         localStorage.setItem('application', JSON.stringify(application));
     }

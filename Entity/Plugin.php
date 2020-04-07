@@ -47,7 +47,7 @@ class Plugin
 
 	/**
 	 * @ORM\Column(type="string")
-     * @Groups({"Plugin", "ApplicationPlugin"})
+     * @Groups({"Plugin", "ApplicationPlugin", "Application"})
 	 */
 	private $identifier;
 

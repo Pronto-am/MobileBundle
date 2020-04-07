@@ -28,8 +28,8 @@ services:
         tags: ['twig.extension']
 
     #### PRONTO MOBILE DOCTRINE EVENT SUBSCRIBERS ####
-    Pronto\MobileBundle\EventListener\:
-        resource: '../../EventListener'
+    Pronto\MobileBundle\EventSubscriber\Doctrine\:
+        resource: '../../EventSubscriber/Doctrine'
         tags:
             - { name: doctrine.event_subscriber, connection: default }
 

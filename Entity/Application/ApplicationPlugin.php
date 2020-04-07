@@ -28,13 +28,13 @@ class ApplicationPlugin
      * @ORM\Id
      * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Plugin", inversedBy="applicationPlugins")
      * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
-     * @Groups({"ApplicationPlugin"})
+     * @Groups({"ApplicationPlugin", "Application"})
      */
     private $plugin;
 
     /**
      * @ORM\Column(type="boolean")
-     * @Groups({"ApplicationPlugin"})
+     * @Groups({"ApplicationPlugin", "Application"})
      */
     private $active = false;
 

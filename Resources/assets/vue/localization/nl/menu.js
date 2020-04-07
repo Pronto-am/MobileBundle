@@ -8,5 +8,6 @@ export default {
     plugins: 'Plugins',
     push_notifications: 'Push notificaties',
     segments: 'Segmenten',
+    translations: 'Vertalingen',
     remote_config: 'Remote config',
 }

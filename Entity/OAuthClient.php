@@ -8,7 +8,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 
 /**
- * Class Application
+ * Class OAuthClient
  * @package Pronto\MobileBundle\Entity
  *
  * @ORM\Entity

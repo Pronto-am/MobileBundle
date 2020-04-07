@@ -65,9 +65,13 @@
         },
 
         methods: {
-            select(application, version) {
+            async select(application, version) {
                 this.$application.setApplication(application);
                 this.$application.setVersion(version);
+
+                await this.$application.init();
+
+                this.$events.$emit('application:change', application);
 
                 this.$router.push({name: 'dashboard'});
             }

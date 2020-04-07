@@ -5,10 +5,10 @@
                 <div class="card">
                     <div class="card-table">
                         <vue-table :url="path('users')"
-                                   :filters="{type: null}"
                                    :can-delete="$auth.userHasRole($auth.roles.ADMIN)"
                                    :deletable-row="canDeleteUser"
                                    :sorting="sorting"
+                                   :filters="filters"
                                    :initial-data="items">
 
                             <template slot="buttons-left">
@@ -34,10 +34,10 @@
                             <template slot="row" slot-scope="{row}">
                                 <vue-table-column :row="row" property="full_name" router-link :to="{name: 'users.edit', params: {id: row.id}}"></vue-table-column>
                                 <vue-table-column :row="row" type="custom">
-                                    <template v-if="row.app_user"><el-tag type="info">App gebruiker</el-tag></template>
-                                    <template v-else-if="row.roles.includes($auth.roles.SUPER_ADMIN)"><el-tag type="danger">Super administrator</el-tag></template>
-                                    <template v-else-if="row.roles.includes($auth.roles.ADMIN)"><el-tag type="warning">Administrator</el-tag></template>
-                                    <template v-else><el-tag>Reguliere gebruiker</el-tag></template>
+                                    <template v-if="row.app_user"><el-tag type="info" v-html="$t('labels.role_app_user')"></el-tag></template>
+                                    <template v-else-if="row.roles.includes($auth.roles.SUPER_ADMIN)"><el-tag type="danger" v-html="$t('labels.role_super_admin')"></el-tag></template>
+                                    <template v-else-if="row.roles.includes($auth.roles.ADMIN)"><el-tag type="warning" v-html="$t('labels.role_admin')"></el-tag></template>
+                                    <template v-else><el-tag v-html="$t('labels.role_user')"></el-tag></template>
                                 </vue-table-column>
                                 <vue-table-column :row="row" property="email"></vue-table-column>
                             </template>
@@ -57,12 +57,21 @@
                 sorting: {
                     column: 'name',
                     order: 'asc'
+                },
+                filters: {
+                    type: null,
                 }
             }
         },
 
         beforeRouteEnter(to, from, next) {
-            axios.get(path('users')).then(({data: applications}) => {
+            axios.get(path('users'), {
+                params: {
+                    filters: {
+                        type: null,
+                    }
+                }
+            }).then(({data: applications}) => {
                 next(vm => {
                     vm.items = applications;
                 })

@@ -1,22 +1,21 @@
 <?php
 
-namespace Pronto\MobileBundle\EventListener;
+namespace Pronto\MobileBundle\EventSubscriber;
 
 
-use Doctrine\Common\EventSubscriber;
-use Doctrine\ORM\Event\LifecycleEventArgs;
-use Doctrine\ORM\Events;
 use Pronto\MobileBundle\Entity\User;
+use Pronto\MobileBundle\Event\UserCreated;
 use Pronto\MobileBundle\Service\ProntoMobile;
 use Psr\Container\ContainerInterface;
 use Swift_Mailer;
 use Swift_Message;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
-class UserSubscriber implements EventSubscriber
+class UserSubscriber implements EventSubscriberInterface
 {
     /**
      * @var ProntoMobile $prontoMobile
@@ -63,24 +62,23 @@ class UserSubscriber implements EventSubscriber
 	 *
 	 * @return string[]
 	 */
-	public function getSubscribedEvents(): array
+	public static function getSubscribedEvents(): array
 	{
-		return [Events::postPersist];
+		return [
+            UserCreated::name() => ['created'],
+        ];
 	}
 
     /**
-     * @param LifecycleEventArgs $args
+     * @param UserCreated $event
      * @throws \Twig\Error\LoaderError
      * @throws \Twig\Error\RuntimeError
      * @throws \Twig\Error\SyntaxError
      */
-	public function postPersist(LifecycleEventArgs $args): void
+	public function created(UserCreated $event): void
 	{
-		$user = $args->getEntity();
-
-		if (!$user instanceof User) {
-			return;
-		}
+	    /** @var User $user */
+        $user = $event->user;
 
         $domain = $this->prontoMobile->getConfiguration('domain', 'pronto.am');
 

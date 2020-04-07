@@ -1,8 +1,12 @@
 ul.menu {
   list-style-type: none;
-  margin: 20px 0 10px 0;
+  margin: 40px 0 10px 10px;
   padding: 0;
   color: #222222;
+
+  @media (max-width: 575.98px) {
+    margin-top: 25px;
+  }
 
   > li {
     min-height: 45px;

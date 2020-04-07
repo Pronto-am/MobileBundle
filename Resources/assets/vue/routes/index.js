@@ -5,6 +5,7 @@ import customers from './modules/customers';
 import devices from './modules/devices';
 import notifications from './modules/notifications';
 import plugins from './modules/plugins';
+import translations from './modules/translations';
 import versions from './modules/app_versions';
 import users from './modules/users';
 
@@ -19,7 +20,7 @@ const routes = [{
     component: require('../views/errors/NotFound').default,
     meta: {auth: false},
 }].concat(
-    applications, authentication, config, customers, devices, notifications, plugins, users, versions,
+    applications, authentication, config, customers, devices, notifications, plugins, translations, users, versions,
 );
 
 export default routes;

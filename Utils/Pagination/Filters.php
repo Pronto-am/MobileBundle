@@ -31,6 +31,15 @@ class Filters
     }
 
     /**
+     * @param string $key
+     * @param $value
+     */
+    public function overwrite(string $key, $value)
+    {
+        $this->filters[$key] = $value;
+    }
+
+    /**
      * @return bool
      */
     public function isSearching(): bool

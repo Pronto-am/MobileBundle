@@ -3,7 +3,7 @@
         <div class="col-sm-12" v-if="item">
             <vue-form :url="path('applications')"
                       :model="item"
-                      @submit:success="submitSuccess"
+                      @submit:success="saved"
                       @submit:error="submitError">
 
                 <template slot-scope="{form, model}">
@@ -121,6 +121,20 @@
             });
         },
 
-        methods: {}
+        methods: {
+            saved({data: application}) {
+                this.submitSuccess();
+
+                if(!this.id) {
+                    this.$router.replace({name: 'applications.edit', params: {id: application.id}});
+                } else {
+                    // Refresh the globally used instance of the application
+                    if (application.id === this.$application.getApplication().id) {
+                        this.$application.setApplication(application);
+                        this.$events.$emit('application:change', application);
+                    }
+                }
+            }
+        }
     }
 </script>

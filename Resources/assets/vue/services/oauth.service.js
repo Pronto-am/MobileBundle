@@ -25,7 +25,7 @@ export default class OAuthService {
      * @returns {boolean}
      */
     guest() {
-        return this.session.get('access_token') === undefined;
+        return !this.isAuthenticated();
     }
 
     /**

@@ -14,7 +14,7 @@ Vue.use(VueRouter);
 let oAuth = new OAuthService();
 
 router.beforeEach((to, from, next) => {
-    //If visiting login view but you already have logged in, you should not be able to see this view
+    // If visiting login view but you already have logged in, you should not be able to see this view
     if (!to.meta.auth && oAuth.isAuthenticated()) {
         return next({
             path: '/'

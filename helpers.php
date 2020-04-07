@@ -36,3 +36,13 @@ if (!function_exists('studly_case')) {
         return str_replace($separator, '', ucwords($input, $separator));
     }
 }
+
+if (!function_exists('running_in_console')) {
+    /**
+     * @return bool
+     */
+    function running_in_console()
+    {
+        return 'cli' === PHP_SAPI;
+    }
+}

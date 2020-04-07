@@ -53,7 +53,7 @@ abstract class EntityRepository
     }
 
     /**
-     * @param $id
+     * @param int|string|array $id
      * @return object|null
      */
     public function findOrNew($id)
@@ -63,11 +63,28 @@ abstract class EntityRepository
             return new $class;
         }
 
-        $result = $this->find($id);
+        if(is_array($id)) {
+            $result = $this->findOneBy($id);
+        } else {
+            $result = $this->find($id);
+        }
 
         if ($result === null) {
             $class = $this->getEntity();
-            return new $class;
+            $entity = new $class;
+
+            // Call setters of the searchable fields, so this is not neccessary anymore
+            if(is_array($id)) {
+                $values = $id;
+                foreach(array_keys($values) as $field) {
+                    $setter = 'set' . ucfirst($field);
+                    if(method_exists($class, $setter)) {
+                        $entity->{$setter}($values[$field]);
+                    }
+                }
+            }
+
+            return $entity;
         }
 
         return $result;

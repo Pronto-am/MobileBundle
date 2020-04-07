@@ -19,6 +19,93 @@ There are significant changes when upgrading to 2.0.0, especially regarding user
 1. It first creates a locally stored backup of relationships between access and refresh tokens, devices and app users.
 2. Secondly, it migrates the app users to the users table.
 
+### What do I need to do?
+
+#### 1. Update packages yaml configuration files:
+
+```yaml
+# fos_oauth_server.yaml: Client class and user provider have been updated
+
+fos_oauth_server:
+    db_driver: orm
+    client_class: Pronto\MobileBundle\Entity\OAuthClient
+    access_token_class: Pronto\MobileBundle\Entity\AccessToken
+    refresh_token_class: Pronto\MobileBundle\Entity\RefreshToken
+    auth_code_class: Pronto\MobileBundle\Entity\AuthCode
+    service:
+        user_provider: Pronto\MobileBundle\Provider\UserProvider
+```
+
+```yaml
+# security.yaml: References to AppUser have been removed and there's main firewall anymore
+
+security:
+
+    encoders:
+        Pronto\MobileBundle\Entity\User: bcrypt
+
+    access_control:
+        - { path: ^/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/reset, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/admin/plugins, roles: [ROLE_SUPER_ADMIN] }
+        - { path: ^/admin/customers, roles: [ROLE_SUPER_ADMIN] }
+        - { path: ^/admin/notifications/segments, roles: [ROLE_SUPER_ADMIN] }
+        - { path: ^/admin/users/app, roles: [ROLE_USER] }
+        - { path: ^/admin/users, roles: [ROLE_ADMIN, ROLE_SUPER_ADMIN] }
+        - { path: ^/admin, roles: ROLE_USER }
+
+    providers:
+        users:
+            id: Pronto\MobileBundle\Provider\UserProvider
+
+
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|scss|images|js)/
+            security: false
+
+        oauth_token:
+            pattern: ^/oauth/v2/token
+            security: false
+
+        oauth_authorize:
+            pattern: ^/oauth/v2/auth
+            anonymous: true
+
+        api:
+            pattern: ^/api
+            stateless: true
+            anonymous: true
+            fos_oauth: true
+            provider: users
+```
+
+#### 2. Create/modify doctrine_migrations.yaml
+
+Since version 2.*, the bundle uses the DoctrineMigrationBundle to migrate the database schema. If you're not using the bundle yet, create the configuration file, otherwise, add the path to the MobileBundle migrations:
+
+```yaml
+doctrine_migrations:
+    name: 'Application Migrations'
+
+    # List of namespace/path pairs to search for migrations, at least one required
+    migrations_paths:
+        'Pronto\MobileBundle\Migrations': '/vendor/pronto/mobilebundle/Migrations'
+
+    # Run all migrations in a transaction.
+    all_or_nothing: true
+```
+
+#### 2. Clear cache
+
+To make sure changes in the configuration files are implemented:
+
+```
+php bin/console cache:clear
+```
+
+#### 3. Run migration:
+
 ```
 php bin/console deployment:migrate
 ``` 

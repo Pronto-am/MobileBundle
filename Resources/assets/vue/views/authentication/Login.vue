@@ -4,11 +4,12 @@
             <div class="col-sm-12 col-md-6 offset-md-3 col-lg-4 offset-lg-4">
                 <vue-form :model="user"
                           :url="path('auth/login')"
+                          @submit="loading = true"
                           @submit:success="authenticated"
                           @submit:error="error">
 
                     <template slot-scope="{ form, model }">
-                        <div v-loading="form.submitting" class="card" element-loading-background="rgba(248,250,252,0.6)">
+                        <div v-loading="form.submitting || loading" class="card" element-loading-background="rgba(248,250,252,0.6)">
 
                             <div class="card-header">{{ $t('titles.login') }}</div>
 
@@ -57,6 +58,7 @@
     export default {
         data() {
             return {
+                loading: false,
                 user: {
                     email: null,
                     password: null,
@@ -68,9 +70,17 @@
 
             authenticated(response) {
                 this.$oauth.storeSession(response);
-                this.$router.replace({name: 'dashboard'});
 
-                Events.$emit('users:authenticated', response.user);
+                this.$auth.init().then(() => {
+                    this.$router.replace({name: 'dashboard'});
+                    Events.$emit('users:authenticated', response.user);
+
+                }).catch(_ => {
+                    this.$oauth.logout();
+
+                }).finally(_ => {
+                    this.loading = false;
+                });
             },
 
             error(error) {

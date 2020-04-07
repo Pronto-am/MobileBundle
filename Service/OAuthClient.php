@@ -56,7 +56,10 @@ class OAuthClient
                 'password'      => $password,
                 'client_id'     => $this->oauthClient->getPublicId(),
                 'client_secret' => $this->oauthClient->getSecret(),
-            ]
+            ],
+            'headers' => [
+                'accept' => 'application/json',
+            ],
         ]);
     }
 
@@ -72,7 +75,10 @@ class OAuthClient
                 'refresh_token' => $refreshToken,
                 'client_id'     => $this->oauthClient->getPublicId(),
                 'client_secret' => $this->oauthClient->getSecret(),
-            ]
+            ],
+            'headers' => [
+                'accept' => 'application/json',
+            ],
         ]);
     }
 }

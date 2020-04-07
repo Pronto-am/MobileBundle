@@ -32,6 +32,11 @@ class UserRepository extends PaginateableRepository
                 ->setParameter('search', '%' . $this->filters->searchValue() . '%');
         }
 
+        if($this->filters->get('type') !== null) {
+            $appUsers = $this->filters->get('type') === 'app';
+            $query = $query->andWhere('entity.appUser = :app_user')->setParameter('app_user', $appUsers);
+        }
+
         $sortColumn = $this->sorting->column();
         $sortColumn = $sortColumn === 'name' ? 'lastName' : $sortColumn;
 

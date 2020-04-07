@@ -61,7 +61,7 @@ trait SerializeEntities
      * @param array $groups
      * @return mixed
      */
-    private function serializeData($data, array $normalizers = [], array $groups = [])
+    public function serializeData($data, array $normalizers = [], array $groups = [])
     {
         return json_decode($this->serializer->serialize($data, $normalizers, $groups));
     }

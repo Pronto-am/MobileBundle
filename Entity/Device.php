@@ -40,11 +40,18 @@ class Device implements ApiEntityInterface
 	private $application;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\AppUser", inversedBy="devices")
+     * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
+     * @Groups({"Device"})
+     */
+    private $appUser;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\User", inversedBy="devices")
      * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
      * @Groups({"Device"})
      */
-    private $user;
+    //private $user;
 
 	/**
 	 * @ORM\Column(type="string", nullable=true)

@@ -32,6 +32,11 @@ export default class AuthService {
         }
     };
 
+    setUser(user) {
+        console.debug('Saving user', user);
+        this.user = user;
+    }
+
     /**
      * Check if a user has the provided role
      * @returns {boolean}

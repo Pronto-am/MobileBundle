@@ -10,9 +10,11 @@ use Pronto\MobileBundle\Entity\PasswordReset;
 use Pronto\MobileBundle\Entity\Customer;
 use Pronto\MobileBundle\Entity\Plugin;
 use Pronto\MobileBundle\Entity\User;
+use Pronto\MobileBundle\Event\UserCreated;
 use Pronto\MobileBundle\Form\ResetPasswordForm;
 use Swift_Mailer;
 use Swift_Message;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
@@ -84,6 +86,7 @@ class AppUserController extends BaseApiController
      */
 
     /**
+     * @param EventDispatcherInterface $dispatcher
      * @param Request $request
      * @param EntityManagerInterface $entityManager
      * @return \Symfony\Component\HttpFoundation\JsonResponse
@@ -91,7 +94,7 @@ class AppUserController extends BaseApiController
      * @throws \Doctrine\ORM\NonUniqueResultException
      * @throws \Pronto\MobileBundle\Exception\ApiException
      */
-    public function registerAction(Request $request, EntityManagerInterface $entityManager)
+    public function registerAction(EventDispatcherInterface $dispatcher, Request $request, EntityManagerInterface $entityManager)
     {
         // Validate the authorization
         $this->validateAuthorization($this->getPluginIdentifier());
@@ -141,6 +144,9 @@ class AppUserController extends BaseApiController
 
         $entityManager->persist($user);
         $entityManager->flush();
+
+        $event = new UserCreated($user);
+        $dispatcher->dispatch($event);
 
         return $this->successResponse($this->serializer->serialize($user, [new DateTimeNormalizer()]));
     }

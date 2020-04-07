@@ -12,13 +12,14 @@ export default [{
     locKey: 'menu.collections',
     submenuOpen: false,
     role: ROLE_USER,
-    children: [],
+    plugins: ['collections'],
 }, {
     name: 'push_notifications',
     icon: 'bell',
     locKey: 'menu.push_notifications',
     submenuOpen: false,
     role: ROLE_USER,
+    plugins: ['notifications'],
     children: [{
         name: 'push_notifications.segments',
         locKey: 'menu.segments',
@@ -29,16 +30,25 @@ export default [{
     icon: 'mobile-alt',
     locKey: 'menu.devices',
     role: ROLE_USER,
+    plugins: ['app_users', 'notifications'],
 }, {
     name: 'app_versions',
     icon: 'code-branch',
     locKey: 'menu.app_versions',
     role: ROLE_SUPER_ADMIN,
+    plugins: ['app_versions'],
 }, {
     name: 'remote_config',
     icon: 'list',
     locKey: 'menu.remote_config',
     role: ROLE_USER,
+    plugins: ['remote_config'],
+}, {
+    name: 'translations',
+    icon: 'language',
+    locKey: 'menu.translations',
+    role: ROLE_USER,
+    plugins: ['translations'],
 }, {
     name: 'users',
     icon: 'list',

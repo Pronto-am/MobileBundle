@@ -14,3 +14,4 @@ Vue.component(InputDateTime.name, InputDateTime);
 Vue.component(InputCode.name, InputCode);
 Vue.component(InputTime.name, InputTime);
 Vue.component(InputColorPicker.name, InputColorPicker);
+

@@ -160,3 +160,33 @@ label {
     }
   }
 }
+
+.el-textarea {
+  .el-textarea__inner {
+    resize: none;
+  }
+
+  &.el-input--small {
+    .el-textarea__inner {
+      padding: 5px 8px;
+    }
+  }
+
+  &.toggleable {
+    .el-textarea__inner {
+      border-color: transparent;
+      background-color: transparent;
+      transition: border-color 0.1s ease, background-color 0.1s ease;
+
+      &:hover {
+        border-color: #DDDFE6;
+        background-color: #DDDFE6;
+      }
+
+      &:focus {
+        border-color: #409EFF;
+        background-color: #ffffff;
+      }
+    }
+  }
+}

@@ -1,4 +1,9 @@
 #app {
+  .vue-table-container {
+    margin-left: -15px;
+    margin-right: -15px;
+  }
+
   table {
     thead {
       tr {
