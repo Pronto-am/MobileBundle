@@ -12,7 +12,6 @@ use Pronto\MobileBundle\Entity\OAuthClient;
 use Pronto\MobileBundle\Entity\Device;
 use Pronto\MobileBundle\Entity\RefreshToken;
 use Pronto\MobileBundle\Entity\User;
-use Pronto\MobileBundle\EventListener\UserSubscriber;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -86,56 +85,64 @@ class MigrateCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->writeLn(['Backup devices and access/refresh tokens', '']);
-        $this->backup();
+        // Add the user_id column to the devices table
+//        $statement = $this->entityManager->getConnection()->prepare('ALTER TABLE devices ADD COLUMN user_id INT AFTER app_user_id');
+//        $statement->execute();
+//
+//        $output->writeLn(['Backup devices and access/refresh tokens', '']);
+//        $this->backup();
+//
+//        $output->writeLn(['Force updating the schema', '']);
+//        $this->schemaUpdate();
+//
+//        $output->writeLn(['Creating OAuth clients', '']);
+//        $this->createOAuthClients();
+//
+//        // Set all users to active
+//        $output->writeLn(['Activating current user accounts', '']);
+//        $this->activateUserAccounts();
+//
+//        $output->writeLn(['Migrating the users', '']);
+//        $this->migrateAppUsers();
+//
+//        $output->writeLn(['Reattaching the access tokens to the new user', '']);
+//
+//        $accessTokens = $this->entityManager->getRepository(AccessToken::class)->findBy(['id' => array_keys($this->accessTokenUserCombinations)]);
+//
+//        /** @var AccessToken $accessToken */
+//        foreach ($accessTokens as $accessToken) {
+//            if ($user = $this->userMapping[$this->accessTokenUserCombinations[$accessToken->getId()]]) {
+//                $accessToken->setUser($user);
+//            }
+//        }
+//
+//        $output->writeLn(['Reattaching the refresh tokens to the new user', '']);
+//
+//        $refreshTokens = $this->entityManager->getRepository(RefreshToken::class)->findBy(['id' => array_keys($this->refreshTokenUserCombinations)]);
+//
+//        /** @var RefreshToken $refreshToken */
+//        foreach ($refreshTokens as $refreshToken) {
+//            if ($user = $this->userMapping[$this->refreshTokenUserCombinations[$refreshToken->getId()]]) {
+//                $refreshToken->setUser($user);
+//            }
+//        }
+//
+//        $output->writeLn(['Reattaching devices to the new user', '']);
+//
+//        $devices = $this->entityManager->getRepository(Device::class)->findBy(['id' => array_keys($this->deviceMapping)]);
+//
+//        /** @var Device $device */
+//        foreach ($devices as $device) {
+//            if ($user = $this->userMapping[$this->deviceMapping[$device->getId()]]) {
+//                $refreshToken->setUser($user);
+//            }
+//        }
+//
+//        $this->entityManager->flush();
 
-        $output->writeLn(['Force updating the schema', '']);
-        $this->schemaUpdate();
-
-        $output->writeLn(['Creating OAuth clients', '']);
-        $this->createOAuthClients();
-
-        // Set all users to active
-        $output->writeLn(['Activating current user accounts', '']);
-        $this->activateUserAccounts();
-
-        $output->writeLn(['Migrating the users', '']);
-        $this->migrateAppUsers();
-
-        $output->writeLn(['Reattaching the access tokens to the new user', '']);
-
-        $accessTokens = $this->entityManager->getRepository(AccessToken::class)->findBy(['id' => array_keys($this->accessTokenUserCombinations)]);
-
-        /** @var AccessToken $accessToken */
-        foreach ($accessTokens as $accessToken) {
-            if ($user = $this->userMapping[$this->accessTokenUserCombinations[$accessToken->getId()]]) {
-                $accessToken->setUser($user);
-            }
-        }
-
-        $output->writeLn(['Reattaching the refresh tokens to the new user', '']);
-
-        $refreshTokens = $this->entityManager->getRepository(RefreshToken::class)->findBy(['id' => array_keys($this->refreshTokenUserCombinations)]);
-
-        /** @var RefreshToken $refreshToken */
-        foreach ($refreshTokens as $refreshToken) {
-            if ($user = $this->userMapping[$this->refreshTokenUserCombinations[$refreshToken->getId()]]) {
-                $refreshToken->setUser($user);
-            }
-        }
-
-        $output->writeLn(['Reattaching devices to the new user', '']);
-
-        $devices = $this->entityManager->getRepository(Device::class)->findBy(['id' => array_keys($this->deviceMapping)]);
-
-        /** @var Device $device */
-        foreach ($devices as $device) {
-            if ($user = $this->userMapping[$this->deviceMapping[$device->getId()]]) {
-                $refreshToken->setUser($user);
-            }
-        }
-
-        $this->entityManager->flush();
+        // Update colors
+        $output->writeLn(['Updating colors of applications', '']);
+        $this->updateApplicationColors();
     }
 
     private function migrateAppUsers()
@@ -296,6 +303,29 @@ class MigrateCommand extends Command
         file_put_contents($this->kernel->getProjectDir() . '/access_tokens.json', json_encode($this->accessTokenUserCombinations));
         file_put_contents($this->kernel->getProjectDir() . '/refresh_tokens.json', json_encode($this->refreshTokenUserCombinations));
         file_put_contents($this->kernel->getProjectDir() . '/devices.json', json_encode($this->deviceMapping));
+
+        $this->entityManager->flush();
+    }
+
+    private function updateApplicationColors()
+    {
+//        $applications = $this->entityManager->getRepository(\Pronto\MobileBundle\Entity\Application::class)->findAll();
+//
+//        foreach ($applications as $application) {
+//            $application->setColor('#' . $application->getColor());
+//            $this->entityManager->persist($application);
+//        }
+
+        $customers = $this->entityManager->getRepository(\Pronto\MobileBundle\Entity\Customer::class)->findAll();
+
+        foreach ($customers as $customer) {
+            $customer->setPrimaryColor('#' . str_replace('#', '', $customer->getPrimaryColor()));
+            $customer->setPrimaryColorDark($customer->getPrimaryColor());
+            $customer->setLinkColor($customer->getPrimaryColor());
+            $customer->setLinkColorDark($customer->getPrimaryColor());
+            $customer->setContrastColor('#ffffff');
+            $this->entityManager->persist($customer);
+        }
 
         $this->entityManager->flush();
     }

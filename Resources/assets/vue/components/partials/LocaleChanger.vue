@@ -1,6 +1,9 @@
 <style scoped lang="scss">
     .el-dropdown-link {
         cursor: pointer;
+        font-family: "Titillium Web", sans-serif;
+        font-size: 14px;
+        font-weight: bold;
     }
 </style>
 
@@ -33,6 +36,6 @@
                     expires: 365 * 24 * 60 * 60,
                 });
             }
-         }
+        }
     }
 </script>

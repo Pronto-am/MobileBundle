@@ -43,7 +43,7 @@ class PushNotificationRepository extends PaginateableRepository
             ->where('entity.application = :application')
             ->setParameter('application', $this->prontoMobile->getApplication())
             ->leftJoin('entity.pushNotificationRecipients', 'recipient')
-            ->where('recipient.device = :device')
+            ->andWhere('recipient.device = :device')
             ->setParameter('device', $this->filters->get('device_id'));
 
         return $this->listQuery($query);

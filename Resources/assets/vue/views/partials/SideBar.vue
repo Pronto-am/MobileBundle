@@ -31,6 +31,13 @@
                 </li>
             </ul>
         </li>
+
+        <li class="danger dividend">
+            <div>
+                <span @click="navigate({name: 'logout'})"><font-awesome-icon icon="sign-out-alt"/></span>
+                <span @click="navigate({name: 'logout'})" v-html="$t('menu.sign_out')"></span>
+            </div>
+        </li>
     </ul>
 </template>
 

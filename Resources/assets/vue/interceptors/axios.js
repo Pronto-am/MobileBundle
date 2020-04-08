@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import Cookies from "js-cookie";
 
 /**
  * Request interceptor
@@ -20,6 +21,10 @@ window.axios.interceptors.request.use((config) => {
     if(Vue.prototype.$application.versionIsSet()) {
         config.headers['Application-Version-Id'] = Vue.prototype.$application.getVersion().id;
     }
+
+    // Add user locale if set
+    let defaultLocale = Cookies.get('selected_locale');
+    config.headers['User-Locale'] = defaultLocale ? defaultLocale : 'en';
 
     return config;
 }, (error) => {

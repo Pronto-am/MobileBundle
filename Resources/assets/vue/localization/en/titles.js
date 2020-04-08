@@ -10,4 +10,5 @@ export default {
     schedule_notification: 'Schedule this notification',
     send_to_test_devices: 'Send the notification to test devices',
     statistics: 'Statistics',
+    success: 'Success',
 }

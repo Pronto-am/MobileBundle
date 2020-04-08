@@ -3,6 +3,7 @@ ul.menu {
   margin: 40px 0 10px 10px;
   padding: 0;
   color: #222222;
+  position: relative;
 
   @media (max-width: 575.98px) {
     margin-top: 25px;
@@ -10,9 +11,10 @@ ul.menu {
 
   > li {
     min-height: 45px;
-    overflow-y: auto;
     display: block;
     margin: 0 0 5px 0;
+    position: relative;
+    overflow: visible;
 
     > div {
       display: flex;
@@ -61,13 +63,33 @@ ul.menu {
       }
     }
 
+    &.danger {
+      > div > span {
+        font-weight: bold;
+        color: var(--danger) !important;
+      }
+    }
+
+    &.dividend {
+      margin-top: 40px;
+
+      &:before {
+        position: absolute;
+        top: -20px;
+        left: 0;
+        height: 1px;
+        width: 90%;
+        background-color: rgba(0, 0, 0, .3);
+        content: '';
+      }
+    }
+
     ul {
       margin: 0;
       padding: 0;
       list-style-type: none;
       opacity: 0;
       transition: height 0.1s, opacity 0.2s ease;
-      background-color: #f8f9fa;
       font-size: 14px;
 
       li {
@@ -81,7 +103,6 @@ ul.menu {
           flex-direction: row;
           cursor: pointer;
           background-color: transparent;
-          transition: background-color 0.2s ease;
           position: relative;
 
           span {
@@ -118,8 +139,6 @@ ul.menu {
         }
 
         > ul {
-          //background-color: $gray-200;
-
           > li {
             cursor: pointer;
             padding-left: 40px;
@@ -127,7 +146,7 @@ ul.menu {
             font-size: 12px;
             color: rgba(0, 0, 0, .5);
             background-color: transparent;
-            transition: background-color 0.2s ease;
+            transition: color 0.2s ease;
             position: relative;
 
             &:hover {

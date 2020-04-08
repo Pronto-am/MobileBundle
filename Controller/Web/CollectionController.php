@@ -11,7 +11,6 @@ use Pronto\MobileBundle\EventSubscriber\ValidateApplicationSelectionInterface;
 use Pronto\MobileBundle\EventSubscriber\ValidateCustomerSelectionInterface;
 use Pronto\MobileBundle\EventSubscriber\ValidatePluginStateInterface;
 use Pronto\MobileBundle\Form\CollectionForm;
-use Pronto\MobileBundle\Service\FontAwesomeLoader;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -50,12 +49,11 @@ class CollectionController extends BaseController implements ValidatePluginState
      * Edit a collection
      *
      * @param Request $request
-     * @param FontAwesomeLoader $fontAwesomeLoader
      * @param EntityManagerInterface $entityManager
      * @param string|null $identifier
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function editAction(Request $request, FontAwesomeLoader $fontAwesomeLoader, EntityManagerInterface $entityManager, string $identifier = null)
+    public function editAction(Request $request, EntityManagerInterface $entityManager, string $identifier = null)
     {
         if (!$this->isGranted('ROLE_SUPER_ADMIN')) {
             $this->addNoPermissionFlash();
@@ -79,9 +77,7 @@ class CollectionController extends BaseController implements ValidatePluginState
 
 		$collectionDTO = CollectionDTO::fromEntity($collection);
 
-		$form = $this->createForm(CollectionForm::class, $collectionDTO, [
-            'fontAwesome' => $fontAwesomeLoader
-        ]);
+		$form = $this->createForm(CollectionForm::class, $collectionDTO);
 
 		$form->handleRequest($request);
 

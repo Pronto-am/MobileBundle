@@ -9,6 +9,7 @@ use Opis\JsonSchema\Validator;
 use Pronto\MobileBundle\Exception\InvalidRequestException;
 use Pronto\MobileBundle\Request\Format\ValidationFormat;
 use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ValidatorService
 {
@@ -18,11 +19,18 @@ class ValidatorService
     private $validator;
 
     /**
-     * ValidatorService constructor.
+     * @var TranslatorInterface $translator
      */
-    public function __construct()
+    private $translator;
+
+    /**
+     * ValidatorService constructor.
+     * @param TranslatorInterface $translator
+     */
+    public function __construct(TranslatorInterface $translator)
     {
         $this->validator = new Validator();
+        $this->translator = $translator;
     }
 
     /**
@@ -57,7 +65,7 @@ class ValidatorService
         ])), -1); // -1 is PHP_MAX_INT
 
         if (!$result->isValid()) {
-            throw new InvalidRequestException($result->getErrors(), $this->validator->getFormats());
+            throw new InvalidRequestException($this->translator, $result->getErrors(), $this->validator->getFormats());
         }
     }
 

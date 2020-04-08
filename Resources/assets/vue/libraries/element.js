@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import {
     Alert,
+    Badge,
     Button,
     Checkbox,
     Collapse,
@@ -38,6 +39,7 @@ import '../../scss/libraries/_element.scss';
 
 locale.use(lang);
 Vue.component(Alert.name, Alert);
+Vue.component(Badge.name, Badge);
 Vue.component(Collapse.name, Collapse);
 Vue.component(CollapseItem.name, CollapseItem);
 Vue.component(Input.name, Input);

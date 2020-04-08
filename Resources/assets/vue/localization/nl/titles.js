@@ -10,4 +10,5 @@ export default {
     schedule_notification: 'Plan de notificatie op een later moment',
     send_to_test_devices: 'Versturen naar test apparaten',
     statistics: 'Statistieken',
+    success: 'Gelukt',
 }

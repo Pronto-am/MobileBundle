@@ -7,10 +7,16 @@ use Opis\JsonSchema\FormatContainer;
 use Opis\JsonSchema\ValidationError;
 use Pronto\MobileBundle\Request\Format\ValidationFormat;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Throwable;
 
 class InvalidRequestException extends Exception
 {
+    /**
+     * @var TranslatorInterface $translator
+     */
+    private $translator;
+
     /**
      * @var ValidationError[] $errors
      */
@@ -23,12 +29,14 @@ class InvalidRequestException extends Exception
 
     /**
      * InvalidRequestException constructor.
+     * @param TranslatorInterface $translator
      * @param ValidationError[] $errors
      * @param FormatContainer $formatContainer
      * @param Throwable|null $previous
      */
-    public function __construct(array $errors, FormatContainer $formatContainer, Throwable $previous = null)
+    public function __construct(TranslatorInterface $translator, array $errors, FormatContainer $formatContainer, Throwable $previous = null)
     {
+        $this->translator = $translator;
         $this->errors = $errors;
         $this->formatContainer = $formatContainer;
 
@@ -73,13 +81,13 @@ class InvalidRequestException extends Exception
                     }
 
                     $result[$key] = $result[$key] ?? [];
-                    $result[$key][] = $message ?? 'Dit veld is ongeldig';
+                    $result[$key][] = $this->translator->trans($message ?? 'form.invalid_value');
                 } else {
                     // Required keys are missing
                     if ($error->keyword() === 'required') {
                         // Remove the named key
                         [$key] = array_values($error->keywordArgs());
-                        $result[$key][] = 'Dit veld is verplicht';
+                        $result[$key][] = $this->translator->trans('form.required_field');
                     }
                 }
                 return $result;

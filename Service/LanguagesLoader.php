@@ -14,7 +14,6 @@ class LanguagesLoader
 	private $languages;
 
 	/**
-	 * FontAwesomeLoader constructor.
 	 * @param FileLocator $fileLocator
 	 */
 	public function __construct(FileLocator $fileLocator)

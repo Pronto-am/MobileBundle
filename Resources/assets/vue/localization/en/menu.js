@@ -1,13 +1,14 @@
 export default {
     app_versions: 'App versions',
-    devices: 'Devices',
     applications: 'Applications',
     collections: 'Collections',
-    users: 'Users',
     customers: 'Customers',
+    devices: 'Devices',
     plugins: 'Plugins',
     push_notifications: 'Push notifications',
-    segments: 'Segments',
-    translations: 'Translations',
     remote_config: 'Remote config',
+    segments: 'Segments',
+    sign_out: 'Sign out',
+    translations: 'Translations',
+    users: 'Users',
 }

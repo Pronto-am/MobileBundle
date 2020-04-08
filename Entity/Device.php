@@ -21,7 +21,6 @@ class Device implements ApiEntityInterface
 {
 	use ApiEntityTrait;
 
-
 	// Custom error messages
 	public const DEVICE_ALREADY_REGISTERED = [422, 22, 'This device is already registered'];
 	public const MISSING_APNS_OR_FIREBASE_TOKEN = [422, 23, 'Either the firebaseToken or the apnsToken should be provided'];
@@ -40,18 +39,11 @@ class Device implements ApiEntityInterface
 	private $application;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\AppUser", inversedBy="devices")
-     * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
-     * @Groups({"Device"})
-     */
-    private $appUser;
-
-    /**
      * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\User", inversedBy="devices")
      * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
      * @Groups({"Device"})
      */
-    //private $user;
+    private $user;
 
 	/**
 	 * @ORM\Column(type="string", nullable=true)

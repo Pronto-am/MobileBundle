@@ -12,6 +12,9 @@ Table of contents
 
 ### From 1.* to 2.*
 
+#### What's new?
+- Use of application versions discouraged
+
 There are significant changes when upgrading to 2.0.0, especially regarding user authentication. From version 2, Pronto will be an SPA. This required us to expand the currently used OAuth authentication form only the app-endpoints to the CMS endpoints as well. A command has been made available to easily migrate the user data to the new required format. Before using this command, make sure you backup your database!
 
 ### What does it do?

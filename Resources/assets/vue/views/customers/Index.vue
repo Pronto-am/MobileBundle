@@ -1,9 +1,9 @@
 <template>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-sm-12">
-                <template v-if="items">
-                    <div class="vue-table-container">
+    <div class="row">
+        <div class="col-sm-12">
+            <template v-if="items">
+                <div class="card">
+                    <div class="card-table">
                         <vue-table :url="path('customers')"
                                    :can-delete="false"
                                    :sorting="sorting"
@@ -23,8 +23,8 @@
 
                         </vue-table>
                     </div>
-                </template>
-            </div>
+                </div>
+            </template>
         </div>
     </div>
 </template>

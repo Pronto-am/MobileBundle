@@ -21,10 +21,10 @@
   },
   "integrity": {
     "/bundles/prontomobile/build/vendors~js/app.css": "sha384-YgRC4+/PycJ2jqwTC/uQjy3AXM1jkp3VOOkZ9SY5qX7x06SbofDvGrXqkTH2kpKd",
-    "/bundles/prontomobile/build/js/app.css": "sha384-WZtUPVVdX1S2XeP4TwZv5d56QUVjO4RYyFMx072V4zitmII3LL3w0OZU03WXCz/j",
-    "/bundles/prontomobile/build/vendors~js/app.js": "sha384-oRv1xcXeBNWkuovmleODyN45aUN7KjWT79KpCUqzqQE4upt0rhgXjF/7oRGJ+38r",
-    "/bundles/prontomobile/build/js/app.js": "sha384-fLpYr44Jnhlw1QfS6/RlyiGB4dJMcZ/vuO7c/dbsCK00Rkg4vUM/bXrk8teo6l7U",
-    "/bundles/prontomobile/build/css/app.css": "sha384-jl1AeI221S4H8sR9FY0A5OqJlr16DXFMj2bPt8Yy8low0bS54Hzkctjj4EWfuSZ5",
+    "/bundles/prontomobile/build/js/app.css": "sha384-vxmshe+sbqKREBhxMsi2+437An/sB4GOpaNOdDYJfdKqfyVPfWK6r7eDzPIevfMs",
+    "/bundles/prontomobile/build/vendors~js/app.js": "sha384-kCl0TCKfyTE16Qu80d/GCeCac09/PMOHxFQn5fNhx40KOyPX56spnOmAE8U6aQKg",
+    "/bundles/prontomobile/build/js/app.js": "sha384-EfHBfMHWOpAmLBMEGl1uoxUNamPwwZiI3TKbPLulM4DDPfm2IfEoog4bKF0xhaHM",
+    "/bundles/prontomobile/build/css/app.css": "sha384-ZNySAdKSMYwGwhSAZl6MouFrlUbIkqhKcXsZpl5nLkmAhlrr40yWYTABdI6Pftpc",
     "/bundles/prontomobile/build/css/app.js": "sha384-A8iwbvGaAzDPN+ij3Eo2DA7xh6V7s6d1Z6uw7disAhxZTjdaWeJmtT6h1yiB/enz"
   }
 }

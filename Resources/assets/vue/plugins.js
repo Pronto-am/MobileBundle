@@ -40,16 +40,18 @@ Vue.mixin({
     methods: {
         path: window.path,
         submitSuccess: function () {
-            this.$message({
-                type: 'success',
-                message: 'De gegevens zijn opgeslagen'
-            })
+            this.$notify.success({
+                title: Vue.prototype.$t('titles.success'),
+                message: Vue.prototype.$t('messages.submitted_successfully')
+            });
         },
-        submitError: function () {
-            this.$message({
-                type: 'error',
-                message: 'Er is iets mis gegaan, probeer het nogmaals'
-            })
+        submitError: function (error) {
+            if (!error.errors) {
+                this.$notify.error({
+                    title: Vue.prototype.$t('titles.error'),
+                    message: Vue.prototype.$t('messages.something_went_wrong')
+                });
+            }
         },
         confirm: function (text, title, confirmButtonText = 'Verwijderen') {
             return this.$confirm(text, title, {
