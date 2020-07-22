@@ -14,12 +14,18 @@ services:
         # if you need to do this, you can override this setting on individual services
         public: false
 
-    Pronto\MobileBundle\:
-        resource: '../../{Command,Controller,DataFixtures,EventListener,EventSubscriber,Middleware,Provider,Security,Service,Repository,Validator}'
-
-    pronto_mobile.global.app:
+    Pronto\MobileBundle\Service\ProntoMobile:
+        autowire: false
         class: Pronto\MobileBundle\Service\ProntoMobile
         public: true
+        arguments:
+            - '@request_stack'
+            - '@doctrine.orm.entity_manager'
+            - []
+
+    Pronto\MobileBundle\:
+        resource: '../../{Command,Controller,DataFixtures,EventListener,EventSubscriber,Middleware,Provider,Security,Service,Repository,Validator}'
+        exclude: '../../Service/ProntoMobile.php'
 
     #### TWIG EXTENSIONS ####
     Pronto\MobileBundle\Twig\:

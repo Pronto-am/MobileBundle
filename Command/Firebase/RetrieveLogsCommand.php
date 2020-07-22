@@ -60,7 +60,7 @@ class RetrieveLogsCommand extends ContainerAwareCommand
 	{
 		$this->entityManager = $entityManager;
 		$this->googleServiceAccountLoader = $googleServiceAccountLoader;
-		$this->prontoMobile = $container->get('pronto_mobile.global.app');
+		$this->prontoMobile = $container->get('Pronto\MobileBundle\Service\ProntoMobile');
 
 		parent::__construct($name);
 	}

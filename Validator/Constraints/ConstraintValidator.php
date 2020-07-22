@@ -56,7 +56,7 @@ abstract class ConstraintValidator extends BaseConstraintValidator
     public function __construct(EntityManagerInterface $entityManager, ContainerInterface $container, TranslatorInterface $translator, RequestStack $requestStack)
     {
         $this->entityManager = $entityManager;
-        $this->prontoMobile = $container->get('pronto_mobile.global.app');
+        $this->prontoMobile = $container->get('Pronto\MobileBundle\Service\ProntoMobile');
         $this->translator = $translator;
         $this->request = $requestStack->getCurrentRequest();
     }

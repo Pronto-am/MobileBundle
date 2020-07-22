@@ -13,7 +13,7 @@
     ],
     "license": "MIT",
     "require": {
-        "php": "^7.1.3",
+        "php": "^7.2",
         "troovers/browser": "^1.0.0",
         "ramsey/uuid": "^3.8",
         "doctrine/orm": "^2.5",
@@ -24,28 +24,29 @@
         "league/flysystem-sftp": "^1.0",
         "php-http/guzzle6-adapter": "^2.0",
         "symfony/swiftmailer-bundle": "^3.2",
-        "symfony/translation": "^3.4|^4.2",
+        "symfony/translation": "^4.2",
         "symfony/orm-pack": "^1.0",
-        "symfony/form": "^3.4|^4.2",
+        "symfony/form": "^4.2",
         "friendsofsymfony/oauth-server-bundle": "^1.6.1",
-        "symfony/twig-bundle": "^3.4|^4.2",
-        "symfony/templating": "^3.4|^4.2",
-        "symfony/validator": "^3.4|^4.2",
-        "symfony/serializer": "^3.4|^4.2",
+        "symfony/twig-bundle": "^4.2",
+        "symfony/templating": "^4.2",
+        "symfony/validator": "^4.2",
+        "symfony/serializer": "^4.2",
         "doctrine/doctrine-fixtures-bundle": "^3.0",
-        "symfony/proxy-manager-bridge": "^3.4|^4.2",
-        "symfony/expression-language": "^3.4|^4.2",
+        "symfony/proxy-manager-bridge": "^4.2",
+        "symfony/expression-language": "^4.2",
         "composer/semver": "^1.4",
         "symfony/dotenv": "^4.2",
         "myclabs/php-enum": "^1.7"
     },
     "require-dev": {
         "nelmio/alice": "^3.5.0",
-        "symfony/phpunit-bridge": "^3.4|^4.2"
+        "symfony/phpunit-bridge": "^4.2"
     },
     "autoload": {
         "psr-4": {
             "Pronto\\MobileBundle\\": ""
+            "Pronto\\MobileBundle\\Tests\\": "Tests\"
         }
     },
     "minimum-stability": "dev",

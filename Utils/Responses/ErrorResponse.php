@@ -11,17 +11,6 @@ use Pronto\MobileBundle\Entity\TranslationKey;
 
 class ErrorResponse extends BaseResponse
 {
-	// Possible error messages
-	public const INVALID_PARAMETERS = [422, 'Not all of the required parameters are present'];
-	public const NO_AUTHORIZATION_HEADER = [401, 'No authorization header present'];
-	public const NOT_AUTHORIZED = [403, 'You are not authorized to perform this request'];
-	public const INVALID_AUTHORIZATION_HEADER = [401, 'Authorization token could not be parsed from the authorization header'];
-	public const INVALID_AUTHORIZATION_TOKEN = [401, 'Invalid authorization token'];
-	public const INVALID_PLUGIN_STATE = [403, 'The plugin is not activated for this account'];
-
-	// Other messages
-	public const NO_MESSAGE_PROVIDED = [400, 'No message provided for the error code'];
-
 	// Entity not found
 	public const NOT_FOUND = [404, 4, '{entity} not found'];
 
@@ -52,7 +41,6 @@ class ErrorResponse extends BaseResponse
 	{
 		$this->parseError($error);
 	}
-
 
 	/**
 	 * @param array $error

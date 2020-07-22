@@ -3,12 +3,13 @@
 namespace Pronto\MobileBundle;
 
 use Pronto\MobileBundle\DependencyInjection\ProntoMobileExtension;
+use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class ProntoMobileBundle extends Bundle
 {
 	/**
-	 * @return null|ProntoMobileExtension|\Symfony\Component\DependencyInjection\Extension\ExtensionInterface
+	 * @return null|ProntoMobileExtension|ExtensionInterface
 	 */
 	public function getContainerExtension()
 	{

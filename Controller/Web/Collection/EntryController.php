@@ -7,6 +7,7 @@ use Exception;
 use Pronto\MobileBundle\Controller\BaseController;
 use Pronto\MobileBundle\Entity\Collection;
 use Pronto\MobileBundle\Entity\Plugin;
+use Pronto\MobileBundle\Exceptions\Auth\NotAuthorizedException;
 use Pronto\MobileBundle\Service\ProntoMobile;
 use Pronto\MobileBundle\Twig\IsGrantedMinimal;
 use Pronto\MobileBundle\Utils\Collection\EntryParser;
@@ -251,8 +252,7 @@ class EntryController extends BaseController implements ValidatePluginStateInter
 
 		// Redirect when the collection doesn't exist
 		if ($collection === null || $entry === null) {
-			$response = new ErrorResponse([403, 'Not authorized to perform this request']);
-			return $response->create()->getJsonResponse();
+		    throw new NotAuthorizedException();
 		}
 
 		$data = $entry->getData();

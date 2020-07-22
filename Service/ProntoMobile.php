@@ -52,10 +52,11 @@ class ProntoMobile
 	 * @param RequestStack $requestStack
 	 * @param EntityManagerInterface $entityManager
 	 */
-	public function __construct(RequestStack $requestStack, EntityManagerInterface $entityManager)
+	public function __construct(RequestStack $requestStack, EntityManagerInterface $entityManager, array $config)
 	{
 		$this->request = $requestStack->getCurrentRequest();
 		$this->entityManager = $entityManager;
+		$this->configuration = $config;
 
 		// Set the needed properties
 		$this->initialize();
@@ -200,16 +201,6 @@ class ProntoMobile
 		$plugin = $this->entityManager->getRepository(ApplicationPlugin::class)->findOneByApplicationAndIdentifier($application, $plugin);
 
 		return $plugin->getConfig();
-	}
-
-	/**
-	 * Set the bundle configuration
-	 *
-	 * @param array $config
-	 */
-	public function setConfiguration(array $config): void
-	{
-		$this->configuration = $config;
 	}
 
 	/**

@@ -11,6 +11,7 @@ use Pronto\MobileBundle\Enum\RemoteConfigType;
 use Pronto\MobileBundle\EventSubscriber\ValidateApplicationSelectionInterface;
 use Pronto\MobileBundle\EventSubscriber\ValidateCustomerSelectionInterface;
 use Pronto\MobileBundle\EventSubscriber\ValidatePluginStateInterface;
+use Pronto\MobileBundle\Exceptions\EntityNotFoundException;
 use Pronto\MobileBundle\Form\RemoteConfigForm;
 use Pronto\MobileBundle\Utils\Doctrine\WhereClause;
 use Pronto\MobileBundle\Utils\Optional;
@@ -142,18 +143,12 @@ class RemoteConfigController extends BaseController implements ValidateCustomerS
     }
 
     /**
-     * @param Request $request
-     * @param EntityManagerInterface $entityManager
-     * @return ErrorResponse|JsonResponse
+     * @throws EntityNotFoundException
      */
     public function togglePlatformAction(Request $request, EntityManagerInterface $entityManager)
     {
         /** @var RemoteConfig $configuration */
-        $configuration = $entityManager->getRepository(RemoteConfig::class)->find($request->request->get('remote_config_id'));
-
-        if ($configuration === null) {
-            return new ErrorResponse([404, 'Invalid remote config key']);
-        }
+        $configuration = $entityManager->getRepository(RemoteConfig::class)->findOrFail($request->request->get('remote_config_id'));
 
         if ($request->request->get('platform') === 'android') {
             $configuration->setAndroid($request->request->getBoolean('active'));

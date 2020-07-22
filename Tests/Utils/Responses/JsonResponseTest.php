@@ -2,7 +2,6 @@
 
 namespace Pronto\MobileBundle\Tests\Utils;
 
-
 use PHPUnit\Framework\TestCase;
 use Pronto\MobileBundle\Entity\Collection;
 use Pronto\MobileBundle\Entity\Device;

@@ -9,6 +9,7 @@ use PascalDeVink\ShortUuid\ShortUuid;
 use Pronto\MobileBundle\Entity\PushNotification\Segment;
 use Pronto\MobileBundle\Traits\ApiEntityTrait;
 use Ramsey\Uuid\Uuid;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 
 /**
@@ -23,20 +24,18 @@ class PushNotification implements ApiEntityInterface
 {
 	use ApiEntityTrait;
 
-
 	public const TYPE_NO_ACTION = 0;
 	public const TYPE_URL_ACTION = 1;
 	public const TYPE_HTML_ACTION = 2;
 
 	public const TYPE_SCHEDULE = 3;
 
-
 	/**
 	 * @ORM\Id
 	 * @ORM\Column(type="string", unique=true)
+     * @Groups({"PushNotification"})
 	 */
 	private $id;
-
 
 	/**
 	 * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Application")
@@ -44,86 +43,80 @@ class PushNotification implements ApiEntityInterface
 	 */
 	private $application;
 
-
 	/**
 	 * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\User", inversedBy="pushNotifications")
 	 * @ORM\JoinColumn(onDelete="SET NULL", nullable=true)
-	 */
+     * @Groups({"PushNotification"})
+     */
 	private $sentBy;
-
 
 	/**
 	 * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\PushNotification\Segment")
 	 * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
+     * @Groups({"PushNotification"})
 	 */
 	private $segment;
 
-
 	/**
-	 * @ORM\Column(type="json_array")
+	 * @ORM\Column(type="json")
+     * @Groups({"PushNotification"})
 	 */
 	private $title;
 
-
 	/**
-	 * @ORM\Column(type="json_array", nullable=true)
-	 */
+	 * @ORM\Column(type="json", nullable=true)
+     * @Groups({"PushNotification"})
+     */
 	private $content;
-
 
 	/**
 	 * @ORM\Column(type="integer", nullable=false)
-	 */
+     */
 	private $clickAction;
 
-
 	/**
-	 * @ORM\Column(type="json_array", nullable=true)
-	 */
+	 * @ORM\Column(type="json", nullable=true)
+     * @Groups({"PushNotification"})
+     */
 	private $clickActionUrl;
 
-
 	/**
-	 * @ORM\Column(type="json_array", nullable=true)
-	 */
+	 * @ORM\Column(type="json", nullable=true)
+     * @Groups({"PushNotification"})
+     */
 	private $clickActionHtml;
 
-
 	/**
 	 * @ORM\Column(type="datetime", nullable=true)
-	 */
+     * @Groups({"PushNotification"})
+     */
 	private $sent;
 
-
 	/**
 	 * @ORM\Column(type="datetime", nullable=true)
-	 */
+     */
 	private $scheduledSending;
-
 
 	/**
 	 * @ORM\Column(type="boolean")
-	 */
+     * @Groups({"PushNotification"})
+     */
 	private $test = false;
 
-
 	/**
-	 * @ORM\Column(type="json_array")
+	 * @ORM\Column(type="json")
 	 */
 	private $testDevices;
-
 
 	/**
 	 * @ORM\Column(type="boolean")
 	 */
 	private $beingProcessed = false;
 
-
 	/**
 	 * @ORM\OneToMany(targetEntity="Pronto\MobileBundle\Entity\PushNotification\Recipient", mappedBy="pushNotification")
 	 */
 	private $pushNotificationRecipients;
-
 
 	/**
 	 * Triggered on pre persist
@@ -136,7 +129,6 @@ class PushNotification implements ApiEntityInterface
 		$this->id = Uuid::uuid1()->toString();
 	}
 
-
 	/**
 	 * @return string|null
 	 */
@@ -144,7 +136,6 @@ class PushNotification implements ApiEntityInterface
 	{
 		return $this->id;
 	}
-
 
 	/**
 	 * @return Application
@@ -154,7 +145,6 @@ class PushNotification implements ApiEntityInterface
 		return $this->application;
 	}
 
-
 	/**
 	 * @param Application $application
 	 */
@@ -162,7 +152,6 @@ class PushNotification implements ApiEntityInterface
 	{
 		$this->application = $application;
 	}
-
 
 	/**
 	 * @return User|null
@@ -172,7 +161,6 @@ class PushNotification implements ApiEntityInterface
 		return $this->sentBy;
 	}
 
-
 	/**
 	 * @param null|User $sentBy
 	 */
@@ -180,7 +168,6 @@ class PushNotification implements ApiEntityInterface
 	{
 		$this->sentBy = $sentBy;
 	}
-
 
 	/**
 	 * @return Segment|null
@@ -190,7 +177,6 @@ class PushNotification implements ApiEntityInterface
 		return $this->segment;
 	}
 
-
 	/**
 	 * @param null|Segment $segment
 	 */
@@ -198,7 +184,6 @@ class PushNotification implements ApiEntityInterface
 	{
 		$this->segment = $segment;
 	}
-
 
 	/**
 	 * @return array
@@ -208,7 +193,6 @@ class PushNotification implements ApiEntityInterface
 		return $this->title;
 	}
 
-
 	/**
 	 * @param array $title
 	 */
@@ -216,7 +200,6 @@ class PushNotification implements ApiEntityInterface
 	{
 		$this->title = $title;
 	}
-
 
 	/**
 	 * @return array|null
@@ -226,7 +209,6 @@ class PushNotification implements ApiEntityInterface
 		return $this->content;
 	}
 
-
 	/**
 	 * @param null|array $content
 	 */
@@ -234,7 +216,6 @@ class PushNotification implements ApiEntityInterface
 	{
 		$this->content = $content;
 	}
-
 
 	/**
 	 * @return int
@@ -244,7 +225,6 @@ class PushNotification implements ApiEntityInterface
 		return $this->clickAction;
 	}
 
-
 	/**
 	 * @param int $clickAction
 	 */
@@ -252,7 +232,6 @@ class PushNotification implements ApiEntityInterface
 	{
 		$this->clickAction = $clickAction;
 	}
-
 
 	/**
 	 * @return array|null
@@ -262,7 +241,6 @@ class PushNotification implements ApiEntityInterface
 		return $this->clickActionUrl;
 	}
 
-
 	/**
 	 * @param null|array $clickActionUrl
 	 */
@@ -270,7 +248,6 @@ class PushNotification implements ApiEntityInterface
 	{
 		$this->clickActionUrl = $clickActionUrl;
 	}
-
 
 	/**
 	 * @return array|null
@@ -280,7 +257,6 @@ class PushNotification implements ApiEntityInterface
 		return $this->clickActionHtml;
 	}
 
-
 	/**
 	 * @param null|array $clickActionHtml
 	 */
@@ -288,7 +264,6 @@ class PushNotification implements ApiEntityInterface
 	{
 		$this->clickActionHtml = $clickActionHtml;
 	}
-
 
 	/**
 	 * @return DateTime|null
@@ -298,7 +273,6 @@ class PushNotification implements ApiEntityInterface
 		return $this->sent;
 	}
 
-
 	/**
 	 * @param null|DateTime $sent
 	 */
@@ -306,7 +280,6 @@ class PushNotification implements ApiEntityInterface
 	{
 		$this->sent = $sent;
 	}
-
 
 	/**
 	 * @return DateTime|null
@@ -316,7 +289,6 @@ class PushNotification implements ApiEntityInterface
 		return $this->scheduledSending;
 	}
 
-
 	/**
 	 * @param DateTime|null $scheduledSending
 	 */
@@ -324,7 +296,6 @@ class PushNotification implements ApiEntityInterface
 	{
 		$this->scheduledSending = $scheduledSending;
 	}
-
 
 	/**
 	 * @return bool
@@ -334,7 +305,6 @@ class PushNotification implements ApiEntityInterface
 		return $this->test;
 	}
 
-
 	/**
 	 * @param bool $test
 	 */
@@ -342,7 +312,6 @@ class PushNotification implements ApiEntityInterface
 	{
 		$this->test = $test;
 	}
-
 
 	/**
 	 * @return array
@@ -352,7 +321,6 @@ class PushNotification implements ApiEntityInterface
 		return $this->testDevices;
 	}
 
-
 	/**
 	 * @param array $testDevices
 	 */
@@ -360,7 +328,6 @@ class PushNotification implements ApiEntityInterface
 	{
 		$this->testDevices = $testDevices;
 	}
-
 
 	/**
 	 * @return bool
@@ -370,7 +337,6 @@ class PushNotification implements ApiEntityInterface
 		return $this->beingProcessed;
 	}
 
-
 	/**
 	 * @param bool $beingProcessed
 	 */
@@ -378,7 +344,6 @@ class PushNotification implements ApiEntityInterface
 	{
 		$this->beingProcessed = $beingProcessed;
 	}
-
 
 	/**
 	 * @return DoctrineCollection

@@ -33,7 +33,7 @@ class FileManager
 	public function __construct(ContainerInterface $container, Filesystem $filesystem)
 	{
 		$this->fileSystem = $filesystem;
-		$this->uploadsDir = $container->get('pronto_mobile.global.app')->getConfiguration('uploads_folder', 'uploads');
+		$this->uploadsDir = $container->get('Pronto\MobileBundle\Service\ProntoMobile')->getConfiguration('uploads_folder', 'uploads');
 	}
 
 	/**

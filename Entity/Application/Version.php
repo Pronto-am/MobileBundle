@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Class Version
  * @package Pronto\MobileBundle\Entity
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Pronto\MobileBundle\Repository\Application\VersionRepository")
  * @ORM\Table(name="application_versions")
  */
 class Version

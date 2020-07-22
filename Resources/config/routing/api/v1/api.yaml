@@ -14,18 +14,27 @@ devices_unregister:
     condition: "context.getMethod() in ['DELETE']"
 
 
+#### NOTIFICATIONS REQUESTS ####
+
+notifications:
+    path: /notifications/{deviceIdentifier}
+    defaults:
+        _controller: Pronto\MobileBundle\Controller\Api\V1\PushNotificationController:listAction
+    condition: "context.getMethod() in ['GET']"
+
+
 #### NOTIFICATION SEGMENTS REQUESTS ####
 
 notifications_segments:
     path: /notifications/segments/{deviceIdentifier}
     defaults:
-        _controller: Pronto\MobileBundle\Controller\Api\V1\PushNotificationSegmentController:subscribedAction
+        _controller: Pronto\MobileBundle\Controller\Api\V1\PushNotification\SegmentController:subscribedAction
     condition: "context.getMethod() in ['GET']"
 
 notifications_segments_update:
     path: /notifications/segments
     defaults:
-        _controller: Pronto\MobileBundle\Controller\Api\V1\PushNotificationSegmentController:updateAction
+        _controller: Pronto\MobileBundle\Controller\Api\V1\PushNotification\SegmentController:updateAction
     condition: "context.getMethod() in ['PUT']"
 
 

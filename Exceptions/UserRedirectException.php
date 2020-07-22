@@ -3,7 +3,9 @@
 namespace Pronto\MobileBundle\Exceptions;
 
 
-class UserRedirectException extends \Exception
+use Exception;
+
+class UserRedirectException extends Exception
 {
 
 }

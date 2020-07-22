@@ -3,7 +3,9 @@
 namespace Pronto\MobileBundle\Exceptions;
 
 
-class InactivePluginException extends \Exception
+use Exception;
+
+class InactivePluginException extends Exception
 {
 
 }

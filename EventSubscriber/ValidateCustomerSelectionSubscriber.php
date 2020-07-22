@@ -42,7 +42,7 @@ class ValidateCustomerSelectionSubscriber implements EventSubscriberInterface
 	public function __construct(UrlGeneratorInterface $router, ContainerInterface $container, EntityManagerInterface $entityManager)
 	{
 		$this->router = $router;
-		$this->prontoMobile = $container->get('pronto_mobile.global.app');
+		$this->prontoMobile = $container->get('Pronto\MobileBundle\Service\ProntoMobile');
 		$this->entityManager = $entityManager;
 	}
 

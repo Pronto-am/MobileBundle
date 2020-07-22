@@ -1,18 +1,28 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pronto\MobileBundle\Controller\Api\V1;
 
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Pronto\MobileBundle\Controller\Api\BaseApiController;
 use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\AppUser;
 use Pronto\MobileBundle\Entity\AppUser\PasswordReset;
 use Pronto\MobileBundle\Entity\Customer;
 use Pronto\MobileBundle\Entity\Plugin;
+use Pronto\MobileBundle\Exceptions\ApiException;
+use Pronto\MobileBundle\Exceptions\AppUsers\EmailAlreadyExistsException;
+use Pronto\MobileBundle\Exceptions\AppUsers\NotFoundException;
+use Pronto\MobileBundle\Exceptions\AppUsers\UserAlreadyRegisteredException;
+use Pronto\MobileBundle\Exceptions\Auth\NotAuthorizedException;
 use Pronto\MobileBundle\Form\ResetPasswordForm;
 use Swift_Mailer;
 use Swift_Message;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
@@ -86,10 +96,11 @@ class AppUserController extends BaseApiController
     /**
      * @param Request $request
      * @param EntityManagerInterface $entityManager
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
-     * @throws \Doctrine\ORM\NoResultException
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     * @throws \Pronto\MobileBundle\Exceptions\ApiException
+     * @return JsonResponse
+     * @throws ApiException
+     * @throws NoResultException
+     * @throws NonUniqueResultException
+     * @throws NotAuthorizedException
      */
 	public function registerAction(Request $request, EntityManagerInterface $entityManager)
 	{
@@ -103,7 +114,7 @@ class AppUserController extends BaseApiController
 
 		// Check if registration is enabled
 		if (!$configuration[Plugin::APP_USERS_REGISTRATION_ENABLED]) {
-			$this->notAuthorizedResponse();
+		    throw new NotAuthorizedException();
 		}
 
 		// Retrieve the content from the request
@@ -116,7 +127,7 @@ class AppUserController extends BaseApiController
 		]);
 
 		if ($user !== null) {
-			$this->customErrorResponse(AppUser::USER_ALREADY_REGISTERED, AppUser::class);
+		    throw new UserAlreadyRegisteredException();
 		}
 
 		$user = new AppUser();
@@ -169,8 +180,8 @@ class AppUserController extends BaseApiController
 	/**
 	 * @param EntityManagerInterface $entityManager
 	 * @param $userIdentifier
-	 * @return \Symfony\Component\HttpFoundation\JsonResponse
-	 * @throws \Pronto\MobileBundle\Exceptions\ApiException
+	 * @return JsonResponse
+	 * @throws ApiException
 	 */
 	public function deregisterAction(EntityManagerInterface $entityManager, $userIdentifier)
 	{
@@ -180,7 +191,7 @@ class AppUserController extends BaseApiController
 		$user = $entityManager->getRepository(AppUser::class)->find($userIdentifier);
 
 		if ($user === null) {
-			$this->objectNotFoundResponse(AppUser::class);
+		    throw new NotFoundException();
 		}
 
 		// Remove the user
@@ -222,8 +233,8 @@ class AppUserController extends BaseApiController
 	 * @param Swift_Mailer $mailer
 	 * @param EntityManagerInterface $entityManager
 	 * @param TranslatorInterface $translator
-	 * @return \Symfony\Component\HttpFoundation\JsonResponse
-	 * @throws \Pronto\MobileBundle\Exceptions\ApiException
+	 * @return JsonResponse
+	 * @throws ApiException
 	 */
 	public function requestPasswordResetLinkAction(Request $request, Swift_Mailer $mailer, EntityManagerInterface $entityManager, TranslatorInterface $translator)
 	{
@@ -382,8 +393,8 @@ class AppUserController extends BaseApiController
 	/**
 	 * Get the profile off a user
 	 *
-	 * @return \Symfony\Component\HttpFoundation\JsonResponse
-	 * @throws \Pronto\MobileBundle\Exceptions\ApiException
+	 * @return JsonResponse
+	 * @throws ApiException
 	 */
 	public function getProfileAction()
 	{
@@ -393,7 +404,7 @@ class AppUserController extends BaseApiController
 		$user = $this->getUser();
 
 		if ($user === null) {
-			$this->notAuthorizedResponse();
+            throw new NotAuthorizedException();
 		}
 
 		return $this->successResponse($this->serializer->serialize($user, [new DateTimeNormalizer()]));
@@ -462,8 +473,8 @@ class AppUserController extends BaseApiController
 	 *
 	 * @param Request $request
 	 * @param EntityManagerInterface $entityManager
-	 * @return \Symfony\Component\HttpFoundation\JsonResponse
-	 * @throws \Pronto\MobileBundle\Exceptions\ApiException
+	 * @return JsonResponse
+	 * @throws ApiException
 	 */
 	public function updateProfileAction(Request $request, EntityManagerInterface $entityManager)
 	{
@@ -480,7 +491,7 @@ class AppUserController extends BaseApiController
 		$user = $this->getUser();
 
 		if ($user === null) {
-			$this->notAuthorizedResponse();
+            throw new NotAuthorizedException();
 		}
 
 		// Check if the new email address already exists
@@ -491,7 +502,7 @@ class AppUserController extends BaseApiController
 			]);
 
 			if (count($existingUsers) > 0) {
-				$this->customErrorResponse(AppUser::EMAIL_ADDRESS_ALREADY_EXISTS, AppUser::class);
+			    throw new EmailAlreadyExistsException();
 			}
 		}
 

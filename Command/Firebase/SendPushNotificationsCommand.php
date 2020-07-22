@@ -45,7 +45,7 @@ class SendPushNotificationsCommand extends ContainerAwareCommand
 	{
 		$this->entityManager = $entityManager;
 		$this->sender = $sender;
-		$this->prontoMobile = $container->get('pronto_mobile.global.app');
+		$this->prontoMobile = $container->get('Pronto\MobileBundle\Service\ProntoMobile');
 
 		parent::__construct($name);
 	}

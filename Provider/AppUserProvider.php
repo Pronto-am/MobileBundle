@@ -8,6 +8,7 @@ use FOS\OAuthServerBundle\Model\AccessTokenManagerInterface;
 use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\AppUser;
 use Pronto\MobileBundle\Exceptions\ApiException;
+use Pronto\MobileBundle\Exceptions\Auth\InvalidAuthorizationTokenException;
 use Pronto\MobileBundle\Utils\Responses\ErrorResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -44,7 +45,7 @@ class AppUserProvider implements UserProviderInterface
      *
      * @param string $email
      * @return UserInterface
-     * @throws ApiException
+     * @throws InvalidAuthorizationTokenException
      */
     public function loadUserByUsername($email): UserInterface
     {
@@ -62,12 +63,12 @@ class AppUserProvider implements UserProviderInterface
                 $application = $this->determineApplication($clientId, $clientSecret);
 
             } catch (Exception $exception) {
-                $this->invalidAuthorization();
+                throw new InvalidAuthorizationTokenException();
             }
         }
 
         if ($application === null) {
-            $this->invalidAuthorization();
+            throw new InvalidAuthorizationTokenException();
         }
 
         /** @var AppUser $user */
@@ -90,7 +91,7 @@ class AppUserProvider implements UserProviderInterface
      * @param string $clientId
      * @param string $clientSecret
      * @return Application|null
-     * @throws ApiException
+     * @throws InvalidAuthorizationTokenException
      */
     private function determineApplication(string $clientId, string $clientSecret): ?Application
     {
@@ -99,19 +100,8 @@ class AppUserProvider implements UserProviderInterface
 
             return $this->entityManager->getRepository(Application::class)->findByOAuthCredentials($randomId, $clientSecret);
         } catch (Exception $exception) {
-            $this->invalidAuthorization();
+            throw new InvalidAuthorizationTokenException();
         }
-    }
-
-    /**
-     * @throws ApiException
-     */
-    private function invalidAuthorization()
-    {
-        $response = new ErrorResponse(ErrorResponse::INVALID_AUTHORIZATION_TOKEN);
-        $response->create();
-
-        throw new ApiException($response);
     }
 
     /**

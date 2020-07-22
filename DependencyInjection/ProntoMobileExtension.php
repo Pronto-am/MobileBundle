@@ -21,7 +21,7 @@ class ProntoMobileExtension extends ConfigurableExtension
 		$loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
 		$loader->load('services.yaml');
 
-		$prontoMobile = $container->getDefinition('pronto_mobile.global.app');
-		$prontoMobile->addMethodCall('setConfiguration', [$mergedConfig]);
+		$prontoMobile = $container->getDefinition('Pronto\MobileBundle\Service\ProntoMobile');
+		$prontoMobile->replaceArgument(2, $mergedConfig);
 	}
 }

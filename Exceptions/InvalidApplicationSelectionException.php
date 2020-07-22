@@ -3,7 +3,9 @@
 namespace Pronto\MobileBundle\Exceptions;
 
 
-class InvalidApplicationSelectionException extends \Exception
+use Exception;
+
+class InvalidApplicationSelectionException extends Exception
 {
 
 }

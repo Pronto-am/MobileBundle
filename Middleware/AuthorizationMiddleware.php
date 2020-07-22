@@ -7,8 +7,9 @@ use Doctrine\ORM\EntityManagerInterface;
 use Pronto\MobileBundle\Entity\AccessToken;
 use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Exceptions\ApiException;
+use Pronto\MobileBundle\Exceptions\Auth\InvalidAuthorizationHeaderException;
+use Pronto\MobileBundle\Exceptions\Auth\InvalidAuthorizationTokenException;
 use Pronto\MobileBundle\Service\ProntoMobile;
-use Pronto\MobileBundle\Utils\Responses\ErrorResponse;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -48,7 +49,7 @@ class AuthorizationMiddleware extends Middleware
     {
         $this->authorizationChecker = $container->get('security.authorization_checker');
         $this->tokenStorage = $container->get('security.token_storage');
-        $this->prontoMobile = $container->get('pronto_mobile.global.app');
+        $this->prontoMobile = $container->get('Pronto\MobileBundle\Service\ProntoMobile');
         $this->entityManager = $entityManager;
 
         parent::__construct();
@@ -56,12 +57,13 @@ class AuthorizationMiddleware extends Middleware
 
     /**
      * @return void
-     * @throws ApiException
+     * @throws InvalidAuthorizationHeaderException
+     * @throws InvalidAuthorizationTokenException
      */
     public function handle(): void
     {
-        if (!$this->authorizationChecker->isGranted('IS_AUTHENTICATED_FULLY')) {
-            throw new ApiException((new ErrorResponse(ErrorResponse::NO_AUTHORIZATION_HEADER))->create());
+        if (! $this->authorizationChecker->isGranted('IS_AUTHENTICATED_FULLY')) {
+            throw new InvalidAuthorizationHeaderException();
         }
 
         /** @var AccessToken $accessToken */
@@ -74,7 +76,7 @@ class AuthorizationMiddleware extends Middleware
 
         // Check if the application exists
         if ($application === null) {
-            throw new ApiException((new ErrorResponse(ErrorResponse::INVALID_AUTHORIZATION_TOKEN))->create());
+            throw new InvalidAuthorizationTokenException();
         }
 
         // Save the application for later use

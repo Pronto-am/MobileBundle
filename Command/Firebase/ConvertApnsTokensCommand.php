@@ -44,7 +44,7 @@ class ConvertApnsTokensCommand extends ContainerAwareCommand
     {
         $this->entityManager = $entityManager;
         $this->apnsTokenConverter = $apnsTokenConverter;
-        $this->prontoMobile = $container->get('pronto_mobile.global.app');
+        $this->prontoMobile = $container->get('Pronto\MobileBundle\Service\ProntoMobile');
 
         parent::__construct($name);
     }
@@ -66,7 +66,7 @@ class ConvertApnsTokensCommand extends ContainerAwareCommand
      * @param OutputInterface $output
      * @return int|null|void
      * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\DBAL\DBALException
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {

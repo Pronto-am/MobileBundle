@@ -12,6 +12,7 @@ use Pronto\MobileBundle\Entity\TranslationKey;
 use Pronto\MobileBundle\EventSubscriber\ValidateApplicationSelectionInterface;
 use Pronto\MobileBundle\EventSubscriber\ValidateCustomerSelectionInterface;
 use Pronto\MobileBundle\EventSubscriber\ValidatePluginStateInterface;
+use Pronto\MobileBundle\Exceptions\EntityNotFoundException;
 use Pronto\MobileBundle\Form\Translation\UploadForm;
 use Pronto\MobileBundle\Form\TranslationForm;
 use Pronto\MobileBundle\Service\ProntoMobile;
@@ -127,17 +128,11 @@ class TranslationController extends BaseController implements ValidateCustomerSe
     }
 
     /**
-     * @param Request $request
-     * @param EntityManagerInterface $entityManager
-     * @return ErrorResponse|JsonResponse
+     * @throws EntityNotFoundException
      */
-    public function saveInlineAction(Request $request, EntityManagerInterface $entityManager)
+    public function saveInlineAction(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $translationKey = $entityManager->getRepository(TranslationKey::class)->find($request->request->get('translation_key_id'));
-
-        if ($translationKey === null) {
-            return new ErrorResponse([404, 'Invalid translation key']);
-        }
+        $translationKey = $entityManager->getRepository(TranslationKey::class)->findOrFail($request->request->get('translation_key_id'));
 
         $translation = $entityManager->getRepository(Translation::class)->findOneBy([
             'translationKey' => $translationKey,
@@ -166,18 +161,12 @@ class TranslationController extends BaseController implements ValidateCustomerSe
     }
 
     /**
-     * @param Request $request
-     * @param EntityManagerInterface $entityManager
-     * @return ErrorResponse|JsonResponse
+     * @throws EntityNotFoundException
      */
     public function togglePlatformAction(Request $request, EntityManagerInterface $entityManager)
     {
         /** @var TranslationKey $translationKey */
-        $translationKey = $entityManager->getRepository(TranslationKey::class)->find($request->request->get('translation_key_id'));
-
-        if ($translationKey === null) {
-            return new ErrorResponse([404, 'Invalid translation key']);
-        }
+        $translationKey = $entityManager->getRepository(TranslationKey::class)->findOrFail($request->request->get('translation_key_id'));
 
         if ($request->request->get('platform') === 'android') {
             $translationKey->setAndroid($request->request->getBoolean('active'));

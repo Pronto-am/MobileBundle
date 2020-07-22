@@ -2,7 +2,6 @@
 
 namespace Pronto\MobileBundle\Repository;
 
-use Doctrine\ORM\EntityRepository;
 use Pronto\MobileBundle\Entity\Application;
 
 class TranslationKeyRepository extends EntityRepository

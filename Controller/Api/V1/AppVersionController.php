@@ -1,11 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pronto\MobileBundle\Controller\Api\V1;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Pronto\MobileBundle\Controller\Api\BaseApiController;
 use Pronto\MobileBundle\Entity\AppVersion;
 use Pronto\MobileBundle\Entity\Plugin;
+use Pronto\MobileBundle\Exceptions\ApiException;
+use Pronto\MobileBundle\Exceptions\AppVersions\FileNotFoundException;
+use Pronto\MobileBundle\Exceptions\AppVersions\NotFoundException;
 use Pronto\MobileBundle\Service\FileManager;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -40,7 +45,7 @@ class AppVersionController extends BaseApiController
      * @param EntityManagerInterface $entityManager
      * @param int $id
      * @return \Symfony\Component\HttpFoundation\JsonResponse
-     * @throws \Pronto\MobileBundle\Exceptions\ApiException
+     * @throws ApiException
      */
     public function getAction(EntityManagerInterface $entityManager, int $id): JsonResponse
     {
@@ -54,7 +59,7 @@ class AppVersionController extends BaseApiController
         ]);
 
         if ($version === null) {
-            $this->objectNotFoundResponse(AppVersion::class);
+            throw new NotFoundException();
         }
 
         return $this->successResponse($this->serializer->serialize($version, [new DateTimeNormalizer()]));
@@ -78,7 +83,7 @@ class AppVersionController extends BaseApiController
      * @param FileManager $fileManager
      * @param int $id
      * @return BinaryFileResponse
-     * @throws \Pronto\MobileBundle\Exceptions\ApiException
+     * @throws ApiException
      */
     public function downloadAction(EntityManagerInterface $entityManager, FileManager $fileManager, int $id): BinaryFileResponse
     {
@@ -92,13 +97,13 @@ class AppVersionController extends BaseApiController
         ]);
 
         if ($version === null) {
-            $this->objectNotFoundResponse(AppVersion::class);
+            throw new NotFoundException();
         }
 
         $file = $fileManager->get(FileManager::APP_VERSIONS_DIRECTORY . '/' . $version->getFileName());
 
         if($file === null) {
-            $this->customErrorResponse(AppVersion::FILE_NOT_FOUND, AppVersion::class);
+            throw new FileNotFoundException();
         }
 
         return new BinaryFileResponse($file->getRealPath());

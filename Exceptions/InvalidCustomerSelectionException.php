@@ -3,7 +3,9 @@
 namespace Pronto\MobileBundle\Exceptions;
 
 
-class InvalidCustomerSelectionException extends \Exception
+use Exception;
+
+class InvalidCustomerSelectionException extends Exception
 {
 
 }

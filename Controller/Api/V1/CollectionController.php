@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pronto\MobileBundle\Controller\Api\V1;
 
 use Exception;
@@ -8,6 +10,8 @@ use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\Application\Version;
 use Pronto\MobileBundle\Entity\Collection;
 use Pronto\MobileBundle\Entity\Collection\Entry;
+use Pronto\MobileBundle\Exceptions\Auth\NotAuthorizedException;
+use Pronto\MobileBundle\Exceptions\Collections\NotFoundException;
 use Pronto\MobileBundle\Service\Collection\Retriever;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -70,7 +74,7 @@ class CollectionController extends BaseApiController
 
 		// Check if the collection exists
 		if($collection === null) {
-			$this->objectNotFoundResponse(Collection::class);
+		    throw new NotFoundException();
 		}
 
 		$retriever->setCollection($collection);
@@ -121,7 +125,7 @@ class CollectionController extends BaseApiController
 
 		// Check if the collection exists
 		if($collection === null) {
-			$this->objectNotFoundResponse(Collection::class);
+		    throw new NotFoundException();
 		}
 
 		$retriever->setCollection($collection);
@@ -129,7 +133,7 @@ class CollectionController extends BaseApiController
 		$entry = $retriever->getEntry($id);
 
 		if ($entry === null) {
-			$this->objectNotFoundResponse(Entry::class);
+		    throw new \Pronto\MobileBundle\Exceptions\Collections\Entries\NotFoundException();
 		}
 
 		return $this->successResponse($entry);
@@ -158,7 +162,7 @@ class CollectionController extends BaseApiController
 				return $applicationVersion->getName() === $version;
 			});
 		} catch (Exception $exception) {
-			$this->notAuthorizedResponse();
+            throw new NotAuthorizedException();
 		}
 
 		/** @var Collection $collection */
@@ -168,7 +172,7 @@ class CollectionController extends BaseApiController
 		]);
 
 		if($collection === null) {
-		    throw new NotFoundHttpException();
+		    throw new NotFoundException();
         }
 
 		return $collection;

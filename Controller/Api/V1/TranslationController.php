@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pronto\MobileBundle\Controller\Api\V1;
 
 use Doctrine\ORM\EntityManagerInterface;
@@ -8,6 +10,7 @@ use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\Translation;
 use Pronto\MobileBundle\Entity\TranslationKey;
 use Pronto\MobileBundle\Exceptions\ApiException;
+use Pronto\MobileBundle\Exceptions\TranslationKeys\ZipFileNotCreatedException;
 use Pronto\MobileBundle\Utils\File;
 use Pronto\MobileBundle\Utils\Responses\ErrorResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -168,10 +171,7 @@ class TranslationController extends BaseApiController
         $zipFileName = date('Y-m-d') . ' Translations.zip';
 
         if ($zip->open($zipFileName, ZipArchive::CREATE) !== true) {
-            // Throw error
-            $response = new ErrorResponse([400, 14, 'Could not create zip file']);
-
-            return $response->create()->getJsonResponse();
+            throw new ZipFileNotCreatedException();
         }
 
         // Add the files to the zip

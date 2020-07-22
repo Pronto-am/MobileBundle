@@ -8,27 +8,21 @@ use Pronto\MobileBundle\DTO\ApplicationDTO;
 use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\Application\Version;
 use Pronto\MobileBundle\EventSubscriber\ValidateCustomerSelectionInterface;
+use Pronto\MobileBundle\Exceptions\EntityNotFoundException;
 use Pronto\MobileBundle\Form\ApplicationForm;
 use Pronto\MobileBundle\Service\LanguagesLoader;
 use Pronto\MobileBundle\Utils\Doctrine\WhereClause;
 use Pronto\MobileBundle\Utils\PageHelper;
-use Pronto\MobileBundle\Utils\Responses\ErrorResponse;
 use Pronto\MobileBundle\Utils\Responses\SuccessResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ApplicationController extends BaseController implements ValidateCustomerSelectionInterface
 {
-    /**
-     * Show a list of applications
-     *
-     * @param Request $request
-     * @param EntityManagerInterface $entityManager
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function indexAction(Request $request, EntityManagerInterface $entityManager)
+    public function indexAction(Request $request, EntityManagerInterface $entityManager): Response
     {
         $pageHelper = new PageHelper($request, $entityManager, Application::class, 15, 't.name');
         $pageHelper->addClause(new WhereClause('t.customer', $this->getCustomer()));
@@ -38,16 +32,7 @@ class ApplicationController extends BaseController implements ValidateCustomerSe
         ]);
     }
 
-    /**
-     * Edit an applications' details
-     *
-     * @param Request $request
-     * @param LanguagesLoader $languagesLoader
-     * @param EntityManagerInterface $entityManager
-     * @param Application|null $application
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-     */
-    public function editAction(Request $request, LanguagesLoader $languagesLoader, EntityManagerInterface $entityManager, Application $application = null)
+    public function editAction(Request $request, LanguagesLoader $languagesLoader, EntityManagerInterface $entityManager, Application $application = null): Response
     {
         $customer = $this->getCustomer();
 
@@ -112,14 +97,7 @@ class ApplicationController extends BaseController implements ValidateCustomerSe
         ]);
     }
 
-    /**
-     * Delete an application
-     *
-     * @param Request $request
-     * @param EntityManagerInterface $entityManager
-     * @return JsonResponse
-     */
-    public function deleteAction(Request $request, EntityManagerInterface $entityManager)
+    public function deleteAction(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
         $id = $request->request->getInt('id');
 
@@ -152,14 +130,7 @@ class ApplicationController extends BaseController implements ValidateCustomerSe
         return $response->create()->getJsonResponse();
     }
 
-    /**
-     * Let the user select an application from the list
-     *
-     * @param Request $request
-     * @param EntityManagerInterface $entityManager
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function selectApplicationAction(Request $request, EntityManagerInterface $entityManager)
+    public function selectApplicationAction(Request $request, EntityManagerInterface $entityManager): Response
     {
         $applications = $entityManager->getRepository(Application::class)->findByCustomer($this->getCustomer());
 
@@ -191,24 +162,21 @@ class ApplicationController extends BaseController implements ValidateCustomerSe
     }
 
     /**
-     * Let the user select a customer from the list
-     *
-     * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws EntityNotFoundException
      */
-    public function setApplicationAction(Request $request)
+    public function setApplicationAction(Request $request): JsonResponse
     {
         $id = $request->request->getInt('id');
 
         $request->getSession()->remove('targetPath');
 
-        if ($id !== null) {
-            $response = new SuccessResponse(['url' => $this->generateAbsoluteUrl('pronto_mobile_homepage')]);
-
-            $request->getSession()->set(Version::SESSION_IDENTIFIER, $id);
-        } else {
-            $response = new ErrorResponse([404, 'No Id present']);
+        if ($id === null) {
+            throw new EntityNotFoundException();
         }
+
+        $response = new SuccessResponse(['url' => $this->generateAbsoluteUrl('pronto_mobile_homepage')]);
+
+        $request->getSession()->set(Version::SESSION_IDENTIFIER, $id);
 
         return $response->create()->getJsonResponse();
     }

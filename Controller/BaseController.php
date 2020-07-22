@@ -30,7 +30,7 @@ class BaseController extends AbstractController
      */
 	public function __construct(TranslatorInterface $translator, ContainerInterface $container)
 	{
-		$this->prontoMobile = $container->get('pronto_mobile.global.app');
+		$this->prontoMobile = $container->get('Pronto\MobileBundle\Service\ProntoMobile');
 		$this->translator = $translator;
 	}
 

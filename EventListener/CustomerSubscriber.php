@@ -41,7 +41,7 @@ class CustomerSubscriber implements EventSubscriber
      */
 	public function __construct(FileManager $fileManager, ContainerInterface $container, TranslatorInterface $translator)
 	{
-		$this->prontoMobile = $container->get('pronto_mobile.global.app');
+		$this->prontoMobile = $container->get('Pronto\MobileBundle\Service\ProntoMobile');
 		$this->fileManager = $fileManager;
 		$this->translator = $translator;
 	}

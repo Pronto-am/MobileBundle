@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Pronto\MobileBundle\Entity\ApiEntityInterface;
 use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Traits\ApiEntityTrait;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
@@ -20,18 +21,16 @@ class Segment implements ApiEntityInterface
 {
 	use ApiEntityTrait;
 
-
 	// Custom entity error messages
 	public const INVALID_SEGMENT_PARAMETER = [422, 22, 'Segments has to be a list with the id and whether the device is subscribed or not'];
-
 
 	/**
 	 * @ORM\Id
 	 * @ORM\GeneratedValue(strategy="AUTO")
 	 * @ORM\Column(type="integer")
+     * @Groups({"PushNotification"})
 	 */
 	private $id;
-
 
 	/**
 	 * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Application")
@@ -39,19 +38,17 @@ class Segment implements ApiEntityInterface
 	 */
 	private $application;
 
-
 	/**
 	 * @ORM\Column(type="json_array")
 	 * @Assert\NotBlank()
-	 */
+     * @Groups({"PushNotification"})
+     */
 	private $name;
-
 
 	/**
 	 * @ORM\OneToMany(targetEntity="Pronto\MobileBundle\Entity\Device\DeviceSegment", mappedBy="segment")
 	 */
 	private $deviceSegments;
-
 
 	/**
 	 * @return int|null

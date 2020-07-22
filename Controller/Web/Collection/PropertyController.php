@@ -12,6 +12,7 @@ use Pronto\MobileBundle\Entity\Plugin;
 use Pronto\MobileBundle\EventSubscriber\ValidateApplicationSelectionInterface;
 use Pronto\MobileBundle\EventSubscriber\ValidateCustomerSelectionInterface;
 use Pronto\MobileBundle\EventSubscriber\ValidatePluginStateInterface;
+use Pronto\MobileBundle\Exceptions\EntityNotFoundException;
 use Pronto\MobileBundle\Form\Collection\PropertyForm;
 use Pronto\MobileBundle\Utils\Responses\ErrorResponse;
 use Pronto\MobileBundle\Utils\Responses\SuccessResponse;
@@ -258,23 +259,14 @@ class PropertyController extends BaseController implements ValidatePluginStateIn
     }
 
     /**
-     * Change the entry title of the collection
-     *
-     * @param Request $request
-     * @param EntityManagerInterface $entityManager
-     * @return JsonResponse
+     * @throws EntityNotFoundException
      */
     public function entryTitleAction(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
         $id = $request->request->get('property_id');
 
         /** @var Property $property */
-        $newProperty = $entityManager->getRepository(Property::class)->find($id);
-
-        if ($newProperty === null) {
-            $response = new ErrorResponse([404, 'Property not found']);
-            return $response->create()->getJsonResponse();
-        }
+        $newProperty = $entityManager->getRepository(Property::class)->findOrFail($id);
 
         /** @var Collection $collection */
         $collection = $newProperty->getCollection();
