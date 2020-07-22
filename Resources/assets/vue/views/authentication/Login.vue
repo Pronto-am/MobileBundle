@@ -73,7 +73,7 @@
 
                 this.$auth.init().then(() => {
                     this.$router.replace({name: 'dashboard'});
-                    Events.$emit('users:authenticated', response.user);
+                    this.$events.$emit('users:authenticated', response.user);
 
                 }).catch(_ => {
                     this.$oauth.logout();

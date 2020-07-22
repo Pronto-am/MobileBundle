@@ -7,10 +7,10 @@
                         <edit-tab :item="item"></edit-tab>
                     </el-tab-pane>
                     <el-tab-pane :label="$t('titles.properties')" name="properties">
-                        <push-notifications-tab :item="item"></push-notifications-tab>
+                        <properties-tab :item="item"></properties-tab>
                     </el-tab-pane>
                     <el-tab-pane :label="$t('titles.relationships')" name="relationships">
-                        <push-notifications-tab :item="item"></push-notifications-tab>
+                        <properties-tab :item="item"></properties-tab>
                     </el-tab-pane>
                 </el-tabs>
             </div>
@@ -20,10 +20,11 @@
 
 <script>
     import EditTab from "./tabs/EditTab";
+    import PropertiesTab from "./tabs/PropertiesTab";
 
     export default {
 
-        components: {EditTab},
+        components: {EditTab, PropertiesTab},
 
         props: {
             id: {
@@ -45,7 +46,7 @@
                 return;
             }
 
-            axios.get(path('collections/:id', {id: to.params.id})).then((item) => {
+            axios.get(path('collections/:id', {id: to.params.id})).then(({data: {data: item}}) => {
                 next(vm => {
                     vm.item = item;
                 });

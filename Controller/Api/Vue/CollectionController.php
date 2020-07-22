@@ -48,7 +48,7 @@ class CollectionController extends ApiController
      */
     public function getAction(int $id)
     {
-        return JsonResponse::create(['data' => []]);
+        return $this->response($this->collections->findOrFail($id));
     }
 
     /**

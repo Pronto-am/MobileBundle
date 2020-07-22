@@ -77,7 +77,7 @@
                         type: 'success'
                     });
 
-                    Events.$emit('users:authenticated');
+                    this.$events.$emit('users:authenticated');
                 } else {
                     this.appPasswordChanged = true;
                     this.$refs.form.reset();

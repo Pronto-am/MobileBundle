@@ -47,10 +47,7 @@ Vue.mixin({
         },
         submitError: function (error) {
             if (!error.errors) {
-                this.$notify.error({
-                    title: Vue.prototype.$t('titles.error'),
-                    message: Vue.prototype.$t('messages.something_went_wrong')
-                });
+                this.$error.notify(Error.unknown);
             }
         },
         confirm: function (text, title, confirmButtonText = 'Verwijderen') {
@@ -153,27 +150,3 @@ Vue.directive('user-has-role', function (el, bindings, vnode) {
     }
 });
 
-
-/**
- * PROTOTYPES
- */
-
-// Events prototype
-Vue.prototype.$events = new Vue();
-
-
-/**
- * Prototype to create a url
- * @param url
- * @param params
- * @returns {string}
- */
-Vue.prototype.$path = (url, params = {}) => {
-    let keys = Object.keys(params);
-
-    for (let key of keys) {
-        url = url.replace(`:${key}`, params[key]);
-    }
-
-    return `/api/vue/${url.replace(/^\/+/g, '')}`;
-};

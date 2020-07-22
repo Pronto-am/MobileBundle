@@ -4,11 +4,13 @@ import Cookies from 'js-cookie';
 
 // Translations
 import baseEnglish from '../localization/en/base';
+import messagesEnglish from '../localization/en/messages';
 import menuEnglish from '../localization/en/menu';
 import labelsEnglish from '../localization/en/labels';
 import titlesEnglish from '../localization/en/titles';
 import buttonsEnglish from '../localization/en/buttons';
 import baseDutch from '../localization/nl/base';
+import messagesDutch from '../localization/nl/messages';
 import menuDutch from '../localization/nl/menu';
 import labelsDutch from '../localization/nl/labels';
 import titlesDutch from '../localization/nl/titles';
@@ -19,6 +21,7 @@ Vue.use(VueI18n);
 const messages = {
     en: {
         default: baseEnglish,
+        messages: messagesEnglish,
         menu: menuEnglish,
         labels: labelsEnglish,
         titles: titlesEnglish,
@@ -26,6 +29,7 @@ const messages = {
     },
     nl: {
         default: baseDutch,
+        messages: messagesDutch,
         menu: menuDutch,
         labels: labelsDutch,
         titles: titlesDutch,

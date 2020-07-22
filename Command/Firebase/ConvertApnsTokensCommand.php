@@ -49,7 +49,6 @@ class ConvertApnsTokensCommand extends ContainerAwareCommand
         parent::__construct($name);
     }
 
-
     /**
      * Configure the command
      */
@@ -58,15 +57,13 @@ class ConvertApnsTokensCommand extends ContainerAwareCommand
         $this->setName('firebase:tokens:convert')->setDescription('Convert APNS tokens to Firebase tokens');
     }
 
-
     /**
-     * Execute the command
-     *
      * @param InputInterface $input
      * @param OutputInterface $output
      * @return int|null|void
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\DBAL\DBALException
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {

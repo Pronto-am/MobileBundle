@@ -1,10 +1,10 @@
 import './bootstrap';
 import Vue from 'vue';
 import './plugins';
+import './prototypes';
 import './interceptors/axios';
 import App from './views/App';
 
-import './libraries/auth';
 import i18n from './libraries/i18n';
 import './libraries/draggable';
 import './libraries/element';
@@ -17,7 +17,6 @@ import './libraries/table';
 import './libraries/fixedheader';
 
 window.Vue = Vue;
-window.Events = new Vue();
 
 // import * as Sentry from '@sentry/browser';
 // import * as Integrations from '@sentry/integrations';

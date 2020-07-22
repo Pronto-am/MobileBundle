@@ -14,3 +14,18 @@ $--font-path: '~element-ui/lib/theme-chalk/fonts';
     border-color: var(--primary-color) !important;
   }
 }
+
+.el-notification {
+  border-radius: 2px;
+  background-color: var(--secondary-color);
+  border-color: var(--secondary-color);
+
+  .el-notification__title, .el-notification__content {
+    color: #ffffff;
+    text-align: left !important;
+  }
+
+  h2:after {
+    display: none;
+  }
+}

@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Pronto\MobileBundle\Entity\Collection;
 use Pronto\MobileBundle\Entity\Collection\Property\Type;
 use Pronto\MobileBundle\Entity\TimestampedEntity;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 
 /**
@@ -22,6 +23,7 @@ class Property extends TimestampedEntity
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      * @ORM\Column(type="integer")
+     * @Groups({"Property"})
      */
     private $id;
 
@@ -36,66 +38,77 @@ class Property extends TimestampedEntity
      * @var Type $type
      * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Collection\Property\Type")
      * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
+     * @Groups({"Property"})
      */
     private $type;
 
     /**
      * @var string $name
      * @ORM\Column(type="string")
+     * @Groups({"Property"})
      */
     private $name;
 
     /**
      * @var string $identifier
      * @ORM\Column(type="string")
+     * @Groups({"Property"})
      */
     private $identifier;
 
     /**
      * @var array $config
      * @ORM\Column(type="json_array")
+     * @Groups({"Property"})
      */
     private $config;
 
     /**
      * @var boolean $required
      * @ORM\Column(type="boolean")
+     * @Groups({"Property"})
      */
     private $required = true;
 
     /**
      * @var boolean $includeInListView
      * @ORM\Column(type="boolean")
+     * @Groups({"Property"})
      */
     private $includeInListView = true;
 
     /**
      * @var boolean $includeInJsonListView
      * @ORM\Column(type="boolean")
+     * @Groups({"Property"})
      */
     private $includeInJsonListView = true;
 
     /**
      * @var boolean $entryTitle
      * @ORM\Column(type="boolean")
+     * @Groups({"Property"})
      */
     private $entryTitle = false;
 
     /**
      * @var int $ordering
      * @ORM\Column(type="integer")
+     * @Groups({"Property"})
      */
     private $ordering;
 
     /**
      * @var boolean $translatable
      * @ORM\Column(type="boolean")
+     * @Groups({"Property"})
      */
     private $translatable = true;
 
     /**
      * @var string|null $editableForRole
      * @ORM\Column(type="string", nullable=true)
+     * @Groups({"Property"})
      */
     private $editableForRole = 'ROLE_USER';
 

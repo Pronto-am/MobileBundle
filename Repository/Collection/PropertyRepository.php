@@ -2,10 +2,12 @@
 
 namespace Pronto\MobileBundle\Repository\Collection;
 
-use Pronto\MobileBundle\Repository\EntityRepository;
 use Pronto\MobileBundle\Entity\Collection;
+use Pronto\MobileBundle\Exception\MethodNotImplementedException;
+use Pronto\MobileBundle\Repository\PaginateableRepository;
+use Pronto\MobileBundle\Utils\Pagination\PaginationResponse;
 
-class PropertyRepository extends EntityRepository
+class PropertyRepository extends PaginateableRepository
 {
     /**
      * @inheritDoc
@@ -31,5 +33,26 @@ class PropertyRepository extends EntityRepository
             ->orderBy('property.ordering')
             ->getQuery()
             ->execute();
+    }
+
+    /**
+     * @inheritDoc
+     * @throws MethodNotImplementedException
+     */
+    public function paginate(): PaginationResponse
+    {
+        throw new MethodNotImplementedException();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function list()
+    {
+        $query = $this->createQueryBuilder('entity')
+            ->where('entity.collection = :collection')
+            ->setParameter('collection', $this->filters->get('collection_id'));
+
+        return $this->listQuery($query);
     }
 }

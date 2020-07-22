@@ -107,7 +107,7 @@
         mounted() {
             this.$Progress.finish();
 
-            Events.$on('users:authenticated', (user) => {
+            this.$events.$on('users:authenticated', (user) => {
                 this.$auth.init().then(() => {
                     this.authenticated = true;
                 });

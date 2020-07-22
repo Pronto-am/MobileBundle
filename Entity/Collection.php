@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\Collection as DoctrineCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Pronto\MobileBundle\Entity\Application\Version;
 use Pronto\MobileBundle\Traits\ApiEntityTrait;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
@@ -25,27 +26,30 @@ class Collection extends TimestampedEntity implements ApiEntityInterface
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      * @ORM\Column(type="integer")
+     * @Groups({"Collection"})
      */
     private $id;
 
 	/**
 	 * @ORM\Column(type="string")
 	 * @Assert\NotBlank()
-	 */
+     * @Groups({"Collection"})
+     */
     private $name;
 
 	/**
 	 * @ORM\Column(type="string")
 	 * @Assert\NotBlank()
+     * @Groups({"Collection"})
 	 */
 	private $identifier;
 
 	/**
 	 * @ORM\Column(type="string")
 	 * @Assert\NotBlank()
+     * @Groups({"Collection"})
 	 */
 	private $icon;
-
 
     /**
      * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Application\Version")
@@ -56,6 +60,7 @@ class Collection extends TimestampedEntity implements ApiEntityInterface
     /**
      * @ORM\OneToMany(targetEntity="Pronto\MobileBundle\Entity\Collection\Property", mappedBy="collection")
 	 * @ORM\OrderBy({"ordering" = "ASC"})
+     * @Groups({"Collection"})
      */
     private $properties;
 
@@ -66,6 +71,7 @@ class Collection extends TimestampedEntity implements ApiEntityInterface
 
     /**
      * @ORM\OneToMany(targetEntity="Pronto\MobileBundle\Entity\Collection\Relationship", mappedBy="collection")
+     * @Groups({"Collection"})
      */
     private $relationships;
 

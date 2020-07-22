@@ -3,6 +3,7 @@
 namespace Pronto\MobileBundle\Entity\Collection\Property;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 
 /**
@@ -32,37 +33,44 @@ class Type
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      * @ORM\Column(type="integer")
+     * @Groups({"Property", "Type"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string")
+     * @Groups({"Property", "Type"})
      */
     private $type;
 
 	/**
 	 * @ORM\Column(type="boolean")
+     * @Groups({"Property", "Type"})
 	 */
     private $translatable = false;
 
 	/**
 	 * @ORM\Column(type="boolean")
+     * @Groups({"Property", "Type"})
 	 */
 	private $listviewCompatible = false;
 
 	/**
 	 * @ORM\Column(type="boolean")
+     * @Groups({"Property", "Type"})
 	 */
 	private $jsonListviewCompatible = false;
 
 	/**
 	 * @ORM\Column(type="smallint")
+     * @Groups({"Property", "Type"})
 	 */
 	private $ordering;
 
 	/**
 	 * @ORM\Column(type="json_array")
-	 */
+     * @Groups({"Property", "Type"})
+     */
     private $config;
 
     /**

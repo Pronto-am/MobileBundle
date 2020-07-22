@@ -7,6 +7,7 @@ use Pronto\MobileBundle\Entity\Collection;
 use Pronto\MobileBundle\Entity\Collection\Relationship\Type;
 use Pronto\MobileBundle\Entity\TimestampedEntity;
 use Ramsey\Uuid\Uuid;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 
 /**
@@ -22,7 +23,8 @@ class Relationship extends TimestampedEntity
 	/**
 	 * @ORM\Id
 	 * @ORM\Column(type="string", unique=true)
-	 */
+     * @Groups({"Collection"})
+     */
 	private $id;
 
 	/**
@@ -40,27 +42,32 @@ class Relationship extends TimestampedEntity
 	/**
 	 * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Collection\Relationship\Type")
 	 * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
+     * @Groups({"Collection"})
 	 */
 	private $type;
 
 	/**
 	 * @ORM\Column(type="string")
-	 */
+     * @Groups({"Collection"})
+     */
 	private $name;
 
 	/**
 	 * @ORM\Column(type="string")
+     * @Groups({"Collection"})
 	 */
 	private $identifier;
 
 	/**
 	 * @ORM\Column(type="boolean")
+     * @Groups({"Collection"})
 	 */
 	private $includeInJsonListView = true;
 
     /**
      * @var string|null $editableForRole
      * @ORM\Column(type="string", nullable=true)
+     * @Groups({"Collection"})
      */
     private $editableForRole = 'ROLE_USER';
 
