@@ -4,6 +4,7 @@ Table of contents
 =================
 
 1. [Installation](#installation)
+2. [Upgrades](#upgrades)
 2. [Configuration](#mobilebundle-configuration)
 3. [API Docs](#api-docs)
 
@@ -68,7 +69,7 @@ You can now check if you're able to login at `http://localhost:8000/login` with 
 
 ### Step 6: Setup Firebase integrations
 
-We use Firebase to send our push notifications and store information in the Firebase database. This information contains sign-ins of devices and app users. At a regular interval, these records are being fetched from the Firebase database and updated into the database of the CMS. This method is used to prevent a lot of requests to your server. 
+We use Firebase to send our push notifications and store information in the Firebase database. This information contains sign-ins of devices and app users. At a regular interval, these records are being fetched from the Firebase database and updated into the database of the CMS. This method is used to prevent a lot of requests to your server.
 
 The CMS also stores notification templates in the cloud storage of Firebase. When a user receives a notification, there might be an html template which is being opened. That template is also retrieved from Firebase.
 
@@ -76,7 +77,7 @@ At last, APNS tokens need to be converted to Firebase tokens for iOS devices to 
 
 #### 6.1 Create a Firebase project
 
-You can do this by going to [the Firebase Console](https://console.firebase.com) and logging in with your Google account. You can now create a new project. After you have done this, you will be redirected to the project overview. 
+You can do this by going to [the Firebase Console](https://console.firebase.com) and logging in with your Google account. You can now create a new project. After you have done this, you will be redirected to the project overview.
 
 #### 6.2 Create a new private key
 
@@ -86,6 +87,23 @@ Click on the settings icon and choose "Project settings". Next, click on the tab
 
 For the MobileBundle to connect to your Firebase project, you need to **rename** this file to: `google-service-account.json` and place it in the root of your project.
 
+
+Upgrades
+========
+
+Most of the upgrades of the bundle do not require any changes for your main project. When changes are needed, they are listed here.
+
+### v1.6.* to v1.7.0
+The service configuration is slightly changed in this version. When using Twig in your package, you'll need to update your `packages/twig.yaml` file:
+
+```diff
+twig:
+    globals:
+-       pronto_mobile: '@pronto_mobile.global.app'
++       pronto_mobile: '@Pronto\MobileBundle\Service\ProntoMobile'
+        entry_value_parser: '@Pronto\MobileBundle\Service\Collection\EntryValueParser'
+        json_translator: '@Pronto\MobileBundle\Service\JsonTranslator'
+```
 
 MobileBundle configuration
 ==========================
@@ -108,7 +126,7 @@ The domain is important for sending the emails. The domain name you provide here
 This option is quite obvious. You can specify in which folder the uploads are being stored. This also means that for now, the only storage option is local.
 
 ##### Firebase: Storage decryption password
-This is the password that's being used to decrypt values from the logging table inside the Firebase Realtime Database. For obvious reasons, this value **needs** to be the same as the one you provide in the Android and iOS sdk of the MobileBundle. 
+This is the password that's being used to decrypt values from the logging table inside the Firebase Realtime Database. For obvious reasons, this value **needs** to be the same as the one you provide in the Android and iOS sdk of the MobileBundle.
 
 
 ### Cronjobs
@@ -139,12 +157,12 @@ The API docs don't list the routes for OAuth. The Android and Mobile sdk of the 
 
 The routes for requesting an access token is: `https://yourdomain.app/oauth/v2/token`. You can request an access token by using the client credentials, or using the username and password combination of an app user.
 
-##### Request access token: Client Credentials 
+##### Request access token: Client Credentials
 Documentation:[https://www.oauth.com/oauth2-servers/access-tokens/client-credentials/](https://www.oauth.com/oauth2-servers/access-tokens/client-credentials/)
 
 ```
 [POST] https://yourdomain.app/oauth/v2/token
- 
+
 {
 	"grant_type": "client_credentials",
 	"client_id": "1_66e8vp2mt2sccosk4w0ogswogsgww4wsokcw4wsc80w4s00woc",
@@ -152,12 +170,12 @@ Documentation:[https://www.oauth.com/oauth2-servers/access-tokens/client-credent
 }
 ```
 
-##### Request access token: Username and password 
+##### Request access token: Username and password
 Documentation:[https://www.oauth.com/oauth2-servers/access-tokens/password-grant/](https://www.oauth.com/oauth2-servers/access-tokens/client-credentials/)
 
 ```
 [POST] https://yourdomain.app/oauth/v2/token
- 
+
 {
 	"grant_type": "password",
 	"username": "user@example.com",
