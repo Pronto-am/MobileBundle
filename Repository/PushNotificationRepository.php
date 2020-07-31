@@ -58,8 +58,10 @@ class PushNotificationRepository extends EntityRepository
         return $this->createQueryBuilder('notifications')
             ->where('notifications.id IN (:ids)')
             ->andWhere('notifications.application = :application')
+            ->andWhere('notifications.sent IS NOT NULL')
             ->setParameter('ids', $ids)
             ->setParameter('application', $application)
+            ->orderBy('notifications.sent', 'desc')
             ->getQuery()
             ->execute();
     }
