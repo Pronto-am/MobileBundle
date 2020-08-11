@@ -16,7 +16,7 @@ class MessageGroup
     /** @var Message $message */
     private $message;
 
-    /** @var string $language */
+    /** @var string|null $language */
     private $language;
 
     /** @var string $defaultLanguage */
@@ -25,21 +25,9 @@ class MessageGroup
     /** @var array $tokens */
     private $tokens;
 
-    /** @var GoogleServiceAccountLoader $googleServiceAccountLoader */
-    private $googleServiceAccountLoader;
-    /**
-     * @var FirebaseStorage
-     */
+    /** @var FirebaseStorage */
     private $firebaseStorage;
 
-
-    /**
-     * MessageGroup constructor.
-     * @param PushNotification $notification
-     * @param GoogleServiceAccountLoader $googleServiceAccountLoader
-     * @param array $devices
-     * @param string|null $language
-     */
     public function __construct(PushNotification $notification, FirebaseStorage $firebaseStorage, array $devices, string $language = null)
     {
         $this->notification = $notification;
@@ -48,7 +36,6 @@ class MessageGroup
         $this->firebaseStorage = $firebaseStorage;
 
         $this->setDefaultLanguage();
-
         $this->setMessage();
     }
 
@@ -78,22 +65,8 @@ class MessageGroup
             $this->message->addData('clickAction', $clickAction);
         } elseif ($this->notification->getClickAction() === PushNotification::TYPE_HTML_ACTION) {
 
-
-//			$identifier = $this->notification->getId();
-//			$clickActionHtml = $this->notification->getClickActionHtml();
-//
-//			try {
-//				$projectId = $this->googleServiceAccountLoader->fromFile()->getProjectId();
-//			} catch (Exception $exception) {
-//				// Service account json not found
-//				$projectId = 'pronto-staging';
-//			}
-//
-//			$clickAction = 'https://firebasestorage.googleapis.com/v0/b/' . $projectId . '.appspot.com/o/notifications%2F' . $identifier . '%2F';
-//			$clickAction .= !empty($clickActionHtml[$this->language]) ? $this->language : $this->defaultLanguage;
-//			$clickAction .= '%2F' . $identifier . '.html?alt=media';
-
-            $this->message->addData('clickAction', $this->firebaseStorage->generateUrlForPushNotification($this->notification, $this->language));
+            $language = $this->language ?? $this->defaultLanguage;
+            $this->message->addData('clickAction', $this->firebaseStorage->generateUrlForPushNotification($this->notification, $language));
         }
 
         // Set the triggers for the statistics
