@@ -28,7 +28,7 @@ class DeviceController extends BaseController implements ValidateCustomerSelecti
 	 */
 	public function indexAction(Request $request, EntityManagerInterface $entityManager)
 	{
-		$pageHelper = new PageHelper($request, $entityManager, Device::class, 15, 't.lastLogin');
+        $pageHelper = new PageHelper($request, $entityManager, Device::class, 15, 't.lastLogin');
 		$pageHelper->addClause(new WhereClause('t.application', $this->getApplication()));
 		$pageHelper->addClause(new WhereClause('t.tokenState', true));
 
@@ -37,7 +37,6 @@ class DeviceController extends BaseController implements ValidateCustomerSelecti
 				'pageHelper' => $pageHelper
 			]);
 	}
-
 
 	/**
 	 * Show the details of a device

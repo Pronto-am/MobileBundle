@@ -5,11 +5,9 @@ namespace Pronto\MobileBundle\Entity;
 use DateTime;
 use Doctrine\Common\Collections\Collection as DoctrineCollection;
 use Doctrine\ORM\Mapping as ORM;
-use PascalDeVink\ShortUuid\ShortUuid;
 use Pronto\MobileBundle\Entity\PushNotification\Segment;
 use Pronto\MobileBundle\Traits\ApiEntityTrait;
 use Ramsey\Uuid\Uuid;
-use Symfony\Component\Serializer\Annotation\Groups;
 
 
 /**
@@ -22,334 +20,325 @@ use Symfony\Component\Serializer\Annotation\Groups;
  */
 class PushNotification implements ApiEntityInterface
 {
-	use ApiEntityTrait;
+    use ApiEntityTrait;
 
-	public const TYPE_NO_ACTION = 0;
-	public const TYPE_URL_ACTION = 1;
-	public const TYPE_HTML_ACTION = 2;
+    public const TYPE_NO_ACTION = 0;
+    public const TYPE_URL_ACTION = 1;
+    public const TYPE_HTML_ACTION = 2;
 
-	public const TYPE_SCHEDULE = 3;
+    public const TYPE_SCHEDULE = 3;
 
-	/**
-	 * @ORM\Id
-	 * @ORM\Column(type="string", unique=true)
-     * @Groups({"PushNotification"})
-	 */
-	private $id;
-
-	/**
-	 * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Application")
-	 * @ORM\JoinColumn(onDelete="CASCADE")
-	 */
-	private $application;
-
-	/**
-	 * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\User", inversedBy="pushNotifications")
-	 * @ORM\JoinColumn(onDelete="SET NULL", nullable=true)
-     * @Groups({"PushNotification"})
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="string", unique=true)
      */
-	private $sentBy;
+    private $id;
 
-	/**
-	 * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\PushNotification\Segment")
-	 * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
-     * @Groups({"PushNotification"})
-	 */
-	private $segment;
-
-	/**
-	 * @ORM\Column(type="json")
-     * @Groups({"PushNotification"})
-	 */
-	private $title;
-
-	/**
-	 * @ORM\Column(type="json", nullable=true)
-     * @Groups({"PushNotification"})
+    /**
+     * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Application")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
-	private $content;
+    private $application;
 
-	/**
-	 * @ORM\Column(type="integer", nullable=false)
+    /**
+     * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\User", inversedBy="pushNotifications")
+     * @ORM\JoinColumn(onDelete="SET NULL", nullable=true)
      */
-	private $clickAction;
+    private $sentBy;
 
-	/**
-	 * @ORM\Column(type="json", nullable=true)
-     * @Groups({"PushNotification"})
+    /**
+     * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\PushNotification\Segment")
+     * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
      */
-	private $clickActionUrl;
+    private $segment;
 
-	/**
-	 * @ORM\Column(type="json", nullable=true)
-     * @Groups({"PushNotification"})
+    /**
+     * @ORM\Column(type="json")
      */
-	private $clickActionHtml;
+    private $title;
 
-	/**
-	 * @ORM\Column(type="datetime", nullable=true)
-     * @Groups({"PushNotification"})
+    /**
+     * @ORM\Column(type="json", nullable=true)
      */
-	private $sent;
+    private $content;
 
-	/**
-	 * @ORM\Column(type="datetime", nullable=true)
+    /**
+     * @ORM\Column(type="integer", nullable=false)
      */
-	private $scheduledSending;
+    private $clickAction;
 
-	/**
-	 * @ORM\Column(type="boolean")
-     * @Groups({"PushNotification"})
+    /**
+     * @ORM\Column(type="json", nullable=true)
      */
-	private $test = false;
+    private $clickActionUrl;
 
-	/**
-	 * @ORM\Column(type="json")
-	 */
-	private $testDevices;
+    /**
+     * @ORM\Column(type="json", nullable=true)
+     */
+    private $clickActionHtml;
 
-	/**
-	 * @ORM\Column(type="boolean")
-	 */
-	private $beingProcessed = false;
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $sent;
 
-	/**
-	 * @ORM\OneToMany(targetEntity="Pronto\MobileBundle\Entity\PushNotification\Recipient", mappedBy="pushNotification")
-	 */
-	private $pushNotificationRecipients;
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $scheduledSending;
 
-	/**
-	 * Triggered on pre persist
-	 *
-	 * @ORM\PrePersist
-	 * @throws \Exception
-	 */
-	public function onPrePersist(): void
-	{
-		$this->id = Uuid::uuid1()->toString();
-	}
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $test = false;
 
-	/**
-	 * @return string|null
-	 */
-	public function getId(): ?string
-	{
-		return $this->id;
-	}
+    /**
+     * @ORM\Column(type="json")
+     */
+    private $testDevices;
 
-	/**
-	 * @return Application
-	 */
-	public function getApplication(): Application
-	{
-		return $this->application;
-	}
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $beingProcessed = false;
 
-	/**
-	 * @param Application $application
-	 */
-	public function setApplication(Application $application): void
-	{
-		$this->application = $application;
-	}
+    /**
+     * @ORM\OneToMany(targetEntity="Pronto\MobileBundle\Entity\PushNotification\Recipient", mappedBy="pushNotification")
+     */
+    private $pushNotificationRecipients;
 
-	/**
-	 * @return User|null
-	 */
-	public function getSentBy(): ?User
-	{
-		return $this->sentBy;
-	}
+    /**
+     * Triggered on pre persist
+     *
+     * @ORM\PrePersist
+     * @throws \Exception
+     */
+    public function onPrePersist(): void
+    {
+        $this->id = Uuid::uuid1()->toString();
+    }
 
-	/**
-	 * @param null|User $sentBy
-	 */
-	public function setSentBy(?User $sentBy): void
-	{
-		$this->sentBy = $sentBy;
-	}
+    /**
+     * @return string|null
+     */
+    public function getId(): ?string
+    {
+        return $this->id;
+    }
 
-	/**
-	 * @return Segment|null
-	 */
-	public function getSegment(): ?Segment
-	{
-		return $this->segment;
-	}
+    /**
+     * @return Application
+     */
+    public function getApplication(): Application
+    {
+        return $this->application;
+    }
 
-	/**
-	 * @param null|Segment $segment
-	 */
-	public function setSegment(?Segment $segment): void
-	{
-		$this->segment = $segment;
-	}
+    /**
+     * @param Application $application
+     */
+    public function setApplication(Application $application): void
+    {
+        $this->application = $application;
+    }
 
-	/**
-	 * @return array
-	 */
-	public function getTitle(): array
-	{
-		return $this->title;
-	}
+    /**
+     * @return User|null
+     */
+    public function getSentBy(): ?User
+    {
+        return $this->sentBy;
+    }
 
-	/**
-	 * @param array $title
-	 */
-	public function setTitle(array $title): void
-	{
-		$this->title = $title;
-	}
+    /**
+     * @param null|User $sentBy
+     */
+    public function setSentBy(?User $sentBy): void
+    {
+        $this->sentBy = $sentBy;
+    }
 
-	/**
-	 * @return array|null
-	 */
-	public function getContent(): ?array
-	{
-		return $this->content;
-	}
+    /**
+     * @return Segment|null
+     */
+    public function getSegment(): ?Segment
+    {
+        return $this->segment;
+    }
 
-	/**
-	 * @param null|array $content
-	 */
-	public function setContent(?array $content): void
-	{
-		$this->content = $content;
-	}
+    /**
+     * @param null|Segment $segment
+     */
+    public function setSegment(?Segment $segment): void
+    {
+        $this->segment = $segment;
+    }
 
-	/**
-	 * @return int
-	 */
-	public function getClickAction(): int
-	{
-		return $this->clickAction;
-	}
+    /**
+     * @return array
+     */
+    public function getTitle(): array
+    {
+        return $this->title;
+    }
 
-	/**
-	 * @param int $clickAction
-	 */
-	public function setClickAction(int $clickAction): void
-	{
-		$this->clickAction = $clickAction;
-	}
+    /**
+     * @param array $title
+     */
+    public function setTitle(array $title): void
+    {
+        $this->title = $title;
+    }
 
-	/**
-	 * @return array|null
-	 */
-	public function getClickActionUrl(): ?array
-	{
-		return $this->clickActionUrl;
-	}
+    /**
+     * @return array|null
+     */
+    public function getContent(): ?array
+    {
+        return $this->content;
+    }
 
-	/**
-	 * @param null|array $clickActionUrl
-	 */
-	public function setClickActionUrl(?array $clickActionUrl): void
-	{
-		$this->clickActionUrl = $clickActionUrl;
-	}
+    /**
+     * @param null|array $content
+     */
+    public function setContent(?array $content): void
+    {
+        $this->content = $content;
+    }
 
-	/**
-	 * @return array|null
-	 */
-	public function getClickActionHtml(): ?array
-	{
-		return $this->clickActionHtml;
-	}
+    /**
+     * @return int
+     */
+    public function getClickAction(): int
+    {
+        return $this->clickAction;
+    }
 
-	/**
-	 * @param null|array $clickActionHtml
-	 */
-	public function setClickActionHtml(?array $clickActionHtml): void
-	{
-		$this->clickActionHtml = $clickActionHtml;
-	}
+    /**
+     * @param int $clickAction
+     */
+    public function setClickAction(int $clickAction): void
+    {
+        $this->clickAction = $clickAction;
+    }
 
-	/**
-	 * @return DateTime|null
-	 */
-	public function getSent(): ?DateTime
-	{
-		return $this->sent;
-	}
+    /**
+     * @return array|null
+     */
+    public function getClickActionUrl(): ?array
+    {
+        return $this->clickActionUrl;
+    }
 
-	/**
-	 * @param null|DateTime $sent
-	 */
-	public function setSent(?DateTime $sent): void
-	{
-		$this->sent = $sent;
-	}
+    /**
+     * @param null|array $clickActionUrl
+     */
+    public function setClickActionUrl(?array $clickActionUrl): void
+    {
+        $this->clickActionUrl = $clickActionUrl;
+    }
 
-	/**
-	 * @return DateTime|null
-	 */
-	public function getScheduledSending(): ?DateTime
-	{
-		return $this->scheduledSending;
-	}
+    /**
+     * @return array|null
+     */
+    public function getClickActionHtml(): ?array
+    {
+        return $this->clickActionHtml;
+    }
 
-	/**
-	 * @param DateTime|null $scheduledSending
-	 */
-	public function setScheduledSending($scheduledSending): void
-	{
-		$this->scheduledSending = $scheduledSending;
-	}
+    /**
+     * @param null|array $clickActionHtml
+     */
+    public function setClickActionHtml(?array $clickActionHtml): void
+    {
+        $this->clickActionHtml = $clickActionHtml;
+    }
 
-	/**
-	 * @return bool
-	 */
-	public function getTest(): bool
-	{
-		return $this->test;
-	}
+    /**
+     * @return DateTime|null
+     */
+    public function getSent(): ?DateTime
+    {
+        return $this->sent;
+    }
 
-	/**
-	 * @param bool $test
-	 */
-	public function setTest(bool $test): void
-	{
-		$this->test = $test;
-	}
+    /**
+     * @param null|DateTime $sent
+     */
+    public function setSent(?DateTime $sent): void
+    {
+        $this->sent = $sent;
+    }
 
-	/**
-	 * @return array
-	 */
-	public function getTestDevices(): array
-	{
-		return $this->testDevices;
-	}
+    /**
+     * @return DateTime|null
+     */
+    public function getScheduledSending(): ?DateTime
+    {
+        return $this->scheduledSending;
+    }
 
-	/**
-	 * @param array $testDevices
-	 */
-	public function setTestDevices(array $testDevices): void
-	{
-		$this->testDevices = $testDevices;
-	}
+    /**
+     * @param DateTime|null $scheduledSending
+     */
+    public function setScheduledSending($scheduledSending): void
+    {
+        $this->scheduledSending = $scheduledSending;
+    }
 
-	/**
-	 * @return bool
-	 */
-	public function getBeingProcessed(): bool
-	{
-		return $this->beingProcessed;
-	}
+    /**
+     * @return bool
+     */
+    public function getTest(): bool
+    {
+        return $this->test;
+    }
 
-	/**
-	 * @param bool $beingProcessed
-	 */
-	public function setBeingProcessed(bool $beingProcessed): void
-	{
-		$this->beingProcessed = $beingProcessed;
-	}
+    /**
+     * @param bool $test
+     */
+    public function setTest(bool $test): void
+    {
+        $this->test = $test;
+    }
 
-	/**
-	 * @return DoctrineCollection
-	 */
-	public function getPushNotificationRecipients(): DoctrineCollection
-	{
-		return $this->pushNotificationRecipients;
-	}
+    /**
+     * @return array
+     */
+    public function getTestDevices(): array
+    {
+        return $this->testDevices;
+    }
+
+    /**
+     * @param array $testDevices
+     */
+    public function setTestDevices(array $testDevices): void
+    {
+        $this->testDevices = $testDevices;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getBeingProcessed(): bool
+    {
+        return $this->beingProcessed;
+    }
+
+    /**
+     * @param bool $beingProcessed
+     */
+    public function setBeingProcessed(bool $beingProcessed): void
+    {
+        $this->beingProcessed = $beingProcessed;
+    }
+
+    /**
+     * @return DoctrineCollection
+     */
+    public function getPushNotificationRecipients(): DoctrineCollection
+    {
+        return $this->pushNotificationRecipients;
+    }
 }

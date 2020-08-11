@@ -10,8 +10,11 @@ use Pronto\MobileBundle\Controller\Api\BaseApiController;
 use Pronto\MobileBundle\Entity\Device;
 use Pronto\MobileBundle\Entity\PushNotification;
 use Pronto\MobileBundle\Exceptions\ApiException;
+use Pronto\MobileBundle\Serializer\Normalizer\PushNotificationNormalizer;
+use Pronto\MobileBundle\Service\PushNotification\FirebaseStorage;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class PushNotificationController extends BaseApiController
 {
@@ -71,13 +74,9 @@ class PushNotificationController extends BaseApiController
      */
 
     /**
-     * @param EntityManagerInterface $entityManager
-     * @param $deviceIdentifier
-     * @return JsonResponse
-     * @throws ApiException
      * @throws DBALException
      */
-    public function listAction(EntityManagerInterface $entityManager, string $deviceIdentifier)
+    public function listAction(EntityManagerInterface $entityManager, SerializerInterface $serializer, FirebaseStorage $firebaseStorage, string $deviceIdentifier)
     {
         $this->validateAuthorization();
 
@@ -85,6 +84,6 @@ class PushNotificationController extends BaseApiController
         $notifications = $entityManager->getRepository(PushNotification::class)
             ->findForDevice($deviceIdentifier, $this->prontoMobile->getApplication());
 
-        return $this->successResponse($this->serializer->serialize($notifications, [new DateTimeNormalizer()]));
+        return $this->successResponse($serializer->serialize($notifications, 'json'));
     }
 }

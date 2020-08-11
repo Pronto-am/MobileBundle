@@ -32,6 +32,11 @@ services:
         resource: '../../Twig'
         tags: ['twig.extension']
 
+    #### SERIALIZER ####
+    Pronto\MobileBundle\Serializer\Normalizer\:
+        resource: '../../Serializer/Normalizer'
+        tags: ['serializer.normalizer']
+
 
     #### PRONTO MOBILE DOCTRINE EVENT SUBSCRIBERS ####
     Pronto\MobileBundle\EventListener\HashPasswordSubscriber:

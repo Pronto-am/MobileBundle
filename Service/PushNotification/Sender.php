@@ -14,7 +14,6 @@ use Pronto\MobileBundle\Utils\Firebase\CloudMessaging\Response;
 
 class Sender
 {
-
 	/** @var Client */
 	private $client;
 
@@ -27,32 +26,18 @@ class Sender
 	/** @var EntityManagerInterface */
 	private $entityManager;
 
-	/** @var \Pronto\MobileBundle\Entity\PushNotification */
+	/** @var PushNotification */
 	private $notification;
 
-	/** @var GoogleServiceAccountLoader $googleServiceAccountLoader */
-	private $googleServiceAccountLoader;
+    /** @var FirebaseStorage */
+    private $firebaseStorage;
 
-
-	/**
-	 * Sender constructor.
-	 * @param EntityManagerInterface $entityManager
-	 * @param GoogleServiceAccountLoader $googleServiceAccountLoader
-	 */
-	public function __construct(EntityManagerInterface $entityManager, GoogleServiceAccountLoader $googleServiceAccountLoader)
+	public function __construct(EntityManagerInterface $entityManager, FirebaseStorage $firebaseStorage)
 	{
 		$this->entityManager = $entityManager;
+        $this->firebaseStorage = $firebaseStorage;
+    }
 
-		$this->googleServiceAccountLoader = $googleServiceAccountLoader;
-	}
-
-
-	/**
-	 * Set the server key
-	 *
-	 * @param $firebaseServerKey
-	 * @return bool
-	 */
 	public function setServerKey(string $firebaseServerKey): bool
 	{
 		try {
@@ -64,12 +49,6 @@ class Sender
 		return $this->client !== false;
 	}
 
-
-	/**
-	 * Add data to the message
-	 *
-	 * @param PushNotification $notification
-	 */
 	public function setNotification(PushNotification $notification): void
 	{
 		$this->notification = $notification;
@@ -77,18 +56,10 @@ class Sender
 		$this->setMessageGroups();
 	}
 
-
-	/**
-	 * Retrieve the devices to send the notification to
-	 */
 	private function setMessageGroups(): void
 	{
-		/** @var Application $application */
 		$application = $this->notification->getApplication();
-
-		$messageGroups = [];
-
-		$languages = [];
+		$messageGroups = $languages = [];
 
 		foreach ($application->getAvailableLanguages() as $language) {
 			$languages[] = $language['code'];
@@ -98,7 +69,7 @@ class Sender
 
 			$this->devices = array_merge($this->devices, $devices);
 
-			$messageGroups[] = new MessageGroup($this->notification, $this->googleServiceAccountLoader, $devices, $language['code']);
+			$messageGroups[] = new MessageGroup($this->notification, $this->firebaseStorage, $devices, $language['code']);
 		}
 
 		// Create another message group of left-over devices
@@ -106,11 +77,10 @@ class Sender
 
 		$this->devices = array_merge($this->devices, $devices);
 
-		$messageGroups[] = new MessageGroup($this->notification, $this->googleServiceAccountLoader, $devices);
+		$messageGroups[] = new MessageGroup($this->notification, $this->firebaseStorage, $devices);
 
 		$this->client->setMessageGroups($messageGroups);
 	}
-
 
 	/**
 	 * Send the message to the Firebase cloud messaging API
@@ -128,7 +98,6 @@ class Sender
 		$this->saveStatistics();
 	}
 
-
 	/**
 	 * Get the expired tokens
 	 *
@@ -142,7 +111,6 @@ class Sender
 
 		return [];
 	}
-
 
 	/**
 	 * Get updated tokens
@@ -158,7 +126,6 @@ class Sender
 		return [];
 	}
 
-
 	/**
 	 * Get the tokens that need a new attempt at sending the notification
 	 *
@@ -172,7 +139,6 @@ class Sender
 
 		return [];
 	}
-
 
 	/**
 	 * Get the success count of the push notification
@@ -188,7 +154,6 @@ class Sender
 		return 0;
 	}
 
-
 	/**
 	 * Get the failure count of the push notification
 	 *
@@ -202,7 +167,6 @@ class Sender
 
 		return 0;
 	}
-
 
 	/**
 	 * Get the modify count of the push notification
@@ -218,7 +182,6 @@ class Sender
 		return 0;
 	}
 
-
 	/**
 	 * Get the failure reasons if the response is set
 	 *
@@ -232,7 +195,6 @@ class Sender
 
 		return [];
 	}
-
 
 	/**
 	 * Handle the errors with the deletion or update of tokens
@@ -249,7 +211,6 @@ class Sender
 			$this->entityManager->getRepository(Device::class)->updateToken($oldToken, $newToken);
 		}
 	}
-
 
 	/**
 	 * Insert statistics for the sent push notification
@@ -279,7 +240,6 @@ class Sender
 
 		$this->entityManager->flush();
 	}
-
 
 	/**
 	 * Display logging of the sent push notification

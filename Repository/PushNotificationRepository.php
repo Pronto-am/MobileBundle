@@ -26,7 +26,6 @@ class PushNotificationRepository extends EntityRepository
             ->execute();
     }
 
-
     /**
      * Set notifications as being processed by an array of id's
      *
@@ -65,7 +64,6 @@ class PushNotificationRepository extends EntityRepository
             ->getQuery()
             ->execute();
     }
-
 
     /**
      * Get the recipient count by where clauses
