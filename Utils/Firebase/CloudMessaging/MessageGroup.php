@@ -45,11 +45,11 @@ class MessageGroup
         $this->notification = $notification;
         $this->language = $language;
         $this->tokens = array_column($devices, 'firebaseToken');
+        $this->firebaseStorage = $firebaseStorage;
 
         $this->setDefaultLanguage();
 
         $this->setMessage();
-        $this->firebaseStorage = $firebaseStorage;
     }
 
     /**
