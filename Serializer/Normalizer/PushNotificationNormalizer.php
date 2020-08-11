@@ -31,12 +31,19 @@ class PushNotificationNormalizer implements ContextAwareNormalizerInterface
         /** @var PushNotification $object */
         $clickActionHtmlUrl = null;
 
-        if ($object->getClickActionHtml() !== null && is_array($object->getClickActionHtml())) {
+        if (
+            $object->getClickActionHtml() !== null &&
+            is_array($object->getClickActionHtml())
+        ) {
             $languages = array_keys($object->getClickActionHtml());
             $clickActionHtmlUrl = [];
 
             foreach ($languages as $language) {
-                $clickActionHtmlUrl[$language] = $this->firebaseStorage->generateUrlForPushNotification($object, $language);
+                $storageUrl = $object->getClickAction() === PushNotification::TYPE_HTML_ACTION
+                    ? $this->firebaseStorage->generateUrlForPushNotification($object, $language)
+                    : '';
+
+                $clickActionHtmlUrl[$language] = $storageUrl;
             }
         }
 
