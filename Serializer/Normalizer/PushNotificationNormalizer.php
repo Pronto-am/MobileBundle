@@ -60,6 +60,7 @@ class PushNotificationNormalizer implements ContextAwareNormalizerInterface
             ],
             'title'                 => $object->getTitle(),
             'content'               => $object->getContent(),
+            'click_action'          => $object->getClickAction(),
             'click_action_url'      => $object->getClickActionUrl(),
             'click_action_html'     => $object->getClickActionHtml(),
             'click_action_html_url' => $clickActionHtmlUrl,
