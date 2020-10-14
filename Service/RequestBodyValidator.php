@@ -21,9 +21,7 @@ class RequestBodyValidator
 	 */
 	public function isValid(Request $request, array $required): bool
 	{
-		$content = json_decode($request->getContent(), true);
-
-		$jsonKeys = array_keys($content);
+		$jsonKeys = array_keys($request->request->all());
 
 		// Get the missing keys
 		$this->missing = array_diff($required, $jsonKeys);

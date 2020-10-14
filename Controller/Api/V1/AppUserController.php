@@ -117,12 +117,9 @@ class AppUserController extends BaseApiController
 		    throw new NotAuthorizedException();
 		}
 
-		// Retrieve the content from the request
-		$content = json_decode($request->getContent());
-
 		/** @var AppUser $user */
 		$user = $entityManager->getRepository(AppUser::class)->findOneBy([
-			'email'       => $content->email,
+			'email'       => $request->request->get('email'),
 			'application' => $this->prontoMobile->getApplication()
 		]);
 
@@ -133,10 +130,10 @@ class AppUserController extends BaseApiController
 		$user = new AppUser();
 		$user->setApplication($this->prontoMobile->getApplication());
 
-		$user->setFirstName($content->first_name);
-		$user->setLastName($content->last_name);
-		$user->setEmail($content->email);
-		$user->setPlainPassword($content->password);
+		$user->setFirstName($request->request->get('first_name'));
+		$user->setLastName($request->request->get('last_name'));
+		$user->setEmail($request->request->get('email'));
+		$user->setPlainPassword($request->request->get('password'));
 		$user->setLastLogin(new \DateTime());
 
 		// If account activation via email is not necessary, mark the user as active
@@ -145,8 +142,8 @@ class AppUserController extends BaseApiController
 		}
 
 		// Save additional data
-		if (isset($content->extra_data)) {
-			$user->setExtraData(json_decode(json_encode($content->extra_data), true));
+		if ($request->request->get('extra_data') !== null) {
+			$user->setExtraData(json_decode(json_encode($request->request->get('extra_data')), true));
 		}
 
 		$entityManager->persist($user);
@@ -247,12 +244,10 @@ class AppUserController extends BaseApiController
 		/** @var Application $application */
 		$application = $this->prontoMobile->getApplication();
 
-		$content = json_decode($request->getContent());
-
 		/** @var AppUser $user */
 		$user = $entityManager->getRepository(AppUser::class)->findOneBy([
 			'application' => $application,
-			'email'       => $content->email
+			'email'       => $request->request->get('email')
 		]);
 
 		// Return a 404
@@ -484,9 +479,6 @@ class AppUserController extends BaseApiController
 		// Validate the authorization
 		$this->validateAuthorization($this->getPluginIdentifier());
 
-		// Retrieve the content from the request
-		$content = json_decode($request->getContent());
-
 		/** @var AppUser $user */
 		$user = $this->getUser();
 
@@ -495,9 +487,9 @@ class AppUserController extends BaseApiController
 		}
 
 		// Check if the new email address already exists
-		if ($user->getEmail() !== $content->email) {
+		if ($user->getEmail() !== $request->request->get('email')) {
 			$existingUsers = $entityManager->getRepository(AppUser::class)->findBy([
-				'email'       => $content->email,
+				'email'       => $request->request->get('email'),
 				'application' => $this->prontoMobile->getApplication()
 			]);
 
@@ -507,18 +499,18 @@ class AppUserController extends BaseApiController
 		}
 
 		// Update the users' info
-		$user->setFirstName($content->first_name);
-		$user->setLastName($content->last_name);
-		$user->setEmail($content->email);
+		$user->setFirstName($request->request->get('first_name'));
+		$user->setLastName($request->request->get('last_name'));
+		$user->setEmail($request->request->get('email'));
 
 		// Update the password if it's been provided
-		if (isset($content->password)) {
-			$user->setPlainPassword($content->password);
+		if ($request->request->get('password') !== null) {
+			$user->setPlainPassword($request->request->get('password'));
 		}
 
 		// Save additional data
-		if (isset($content->extra_data)) {
-			$user->setExtraData(json_decode(json_encode($content->extra_data), true));
+		if ($request->request->get('extra_data') !== null) {
+			$user->setExtraData(json_decode(json_encode($request->request->get('extra_data')), true));
 		}
 
 		$entityManager->persist($user);

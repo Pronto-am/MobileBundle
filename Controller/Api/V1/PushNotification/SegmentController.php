@@ -130,15 +130,13 @@ class SegmentController extends BaseApiController
         // Validate the request body
         $this->validateRequestContent($request, ['device_identifier', 'segments']);
 
-        $content = json_decode($request->getContent());
-
         // Check if the segments property is an array
-        if (! is_array($content->segments)) {
+        if (! is_array($request->request->get('segments'))) {
             throw new InvalidSegmentException();
         }
 
         /** @var Device $device */
-        $device = $entityManager->getRepository(Device::class)->find($content->device_identifier);
+        $device = $entityManager->getRepository(Device::class)->find($request->request->get('device_identifier'));
 
         // Check if the application exists
         if ($device === null) {
@@ -146,11 +144,11 @@ class SegmentController extends BaseApiController
         }
 
         // Update the segments for the device
-        foreach ($content->segments as $segment) {
+        foreach ($request->request->get('segments') as $segment) {
             /** @var DeviceSegment $deviceSegment */
             $deviceSegment = $entityManager->getRepository(DeviceSegment::class)->findOneBy([
                 'segment' => $segment->id,
-                'device'  => $content->device_identifier
+                'device'  => $request->request->get('device_identifier')
             ]);
 
             // check if the user subscribed to the segment

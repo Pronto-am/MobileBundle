@@ -154,7 +154,7 @@ text-align: center; text-decoration: none; -webkit-text-size-adjust: none;' %}
                             <tr>
                                 <td style="{{ fontFamily }} {{ footer_cell }}">
                                     <p style="{{ paragraph_sub }}">
-                                        &copy; 2018
+                                        &copy; {{ 'now'|date('Y') }}
                                         <a style="{{ anchor }}" href="{{ path('pronto_mobile_login') }}" target="_blank">Pronto - App management</a> {{  customer != null ? 'for ' ~ customer.companyName : '' }}.
                                         {{ 'mails.base.rights_reserved'|trans }}
                                     </p>

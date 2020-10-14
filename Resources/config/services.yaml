@@ -24,7 +24,7 @@ services:
             - []
 
     Pronto\MobileBundle\:
-        resource: '../../{Command,Controller,DataFixtures,EventListener,EventSubscriber,Middleware,Provider,Security,Service,Repository,Validator}'
+        resource: '../../{Command,Controller,DataFixtures,EventSubscriber,Middleware,Provider,Security,Service,Repository,Validator}'
         exclude: '../../Service/ProntoMobile.php'
 
     #### TWIG EXTENSIONS ####
@@ -37,35 +37,11 @@ services:
         resource: '../../Serializer/Normalizer'
         tags: ['serializer.normalizer']
 
-
     #### PRONTO MOBILE DOCTRINE EVENT SUBSCRIBERS ####
-    Pronto\MobileBundle\EventListener\HashPasswordSubscriber:
+    Pronto\MobileBundle\EventSubscriber\Doctrine\:
+        resource: '../../EventSubscriber/Doctrine'
         tags:
-            - { name: doctrine.event_subscriber, connection: default }
-
-    Pronto\MobileBundle\EventListener\CustomerSubscriber:
-        tags:
-            - { name: doctrine.event_subscriber, connection: default }
-
-    Pronto\MobileBundle\EventListener\AppVersionSubscriber:
-        tags:
-            - { name: doctrine.event_subscriber, connection: default }
-
-    Pronto\MobileBundle\EventListener\NotificationSubscriber:
-        tags:
-            - { name: doctrine.event_subscriber, connection: default }
-
-    Pronto\MobileBundle\EventListener\AccessTokenSubscriber:
-        tags:
-            - { name: doctrine.event_subscriber, connection: default }
-
-    Pronto\MobileBundle\EventListener\ApplicationVersionSubscriber:
-        tags:
-            - { name: doctrine.event_subscriber, connection: default }
-
-    Pronto\MobileBundle\EventListener\PluginSubscriber:
-        tags:
-            - { name: doctrine.event_subscriber, connection: default }
+#            - { name: doctrine.event_subscriber, connection: default }
 
     #### PRONTO MOBILE DATA FIXTURES ####
     Pronto\MobileBundle\DataFixtures\:

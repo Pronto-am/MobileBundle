@@ -1,6 +1,6 @@
 <?php
 
-namespace Pronto\MobileBundle\EventListener;
+namespace Pronto\MobileBundle\EventSubscriber\Doctrine;
 
 
 use Doctrine\Common\EventSubscriber;
@@ -10,8 +10,8 @@ use Doctrine\ORM\Events;
 use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\Application\Version;
 use Pronto\MobileBundle\Entity\Plugin;
-use Pronto\MobileBundle\Service\Cache;
 use Pronto\MobileBundle\Service\PluginInitializer;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -23,7 +23,7 @@ class ApplicationVersionSubscriber implements EventSubscriber
     private $tokenStorage;
 
     /**
-     * @var \Symfony\Component\HttpFoundation\Request
+     * @var Request
      */
     private $request;
 

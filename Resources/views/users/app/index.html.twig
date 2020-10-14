@@ -33,7 +33,7 @@
                                 </td>
                                 <td>{{ user.email }}</td>
                                 <td>
-                                    {{ user.lastLogin != null ? 'format.date_and_time'|trans({'%date%': user.lastLogin.date|date('d-m-Y'), '%time%': user.lastLogin.date|date('H:i')}) : '' }}
+                                    {{ user.lastLogin != null ? 'format.date_and_time'|trans({'%date%': user.lastLogin|date('d-m-Y'), '%time%': user.lastLogin|date('H:i')}) : '' }}
                                 </td>
                             </tr>
                         {% endfor %}

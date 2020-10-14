@@ -1,6 +1,6 @@
 <?php
 
-namespace Pronto\MobileBundle\EventListener;
+namespace Pronto\MobileBundle\EventSubscriber\Doctrine;
 
 
 use Doctrine\Common\EventSubscriber;

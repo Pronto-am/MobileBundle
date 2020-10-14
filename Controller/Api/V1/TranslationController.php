@@ -12,7 +12,6 @@ use Pronto\MobileBundle\Entity\TranslationKey;
 use Pronto\MobileBundle\Exceptions\ApiException;
 use Pronto\MobileBundle\Exceptions\TranslationKeys\ZipFileNotCreatedException;
 use Pronto\MobileBundle\Utils\File;
-use Pronto\MobileBundle\Utils\Responses\ErrorResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

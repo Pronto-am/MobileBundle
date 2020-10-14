@@ -99,27 +99,24 @@ class DeviceController extends BaseApiController
         // Validate the body
         $this->validateRequestContent($request, ['name', 'model', 'manufacturer', 'platform', 'os_version', 'app_version', 'language']);
 
-        // Retrieve the content from the request
-        $content = json_decode($request->getContent());
-
         // Check if either the firebase or apns token is present
-        if ((! isset($content->firebase_token) || empty($content->firebase_token)) && (! isset($content->apns_token) || empty($content->apns_token))) {
+        if (empty($request->request->get('firebase_token')) && empty($request->request->get('apns_token'))) {
             throw new MissingTokenException();
         }
 
         /** @var Application $application */
         $application = $this->prontoMobile->getApplication();
 
-        if (isset($content->firebase_token) && ! empty($content->firebase_token)) {
+        if (empty($request->request->get('firebase_token'))) {
             /** @var Device $device */
             $device = $entityManager->getRepository(Device::class)->findOneBy([
-                'firebaseToken' => $content->firebase_token,
+                'firebaseToken' => $request->request->get('firebase_token'),
                 'application'   => $application
             ]);
         } else {
             /** @var Device $device */
             $device = $entityManager->getRepository(Device::class)->findOneBy([
-                'apnsToken'   => $content->apns_token,
+                'apnsToken'   => $request->request->get('apns_token'),
                 'application' => $application
             ]);
         }
@@ -134,9 +131,9 @@ class DeviceController extends BaseApiController
                 $device->setPushNotifications(true);
 
                 // Attach the app user when it's provided
-                if (isset($content->user_identifier)) {
+                if ($request->request->get('user_identifier') !== null) {
                     $appUser = $entityManager->getRepository(AppUser::class)->findOneBy([
-                        'id'          => $content->user_identifier,
+                        'id'          => $request->request->get('user_identifier'),
                         'application' => $application
                     ]);
 
@@ -155,16 +152,16 @@ class DeviceController extends BaseApiController
         $device = new Device();
         $device->setApplication($this->prontoMobile->getApplication());
 
-        if (strtolower($content->platform) === 'ios') {
-            $device->setApnsToken($content->apns_token);
+        if (strtolower($request->request->get('platform')) === 'ios') {
+            $device->setApnsToken($request->request->get('apns_token'));
         } else {
-            $device->setFirebaseToken($content->firebase_token);
+            $device->setFirebaseToken($request->request->get('firebase_token'));
         }
 
         // Attach the app user when it's provided
-        if (isset($content->user_identifier)) {
+        if ($request->request->get('user_identifier') !== null) {
             $appUser = $entityManager->getRepository(AppUser::class)->findOneBy([
-                'id'          => $content->user_identifier,
+                'id'          => $request->request->get('user_identifier'),
                 'application' => $application
             ]);
 
@@ -173,18 +170,18 @@ class DeviceController extends BaseApiController
             }
         }
 
-        $device->setName($content->name);
-        $device->setModel($content->model);
-        $device->setManufacturer($content->manufacturer);
-        $device->setPlatform(strtolower($content->platform));
-        $device->setOsVersion($content->os_version);
-        $device->setAppVersion($content->app_version);
-        $device->setLanguage($content->language);
+        $device->setName($request->request->get('name'));
+        $device->setModel($request->request->get('model'));
+        $device->setManufacturer($request->request->get('manufacturer'));
+        $device->setPlatform(strtolower($request->request->get('platform')));
+        $device->setOsVersion($request->request->get('os_version'));
+        $device->setAppVersion($request->request->get('app_version'));
+        $device->setLanguage($request->request->get('language'));
         $device->setLastLogin(new \DateTime());
 
         // Save additional data
-        if (isset($content->extra_data)) {
-            $device->setExtraData($content->extra_data);
+        if ($request->request->get('extra_data') !== null) {
+            $device->setExtraData($request->request->get('extra_data'));
         }
 
         $entityManager->persist($device);
