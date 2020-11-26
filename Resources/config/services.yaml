@@ -41,7 +41,7 @@ services:
     Pronto\MobileBundle\EventSubscriber\Doctrine\:
         resource: '../../EventSubscriber/Doctrine'
         tags:
-#            - { name: doctrine.event_subscriber, connection: default }
+            - { name: doctrine.event_subscriber, connection: default }
 
     #### PRONTO MOBILE DATA FIXTURES ####
     Pronto\MobileBundle\DataFixtures\:

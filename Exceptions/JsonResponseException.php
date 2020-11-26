@@ -35,6 +35,10 @@ abstract class JsonResponseException extends Exception
 
         if ($this->data !== null) {
             $error['data'] = $this->data;
+
+            if ($this->dataIsJson()) {
+                $error['data'] = json_decode($error['data']);
+            }
         }
 
         return new JsonResponse($error, $this->statusCode());
@@ -56,5 +60,18 @@ abstract class JsonResponseException extends Exception
     {
         $classParts = explode('\\', get_class($this));
         return end($classParts);
+    }
+
+    private function dataIsJson(): bool
+    {
+        // Data must be a string with starting character '{' or '['
+        if ($this->data === null ||
+            !is_string($this->data) ||
+            (is_string($this->data) && !in_array(substr($this->data, 0, 1), ['{', '[']))) {
+            return false;
+        }
+
+        json_decode($this->data);
+        return json_last_error() == JSON_ERROR_NONE;
     }
 }
