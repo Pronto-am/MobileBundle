@@ -15,6 +15,6 @@ class AlreadyRegisteredException extends JsonResponseException
 
     public function statusCode(): int
     {
-        return 422;
+        return 200;
     }
 }
