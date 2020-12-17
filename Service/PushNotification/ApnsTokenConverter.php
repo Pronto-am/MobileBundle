@@ -3,6 +3,8 @@
 namespace Pronto\MobileBundle\Service\PushNotification;
 
 
+use Exception;
+use GuzzleHttp\Exception\GuzzleException;
 use Pronto\MobileBundle\Utils\Firebase\Tokens\Client;
 
 class ApnsTokenConverter
@@ -19,7 +21,6 @@ class ApnsTokenConverter
 	/** @var string $serverKey */
 	private $serverKey;
 
-
 	/**
 	 * Set the bundle
 	 *
@@ -30,7 +31,6 @@ class ApnsTokenConverter
 		$this->bundle = $bundle;
 	}
 
-
 	/**
 	 * Set the devices that need token conversion
 	 *
@@ -40,7 +40,6 @@ class ApnsTokenConverter
 	{
 		$this->convertDevicesToTokens($devices);
 	}
-
 
 	/**
 	 * Get the tokens from the array of devices
@@ -60,7 +59,6 @@ class ApnsTokenConverter
 		$this->chunks = array_chunk($tokens, 100);
 	}
 
-
 	/**
 	 * Set the server key
 	 *
@@ -70,7 +68,6 @@ class ApnsTokenConverter
 	{
 		$this->serverKey = $serverKey;
 	}
-
 
 	/**
 	 * Check if we can execute the request
@@ -82,12 +79,11 @@ class ApnsTokenConverter
 		return $this->numberOfTokens !== 0 && !empty($this->serverKey) && !empty($this->bundle);
 	}
 
-
     /**
      * Convert the tokens
      *
      * @return bool|array
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
 	public function convert()
 	{
@@ -99,7 +95,11 @@ class ApnsTokenConverter
 
 		// Loop through the chunks of tokens
 		foreach ($this->chunks as $chunk) {
-			$response = $this->execute($chunk);
+		    try {
+                $response = $this->execute($chunk);
+            } catch(Exception $exception) {
+		        continue;
+            }
 
 			// If the response didn't contain an object, return false
 			if ($response === false) {
@@ -113,13 +113,12 @@ class ApnsTokenConverter
 		return $results;
 	}
 
-
     /**
      * Execute the request
      *
      * @param $chunk
      * @return mixed
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
 	private function execute(array $chunk)
 	{
