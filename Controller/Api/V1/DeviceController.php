@@ -100,14 +100,15 @@ class DeviceController extends BaseApiController
         $this->validateRequestContent($request, ['name', 'model', 'manufacturer', 'platform', 'os_version', 'app_version', 'language']);
 
         // Check if either the firebase or apns token is present
-        if (empty($request->request->get('firebase_token')) && empty($request->request->get('apns_token'))) {
+        if ($request->request->get('firebase_token') === null &&
+            $request->request->get('apns_token') === null) {
             throw new MissingTokenException();
         }
 
         /** @var Application $application */
         $application = $this->prontoMobile->getApplication();
 
-        if (empty($request->request->get('firebase_token'))) {
+        if ($request->request->get('firebase_token') !== null) {
             /** @var Device $device */
             $device = $entityManager->getRepository(Device::class)->findOneBy([
                 'firebaseToken' => $request->request->get('firebase_token'),

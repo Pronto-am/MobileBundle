@@ -23,6 +23,7 @@ class ExceptionSubscriber implements EventSubscriberInterface
         }
 
         if ($exception instanceof JsonResponseException) {
+            $event->allowCustomResponseCode();
             $event->setResponse($exception->response());
         }
 
