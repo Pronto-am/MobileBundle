@@ -147,16 +147,16 @@ class SegmentController extends BaseApiController
         foreach ($request->request->get('segments') as $segment) {
             /** @var DeviceSegment $deviceSegment */
             $deviceSegment = $entityManager->getRepository(DeviceSegment::class)->findOneBy([
-                'segment' => $segment->id,
+                'segment' => $segment['id'],
                 'device'  => $request->request->get('device_identifier')
             ]);
 
             // check if the user subscribed to the segment
-            if ($segment->subscribed) {
+            if ($segment['subscribed']) {
                 // If subscribed and not present, add it
                 if ($deviceSegment === null) {
                     /** @var Segment $pushNotificationSegment */
-                    $pushNotificationSegment = $entityManager->getRepository(Segment::class)->find($segment->id);
+                    $pushNotificationSegment = $entityManager->getRepository(Segment::class)->find($segment['id']);
 
                     // Check if the segment exists
                     if ($pushNotificationSegment === null) {
