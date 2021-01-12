@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pronto\MobileBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -9,12 +11,11 @@ use Pronto\MobileBundle\Entity\Application\Version;
 use Pronto\MobileBundle\Traits\ApiEntityTrait;
 use Symfony\Component\Validator\Constraints as Assert;
 
-
 /**
  * Class Collection
  * @package Pronto\MobileBundle\Entity
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Pronto\MobileBundle\Repository\CollectionRepository")
  * @ORM\Table(name="collections")
  */
 class Collection extends TimestampedEntity implements ApiEntityInterface

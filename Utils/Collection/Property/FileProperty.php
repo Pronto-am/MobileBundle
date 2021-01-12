@@ -16,7 +16,7 @@ class FileProperty extends BaseType
 	public function parse(): array
 	{
 		// Set the upload directory
-		$directory = 'uploads/collections/' . $this->property->getCollection()->getIdentifier();
+		$directory = 'uploads/collections/' . $this->property->getCollection()->getId();
 
 		$parsed = [];
 
@@ -42,7 +42,6 @@ class FileProperty extends BaseType
 			$this->getIdentifier() => $parsed
 		];
 	}
-
 
 	/**
 	 * Upload the file

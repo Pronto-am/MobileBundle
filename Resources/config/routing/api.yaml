@@ -4,3 +4,11 @@ api_v1_routes:
     prefix: /v1
     name_prefix: api_v1_
     schemes: [https]
+
+api_file_download:
+    controller: Pronto\MobileBundle\Controller\Api\FileController::download
+    path: /files/{path}
+    schemes: [https]
+    methods: GET
+    requirements:
+        path: '.+'

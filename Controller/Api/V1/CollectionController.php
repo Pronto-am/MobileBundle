@@ -82,7 +82,6 @@ class CollectionController extends BaseApiController
 		return $this->paginatedResponse($retriever->getEntries(), $retriever->getPaginationInfo());
 	}
 
-
 	/**
 	 * API-docs: Get the details of a single entry
 	 *

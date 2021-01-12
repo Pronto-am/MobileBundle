@@ -9,11 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Pronto\MobileBundle\Controller\Api\BaseApiController;
 use Pronto\MobileBundle\Entity\Device;
 use Pronto\MobileBundle\Entity\PushNotification;
-use Pronto\MobileBundle\Exceptions\ApiException;
-use Pronto\MobileBundle\Serializer\Normalizer\PushNotificationNormalizer;
 use Pronto\MobileBundle\Service\PushNotification\FirebaseStorage;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
 
 class PushNotificationController extends BaseApiController
