@@ -269,8 +269,8 @@ class AppUserController extends BaseApiController
 
 		// Build the message with the password reset link
 		$message = (new Swift_Message($application->getName() . ' | ' . $translator->trans('authentication.reset_password')))
-			->setFrom($companyEmail . '@' . $domain)
-			->setTo($user->getEmail())
+			->setFrom($companyEmail . '@' . $domain, $application->getCustomer()->getCompanyName())
+			->setTo($user->getEmail(), $user->getFullName())
 			->setBody(
 				$this->renderView(
 					'@ProntoMobile/mails/users/app/password.html.twig',
