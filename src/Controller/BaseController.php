@@ -9,7 +9,7 @@ use Pronto\MobileBundle\Service\ProntoMobile;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class BaseController extends AbstractController
 {
@@ -30,7 +30,7 @@ class BaseController extends AbstractController
      */
 	public function __construct(TranslatorInterface $translator, ContainerInterface $container)
 	{
-		$this->prontoMobile = $container->get('Pronto\MobileBundle\Service\ProntoMobile');
+		$this->prontoMobile = $container->get(ProntoMobile::class);
 		$this->translator = $translator;
 	}
 

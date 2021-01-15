@@ -45,8 +45,8 @@
     },
     "autoload": {
         "psr-4": {
-            "Pronto\\MobileBundle\\": "",
-            "Pronto\\MobileBundle\\Tests\\": "Tests/"
+            "Pronto\\MobileBundle\\": "src/",
+            "Pronto\\MobileBundle\\Tests\\": "tests/"
         }
     },
     "minimum-stability": "dev",

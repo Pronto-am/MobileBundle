@@ -6,12 +6,12 @@
   },
   "dependencies": {
     "ajv": "^6.5.2",
+    "bootstrap": "^4.5.3",
     "chart.js": "^2.7.1",
     "codeflask": "^0.3.0",
     "font-awesome": "^4.7.0",
     "jquery-ui": "^1.12.1",
     "laravel-mix": "^4.0.14",
-    "materialize-css": "^0.100.2",
     "moment": "^2.22.1",
     "sweetalert": "^2.1.0",
     "trumbowyg": "^2.9.4"
