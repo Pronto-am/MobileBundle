@@ -2,14 +2,13 @@
 
 namespace Pronto\MobileBundle\DataFixtures;
 
-
+use DateTime;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use Pronto\MobileBundle\Entity\User;
 
 class UserFixtures extends Fixture
 {
-
 	/**
 	 * Load data fixtures with the passed EntityManager
 	 *
@@ -23,8 +22,8 @@ class UserFixtures extends Fixture
 		$user->setLastName('Doe');
 		$user->setPlainPassword('admin');
 		$user->setRoles(['ROLE_USER', 'ROLE_SUPER_ADMIN']);
-		$user->setCreatedAt(new \DateTime());
-		$user->setUpdatedAt(new \DateTime());
+		$user->setCreatedAt(new DateTime());
+		$user->setUpdatedAt(new DateTime());
 
 		$manager->persist($user);
 		$manager->flush();

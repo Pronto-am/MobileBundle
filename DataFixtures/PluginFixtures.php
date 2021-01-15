@@ -2,9 +2,8 @@
 
 namespace Pronto\MobileBundle\DataFixtures;
 
-
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use Pronto\MobileBundle\Entity\Plugin;
 
 class PluginFixtures extends Fixture

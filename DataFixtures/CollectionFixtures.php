@@ -2,9 +2,8 @@
 
 namespace Pronto\MobileBundle\DataFixtures;
 
-
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use Pronto\MobileBundle\Entity\Collection\Property\Type as PropertyType;
 use Pronto\MobileBundle\Entity\Collection\Relationship\Type as RelationshipType;
 
