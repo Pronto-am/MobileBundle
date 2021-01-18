@@ -4,34 +4,22 @@ declare(strict_types=1);
 
 namespace Pronto\MobileBundle\Validator\Constraints\AppVersion;
 
-use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use UnexpectedValueException;
 
 class IsSemanticVersionValidator extends ConstraintValidator
 {
-    /**
-     * @var TranslatorInterface $translator
-     */
+    /** @var TranslatorInterface $translator */
     private $translator;
 
-    /**
-     * IsSemanticVersionValidator constructor.
-     * @param TranslatorInterface $translator
-     */
     public function __construct(TranslatorInterface $translator)
     {
         $this->translator = $translator;
     }
 
-    /**
-     * Checks if the passed value is valid.
-     *
-     * @param mixed $value The value that should be validated
-     * @param Constraint $constraint The constraint for the validation
-     */
     public function validate($value, Constraint $constraint)
     {
         if (!$constraint instanceof IsSemanticVersion) {
