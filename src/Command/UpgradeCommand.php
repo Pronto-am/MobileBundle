@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Pronto\MobileBundle\Command;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Pronto\MobileBundle\Entity\Application;
@@ -52,9 +51,8 @@ class UpgradeCommand extends Command
 
     private function migrateOAuthClients(): void
     {
-        /** @var ArrayCollection $applications */
         $applications = $this->entityManager->getRepository(Application::class)->findAll();
-        $applications->filter(static function (Application $application) {
+        $applications = array_filter($applications, static function (Application $application) {
             return $application->getApplicationClients()->isEmpty();
         });
 

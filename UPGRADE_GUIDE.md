@@ -4,13 +4,15 @@
 
 This change is breaking for your currently logged in app users. A switch from friends-of-symfony/oauth-server-bundle to triker/oauth2-bundle was neccessary because the first one is not being maintained anymore.
 
-### Update `bundles.php` 
-Remove the reference of 
+### Remove legacy configuration 
+Remove the reference of the former used dependency `friendsofsymfony/oauth2-server-bundle` from `bundles.php`:
 
 ```suggestion
 - FOS\OAuthServerBundle\FOSOAuthServerBundle::class => ['all' => true],
 + Trikoder\Bundle\OAuth2Bundle\TrikoderOAuth2Bundle::class => ['all' => true],
 ```
+
+And delete the yaml config file of the bundle.
 
 ### Upgrade
 Update `composer.json` to use the new version:
@@ -21,6 +23,9 @@ Update `composer.json` to use the new version:
 ```
 
 Run `composer update`.
+
+### Clear cache
+Completely delete your cache directory, because the bundle now resides inside a `src/` directory.
 
 ### Upgrade config
 
@@ -57,7 +62,17 @@ Also make sure your `.env` file contains the `OAUTH2_ENCRYPTION_KEY` key. You ca
 ```
 php -r 'echo base64_encode(random_bytes(32)), PHP_EOL;'
 ```
- 
+
+#### `security.yaml`
+
+```yaml
+security:
+    firewalls:
+        api:
+-           fos_oauth:  true
++           oauth2: true
+``` 
+
 ### Create keys
 
 Private key:
