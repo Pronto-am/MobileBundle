@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Pronto\MobileBundle\Controller\Web;
 
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Pronto\MobileBundle\Controller\BaseController;
 use Pronto\MobileBundle\Entity\Customer;
@@ -53,7 +54,6 @@ class AuthenticationController extends BaseController implements RedirectWhenAut
         ]);
     }
 
-
     /**
      * Let the user select a customer from the list
      *
@@ -69,7 +69,6 @@ class AuthenticationController extends BaseController implements RedirectWhenAut
             'customerUsers' => $customerUsers
         ]);
     }
-
 
     /**
      * Set the customer using the selection list
@@ -93,7 +92,6 @@ class AuthenticationController extends BaseController implements RedirectWhenAut
 
         return $response;
     }
-
 
     /**
      * Show the reset password form
@@ -173,7 +171,6 @@ class AuthenticationController extends BaseController implements RedirectWhenAut
             ]);
     }
 
-
     /**
      * Show the reset password form
      *
@@ -196,7 +193,7 @@ class AuthenticationController extends BaseController implements RedirectWhenAut
         }
 
         // Check if the reset link has expired (1 hour)
-        $now = new \DateTime();
+        $now = new DateTime();
         $difference = $now->diff($passwordReset->getCreatedAt());
         $hours = $difference->h + ($difference->days * 24);
 
@@ -246,7 +243,6 @@ class AuthenticationController extends BaseController implements RedirectWhenAut
             'resetting' => true
         ]);
     }
-
 
     /**
      * Show the create password form

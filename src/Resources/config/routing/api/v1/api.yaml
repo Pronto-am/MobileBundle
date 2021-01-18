@@ -1,113 +1,112 @@
-
 #### DEVICE REQUESTS ####
 
 devices_register:
-    path: /devices/registration
-    defaults:
-        _controller: Pronto\MobileBundle\Controller\Api\V1\DeviceController:registerAction
-    condition: "context.getMethod() in ['POST']"
+  path: /devices/registration
+  defaults:
+    _controller: Pronto\MobileBundle\Controller\Api\V1\DeviceController:registerAction
+  condition: "context.getMethod() in ['POST']"
 
 devices_unregister:
-    path: /devices/registration/{deviceIdentifier}
-    defaults:
-        _controller: Pronto\MobileBundle\Controller\Api\V1\DeviceController:deregisterAction
-    condition: "context.getMethod() in ['DELETE']"
+  path: /devices/registration/{deviceIdentifier}
+  defaults:
+    _controller: Pronto\MobileBundle\Controller\Api\V1\DeviceController:deregisterAction
+  condition: "context.getMethod() in ['DELETE']"
 
 
 #### NOTIFICATIONS REQUESTS ####
 
 notifications:
-    path: /notifications/{deviceIdentifier}
-    defaults:
-        _controller: Pronto\MobileBundle\Controller\Api\V1\PushNotificationController:listAction
-    condition: "context.getMethod() in ['GET']"
+  path: /notifications/{deviceIdentifier}
+  defaults:
+    _controller: Pronto\MobileBundle\Controller\Api\V1\PushNotificationController:listAction
+  condition: "context.getMethod() in ['GET']"
 
 
 #### NOTIFICATION SEGMENTS REQUESTS ####
 
 notifications_segments:
-    path: /notifications/segments/{deviceIdentifier}
-    defaults:
-        _controller: Pronto\MobileBundle\Controller\Api\V1\PushNotification\SegmentController:subscribedAction
-    condition: "context.getMethod() in ['GET']"
+  path: /notifications/segments/{deviceIdentifier}
+  defaults:
+    _controller: Pronto\MobileBundle\Controller\Api\V1\PushNotification\SegmentController:subscribedAction
+  condition: "context.getMethod() in ['GET']"
 
 notifications_segments_update:
-    path: /notifications/segments
-    defaults:
-        _controller: Pronto\MobileBundle\Controller\Api\V1\PushNotification\SegmentController:updateAction
-    condition: "context.getMethod() in ['PUT']"
+  path: /notifications/segments
+  defaults:
+    _controller: Pronto\MobileBundle\Controller\Api\V1\PushNotification\SegmentController:updateAction
+  condition: "context.getMethod() in ['PUT']"
 
 
 #### APP USER REQUESTS ####
 
 app_users_register:
-    path: /users/app/registration
-    defaults:
-        _controller: Pronto\MobileBundle\Controller\Api\V1\AppUserController:registerAction
-    condition: "context.getMethod() in ['POST']"
+  path: /users/app/registration
+  defaults:
+    _controller: Pronto\MobileBundle\Controller\Api\V1\AppUserController:registerAction
+  condition: "context.getMethod() in ['POST']"
 
 app_users_deregister:
-    path: /users/app/registration/{userIdentifier}
-    defaults:
-        _controller: Pronto\MobileBundle\Controller\Api\V1\AppUserController:deregisterAction
-    condition: "context.getMethod() in ['DELETE']"
+  path: /users/app/registration/{userIdentifier}
+  defaults:
+    _controller: Pronto\MobileBundle\Controller\Api\V1\AppUserController:deregisterAction
+  condition: "context.getMethod() in ['DELETE']"
 
 app_users_profile:
-    path: /users/app/profile
-    defaults:
-        _controller: Pronto\MobileBundle\Controller\Api\V1\AppUserController:getProfileAction
-    condition: "context.getMethod() in ['GET']"
+  path: /users/app/profile
+  defaults:
+    _controller: Pronto\MobileBundle\Controller\Api\V1\AppUserController:getProfileAction
+  condition: "context.getMethod() in ['GET']"
 
 app_users_update_profile:
-    path: /users/app/profile
-    defaults:
-        _controller: Pronto\MobileBundle\Controller\Api\V1\AppUserController:updateProfileAction
-    condition: "context.getMethod() in ['PUT']"
+  path: /users/app/profile
+  defaults:
+    _controller: Pronto\MobileBundle\Controller\Api\V1\AppUserController:updateProfileAction
+  condition: "context.getMethod() in ['PUT']"
 
 app_users_password_reset:
-    path: /users/app/password/reset
-    defaults:
-        _controller: Pronto\MobileBundle\Controller\Api\V1\AppUserController:requestPasswordResetLinkAction
-    condition: "context.getMethod() in ['POST']"
+  path: /users/app/password/reset
+  defaults:
+    _controller: Pronto\MobileBundle\Controller\Api\V1\AppUserController:requestPasswordResetLinkAction
+  condition: "context.getMethod() in ['POST']"
 
 
 #### COLLECTIONS ####
 
 collection_entries:
-    path: /collections/{version}/{identifier}
-    defaults:
-        _controller: Pronto\MobileBundle\Controller\Api\V1\CollectionController:getEntriesAction
-    condition: "context.getMethod() in ['GET']"
+  path: /collections/{version}/{identifier}
+  defaults:
+    _controller: Pronto\MobileBundle\Controller\Api\V1\CollectionController:getEntriesAction
+  condition: "context.getMethod() in ['GET']"
 
 collection_entry:
-    path: /collections/{version}/{identifier}/{id}
-    defaults:
-        _controller: Pronto\MobileBundle\Controller\Api\V1\CollectionController:getEntryAction
-    condition: "context.getMethod() in ['GET']"
+  path: /collections/{version}/{identifier}/{id}
+  defaults:
+    _controller: Pronto\MobileBundle\Controller\Api\V1\CollectionController:getEntryAction
+  condition: "context.getMethod() in ['GET']"
 
 
 #### TRANSLATIONS ####
 
 translations:
-    path: /translations
-    defaults:
-        _controller: Pronto\MobileBundle\Controller\Api\V1\TranslationController:indexAction
-    condition: "context.getMethod() in ['GET']"
+  path: /translations
+  defaults:
+    _controller: Pronto\MobileBundle\Controller\Api\V1\TranslationController:indexAction
+  condition: "context.getMethod() in ['GET']"
 
 
 #### APP VERSIONS ####
 
 app_version_file:
-    path: /versions/app/{id}/file
-    defaults:
-        _controller: Pronto\MobileBundle\Controller\Api\V1\AppVersionController:downloadAction
-    condition: "context.getMethod() in ['GET']"
+  path: /versions/app/{id}/file
+  defaults:
+    _controller: Pronto\MobileBundle\Controller\Api\V1\AppVersionController:downloadAction
+  condition: "context.getMethod() in ['GET']"
 
 
 #### REMOTE CONFIG ####
 
 remote_configurations:
-    path: /config
-    defaults:
-        _controller: Pronto\MobileBundle\Controller\Api\V1\RemoteConfigController:indexAction
-    condition: "context.getMethod() in ['GET']"
+  path: /config
+  defaults:
+    _controller: Pronto\MobileBundle\Controller\Api\V1\RemoteConfigController:indexAction
+  condition: "context.getMethod() in ['GET']"

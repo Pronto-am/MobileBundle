@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Pronto\MobileBundle\Entity\Collection;
 
 use Doctrine\ORM\Mapping as ORM;
+use Exception;
 use Pronto\MobileBundle\Entity\ApiEntityInterface;
 use Pronto\MobileBundle\Entity\Collection;
 use Pronto\MobileBundle\Entity\TimestampedWithUserEntity;
@@ -54,7 +55,7 @@ class Entry extends TimestampedWithUserEntity implements ApiEntityInterface
      * Triggered on pre persist
      *
      * @ORM\PrePersist
-     * @throws \Exception
+     * @throws Exception
      */
     public function onPrePersist(): void
     {

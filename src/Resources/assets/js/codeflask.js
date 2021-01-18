@@ -34,7 +34,7 @@ module.exports = {
     setIframeContent: function (code) {
         let iframe = $('.html-preview .content iframe')[0];
 
-        if(typeof iframe === 'undefined') {
+        if (typeof iframe === 'undefined') {
             return;
         }
 

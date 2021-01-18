@@ -2,6 +2,7 @@
 
 namespace Pronto\MobileBundle\Utils;
 
+use function is_array;
 
 class Collect
 {
@@ -52,7 +53,7 @@ class Collect
     public static function getSingleObjectByInnerProperty(array $collection, string $key, $value)
     {
         $result = array_filter($collection, function ($object) use ($key, $value) {
-            $toCompare = \is_array($object) ? $object[$key] : $object->{'get' . ucfirst($key)}();
+            $toCompare = is_array($object) ? $object[$key] : $object->{'get' . ucfirst($key)}();
 
             // We are unsure of the type, so don't use precision
             return $toCompare == $value;

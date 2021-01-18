@@ -21,7 +21,8 @@
                     <div class="row">
                         <div class="col s12">
                             <label for="{{ language.code ~ '_name' }}">{{ language.name }}</label>
-                            <input name="{{ language.code ~ '_name' }}" placeholder="{{ 'push_notification.segment.name'|trans|capitalize }}" id="{{ language.code ~ '_name' }}" type="text" class="validate" value="{{ attribute(segment.name, language.code) is defined ? attribute(segment.name, language.code) : '' }}" required>
+                            <input name="{{ language.code ~ '_name' }}" placeholder="{{ 'push_notification.segment.name'|trans|capitalize }}" id="{{ language.code ~ '_name' }}" type="text" class="validate"
+                                   value="{{ attribute(segment.name, language.code) is defined ? attribute(segment.name, language.code) : '' }}" required>
                         </div>
                     </div>
                 {% endfor %}

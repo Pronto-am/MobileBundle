@@ -18,107 +18,108 @@ use Pronto\MobileBundle\Utils\Optional;
 use Pronto\MobileBundle\Utils\PageHelper;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class AppVersionController extends BaseController implements ValidateCustomerSelectionInterface, ValidateApplicationSelectionInterface, ValidatePluginStateInterface
 {
 
-	/**
-	 * Check if the plugin is active
-	 *
-	 * @return string
-	 */
-	public function getPluginIdentifier(): string
-	{
-		return Plugin::APP_VERSIONS;
-	}
+    /**
+     * Check if the plugin is active
+     *
+     * @return string
+     */
+    public function getPluginIdentifier(): string
+    {
+        return Plugin::APP_VERSIONS;
+    }
 
-	/**
-	 * @param Request $request
-	 * @param EntityManagerInterface $entityManager
-	 * @return \Symfony\Component\HttpFoundation\Response
-	 */
-	public function indexAction(Request $request, EntityManagerInterface $entityManager)
-	{
-		$pageHelper = new PageHelper($request, $entityManager, AppVersion::class, 15, 't.releaseDate');
-		$pageHelper->addClause(new WhereClause('t.application', $this->getApplication()));
+    /**
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @return Response
+     */
+    public function indexAction(Request $request, EntityManagerInterface $entityManager)
+    {
+        $pageHelper = new PageHelper($request, $entityManager, AppVersion::class, 15, 't.releaseDate');
+        $pageHelper->addClause(new WhereClause('t.application', $this->getApplication()));
 
-		return $this->render('@ProntoMobile/versions/index.html.twig', [
-			'pageHelper' => $pageHelper
-		]);
-	}
+        return $this->render('@ProntoMobile/versions/index.html.twig', [
+            'pageHelper' => $pageHelper
+        ]);
+    }
 
-	/**
-	 * @param Request $request
-	 * @param EntityManagerInterface $entityManager
-	 * @param AppVersion|null $version
-	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-	 */
-	public function editAction(Request $request, EntityManagerInterface $entityManager, AppVersion $version = null)
-	{
-		$originalFileName = Optional::get($version)->getFileName();
+    /**
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @param AppVersion|null $version
+     * @return RedirectResponse|Response
+     */
+    public function editAction(Request $request, EntityManagerInterface $entityManager, AppVersion $version = null)
+    {
+        $originalFileName = Optional::get($version)->getFileName();
 
-		$versionDTO = AppVersionDTO::fromEntity($version);
+        $versionDTO = AppVersionDTO::fromEntity($version);
 
-		if ($version === null) {
-			$versionDTO->description = [];
-		}
+        if ($version === null) {
+            $versionDTO->description = [];
+        }
 
-		foreach ($this->getApplication()->getAvailableLanguages() as $language) {
-			$versionDTO->description[$language['code']] = $versionDTO->description[$language['code']] ?? '';
-		}
+        foreach ($this->getApplication()->getAvailableLanguages() as $language) {
+            $versionDTO->description[$language['code']] = $versionDTO->description[$language['code']] ?? '';
+        }
 
-		$form = $this->createForm(AppVersionForm::class, $versionDTO);
-		$form->handleRequest($request);
+        $form = $this->createForm(AppVersionForm::class, $versionDTO);
+        $form->handleRequest($request);
 
-		if ($form->isSubmitted() && $form->isValid()) {
-			$versionDTO = $form->getData();
+        if ($form->isSubmitted() && $form->isValid()) {
+            $versionDTO = $form->getData();
 
-			/** @var AppVersion $version */
-			$version = $versionDTO->toEntity($version ?? new AppVersion());
-			$version->setApplication($this->getApplication());
+            /** @var AppVersion $version */
+            $version = $versionDTO->toEntity($version ?? new AppVersion());
+            $version->setApplication($this->getApplication());
 
-			// Keep the original file when no new file has been uploaded
-			if ($originalFileName !== null && $versionDTO->file === null) {
-				$version->setFileName($originalFileName);
-			} elseif ($versionDTO->file !== null) {
-				$version->setFileName($versionDTO->file);
-			}
+            // Keep the original file when no new file has been uploaded
+            if ($originalFileName !== null && $versionDTO->file === null) {
+                $version->setFileName($originalFileName);
+            } elseif ($versionDTO->file !== null) {
+                $version->setFileName($versionDTO->file);
+            }
 
-			$entityManager->persist($version);
-			$entityManager->flush();
+            $entityManager->persist($version);
+            $entityManager->flush();
 
-			$this->addDataSavedFlash();
+            $this->addDataSavedFlash();
 
-			return $this->redirectToRoute('pronto_mobile_app_versions');
-		}
+            return $this->redirectToRoute('pronto_mobile_app_versions');
+        }
 
-		return $this->render('@ProntoMobile/versions/edit.html.twig', [
-			'form'    => $form->createView(),
-			'version' => $version
-		]);
-	}
+        return $this->render('@ProntoMobile/versions/edit.html.twig', [
+            'form'    => $form->createView(),
+            'version' => $version
+        ]);
+    }
 
-	/**
-	 * @param Request $request
-	 * @param EntityManagerInterface $entityManager
-	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
-	 */
-	public function deleteAction(Request $request, EntityManagerInterface $entityManager): RedirectResponse
-	{
-		// Find users by id and the current customer
-		$versions = $entityManager->getRepository(AppVersion::class)->findBy([
-			'id'          => $request->get('versions'),
-			'application' => $this->getApplication()
-		]);
+    /**
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @return RedirectResponse
+     */
+    public function deleteAction(Request $request, EntityManagerInterface $entityManager): RedirectResponse
+    {
+        // Find users by id and the current customer
+        $versions = $entityManager->getRepository(AppVersion::class)->findBy([
+            'id'          => $request->get('versions'),
+            'application' => $this->getApplication()
+        ]);
 
-		foreach ($versions as $version) {
-			$entityManager->remove($version);
-		}
+        foreach ($versions as $version) {
+            $entityManager->remove($version);
+        }
 
-		$entityManager->flush();
+        $entityManager->flush();
 
-		$this->addDataRemovedFlash();
+        $this->addDataRemovedFlash();
 
-		return $this->redirectToRoute('pronto_mobile_app_versions');
-	}
+        return $this->redirectToRoute('pronto_mobile_app_versions');
+    }
 }

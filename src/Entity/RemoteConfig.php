@@ -243,24 +243,6 @@ class RemoteConfig extends TimestampedEntity implements ApiEntityInterface
     }
 
     /**
-     * @return RemoteConfigType
-     */
-    public function getType(): RemoteConfigType
-    {
-        return new RemoteConfigType($this->type);
-    }
-
-    /**
-     * @param RemoteConfigType $type
-     * @return RemoteConfig
-     */
-    public function setType(RemoteConfigType $type): RemoteConfig
-    {
-        $this->type = $type->getValue();
-        return $this;
-    }
-
-    /**
      * @return array|null
      */
     public function getOptions(): ?array
@@ -283,7 +265,7 @@ class RemoteConfig extends TimestampedEntity implements ApiEntityInterface
      */
     public function getValue(): ?string
     {
-        if($this->getType()->equals(RemoteConfigType::INTEGER())) {
+        if ($this->getType()->equals(RemoteConfigType::INTEGER())) {
             return (float) $this->value;
         } else if ($this->getType()->equals(RemoteConfigType::BOOL())) {
             return (int) $this->value === 1;
@@ -299,6 +281,24 @@ class RemoteConfig extends TimestampedEntity implements ApiEntityInterface
     public function setValue(?string $value): RemoteConfig
     {
         $this->value = $value;
+        return $this;
+    }
+
+    /**
+     * @return RemoteConfigType
+     */
+    public function getType(): RemoteConfigType
+    {
+        return new RemoteConfigType($this->type);
+    }
+
+    /**
+     * @param RemoteConfigType $type
+     * @return RemoteConfig
+     */
+    public function setType(RemoteConfigType $type): RemoteConfig
+    {
+        $this->type = $type->getValue();
         return $this;
     }
 

@@ -7,7 +7,7 @@ $.trumbowyg.svgPath = '/trumbowyg/icons.svg';
 $('.trumbowyg').trumbowyg({
     autogrowOnEnter: true,
     imageWidthModalEdit: true
-}).on('tbwchange', function() {
+}).on('tbwchange', function () {
     htmlEditorChanged($(this));
 });
 
@@ -38,13 +38,13 @@ function htmlEditorChanged(trumbowyg) {
 $(document).ready(function () {
 
     // Remove materialize styling
-    $('.trumbowyg-modal-box input').each(function() {
+    $('.trumbowyg-modal-box input').each(function () {
         $(this).addClass('browser-default');
     });
 
 
     // Fire change event, to fill the iFrame
-    $('.trumbowyg').each(function() {
+    $('.trumbowyg').each(function () {
         htmlEditorChanged($(this));
     });
 
@@ -98,7 +98,7 @@ $(document).ready(function () {
 
         if (!formIsConsistent()) {
             // Show an alert and let the user change the fields or confirm by clicking 'send' again
-            sweetalert.confirm(translations.inconsistentTitle, translations.inconsistentContent, function() {
+            sweetalert.confirm(translations.inconsistentTitle, translations.inconsistentContent, function () {
                 submitForm();
             }, undefined, translations.sendAnyway);
         } else {
@@ -128,8 +128,8 @@ $(document).ready(function () {
             valid = false;
         }
 
-        $('input.title, input.content').each(function() {
-            if($(this).val().length > $(this).data('length')) {
+        $('input.title, input.content').each(function () {
+            if ($(this).val().length > $(this).data('length')) {
                 forms.markInvalid($(this), translations.maximumCharacterCountExceeded);
 
                 valid = false;
@@ -139,7 +139,7 @@ $(document).ready(function () {
         let clickAction = $('select.click-action').val();
 
         if (clickAction == 1) {
-            if(fallback.find('input.click-action-url').val() === '') {
+            if (fallback.find('input.click-action-url').val() === '') {
                 forms.markInvalid(fallback.find('input.click-action-url'));
 
                 valid = false;
@@ -147,7 +147,7 @@ $(document).ready(function () {
 
             // Add http before a url if it's not present
             $('input.click-action-url').each(function () {
-                if($(this).val() !== '' && !/^https?:\/\//.test($(this).val())) {
+                if ($(this).val() !== '' && !/^https?:\/\//.test($(this).val())) {
                     $(this).val('http://' + $(this).val());
                 }
             });
@@ -161,7 +161,7 @@ $(document).ready(function () {
 
         let segment = $('#push_notification_form_segment');
 
-        if(segment.val() === '') {
+        if (segment.val() === '') {
             forms.markInvalid(segment.closest('.select-wrapper'));
 
             valid = false;

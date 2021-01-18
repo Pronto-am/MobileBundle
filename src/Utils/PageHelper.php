@@ -2,8 +2,9 @@
 
 namespace Pronto\MobileBundle\Utils;
 
-
+use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Exception;
 use Pronto\MobileBundle\Utils\Doctrine\Clause;
@@ -17,359 +18,359 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class PageHelper
 {
-	/**
-	 * @var Request $request
-	 */
-	private $request;
+    /**
+     * @var Request $request
+     */
+    private $request;
 
-	/**
-	 * @var \Doctrine\ORM\EntityRepository $repository
-	 */
-	private $repository;
+    /**
+     * @var EntityRepository $repository
+     */
+    private $repository;
 
-	/**
-	 * @var array $clauses
-	 */
-	private $clauses = [];
+    /**
+     * @var array $clauses
+     */
+    private $clauses = [];
 
-	/**
-	 * @var string $sortField
-	 */
-	private $sortField;
+    /**
+     * @var string $sortField
+     */
+    private $sortField;
 
-	/**
-	 * @var string $sortOrder
-	 */
-	private $sortOrder;
+    /**
+     * @var string $sortOrder
+     */
+    private $sortOrder;
 
-	/**
-	 * @var int $perPage
-	 */
-	private $perPage;
+    /**
+     * @var int $perPage
+     */
+    private $perPage;
 
-	/**
-	 * @var int $offset
-	 */
-	private $offset;
+    /**
+     * @var int $offset
+     */
+    private $offset;
 
-	/**
-	 * @var int $currentPage
-	 */
-	private $currentPage;
+    /**
+     * @var int $currentPage
+     */
+    private $currentPage;
 
-	/**
-	 * @var int $totalPages
-	 */
-	private $totalPages;
+    /**
+     * @var int $totalPages
+     */
+    private $totalPages;
 
-	/**
-	 * @var int $totalRecords
-	 */
-	private $totalRecords;
+    /**
+     * @var int $totalRecords
+     */
+    private $totalRecords;
 
-	/**
-	 * @var mixed $list
-	 */
-	private $list;
+    /**
+     * @var mixed $list
+     */
+    private $list;
 
-	/**
-	 * @var null|string $query
-	 */
-	private $query;
+    /**
+     * @var null|string $query
+     */
+    private $query;
 
-	/**
-	 * @var string $countField
-	 */
-	private $countField;
+    /**
+     * @var string $countField
+     */
+    private $countField;
 
     /**
      * PageHelper constructor.
      *
      * @param Request $request
-     * @param EntityManager|\Doctrine\Common\Persistence\ObjectManager $entityManager
+     * @param EntityManager|ObjectManager $entityManager
      * @param string $entity
      * @param int $perPage
      * @param string $sortField
      * @param string $sortOrder
      * @param string $countField
      */
-	public function __construct(Request $request, EntityManager $entityManager, string $entity, int $perPage = 15, string $sortField = 't.id', $sortOrder = 'ASC', $countField = 't.id')
-	{
-		$this->request = $request;
-		$this->perPage = $perPage;
-		$this->sortField = $request->get('sortBy') ?? $sortField;
-		$this->sortOrder = strtolower($request->get('sortOrder') ?? $sortOrder);
-		$this->countField = $countField;
+    public function __construct(Request $request, EntityManager $entityManager, string $entity, int $perPage = 15, string $sortField = 't.id', $sortOrder = 'ASC', $countField = 't.id')
+    {
+        $this->request = $request;
+        $this->perPage = $perPage;
+        $this->sortField = $request->get('sortBy') ?? $sortField;
+        $this->sortOrder = strtolower($request->get('sortOrder') ?? $sortOrder);
+        $this->countField = $countField;
 
-		$this->repository = $entityManager->getRepository($entity);
-	}
+        $this->repository = $entityManager->getRepository($entity);
+    }
 
-	/**
-	 * Set the current page and total number of pages
-	 */
-	private function setCurrentPage(): void
-	{
-		$this->currentPage = $this->request->get('page', 1);
-		$this->totalPages = ceil($this->totalRecords / $this->perPage);
+    /**
+     * Create a url to sort a table by the column
+     *
+     * @param $label
+     * @param $column
+     */
+    public function createSortableLink(string $label, string $column): void
+    {
+        $active = $this->sortField === $column;
 
-		if (($this->currentPage * $this->perPage) > $this->totalRecords) {
-			$this->currentPage = $this->totalPages;
-		}
+        $url = $this->request->getPathInfo() . '?page=' . $this->currentPage . '&sortBy=' . $column . '&sortOrder=' . ($active ? ($this->sortOrder === 'asc' ? 'desc' : 'asc') : 'asc');
 
-		// Offset for db table
-		if ($this->currentPage > 1) {
-			$this->offset = ($this->currentPage - 1) * $this->perPage;
-		} else {
-			$this->offset = 0;
-		}
-	}
+        echo '<a href="' . $url . '" class="column-sortable ' . ($active ? 'column-active' : '') . '">' . $label . ' <i class="fa fa-caret-' . ($active ? ($this->sortOrder === 'asc' ? 'up' : 'down') : 'up') . '" aria-hidden="true"></i></a>';
+    }
 
-	/**
-	 * Create a url to sort a table by the column
-	 *
-	 * @param $label
-	 * @param $column
-	 */
-	public function createSortableLink(string $label, string $column): void
-	{
-		$active = $this->sortField === $column;
+    /**
+     * Get the row number of the current record
+     *
+     * @param $key
+     * @return int
+     */
+    public function getRowNumber(int $key): int
+    {
+        return (($this->currentPage - 1) * $this->perPage) + $key + 1;
+    }
 
-		$url = $this->request->getPathInfo() . '?page=' . $this->currentPage . '&sortBy=' . $column . '&sortOrder=' . ($active ? ($this->sortOrder === 'asc' ? 'desc' : 'asc') : 'asc');
+    /**
+     * @return string
+     */
+    public function getSortField(): string
+    {
+        return $this->sortField;
+    }
 
-		echo '<a href="' . $url . '" class="column-sortable ' . ($active ? 'column-active' : '') . '">' . $label . ' <i class="fa fa-caret-' . ($active ? ($this->sortOrder === 'asc' ? 'up' : 'down') : 'up') . '" aria-hidden="true"></i></a>';
-	}
+    /**
+     * @return string
+     */
+    public function getSortOrder(): string
+    {
+        return $this->sortOrder;
+    }
 
-	/**
-	 * Get the row number of the current record
-	 *
-	 * @param $key
-	 * @return int
-	 */
-	public function getRowNumber(int $key): int
-	{
-		return (($this->currentPage - 1) * $this->perPage) + $key + 1;
-	}
+    /**
+     * Add a clause to the query
+     *
+     * @param Clause $clause
+     */
+    public function addClause(Clause $clause): void
+    {
+        $this->clauses[] = $clause;
+    }
 
-	/**
-	 * @return string
-	 */
-	public function getSortField(): string
-	{
-		return $this->sortField;
-	}
+    /**
+     * Get a list of results
+     *
+     * @return array
+     */
+    public function getList(): array
+    {
+        // Prevent the query from being executed multiple times
+        if ($this->list !== null) {
+            return $this->list;
+        }
 
-	/**
-	 * @return string
-	 */
-	public function getSortOrder(): string
-	{
-		return $this->sortOrder;
-	}
+        $this->setTotalRecords();
 
-	/**
-	 * Get the total number of records
-	 *
-	 * @return mixed
-	 */
-	private function setTotalRecords()
-	{
-		if ($this->query === null) {
-			$this->query = $this->repository
-				->createQueryBuilder('t')
-				->select('count(distinct ' . $this->countField . ')');
+        $this->setCurrentPage();
 
-			$this->addClausesToQuery($this->query, true);
-		}
+        $query = $this->generateQuery();
 
-		try {
-			$this->totalRecords = $this->query->getQuery()->getSingleScalarResult();
-		} catch (Exception $exception) {
-			$this->totalRecords = 0;
-		}
-	}
+        $query->setFirstResult($this->offset);
+        $query->setMaxResults($this->perPage);
 
-	/**
-	 * Add a clause to the query
-	 *
-	 * @param Clause $clause
-	 */
-	public function addClause(Clause $clause): void
-	{
-		$this->clauses[] = $clause;
-	}
+        $this->list = $query->getQuery()->execute();
 
-	/**
-	 * Add all clauses to the query
-	 *
-	 * @param QueryBuilder $query
-	 * @param bool $withoutSelect
-	 */
-	private function addClausesToQuery(&$query, bool $withoutSelect = false): void
-	{
-		foreach ($this->clauses as $clause) {
-			if ($withoutSelect && ($clause instanceof SelectClause || $clause instanceof GroupClause)) {
-				continue;
-			}
+        return $this->list;
+    }
 
-			$clause->addToQuery($query);
-		}
-	}
+    /**
+     * Get the total number of records
+     *
+     * @return mixed
+     */
+    private function setTotalRecords()
+    {
+        if ($this->query === null) {
+            $this->query = $this->repository
+                ->createQueryBuilder('t')
+                ->select('count(distinct ' . $this->countField . ')');
 
-	/**
-	 * Generate the base query for one or more results
-	 *
-	 * @return \Doctrine\ORM\QueryBuilder
-	 */
-	private function generateQuery(): QueryBuilder
-	{
-		$query = $this->repository->createQueryBuilder('t');
+            $this->addClausesToQuery($this->query, true);
+        }
 
-		$this->addClausesToQuery($query);
+        try {
+            $this->totalRecords = $this->query->getQuery()->getSingleScalarResult();
+        } catch (Exception $exception) {
+            $this->totalRecords = 0;
+        }
+    }
 
-		$query->orderBy($this->sortField, $this->sortOrder);
+    /**
+     * Add all clauses to the query
+     *
+     * @param QueryBuilder $query
+     * @param bool $withoutSelect
+     */
+    private function addClausesToQuery(&$query, bool $withoutSelect = false): void
+    {
+        foreach ($this->clauses as $clause) {
+            if ($withoutSelect && ($clause instanceof SelectClause || $clause instanceof GroupClause)) {
+                continue;
+            }
 
-		return $query;
-	}
+            $clause->addToQuery($query);
+        }
+    }
 
-	/**
-	 * Get a list of results
-	 *
-	 * @return array
-	 */
-	public function getList(): array
-	{
-		// Prevent the query from being executed multiple times
-		if ($this->list !== null) {
-			return $this->list;
-		}
+    /**
+     * Set the current page and total number of pages
+     */
+    private function setCurrentPage(): void
+    {
+        $this->currentPage = $this->request->get('page', 1);
+        $this->totalPages = ceil($this->totalRecords / $this->perPage);
 
-		$this->setTotalRecords();
+        if (($this->currentPage * $this->perPage) > $this->totalRecords) {
+            $this->currentPage = $this->totalPages;
+        }
 
-		$this->setCurrentPage();
+        // Offset for db table
+        if ($this->currentPage > 1) {
+            $this->offset = ($this->currentPage - 1) * $this->perPage;
+        } else {
+            $this->offset = 0;
+        }
+    }
 
-		$query = $this->generateQuery();
+    /**
+     * Generate the base query for one or more results
+     *
+     * @return QueryBuilder
+     */
+    private function generateQuery(): QueryBuilder
+    {
+        $query = $this->repository->createQueryBuilder('t');
 
-		$query->setFirstResult($this->offset);
-		$query->setMaxResults($this->perPage);
+        $this->addClausesToQuery($query);
 
-		$this->list = $query->getQuery()->execute();
+        $query->orderBy($this->sortField, $this->sortOrder);
 
-		return $this->list;
-	}
+        return $query;
+    }
 
-	/**
-	 * Create the pagination links
-	 *
-	 * @return string
-	 */
-	public function createPaginationLinks(): string
-	{
-		$adjacents = 1;
+    /**
+     * Create the pagination links
+     *
+     * @return string
+     */
+    public function createPaginationLinks(): string
+    {
+        $adjacents = 1;
 
-		$pagination = '';
+        $pagination = '';
 
-		if ($this->totalPages > 1) {
-			$pagination .= '<ul class="pagination">';
+        if ($this->totalPages > 1) {
+            $pagination .= '<ul class="pagination">';
 
-			// Previous button
-			if ($this->currentPage > 1) {
-				$pagination .= '<li><a href="' . $this->createPageLink($this->currentPage - 1) . '"><i class="fa fa-angle-left" aria-hidden="true"></i></a></li>';
-			} else {
-				$pagination .= '<li class="disabled"><a href="#!"><i class="fa fa-angle-left" aria-hidden="true"></i></a></li>';
-			}
+            // Previous button
+            if ($this->currentPage > 1) {
+                $pagination .= '<li><a href="' . $this->createPageLink($this->currentPage - 1) . '"><i class="fa fa-angle-left" aria-hidden="true"></i></a></li>';
+            } else {
+                $pagination .= '<li class="disabled"><a href="#!"><i class="fa fa-angle-left" aria-hidden="true"></i></a></li>';
+            }
 
-			// Pages
-			if ($this->totalPages < 7 + ($adjacents * 2)) {
-				for ($counter = 1; $counter <= $this->totalPages; $counter++) {
-					$this->createSinglePageButton($pagination, $counter);
-				}
-			} else if ($this->totalPages >= 7 + ($adjacents * 2)) {
-				// Close to beginning; only hide later pages
-				if ($this->currentPage < 1 + ($adjacents * 3)) {
-					for ($counter = 1; $counter < 4 + ($adjacents * 2); $counter++) {
-						$this->createSinglePageButton($pagination, $counter);
-					}
+            // Pages
+            if ($this->totalPages < 7 + ($adjacents * 2)) {
+                for ($counter = 1; $counter <= $this->totalPages; $counter++) {
+                    $this->createSinglePageButton($pagination, $counter);
+                }
+            } else if ($this->totalPages >= 7 + ($adjacents * 2)) {
+                // Close to beginning; only hide later pages
+                if ($this->currentPage < 1 + ($adjacents * 3)) {
+                    for ($counter = 1; $counter < 4 + ($adjacents * 2); $counter++) {
+                        $this->createSinglePageButton($pagination, $counter);
+                    }
 
-					$this->addEndingEllipsis($pagination);
-				} elseif ($this->totalPages - ($adjacents * 2) > $this->currentPage && $this->currentPage > ($adjacents * 2)) {
-					$this->addStartingEllipsis($pagination);
+                    $this->addEndingEllipsis($pagination);
+                } elseif ($this->totalPages - ($adjacents * 2) > $this->currentPage && $this->currentPage > ($adjacents * 2)) {
+                    $this->addStartingEllipsis($pagination);
 
-					for ($counter = $this->currentPage - $adjacents; $counter <= $this->currentPage + $adjacents; $counter++) {
-						$this->createSinglePageButton($pagination, $counter);
-					}
+                    for ($counter = $this->currentPage - $adjacents; $counter <= $this->currentPage + $adjacents; $counter++) {
+                        $this->createSinglePageButton($pagination, $counter);
+                    }
 
-					$this->addEndingEllipsis($pagination);
-				} //close to end; only hide early pages
-				else {
-					$this->addStartingEllipsis($pagination);
+                    $this->addEndingEllipsis($pagination);
+                } //close to end; only hide early pages
+                else {
+                    $this->addStartingEllipsis($pagination);
 
-					for ($counter = $this->totalPages - (1 + ($adjacents * 3)); $counter <= $this->totalPages; $counter++) {
-						$this->createSinglePageButton($pagination, $counter);
-					}
-				}
-			}
+                    for ($counter = $this->totalPages - (1 + ($adjacents * 3)); $counter <= $this->totalPages; $counter++) {
+                        $this->createSinglePageButton($pagination, $counter);
+                    }
+                }
+            }
 
-			if ($this->currentPage < $counter - 1) {
-				$pagination .= '<li><a href="' . $this->createPageLink($this->currentPage + 1) . '"><i class="fa fa-angle-right" aria-hidden="true"></i></a></li>';
-			} else {
-				$pagination .= '<li class="disabled"><a href="#!"><i class="fa fa-angle-right" aria-hidden="true"></i></a></li>';
-			}
+            if ($this->currentPage < $counter - 1) {
+                $pagination .= '<li><a href="' . $this->createPageLink($this->currentPage + 1) . '"><i class="fa fa-angle-right" aria-hidden="true"></i></a></li>';
+            } else {
+                $pagination .= '<li class="disabled"><a href="#!"><i class="fa fa-angle-right" aria-hidden="true"></i></a></li>';
+            }
 
-			$pagination .= '</ul>';
-		}
+            $pagination .= '</ul>';
+        }
 
-		return $pagination;
-	}
+        return $pagination;
+    }
 
-	/**
-	 * Create a single page button
-	 *
-	 * @param $pagination
-	 * @param $counter
-	 */
-	private function createSinglePageButton(&$pagination, int $counter): void
-	{
-		if ($counter === $this->currentPage) {
-			$pagination .= '<li class="active"><a href="#!">' . $counter . '</a></li>';
-		} else {
-			$pagination .= '<li class="waves-effect"><a href="' . $this->createPageLink($counter) . '">' . $counter . '</a></li>';
-		}
-	}
+    /**
+     * Generate the url with the query parameters
+     *
+     * @param $page
+     * @return string
+     */
+    private function createPageLink(int $page): string
+    {
+        $queryString = str_replace('page=' . $this->currentPage, '', $this->request->getQueryString());
 
-	/**
-	 * Add the starting pages with ellipsis
-	 *
-	 * @param $pagination
-	 */
-	private function addStartingEllipsis(&$pagination): void
-	{
-		$pagination .= '<li class="waves-effect"><a href="' . $this->createPageLink(1) . '">1</a></li>';
-		$pagination .= '<li class="waves-effect"><a href="' . $this->createPageLink(2) . '">2</a></li>';
-		$pagination .= '<li class="disabled"><a href="#!">...</a></li>';
-	}
+        return $this->request->getPathInfo() . '?page=' . $page . '&' . $queryString;
+    }
 
-	/**
-	 * Add the ending pages with ellipsis
-	 *
-	 * @param $pagination
-	 */
-	private function addEndingEllipsis(&$pagination): void
-	{
-		$pagination .= '<li class="disabled"><a href="#!">...</a></li>';
-		$pagination .= '<li class="waves-effect"><a href="' . $this->createPageLink($this->totalPages - 1) . '">' . ($this->totalPages - 1) . '</a></li>';
-		$pagination .= '<li class="waves-effect"><a href="' . $this->createPageLink($this->totalPages) . '">' . $this->totalPages . '</a></li>';
-	}
+    /**
+     * Create a single page button
+     *
+     * @param $pagination
+     * @param $counter
+     */
+    private function createSinglePageButton(&$pagination, int $counter): void
+    {
+        if ($counter === $this->currentPage) {
+            $pagination .= '<li class="active"><a href="#!">' . $counter . '</a></li>';
+        } else {
+            $pagination .= '<li class="waves-effect"><a href="' . $this->createPageLink($counter) . '">' . $counter . '</a></li>';
+        }
+    }
 
-	/**
-	 * Generate the url with the query parameters
-	 *
-	 * @param $page
-	 * @return string
-	 */
-	private function createPageLink(int $page): string
-	{
-		$queryString = str_replace('page=' . $this->currentPage, '', $this->request->getQueryString());
+    /**
+     * Add the ending pages with ellipsis
+     *
+     * @param $pagination
+     */
+    private function addEndingEllipsis(&$pagination): void
+    {
+        $pagination .= '<li class="disabled"><a href="#!">...</a></li>';
+        $pagination .= '<li class="waves-effect"><a href="' . $this->createPageLink($this->totalPages - 1) . '">' . ($this->totalPages - 1) . '</a></li>';
+        $pagination .= '<li class="waves-effect"><a href="' . $this->createPageLink($this->totalPages) . '">' . $this->totalPages . '</a></li>';
+    }
 
-		return $this->request->getPathInfo() . '?page=' . $page . '&' . $queryString;
-	}
+    /**
+     * Add the starting pages with ellipsis
+     *
+     * @param $pagination
+     */
+    private function addStartingEllipsis(&$pagination): void
+    {
+        $pagination .= '<li class="waves-effect"><a href="' . $this->createPageLink(1) . '">1</a></li>';
+        $pagination .= '<li class="waves-effect"><a href="' . $this->createPageLink(2) . '">2</a></li>';
+        $pagination .= '<li class="disabled"><a href="#!">...</a></li>';
+    }
 }

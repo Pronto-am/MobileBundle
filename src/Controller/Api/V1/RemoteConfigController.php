@@ -6,12 +6,12 @@ namespace Pronto\MobileBundle\Controller\Api\V1;
 
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Pronto\MobileBundle\Controller\Api\BaseApiController;
 use Pronto\MobileBundle\Entity\RemoteConfig;
 use Pronto\MobileBundle\Middleware\AuthorizationMiddleware;
 use Pronto\MobileBundle\Serializer\EnumNormalizer;
 use Pronto\MobileBundle\Serializer\RemoteConfigNormalizer;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 class RemoteConfigController extends BaseApiController
@@ -46,11 +46,7 @@ class RemoteConfigController extends BaseApiController
      */
 
     /**
-     * @param AuthorizationMiddleware $authorizationMiddleware
-     * @param Request $request
-     * @param EntityManagerInterface $entityManager
-     * @return JsonResponse
-     * @throws \Exception
+     * @throws Exception
      */
     public function indexAction(
         // Middleware:

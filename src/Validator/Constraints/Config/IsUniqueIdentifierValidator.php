@@ -2,7 +2,6 @@
 
 namespace Pronto\MobileBundle\Validator\Constraints\Config;
 
-
 use Pronto\MobileBundle\Entity\RemoteConfig;
 use Pronto\MobileBundle\Enum\VariableType;
 use Pronto\MobileBundle\Validator\Constraints\ConstraintValidator;

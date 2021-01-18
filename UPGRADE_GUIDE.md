@@ -22,10 +22,10 @@ Update `composer.json` to use the new version:
 
 Run `composer update`.
 
-### Upgrade package config
+### Upgrade config
 
 The newly required oauth2 bundle requires configuration in your `packages` dir. Replace the contents of the created file with:
-Modify the locations of the private and public keys to your needs. Also make sure your `.env` file contains the `OAUTH2_ENCRYPTION_KEY` key. 
+Modify the locations of the private and public keys to your needs. 
 
 ```yaml
 trikoder_oauth2:
@@ -52,18 +52,22 @@ trikoder_oauth2:
     role_prefix: ROLE_OAUTH2_
 ```
 
-You also need to update the doctrine configuration. The new bundle limits the length of the identifier, which is too short for our existing clients. Override the mapping of the bundle:
+Also make sure your `.env` file contains the `OAUTH2_ENCRYPTION_KEY` key. You can create a key using:
 
-```yaml
-doctrine:
-    orm:
-        mapping:
-            TrikoderOAuth2Bundle:
-                mapping: true
-                type: xml
-                dir: '%kernel.root_dir%/../app/Resources/config/TrikoderOAuth2Bundle'
-                alias: 'JMSPaymentCoreBundle'
-                prefix: 'JMS\Payment\CoreBundle\Entity'
+```
+php -r 'echo base64_encode(random_bytes(32)), PHP_EOL;'
+```
+ 
+### Create keys
+
+Private key:
+```
+openssl genrsa -aes128 -passout pass:_passphrase_ -out config/security/oauth/private.key 2048
+```
+
+Public key:
+```
+openssl rsa -in config/security/oauth/private.key -passin pass:_passphrase_ -pubout -out config/security/oauth/public.key
 ```
 
 ### Update your database
@@ -71,3 +75,7 @@ Publish a migrations file or run migrastions directly to create the new oauth2 t
 
 ### Migrate existing clients
 The information of the existing clients which are linked to the `Application`, is still available. We need to migrate this info and create new OAuth clients. Do so by running the upgrade assistent:
+
+```
+php bin/console pronto:upgrade:assist 2.0.0
+```

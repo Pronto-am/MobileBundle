@@ -1,14 +1,13 @@
-
 api_v1_routes:
-    resource: "@ProntoMobileBundle/Resources/config/routing/api/v1/api.yaml"
-    prefix: /v1
-    name_prefix: api_v1_
-    schemes: [https]
+  resource: "@ProntoMobileBundle/Resources/config/routing/api/v1/api.yaml"
+  prefix: /v1
+  name_prefix: api_v1_
+  schemes: [https]
 
 api_file_download:
-    controller: Pronto\MobileBundle\Controller\Api\FileController::download
-    path: /files/{path}
-    schemes: [https]
-    methods: GET
-    requirements:
-        path: '.+'
+  controller: Pronto\MobileBundle\Controller\Api\FileController::download
+  path: /files/{path}
+  schemes: [https]
+  methods: GET
+  requirements:
+    path: '.+'

@@ -26,110 +26,88 @@ class Application implements ApiEntityInterface
      * @ORM\Column(type="integer")
      */
     protected $id;
-
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $randomId;
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $secret;
+    /**
+     * @ORM\Column(type="array", nullable=true)
+     */
+    protected $redirectUris = [];
+    /**
+     * @ORM\Column(type="array", nullable=true)
+     */
+    protected $allowedGrantTypes = [];
     /**
      * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Customer")
      * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     private $customer;
-
     /**
      * @ORM\Column(type="string")
      * @Assert\NotBlank()
      */
     private $name;
-
     /**
      * @ORM\Column(type="string", nullable=true)
      */
     private $label;
-
     /**
      * @ORM\Column(type="string")
      * @Assert\NotBlank()
      */
     private $color;
-
     /**
      * @ORM\Column(type="string", nullable=true)
      * @Assert\NotBlank()
      */
     private $androidBundleIdentifier;
-
     /**
      * @ORM\Column(type="string", nullable=true)
      * @Assert\NotBlank()
      */
     private $iosBundleIdentifier;
-
     /**
      * @ORM\Column(type="string")
      * @Assert\NotBlank()
      */
     private $defaultLanguage;
-
     /**
      * @ORM\Column(type="json_array")
      * @Assert\NotBlank()
      */
     private $availableLanguages;
-
     /**
      * @ORM\Column(type="datetime")
      */
     private $createdAt;
 
+    /*
+     * The next properties are from the old FOS OAuth server
+     */
     /**
      * @ORM\Column(type="datetime")
      */
     private $updatedAt;
-
     /**
      * @ORM\OneToMany(targetEntity="Pronto\MobileBundle\Entity\Application\ApplicationPlugin", mappedBy="application")
      */
     private $applicationPlugins;
-
     /**
      * @ORM\OneToMany(targetEntity="Pronto\MobileBundle\Entity\Application\Version", mappedBy="application")
      */
     private $applicationVersions;
-
     /**
      * @ORM\OneToMany(targetEntity="Pronto\MobileBundle\Entity\Application\ApplicationClient", mappedBy="application")
      */
     private $applicationClients;
 
-    /*
-     * The next properties are from the old FOS OAuth server
-     */
-
-    /**
-     * @ORM\Column(type="string")
-     */
-    protected $randomId;
-
-    /**
-     * @ORM\Column(type="string")
-     */
-    protected $secret;
-
-    /**
-     * @ORM\Column(type="array")
-     */
-    protected $redirectUris = [];
-
-    /**
-     * @ORM\Column(type="array")
-     */
-    protected $allowedGrantTypes = [];
-
-    /**
-     * Application constructor.
-     */
     public function __construct()
     {
-        parent::__construct();
-
         $this->applicationPlugins = new ArrayCollection();
         $this->applicationVersions = new ArrayCollection();
         $this->applicationClients = new ArrayCollection();
@@ -150,6 +128,11 @@ class Application implements ApiEntityInterface
     public function onPreUpdate()
     {
         $this->updatedAt = new DateTime();
+    }
+
+    public function getId()
+    {
+        return $this->id;
     }
 
     public function getCustomer()
@@ -267,17 +250,6 @@ class Application implements ApiEntityInterface
         return $this->applicationClients;
     }
 
-    public function getRandomId()
-    {
-        return $this->randomId;
-    }
-
-    public function setRandomId($randomId): self
-    {
-        $this->randomId = $randomId;
-        return $this;
-    }
-
     public function getSecret()
     {
         return $this->secret;
@@ -314,5 +286,16 @@ class Application implements ApiEntityInterface
     public function getPublicId(): string
     {
         return sprintf('%s_%s', $this->id, $this->getRandomId());
+    }
+
+    public function getRandomId()
+    {
+        return $this->randomId;
+    }
+
+    public function setRandomId($randomId): self
+    {
+        $this->randomId = $randomId;
+        return $this;
     }
 }

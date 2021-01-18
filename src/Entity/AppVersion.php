@@ -19,225 +19,225 @@ use Symfony\Component\Serializer\Annotation\Groups;
  */
 class AppVersion extends TimestampedEntity implements ApiEntityInterface
 {
-	use ApiEntityTrait;
+    use ApiEntityTrait;
 
-	/**
-	 * @var int|null $id
-	 *
-	 * @ORM\Id
-	 * @ORM\GeneratedValue(strategy="AUTO")
-	 * @ORM\Column(type="integer")
-	 *
-	 * @Groups({"AppVersion"})
-	 */
-	private $id;
+    /**
+     * @var int|null $id
+     *
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(type="integer")
+     *
+     * @Groups({"AppVersion"})
+     */
+    private $id;
 
-	/**
-	 * @var Application $application
-	 *
-	 * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Application")
-	 * @ORM\JoinColumn(onDelete="CASCADE")
-	 */
-	private $application;
+    /**
+     * @var Application $application
+     *
+     * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Application")
+     * @ORM\JoinColumn(onDelete="CASCADE")
+     */
+    private $application;
 
-	/**
-	 * @var string $version
-	 *
-	 * @ORM\Column(type="string")
-	 */
-	private $version;
+    /**
+     * @var string $version
+     *
+     * @ORM\Column(type="string")
+     */
+    private $version;
 
-	/**
-	 * @var DateTime $releaseDate
-	 *
-	 * @ORM\Column(type="date")
-	 */
-	private $releaseDate;
+    /**
+     * @var DateTime $releaseDate
+     *
+     * @ORM\Column(type="date")
+     */
+    private $releaseDate;
 
-	/**
-	 * @var string $platform
-	 *
-	 * @ORM\Column(type="string")
-	 */
-	private $platform;
+    /**
+     * @var string $platform
+     *
+     * @ORM\Column(type="string")
+     */
+    private $platform;
 
-	/**
-	 * @var bool $required
-	 *
-	 * @ORM\Column(type="boolean")
-	 */
-	private $required = false;
+    /**
+     * @var bool $required
+     *
+     * @ORM\Column(type="boolean")
+     */
+    private $required = false;
 
-	/**
-	 * @var array $description
-	 *
-	 * @ORM\Column(type="json_array", nullable=true)
-	 */
-	private $description;
+    /**
+     * @var array $description
+     *
+     * @ORM\Column(type="json_array", nullable=true)
+     */
+    private $description;
 
-	/**
-	 * @var string $url
-	 *
-	 * @ORM\Column(type="string", nullable=true)
-	 */
-	private $url;
+    /**
+     * @var string $url
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $url;
 
-	/**
-	 * @var string $fileName
-	 *
-	 * @ORM\Column(type="string", nullable=true)
-	 */
-	private $fileName;
+    /**
+     * @var string $fileName
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $fileName;
 
-	/**
-	 * @return int|null
-	 */
-	public function getId(): ?int
-	{
-		return $this->id;
-	}
+    /**
+     * @return int|null
+     */
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
 
-	/**
-	 * @return Application
-	 */
-	public function getApplication(): Application
-	{
-		return $this->application;
-	}
+    /**
+     * @return Application
+     */
+    public function getApplication(): Application
+    {
+        return $this->application;
+    }
 
-	/**
-	 * @param Application $application
-	 * @return AppVersion
-	 */
-	public function setApplication(Application $application): AppVersion
-	{
-		$this->application = $application;
-		return $this;
-	}
+    /**
+     * @param Application $application
+     * @return AppVersion
+     */
+    public function setApplication(Application $application): AppVersion
+    {
+        $this->application = $application;
+        return $this;
+    }
 
-	/**
-	 * @return string
-	 */
-	public function getVersion(): string
-	{
-		return $this->version;
-	}
+    /**
+     * @return string
+     */
+    public function getVersion(): string
+    {
+        return $this->version;
+    }
 
-	/**
-	 * @param string $version
-	 * @return AppVersion
-	 */
-	public function setVersion(string $version): AppVersion
-	{
-		$this->version = $version;
-		return $this;
-	}
+    /**
+     * @param string $version
+     * @return AppVersion
+     */
+    public function setVersion(string $version): AppVersion
+    {
+        $this->version = $version;
+        return $this;
+    }
 
-	/**
-	 * @return DateTime
-	 */
-	public function getReleaseDate(): DateTime
-	{
-		return $this->releaseDate;
-	}
+    /**
+     * @return DateTime
+     */
+    public function getReleaseDate(): DateTime
+    {
+        return $this->releaseDate;
+    }
 
-	/**
-	 * @param DateTime $releaseDate
-	 * @return AppVersion
-	 */
-	public function setReleaseDate(DateTime $releaseDate): AppVersion
-	{
-		$this->releaseDate = $releaseDate;
-		return $this;
-	}
+    /**
+     * @param DateTime $releaseDate
+     * @return AppVersion
+     */
+    public function setReleaseDate(DateTime $releaseDate): AppVersion
+    {
+        $this->releaseDate = $releaseDate;
+        return $this;
+    }
 
-	/**
-	 * @return string
-	 */
-	public function getPlatform(): string
-	{
-		return $this->platform;
-	}
+    /**
+     * @return string
+     */
+    public function getPlatform(): string
+    {
+        return $this->platform;
+    }
 
     /**
      * @param string $platform
      * @return AppVersion
      */
-	public function setPlatform(string $platform): AppVersion
-	{
-		$this->platform = $platform;
-		return $this;
-	}
+    public function setPlatform(string $platform): AppVersion
+    {
+        $this->platform = $platform;
+        return $this;
+    }
 
-	/**
-	 * @return bool
-	 */
-	public function isRequired(): bool
-	{
-		return $this->required;
-	}
+    /**
+     * @return bool
+     */
+    public function isRequired(): bool
+    {
+        return $this->required;
+    }
 
-	/**
-	 * @param bool $required
-	 * @return AppVersion
-	 */
-	public function setRequired(bool $required): AppVersion
-	{
-		$this->required = $required;
-		return $this;
-	}
+    /**
+     * @param bool $required
+     * @return AppVersion
+     */
+    public function setRequired(bool $required): AppVersion
+    {
+        $this->required = $required;
+        return $this;
+    }
 
-	/**
-	 * @return array
-	 */
-	public function getDescription(): array
-	{
-		return $this->description;
-	}
+    /**
+     * @return array
+     */
+    public function getDescription(): array
+    {
+        return $this->description;
+    }
 
-	/**
-	 * @param null|array $description
-	 * @return AppVersion
-	 */
-	public function setDescription(?array $description): AppVersion
-	{
-		$this->description = $description;
-		return $this;
-	}
+    /**
+     * @param null|array $description
+     * @return AppVersion
+     */
+    public function setDescription(?array $description): AppVersion
+    {
+        $this->description = $description;
+        return $this;
+    }
 
-	/**
-	 * @return string
-	 */
-	public function getUrl(): string
-	{
-		return $this->url;
-	}
+    /**
+     * @return string
+     */
+    public function getUrl(): string
+    {
+        return $this->url;
+    }
 
-	/**
-	 * @param null|string $url
-	 * @return AppVersion
-	 */
-	public function setUrl(?string $url): AppVersion
-	{
-		$this->url = $url;
-		return $this;
-	}
+    /**
+     * @param null|string $url
+     * @return AppVersion
+     */
+    public function setUrl(?string $url): AppVersion
+    {
+        $this->url = $url;
+        return $this;
+    }
 
-	/**
-	 * @return string|UploadedFile
-	 */
-	public function getFileName()
-	{
-		return $this->fileName;
-	}
+    /**
+     * @return string|UploadedFile
+     */
+    public function getFileName()
+    {
+        return $this->fileName;
+    }
 
-	/**
-	 * @param UploadedFile|string $fileName
-	 * @return AppVersion
-	 */
-	public function setFileName($fileName): AppVersion
-	{
-		$this->fileName = $fileName;
-		return $this;
-	}
+    /**
+     * @param UploadedFile|string $fileName
+     * @return AppVersion
+     */
+    public function setFileName($fileName): AppVersion
+    {
+        $this->fileName = $fileName;
+        return $this;
+    }
 }

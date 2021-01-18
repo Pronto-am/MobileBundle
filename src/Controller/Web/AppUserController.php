@@ -16,113 +16,112 @@ use Pronto\MobileBundle\EventSubscriber\ValidatePluginStateInterface;
 use Pronto\MobileBundle\Form\AppUserForm;
 use Pronto\MobileBundle\Utils\Doctrine\WhereClause;
 use Pronto\MobileBundle\Utils\PageHelper;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class AppUserController extends BaseController implements ValidateCustomerSelectionInterface, ValidateApplicationSelectionInterface, ValidatePluginStateInterface
 {
 
-	/**
-	 * Check if the plugin is active
-	 *
-	 * @return string
-	 */
-	public function getPluginIdentifier(): string
-	{
-		return Plugin::APP_USERS;
-	}
+    /**
+     * Check if the plugin is active
+     *
+     * @return string
+     */
+    public function getPluginIdentifier(): string
+    {
+        return Plugin::APP_USERS;
+    }
 
+    /**
+     * Show a list of app users
+     *
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @return Response
+     */
+    public function indexAction(Request $request, EntityManagerInterface $entityManager)
+    {
+        $pageHelper = new PageHelper($request, $entityManager, AppUser::class, 15, 't.lastName');
+        $pageHelper->addClause(new WhereClause('t.application', $this->getApplication()));
 
-	/**
-	 * Show a list of app users
-	 *
-	 * @param Request $request
-	 * @param EntityManagerInterface $entityManager
-	 * @return \Symfony\Component\HttpFoundation\Response
-	 */
-	public function indexAction(Request $request, EntityManagerInterface $entityManager)
-	{
-		$pageHelper = new PageHelper($request, $entityManager, AppUser::class, 15, 't.lastName');
-		$pageHelper->addClause(new WhereClause('t.application', $this->getApplication()));
+        return $this->render('@ProntoMobile/users/app/index.html.twig',
+            [
+                'pageHelper' => $pageHelper
+            ]);
+    }
 
-		return $this->render('@ProntoMobile/users/app/index.html.twig',
-			[
-				'pageHelper' => $pageHelper
-			]);
-	}
+    /**
+     * Show the details of a device
+     *
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @param $identifier
+     * @return RedirectResponse|Response
+     */
+    public function detailsAction(Request $request, EntityManagerInterface $entityManager, $identifier)
+    {
+        /** @var AppUser $user */
+        $user = $entityManager->getRepository(AppUser::class)->findOneBy([
+            'id'          => $identifier,
+            'application' => $this->getApplication()
+        ]);
 
+        if ($user === null) {
+            // Redirect back, the user has no access to other app users
+            return $this->redirectToRoute('pronto_mobile_app_users');
+        }
 
-	/**
-	 * Show the details of a device
-	 *
-	 * @param Request $request
-	 * @param EntityManagerInterface $entityManager
-	 * @param $identifier
-	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-	 */
-	public function detailsAction(Request $request, EntityManagerInterface $entityManager, $identifier)
-	{
-		/** @var AppUser $user */
-		$user = $entityManager->getRepository(AppUser::class)->findOneBy([
-			'id'          => $identifier,
-			'application' => $this->getApplication()
-		]);
+        // Get the related notifications
+        $pageHelper = new PageHelper($request, $entityManager, Device::class, 15, 't.lastLogin', 'DESC');
+        $pageHelper->addClause(new WhereClause('t.appUser', $user));
 
-		if ($user === null) {
-			// Redirect back, the user has no access to other app users
-			return $this->redirectToRoute('pronto_mobile_app_users');
-		}
+        $userDTO = AppUserDTO::fromEntity($user);
 
-		// Get the related notifications
-		$pageHelper = new PageHelper($request, $entityManager, Device::class, 15, 't.lastLogin', 'DESC');
-		$pageHelper->addClause(new WhereClause('t.appUser', $user));
+        $form = $this->createForm(AppUserForm::class, $userDTO);
 
-		$userDTO = AppUserDTO::fromEntity($user);
+        $form->handleRequest($request);
 
-		$form = $this->createForm(AppUserForm::class, $userDTO);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $userDTO = $form->getData();
+            $user = $userDTO->toEntity($user ?? new AppUser());
 
-		$form->handleRequest($request);
+            $entityManager->persist($user);
+            $entityManager->flush();
 
-		if ($form->isSubmitted() && $form->isValid()) {
-			$userDTO = $form->getData();
-			$user = $userDTO->toEntity($user ?? new AppUser());
+            $this->addDataSavedFlash();
+        }
 
-			$entityManager->persist($user);
-			$entityManager->flush();
+        return $this->render('@ProntoMobile/users/app/details.html.twig', [
+            'user'             => $user,
+            'devicePageHelper' => $pageHelper,
+            'userForm'         => $form->createView()
+        ]);
+    }
 
-			$this->addDataSavedFlash();
-		}
+    /**
+     * Delete one or more users
+     *
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @return RedirectResponse
+     */
+    public function deleteAction(Request $request, EntityManagerInterface $entityManager)
+    {
+        // Find users by id and the current customer
+        $users = $entityManager->getRepository(AppUser::class)->findBy([
+            'id'          => $request->get('users'),
+            'application' => $this->getApplication()
+        ]);
 
-		return $this->render('@ProntoMobile/users/app/details.html.twig', [
-			'user'             => $user,
-			'devicePageHelper' => $pageHelper,
-			'userForm'         => $form->createView()
-		]);
-	}
+        foreach ($users as $user) {
+            $entityManager->remove($user);
+        }
 
+        $entityManager->flush();
 
-	/**
-	 * Delete one or more users
-	 *
-	 * @param Request $request
-	 * @param EntityManagerInterface $entityManager
-	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
-	 */
-	public function deleteAction(Request $request, EntityManagerInterface $entityManager)
-	{
-		// Find users by id and the current customer
-		$users = $entityManager->getRepository(AppUser::class)->findBy([
-			'id'          => $request->get('users'),
-			'application' => $this->getApplication()
-		]);
+        $this->addDataRemovedFlash();
 
-		foreach ($users as $user) {
-			$entityManager->remove($user);
-		}
-
-		$entityManager->flush();
-
-		$this->addDataRemovedFlash();
-
-		return $this->redirectToRoute('pronto_mobile_app_users');
-	}
+        return $this->redirectToRoute('pronto_mobile_app_users');
+    }
 }

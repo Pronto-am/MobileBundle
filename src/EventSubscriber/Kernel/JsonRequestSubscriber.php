@@ -11,6 +11,13 @@ use Symfony\Component\HttpKernel\KernelEvents;
 
 class JsonRequestSubscriber implements EventSubscriberInterface
 {
+    public static function getSubscribedEvents(): array
+    {
+        return [
+            KernelEvents::REQUEST => 'decodeJsonContent',
+        ];
+    }
+
     public function decodeJsonContent(RequestEvent $event): void
     {
         $request = $event->getRequest();
@@ -28,13 +35,6 @@ class JsonRequestSubscriber implements EventSubscriberInterface
 
         $content = json_decode($request->getContent(), true);
         $event->getRequest()->request->replace(is_array($content) ? $content : []);
-    }
-
-    public static function getSubscribedEvents(): array
-    {
-        return [
-            KernelEvents::REQUEST => 'decodeJsonContent',
-        ];
     }
 
     private function isJson(string $string): bool

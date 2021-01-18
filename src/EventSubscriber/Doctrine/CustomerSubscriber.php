@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Pronto\MobileBundle\EventSubscriber\Doctrine;
 
-
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Events;
+use Doctrine\ORM\ORMException;
 use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\Customer;
 use Pronto\MobileBundle\Service\FileManager;
@@ -20,20 +20,20 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class CustomerSubscriber implements EventSubscriber
 {
-	/**
-	 * @var FileManager $fileManager
-	 */
-	private $fileManager;
+    /**
+     * @var FileManager $fileManager
+     */
+    private $fileManager;
 
-	/**
-	 * @var ProntoMobile $prontoMobile
-	 */
-	private $prontoMobile;
+    /**
+     * @var ProntoMobile $prontoMobile
+     */
+    private $prontoMobile;
 
-	/**
-	 * @var TranslatorInterface $translator
-	 */
-	private $translator;
+    /**
+     * @var TranslatorInterface $translator
+     */
+    private $translator;
 
     /**
      * CustomerSubscriber constructor.
@@ -41,163 +41,163 @@ class CustomerSubscriber implements EventSubscriber
      * @param ContainerInterface $container
      * @param TranslatorInterface $translator
      */
-	public function __construct(FileManager $fileManager, ContainerInterface $container, TranslatorInterface $translator)
-	{
-		$this->prontoMobile = $container->get('Pronto\MobileBundle\Service\ProntoMobile');
-		$this->fileManager = $fileManager;
-		$this->translator = $translator;
-	}
+    public function __construct(FileManager $fileManager, ContainerInterface $container, TranslatorInterface $translator)
+    {
+        $this->prontoMobile = $container->get('Pronto\MobileBundle\Service\ProntoMobile');
+        $this->fileManager = $fileManager;
+        $this->translator = $translator;
+    }
 
-	/**
-	 * Returns an array of events this subscriber wants to listen to.
-	 *
-	 * @return string[]
-	 */
-	public function getSubscribedEvents(): array
-	{
-		return [Events::prePersist, Events::postPersist, Events::preUpdate, Events::postLoad, Events::postRemove];
-	}
+    /**
+     * Returns an array of events this subscriber wants to listen to.
+     *
+     * @return string[]
+     */
+    public function getSubscribedEvents(): array
+    {
+        return [Events::prePersist, Events::postPersist, Events::preUpdate, Events::postLoad, Events::postRemove];
+    }
 
-	/**
-	 * Pre persist event
-	 *
-	 * @param LifecycleEventArgs $args
-	 */
-	public function prePersist(LifecycleEventArgs $args): void
-	{
-		$entity = $args->getEntity();
+    /**
+     * Pre persist event
+     *
+     * @param LifecycleEventArgs $args
+     */
+    public function prePersist(LifecycleEventArgs $args): void
+    {
+        $entity = $args->getEntity();
 
-		$this->uploadFile($entity);
-	}
+        $this->uploadFile($entity);
+    }
 
-	/**
-	 * Pre update event
-	 *
-	 * @param LifecycleEventArgs $args
-	 */
-	public function preUpdate(LifecycleEventArgs $args): void
-	{
-		$entity = $args->getEntity();
+    /**
+     * Upload the file
+     *
+     * @param $entity
+     */
+    private function uploadFile($entity): void
+    {
+        if (!$entity instanceof Customer) {
+            return;
+        }
 
-		$this->uploadFile($entity);
-	}
+        $file = $entity->getLogo();
 
-	/**
-	 * Handle the post persist event of a customer object
-	 *
-	 * @param LifecycleEventArgs $args
-	 * @throws \Doctrine\ORM\ORMException
-	 */
-	public function postPersist(LifecycleEventArgs $args): void
-	{
-		$entity = $args->getEntity();
+        // only upload new files
+        if ($file instanceof UploadedFile) {
+            $fileName = $this->fileManager->upload(FileManager::IMAGES_DIRECTORY, $file);
 
-		if (!$entity instanceof Customer) {
-			return;
-		}
+            $entity->setLogo($fileName);
+        } elseif ($file instanceof File) {
+            // If the entity is saved as file, save only the filename
+            $entity->setLogo($file->getFilename());
+        }
+    }
 
-		// Initialize a new account
-		$this->initializeAccount($entity, $args->getEntityManager());
-	}
+    /**
+     * Pre update event
+     *
+     * @param LifecycleEventArgs $args
+     */
+    public function preUpdate(LifecycleEventArgs $args): void
+    {
+        $entity = $args->getEntity();
 
-	/**
-	 * Post load event, to use the file object inside Twig templates
-	 *
-	 * @param LifecycleEventArgs $args
-	 */
-	public function postLoad(LifecycleEventArgs $args): void
-	{
-		$entity = $args->getEntity();
+        $this->uploadFile($entity);
+    }
 
-		if (!$entity instanceof Customer) {
-			return;
-		}
+    /**
+     * Handle the post persist event of a customer object
+     *
+     * @param LifecycleEventArgs $args
+     * @throws ORMException
+     */
+    public function postPersist(LifecycleEventArgs $args): void
+    {
+        $entity = $args->getEntity();
 
-		if ($fileName = $entity->getLogo()) {
-			// Check if the logo exists
-			$file = $this->fileManager->get(FileManager::IMAGES_DIRECTORY . '/' . $fileName);
+        if (!$entity instanceof Customer) {
+            return;
+        }
 
-			// Get the path name instead of the File object -> leads to serialization errors
-			$entity->setLogo($file !== null ? $file->getFilename() : null);
-		}
-	}
+        // Initialize a new account
+        $this->initializeAccount($entity, $args->getEntityManager());
+    }
 
-	/**
-	 * Pre update event
-	 *
-	 * @param LifecycleEventArgs $args
-	 */
-	public function postRemove(LifecycleEventArgs $args): void
-	{
-		$entity = $args->getEntity();
+    /**
+     * @param Customer $entity
+     * @param EntityManager $entityManager
+     * @throws ORMException
+     */
+    private function initializeAccount(Customer $entity, EntityManager $entityManager): void
+    {
+        // Add the first application and version
+        $app = new Application();
+        $app->setName($this->translator->trans('application.first'));
+        $app->setColor('00f4a7');
+        $app->setDefaultLanguage('nl');
+        $app->setAvailableLanguages([
+            [
+                'code'       => 'nl',
+                'name'       => 'Dutch',
+                'nativeName' => 'Nederlands, Vlaams'
+            ]
+        ]);
 
-		$this->removeFile($entity);
-	}
+        $app->setCustomer($entity);
 
-	/**
-	 * Upload the file
-	 *
-	 * @param $entity
-	 */
-	private function uploadFile($entity): void
-	{
-		if (!$entity instanceof Customer) {
-			return;
-		}
+        $domain = $this->prontoMobile->getConfiguration('domain', 'pronto.am');
 
-		$file = $entity->getLogo();
+        $app->setRedirectUris(['https://' . $domain]);
+        $app->setAllowedGrantTypes(['refresh_token', 'password', 'token', 'authorization_code', 'client_credentials']);
 
-		// only upload new files
-		if ($file instanceof UploadedFile) {
-			$fileName = $this->fileManager->upload(FileManager::IMAGES_DIRECTORY, $file);
+        $entityManager->persist($app);
+        $entityManager->flush();
+    }
 
-			$entity->setLogo($fileName);
-		} elseif ($file instanceof File) {
-			// If the entity is saved as file, save only the filename
-			$entity->setLogo($file->getFilename());
-		}
-	}
+    /**
+     * Post load event, to use the file object inside Twig templates
+     *
+     * @param LifecycleEventArgs $args
+     */
+    public function postLoad(LifecycleEventArgs $args): void
+    {
+        $entity = $args->getEntity();
 
-	/**
-	 * @param $entity
-	 */
-	private function removeFile($entity): void
-	{
-		if (!$entity instanceof Customer) {
-			return;
-		}
+        if (!$entity instanceof Customer) {
+            return;
+        }
 
-		$this->fileManager->remove(FileManager::IMAGES_DIRECTORY . '/' . $entity->getLogo());
-	}
+        if ($fileName = $entity->getLogo()) {
+            // Check if the logo exists
+            $file = $this->fileManager->get(FileManager::IMAGES_DIRECTORY . '/' . $fileName);
 
-	/**
-	 * @param Customer $entity
-	 * @param EntityManager $entityManager
-	 * @throws \Doctrine\ORM\ORMException
-	 */
-	private function initializeAccount(Customer $entity, EntityManager $entityManager): void
-	{
-		// Add the first application and version
-		$app = new Application();
-		$app->setName($this->translator->trans('application.first'));
-		$app->setColor('00f4a7');
-		$app->setDefaultLanguage('nl');
-		$app->setAvailableLanguages([
-			[
-				'code'       => 'nl',
-				'name'       => 'Dutch',
-				'nativeName' => 'Nederlands, Vlaams'
-			]
-		]);
+            // Get the path name instead of the File object -> leads to serialization errors
+            $entity->setLogo($file !== null ? $file->getFilename() : null);
+        }
+    }
 
-		$app->setCustomer($entity);
+    /**
+     * Pre update event
+     *
+     * @param LifecycleEventArgs $args
+     */
+    public function postRemove(LifecycleEventArgs $args): void
+    {
+        $entity = $args->getEntity();
 
-		$domain = $this->prontoMobile->getConfiguration('domain', 'pronto.am');
+        $this->removeFile($entity);
+    }
 
-		$app->setRedirectUris(['https://' . $domain]);
-		$app->setAllowedGrantTypes(['refresh_token', 'password', 'token', 'authorization_code', 'client_credentials']);
+    /**
+     * @param $entity
+     */
+    private function removeFile($entity): void
+    {
+        if (!$entity instanceof Customer) {
+            return;
+        }
 
-		$entityManager->persist($app);
-		$entityManager->flush();
-	}
+        $this->fileManager->remove(FileManager::IMAGES_DIRECTORY . '/' . $entity->getLogo());
+    }
 }

@@ -92,7 +92,7 @@ module.exports = {
         });
     },
     removeInvalidAlerts(element) {
-        if(typeof element !== 'undefined') {
+        if (typeof element !== 'undefined') {
             $('ul.validation-message', element).remove();
             $('input.invalid', element).removeClass('invalid');
         } else {

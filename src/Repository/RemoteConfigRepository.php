@@ -45,11 +45,11 @@ class RemoteConfigRepository extends EntityRepository
         $query = $this->createQueryBuilder('config')->where('config.application = :application');
         $parameters = ['application' => $application];
 
-        if($platform !== null) {
+        if ($platform !== null) {
             $query = $query->andWhere(sprintf('config.%s = true', $platform));
         }
 
-        if($afterDate !== null) {
+        if ($afterDate !== null) {
             $query = $query->andWhere('(config.releaseDate <= :releaseDate OR config.releaseDate IS NULL)')->orWhere();
             $parameters['releaseDate'] = $afterDate;
         }

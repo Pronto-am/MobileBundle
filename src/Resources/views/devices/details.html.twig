@@ -153,9 +153,14 @@
                             </td>
                             <td>
                                 {% if notification.sent == null and notification.pushNotification.scheduledSending != null %}
-                                    {{ 'format.date_and_time'|trans({'%date%': notification.pushNotification.scheduledSending|date('d-m-Y'), '%time%': notification.pushNotification.scheduledSending|date('H:i')}) }} &nbsp;&nbsp;<i class="fa fa-clock-o fa-lg text-primary tooltipped" data-position="right" data-delay="50" data-tooltip="{{ 'push_notification.scheduled'|trans|capitalize }}" aria-hidden="true"></i>
+                                    {{ 'format.date_and_time'|trans({'%date%': notification.pushNotification.scheduledSending|date('d-m-Y'), '%time%': notification.pushNotification.scheduledSending|date('H:i')}) }} &nbsp;&nbsp;<i class="fa fa-clock-o fa-lg text-primary tooltipped"
+                                                                                                                                                                                                                                      data-position="right" data-delay="50"
+                                                                                                                                                                                                                                      data-tooltip="{{ 'push_notification.scheduled'|trans|capitalize }}"
+                                                                                                                                                                                                                                      aria-hidden="true"></i>
                                 {% elseif notification.sent != null and notification.pushNotification.scheduledSending != null %}
-                                    {{ 'format.date_and_time'|trans({'%date%': notification.pushNotification.sent|date('d-m-Y'), '%time%': notification.pushNotification.sent|date('H:i')}) }} &nbsp;&nbsp;<i class="fa fa-spin fa-circle-o-notch fa-lg text-primary tooltipped" data-position="right" data-delay="50" data-tooltip="{{ 'push_notification.being_send'|trans|capitalize }}" aria-hidden="true"></i>
+                                    {{ 'format.date_and_time'|trans({'%date%': notification.pushNotification.sent|date('d-m-Y'), '%time%': notification.pushNotification.sent|date('H:i')}) }} &nbsp;&nbsp;<i class="fa fa-spin fa-circle-o-notch fa-lg text-primary tooltipped" data-position="right"
+                                                                                                                                                                                                              data-delay="50" data-tooltip="{{ 'push_notification.being_send'|trans|capitalize }}"
+                                                                                                                                                                                                              aria-hidden="true"></i>
                                 {% else %}
                                     {{ 'format.date_and_time'|trans({'%date%': notification.pushNotification.sent|date('d-m-Y'), '%time%': notification.pushNotification.sent|date('H:i')}) }}
                                 {% endif %}

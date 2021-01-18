@@ -10,6 +10,15 @@ use Symfony\Component\HttpKernel\KernelEvents;
 
 class SetLocaleSusbcriber implements EventSubscriberInterface
 {
+    public static function getSubscribedEvents(): array
+    {
+        return [
+            KernelEvents::REQUEST => [
+                ['changeLocale', 114],
+            ]
+        ];
+    }
+
     public function changeLocale(RequestEvent $event): void
     {
         // Determine the locale
@@ -24,14 +33,5 @@ class SetLocaleSusbcriber implements EventSubscriberInterface
             ['language' => $language] = locale_parse($request->headers->get('Accept-Language'));
             $request->setLocale($language);
         }
-    }
-
-    public static function getSubscribedEvents(): array
-    {
-        return [
-            KernelEvents::REQUEST => [
-                ['changeLocale', 114],
-            ]
-        ];
     }
 }

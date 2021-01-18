@@ -2,7 +2,6 @@
 
 namespace Pronto\MobileBundle\Utils\Collection;
 
-
 use Pronto\MobileBundle\Entity\Collection\Property;
 use Pronto\MobileBundle\Utils\Collection\Property\BaseType;
 use Pronto\MobileBundle\Utils\Collection\Property\BooleanProperty;
@@ -16,99 +15,99 @@ use Symfony\Component\HttpFoundation\Request;
 
 class EntryParser
 {
-	/**
+    /**
      * @var array $entry
      */
-	private $entry = [];
+    private $entry = [];
 
-	/**
+    /**
      * @var array $formData
      */
-	private $formData;
+    private $formData;
 
-	/**
+    /**
      * @var FileBag $files
      */
-	private $files;
+    private $files;
 
-	/**
+    /**
      * @var array $classes Mapping for the property types
      */
-	private $classes = [
-		'boolean'     => BooleanProperty::class,
-		'coordinates' => CoordinatesProperty::class,
-		'date'        => DateProperty::class,
-		'dateTime'    => DateTimeProperty::class,
-		'file'        => FileProperty::class
-	];
+    private $classes = [
+        'boolean'     => BooleanProperty::class,
+        'coordinates' => CoordinatesProperty::class,
+        'date'        => DateProperty::class,
+        'dateTime'    => DateTimeProperty::class,
+        'file'        => FileProperty::class
+    ];
 
-	/**
-	 * EntryParser constructor.
-	 *
-	 * @param Request $request
-	 */
-	public function __construct(Request $request)
-	{
-		$this->formData = $request->request->all();
+    /**
+     * EntryParser constructor.
+     *
+     * @param Request $request
+     */
+    public function __construct(Request $request)
+    {
+        $this->formData = $request->request->all();
 
-		// Remove the active checkbox
-		unset($this->formData['active']);
+        // Remove the active checkbox
+        unset($this->formData['active']);
 
-		// Set the additional files
-		$this->files = $request->files;
-	}
+        // Set the additional files
+        $this->files = $request->files;
+    }
 
     /**
      * @param array $initial
      */
-	public function setInitialData(array $initial): void
+    public function setInitialData(array $initial): void
     {
         $this->entry = $initial;
     }
 
-	/**
-	 * Add property values to the entry
-	 *
-	 * @param Property $property
-	 */
-	public function addProperty(Property $property): void
-	{
-		// Get the right property transformer
-		$type = $this->getPropertyTransformer($property);
+    /**
+     * Add property values to the entry
+     *
+     * @param Property $property
+     */
+    public function addProperty(Property $property): void
+    {
+        // Get the right property transformer
+        $type = $this->getPropertyTransformer($property);
 
-		$this->entry = array_merge($this->entry, $type->parse());
-	}
+        $this->entry = array_merge($this->entry, $type->parse());
+    }
 
-	/**
-	 * Get the transformer by property type
-	 *
-	 * @param Property $property
-	 * @return PropertyType
-	 */
-	private function getPropertyTransformer(Property $property): PropertyType
-	{
-		$type = $property->getType()->getType();
+    /**
+     * Get the transformer by property type
+     *
+     * @param Property $property
+     * @return PropertyType
+     */
+    private function getPropertyTransformer(Property $property): PropertyType
+    {
+        $type = $property->getType()->getType();
 
-		if (isset($this->classes[$type])) {
-			$class = $this->classes[$type];
+        if (isset($this->classes[$type])) {
+            $class = $this->classes[$type];
 
-			if($type !== 'file') {
-				return new $class($this->formData, $property);
-			}
+            if ($type !== 'file') {
+                return new $class($this->formData, $property);
+            }
 
-			return new $class($this->formData, $property, $this->files);
-		}
+            return new $class($this->formData, $property, $this->files);
+        }
 
-		return new BaseType($this->formData, $property);
-	}
+        return new BaseType($this->formData, $property);
+    }
 
-	/**
-	 * Get the entry object as array
-	 *
-	 * @return array
-	 */
-	public function getEntryObject(): array
-	{
-		return $this->entry;
-	}
+    /**
+     * Get the entry object as array
+     *
+     * @return array
+     */
+    public function getEntryObject(): array
+    {
+        return $this->entry;
+    }
 }

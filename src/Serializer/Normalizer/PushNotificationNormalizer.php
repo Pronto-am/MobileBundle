@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Pronto\MobileBundle\Serializer\Normalizer;
 
+use DateTime;
 use Pronto\MobileBundle\Entity\PushNotification;
 use Pronto\MobileBundle\Service\PushNotification\FirebaseStorage;
 use Symfony\Component\Serializer\Exception\CircularReferenceException;
@@ -64,7 +65,7 @@ class PushNotificationNormalizer implements ContextAwareNormalizerInterface
             'click_action_url'      => $object->getClickActionUrl(),
             'click_action_html'     => $object->getClickActionHtml(),
             'click_action_html_url' => $clickActionHtmlUrl,
-            'sent'                  => $object->getSent()->format(\DateTime::ISO8601),
+            'sent'                  => $object->getSent()->format(DateTime::ISO8601),
             'test'                  => $object->getTest(),
         ];
     }

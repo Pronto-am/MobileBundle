@@ -2,7 +2,6 @@
 
 namespace Pronto\MobileBundle\Twig;
 
-
 use Pronto\MobileBundle\Entity\User;
 use Symfony\Component\Security\Core\Security;
 use Twig\Extension\AbstractExtension;
@@ -48,14 +47,14 @@ class IsGrantedMinimal extends AbstractExtension
      */
     public function isGrantedMinimal(string $role): bool
     {
-        if(!in_array($role, $this->roles)) {
+        if (!in_array($role, $this->roles)) {
             return false;
         }
 
         $userRoleIndex = null;
 
         // Get the highest role of the user
-        foreach($this->user->getRoles() as $userRole) {
+        foreach ($this->user->getRoles() as $userRole) {
             $index = array_search($userRole, $this->roles);
             $userRoleIndex = $index > $userRoleIndex ? $index : $userRoleIndex;
         }

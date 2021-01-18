@@ -2,7 +2,6 @@
 
 namespace Pronto\MobileBundle\Form\Collection;
 
-
 use Pronto\MobileBundle\DTO\Collection\PropertyDTO;
 use Pronto\MobileBundle\Entity\Collection\Property\Type;
 use Symfony\Component\Form\AbstractType;
@@ -61,11 +60,11 @@ class PropertyForm extends AbstractType
                 },
             ])
             ->add('editableForRole', ChoiceType::class, [
-                'attr'         => [
+                'attr'    => [
                     'class' => 'browser-default'
                 ],
-                'label'        => 'collection.property.editable_for_role',
-                'choices'      => [
+                'label'   => 'collection.property.editable_for_role',
+                'choices' => [
                     $translator->trans('user.roles.regular')     => 'ROLE_USER',
                     $translator->trans('user.roles.admin')       => 'ROLE_ADMIN',
                     $translator->trans('user.roles.super_admin') => 'ROLE_SUPER_ADMIN',

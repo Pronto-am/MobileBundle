@@ -17,86 +17,86 @@ use Pronto\MobileBundle\Utils\Doctrine\WhereClause;
 use Pronto\MobileBundle\Utils\PageHelper;
 use Swift_Mailer;
 use Swift_Message;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class UserController extends BaseController implements ValidateCustomerSelectionInterface
 {
-	/**
-	 * Show a list of CMS users
-	 *
-	 * @param Request $request
-	 * @param EntityManagerInterface $entityManager
-	 * @return \Symfony\Component\HttpFoundation\Response
-	 */
-	public function indexAction(Request $request, EntityManagerInterface $entityManager)
-	{
-		$pageHelper = new PageHelper($request, $entityManager, User::class, 15, 't.lastName');
-		$pageHelper->addClause(new WhereClause('t.customer', $this->getCustomer()));
+    /**
+     * Show a list of CMS users
+     *
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @return Response
+     */
+    public function indexAction(Request $request, EntityManagerInterface $entityManager)
+    {
+        $pageHelper = new PageHelper($request, $entityManager, User::class, 15, 't.lastName');
+        $pageHelper->addClause(new WhereClause('t.customer', $this->getCustomer()));
 
-		return $this->render('@ProntoMobile/users/index.html.twig',
-			[
-				'pageHelper' => $pageHelper
-			]);
-	}
+        return $this->render('@ProntoMobile/users/index.html.twig',
+            [
+                'pageHelper' => $pageHelper
+            ]);
+    }
 
+    /**
+     * Update the users' profile
+     *
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @param UserInterface $user
+     * @return Response
+     */
+    public function profileAction(Request $request, EntityManagerInterface $entityManager, UserInterface $user)
+    {
+        $profileDTO = ProfileDTO::fromEntity($user);
+        $profileForm = $this->createForm(ProfileForm::class, $profileDTO);
 
-	/**
-	 * Update the users' profile
-	 *
-	 * @param Request $request
-	 * @param EntityManagerInterface $entityManager
-	 * @param UserInterface $user
-	 * @return \Symfony\Component\HttpFoundation\Response
-	 */
-	public function profileAction(Request $request, EntityManagerInterface $entityManager, UserInterface $user)
-	{
-		$profileDTO = ProfileDTO::fromEntity($user);
-		$profileForm = $this->createForm(ProfileForm::class, $profileDTO);
+        $passwordForm = $this->createForm(PasswordForm::class);
 
-		$passwordForm = $this->createForm(PasswordForm::class);
+        if ('POST' === $request->getMethod()) {
+            if ($request->request->has('profile_form')) {
+                $profileForm->handleRequest($request);
 
-		if ('POST' === $request->getMethod()) {
-			if ($request->request->has('profile_form')) {
-				$profileForm->handleRequest($request);
+                if ($profileForm->isSubmitted() && $profileForm->isValid()) {
+                    $profileDTO = $profileForm->getData();
+                    $user = $profileDTO->toEntity($user);
 
-				if ($profileForm->isSubmitted() && $profileForm->isValid()) {
-					$profileDTO = $profileForm->getData();
-					$user = $profileDTO->toEntity($user);
+                    $entityManager->persist($user);
+                    $entityManager->flush();
 
-					$entityManager->persist($user);
-					$entityManager->flush();
+                    $this->addDataSavedFlash();
 
-					$this->addDataSavedFlash();
+                    return $this->redirectToRoute('pronto_mobile_profile');
+                }
+            } else {
+                $passwordForm->handleRequest($request);
 
-					return $this->redirectToRoute('pronto_mobile_profile');
-				}
-			} else {
-				$passwordForm->handleRequest($request);
+                if ($passwordForm->isSubmitted() && $passwordForm->isValid()) {
+                    $data = $passwordForm->getData();
+                    $user->setPlainPassword($data['password']);
 
-				if ($passwordForm->isSubmitted() && $passwordForm->isValid()) {
-					$data = $passwordForm->getData();
-					$user->setPlainPassword($data['password']);
+                    $entityManager->persist($user);
+                    $entityManager->flush();
 
-					$entityManager->persist($user);
-					$entityManager->flush();
+                    $this->addDataSavedFlash();
 
-					$this->addDataSavedFlash();
+                    return $this->redirectToRoute('pronto_mobile_profile');
+                }
+            }
+        }
 
-					return $this->redirectToRoute('pronto_mobile_profile');
-				}
-			}
-		}
-
-		return $this->render('@ProntoMobile/users/profile.html.twig', [
-			'profileForm'  => $profileForm->createView(),
-			'passwordForm' => $passwordForm->createView(),
-			'user'         => $user
-		]);
-	}
-
+        return $this->render('@ProntoMobile/users/profile.html.twig', [
+            'profileForm'  => $profileForm->createView(),
+            'passwordForm' => $passwordForm->createView(),
+            'user'         => $user
+        ]);
+    }
 
     /**
      * Add or edit a user
@@ -106,99 +106,98 @@ class UserController extends BaseController implements ValidateCustomerSelection
      * @param TranslatorInterface $translator
      * @param Swift_Mailer $mailer
      * @param User|null $user
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @return RedirectResponse|Response
      */
-	public function editAction(Request $request,
-							   EntityManagerInterface $entityManager,
-							   TranslatorInterface $translator,
-							   Swift_Mailer $mailer,
-							   User $user = null)
-	{
+    public function editAction(Request $request,
+                               EntityManagerInterface $entityManager,
+                               TranslatorInterface $translator,
+                               Swift_Mailer $mailer,
+                               User $user = null)
+    {
         $customer = $this->getCustomer();
 
-		// The user is not allowed to edit users belonging to other customers
-		if ($user !== null && $user->getCustomer()->getId() !== $customer->getId()) {
-			return $this->redirectToRoute('pronto_mobile_users');
-		}
+        // The user is not allowed to edit users belonging to other customers
+        if ($user !== null && $user->getCustomer()->getId() !== $customer->getId()) {
+            return $this->redirectToRoute('pronto_mobile_users');
+        }
 
-		$userDTO = UserDTO::fromEntity($user);
-		$form = $this->createForm(UserForm::class, $userDTO);
-		$form->handleRequest($request);
+        $userDTO = UserDTO::fromEntity($user);
+        $form = $this->createForm(UserForm::class, $userDTO);
+        $form->handleRequest($request);
 
-		if ($form->isSubmitted() && $form->isValid()) {
-			$userDTO = $form->getData();
+        if ($form->isSubmitted() && $form->isValid()) {
+            $userDTO = $form->getData();
 
-			/** @var User $user */
-			$user = $userDTO->toEntity($user ?? new User());
+            /** @var User $user */
+            $user = $userDTO->toEntity($user ?? new User());
 
-			$user->setCustomer($customer);
+            $user->setCustomer($customer);
 
-			// Remove or add the admin role
-			if (!$form->get('admin')->getData()) {
-				$user->removeRole('ROLE_ADMIN');
-			} else {
-				$user->addRole('ROLE_ADMIN');
-			}
+            // Remove or add the admin role
+            if (!$form->get('admin')->getData()) {
+                $user->removeRole('ROLE_ADMIN');
+            } else {
+                $user->addRole('ROLE_ADMIN');
+            }
 
-			$new = $user->getId() === null;
+            $new = $user->getId() === null;
 
-			$entityManager->persist($user);
-			$entityManager->flush();
+            $entityManager->persist($user);
+            $entityManager->flush();
 
-			$domain = $this->prontoMobile->getConfiguration('domain', 'pronto.am');
+            $domain = $this->prontoMobile->getConfiguration('domain', 'pronto.am');
 
-			if ($new) {
-				// Create an account activation link for the user and mail it
-				$message = (new Swift_Message($translator->trans('authentication.create_password')))
-					->setFrom('noreply@' . $domain)
-					->setTo($user->getEmail())
-					->setBody(
-						$this->renderView('@ProntoMobile/mails/registration.html.twig', [
-							'user'   => $user,
-							'action' => [
-								'url'  => $this->generateUrl('pronto_mobile_create_password', ['token' => $user->getActivationToken()], UrlGeneratorInterface::ABSOLUTE_URL),
-								'text' => $translator->trans('authentication.create_password')
-							]
-						]), 'text/html');
+            if ($new) {
+                // Create an account activation link for the user and mail it
+                $message = (new Swift_Message($translator->trans('authentication.create_password')))
+                    ->setFrom('noreply@' . $domain)
+                    ->setTo($user->getEmail())
+                    ->setBody(
+                        $this->renderView('@ProntoMobile/mails/registration.html.twig', [
+                            'user'   => $user,
+                            'action' => [
+                                'url'  => $this->generateUrl('pronto_mobile_create_password', ['token' => $user->getActivationToken()], UrlGeneratorInterface::ABSOLUTE_URL),
+                                'text' => $translator->trans('authentication.create_password')
+                            ]
+                        ]), 'text/html');
 
-				$mailer->send($message);
-			}
+                $mailer->send($message);
+            }
 
-			$this->addDataSavedFlash();
+            $this->addDataSavedFlash();
 
-			return $this->redirectToRoute('pronto_mobile_users');
-		}
+            return $this->redirectToRoute('pronto_mobile_users');
+        }
 
-		return $this->render('@ProntoMobile/users/edit.html.twig', [
-			'userForm' => $form->createView(),
-			'user'     => $user
-		]);
-	}
+        return $this->render('@ProntoMobile/users/edit.html.twig', [
+            'userForm' => $form->createView(),
+            'user'     => $user
+        ]);
+    }
 
+    /**
+     * Delete one or more users
+     *
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @return RedirectResponse
+     */
+    public function deleteAction(Request $request, EntityManagerInterface $entityManager)
+    {
+        // Find users by id and the current customer
+        $users = $entityManager->getRepository(User::class)->findBy([
+            'id'       => $request->get('users'),
+            'customer' => $this->getCustomer()
+        ]);
 
-	/**
-	 * Delete one or more users
-	 *
-	 * @param Request $request
-	 * @param EntityManagerInterface $entityManager
-	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
-	 */
-	public function deleteAction(Request $request, EntityManagerInterface $entityManager)
-	{
-		// Find users by id and the current customer
-		$users = $entityManager->getRepository(User::class)->findBy([
-			'id'       => $request->get('users'),
-			'customer' => $this->getCustomer()
-		]);
+        foreach ($users as $user) {
+            $entityManager->remove($user);
+        }
 
-		foreach ($users as $user) {
-			$entityManager->remove($user);
-		}
+        $entityManager->flush();
 
-		$entityManager->flush();
+        $this->addDataRemovedFlash();
 
-		$this->addDataRemovedFlash();
-
-		return $this->redirectToRoute('pronto_mobile_users');
-	}
+        return $this->redirectToRoute('pronto_mobile_users');
+    }
 }

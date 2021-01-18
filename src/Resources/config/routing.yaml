@@ -1,54 +1,54 @@
 oauth2:
-    resource: '@TrikoderOAuth2Bundle/Resources/config/routes.xml'
-    prefix: /oauth/v2
+  resource: '@TrikoderOAuth2Bundle/Resources/config/routes.xml'
+  prefix: /oauth/v2
 
 #### LOGIN AND PASSWORD RESET ####
 
 pronto_mobile_login:
-    path: /login
-    schemes: [https]
-    defaults:
-        _controller: Pronto\MobileBundle\Controller\Web\AuthenticationController:loginAction
+  path: /login
+  schemes: [https]
+  defaults:
+    _controller: Pronto\MobileBundle\Controller\Web\AuthenticationController:loginAction
 
 pronto_mobile_logout:
-    path: /logout
-    schemes: [https]
-    defaults:
-        _controller: Pronto\MobileBundle\Controller\Web\AuthenticationController:logoutAction
+  path: /logout
+  schemes: [https]
+  defaults:
+    _controller: Pronto\MobileBundle\Controller\Web\AuthenticationController:logoutAction
 
 pronto_mobile_forgot_password:
-    path: /password/reset
-    schemes: [https]
-    defaults:
-        _controller: Pronto\MobileBundle\Controller\Web\AuthenticationController:resetPasswordFormAction
+  path: /password/reset
+  schemes: [https]
+  defaults:
+    _controller: Pronto\MobileBundle\Controller\Web\AuthenticationController:resetPasswordFormAction
 
 pronto_mobile_reset_password:
-    path: /password/reset/{token}
-    schemes: [https]
-    defaults:
-        _controller: Pronto\MobileBundle\Controller\Web\AuthenticationController:resetPasswordAction
+  path: /password/reset/{token}
+  schemes: [https]
+  defaults:
+    _controller: Pronto\MobileBundle\Controller\Web\AuthenticationController:resetPasswordAction
 
 pronto_mobile_create_password:
-    path: /password/create/{token}
-    schemes: [https]
-    defaults:
-        _controller: Pronto\MobileBundle\Controller\Web\AuthenticationController:createPasswordAction
+  path: /password/create/{token}
+  schemes: [https]
+  defaults:
+    _controller: Pronto\MobileBundle\Controller\Web\AuthenticationController:createPasswordAction
 
 pronto_mobile_app_users_reset_password:
-    path: /users/app/password/reset/{token}
-    schemes: [https]
-    defaults:
-        _controller: Pronto\MobileBundle\Controller\Api\V1\AppUserController:resetPasswordAction
+  path: /users/app/password/reset/{token}
+  schemes: [https]
+  defaults:
+    _controller: Pronto\MobileBundle\Controller\Api\V1\AppUserController:resetPasswordAction
 
 
 pronto_mobile_app_web_file:
-    resource: "@ProntoMobileBundle/Resources/config/routing/web.yaml"
-    prefix: /admin
-    name_prefix: pronto_mobile_
-    schemes: [https]
+  resource: "@ProntoMobileBundle/Resources/config/routing/web.yaml"
+  prefix: /admin
+  name_prefix: pronto_mobile_
+  schemes: [https]
 
 pronto_mobile_app_api_file:
-    resource: "@ProntoMobileBundle/Resources/config/routing/api.yaml"
-    prefix: /api
-    name_prefix: pronto_mobile_
-    schemes: [https]
+  resource: "@ProntoMobileBundle/Resources/config/routing/api.yaml"
+  prefix: /api
+  name_prefix: pronto_mobile_
+  schemes: [https]

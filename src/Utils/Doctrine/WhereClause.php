@@ -2,44 +2,44 @@
 
 namespace Pronto\MobileBundle\Utils\Doctrine;
 
+use Doctrine\ORM\QueryBuilder;
 
 class WhereClause implements Clause
 {
-	/** @var string $field */
-	private $field;
+    /** @var string $field */
+    private $field;
 
-	/** @var mixed $parameter */
-	private $parameter;
+    /** @var mixed $parameter */
+    private $parameter;
 
-	/** @var string $type */
-	private $type;
+    /** @var string $type */
+    private $type;
 
+    /**
+     * WhereClause constructor.
+     * @param string $field
+     * @param mixed $parameter
+     * @param string $type
+     */
+    public function __construct(string $field, $parameter, string $type = '=')
+    {
+        $this->field = $field;
+        $this->parameter = $parameter;
+        $this->type = $type;
+    }
 
-	/**
-	 * WhereClause constructor.
-	 * @param string $field
-	 * @param mixed $parameter
-	 * @param string $type
-	 */
-	public function __construct(string $field, $parameter, string $type = '=')
-	{
-		$this->field = $field;
-		$this->parameter = $parameter;
-		$this->type = $type;
-	}
+    /**
+     * Add the clause to the query
+     *
+     * @param QueryBuilder $query
+     * @return void
+     */
+    public function addToQuery(&$query): void
+    {
+        $field = explode('.', $this->field);
+        $parameter = end($field);
 
-	/**
-	 * Add the clause to the query
-	 *
-	 * @param \Doctrine\ORM\QueryBuilder $query
-	 * @return void
-	 */
-	public function addToQuery(&$query): void
-	{
-		$field = explode('.', $this->field);
-		$parameter = end($field);
-
-		$query->andWhere($this->field . ' ' . $this->type . ' :' . $parameter);
-		$query->setParameter($parameter, $this->parameter);
-	}
+        $query->andWhere($this->field . ' ' . $this->type . ' :' . $parameter);
+        $query->setParameter($parameter, $this->parameter);
+    }
 }

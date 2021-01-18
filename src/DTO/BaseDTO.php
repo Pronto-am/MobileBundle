@@ -9,9 +9,6 @@ abstract class BaseDTO
     /** @var bool $new */
     public $new = true;
 
-    /** @return array */
-    abstract public static function getFillable(): array;
-
     /**
      * @param mixed|null $entity
      * @return static
@@ -46,6 +43,9 @@ abstract class BaseDTO
 
         return $data;
     }
+
+    /** @return array */
+    abstract public static function getFillable(): array;
 
     /**
      * @param $entity

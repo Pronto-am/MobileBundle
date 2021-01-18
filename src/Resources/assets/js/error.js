@@ -1,10 +1,10 @@
 const $ = require('jquery');
 
-$(document).ready(function() {
-    setTimeout(function() {
+$(document).ready(function () {
+    setTimeout(function () {
         $('#header img').addClass('hinge');
 
-        setTimeout(function() {
+        setTimeout(function () {
             $('#header img').hide();
         }, 6000);
     }, 1000);

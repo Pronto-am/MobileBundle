@@ -10,6 +10,7 @@ use Pronto\MobileBundle\Entity\Customer;
 use Pronto\MobileBundle\Entity\User;
 use Pronto\MobileBundle\Utils\Collect;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use function in_array;
 
 class EntryParser
 {
@@ -57,27 +58,6 @@ class EntryParser
     }
 
     /**
-     * Parse the entries to the correct format to return as an API response
-     */
-    public function parse(array $entries, array $mappedRelationships = []): array
-    {
-        $this->parseEntries($entries, $mappedRelationships);
-
-        return $entries;
-    }
-
-    /**
-     * Parse the entries
-     */
-    private function parseEntries(array &$entries, array $mappedRelationships): void
-    {
-        // Parse the entry
-        foreach ($entries as &$entry) {
-            $this->parseEntry($entry, $mappedRelationships);
-        }
-    }
-
-    /**
      * Map the properties to a readable format
      */
     private function mapProperties(Collection $collection): void
@@ -117,6 +97,27 @@ class EntryParser
     }
 
     /**
+     * Parse the entries to the correct format to return as an API response
+     */
+    public function parse(array $entries, array $mappedRelationships = []): array
+    {
+        $this->parseEntries($entries, $mappedRelationships);
+
+        return $entries;
+    }
+
+    /**
+     * Parse the entries
+     */
+    private function parseEntries(array &$entries, array $mappedRelationships): void
+    {
+        // Parse the entry
+        foreach ($entries as &$entry) {
+            $this->parseEntry($entry, $mappedRelationships);
+        }
+    }
+
+    /**
      * Parse an entry to the correct format
      * @throws Exception
      */
@@ -136,7 +137,7 @@ class EntryParser
             $type = $property->getType();
 
             // JSON encoding collection property types
-            if ($property->isTranslatable() || \in_array($type->getType(), self::JSON, true)) {
+            if ($property->isTranslatable() || in_array($type->getType(), self::JSON, true)) {
                 $value = json_decode($value, true);
             }
 

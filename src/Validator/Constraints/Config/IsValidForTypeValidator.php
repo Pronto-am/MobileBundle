@@ -2,7 +2,6 @@
 
 namespace Pronto\MobileBundle\Validator\Constraints\Config;
 
-
 use Pronto\MobileBundle\Enum\RemoteConfigType;
 use Pronto\MobileBundle\Enum\VariableType;
 use Pronto\MobileBundle\Validator\Constraints\ConstraintValidator;
@@ -67,7 +66,7 @@ class IsValidForTypeValidator extends ConstraintValidator
             }
 
             // Validate the step size of the number
-            if(isset($options['step'])) {
+            if (isset($options['step'])) {
                 $normalized = round($float / (float) $options['step']) * (float) $options['step'];
 
                 // There could be a minor difference, hence the: 0.000001

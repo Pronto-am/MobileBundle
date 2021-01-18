@@ -2,8 +2,8 @@
 
 namespace Pronto\MobileBundle\Service\Collection;
 
-
 use DateTime;
+use Exception;
 use Pronto\MobileBundle\Entity\Collection\Property;
 use Pronto\MobileBundle\Service\JsonTranslator;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -76,7 +76,7 @@ class EntryValueParser
      *
      * @param string $value
      * @return string
-     * @throws \Exception
+     * @throws Exception
      */
     public function parseDate(string $value): string
     {
@@ -90,7 +90,7 @@ class EntryValueParser
      *
      * @param string $value
      * @return string
-     * @throws \Exception
+     * @throws Exception
      */
     public function parseDateTime(string $value): string
     {

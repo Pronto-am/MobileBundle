@@ -7,7 +7,7 @@ module.exports = {
 
             modal.find('button[type="submit"]').addClass('disabled');
         },
-        hide: function(modal) {
+        hide: function (modal) {
             modal.find('.progress').remove();
 
             modal.find('button[type="submit"]').removeClass('disabled');

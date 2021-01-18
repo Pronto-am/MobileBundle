@@ -9,10 +9,11 @@ use Pronto\MobileBundle\Controller\Api\BaseApiController;
 use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\Translation;
 use Pronto\MobileBundle\Entity\TranslationKey;
-use Pronto\MobileBundle\Exceptions\ApiException;
+use Pronto\MobileBundle\Exceptions\Auth\InvalidAuthorizationHeaderException;
+use Pronto\MobileBundle\Exceptions\Auth\InvalidAuthorizationTokenException;
+use Pronto\MobileBundle\Exceptions\Auth\InvalidPluginStateException;
 use Pronto\MobileBundle\Exceptions\TranslationKeys\ZipFileNotCreatedException;
 use Pronto\MobileBundle\Utils\File;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -47,11 +48,10 @@ class TranslationController extends BaseApiController
      */
 
     /**
-     * @param Request $request
-     * @param KernelInterface $kernel
-     * @param EntityManagerInterface $entityManager
-     * @return JsonResponse|Response
-     * @throws \Pronto\MobileBundle\Exceptions\ApiException
+     * @throws ZipFileNotCreatedException
+     * @throws InvalidAuthorizationHeaderException
+     * @throws InvalidAuthorizationTokenException
+     * @throws InvalidPluginStateException
      */
     public function indexAction(Request $request, KernelInterface $kernel, EntityManagerInterface $entityManager)
     {
@@ -96,11 +96,7 @@ class TranslationController extends BaseApiController
     }
 
     /**
-     * @param array $translations
-     * @param KernelInterface $kernel
-     * @param Application $application
-     * @return Response
-     * @throws ApiException
+     * @throws ZipFileNotCreatedException
      */
     private function exportXml(array $translations, KernelInterface $kernel, Application $application)
     {

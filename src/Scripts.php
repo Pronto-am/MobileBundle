@@ -81,36 +81,6 @@ class Scripts
         file_put_contents($fileName, Yaml::dump($oauth, 4));
     }
 
-    private static function addRoutes(string $routesDir): void
-    {
-        $fileName = $routesDir . '/routes.yaml';
-
-        $routes = [
-            'pronto_mobile' => [
-                'resource' => '@ProntoMobileBundle/Resources/config/routing.yaml',
-            ]
-        ];
-
-        file_put_contents($fileName, Yaml::dump($routes, 4));
-    }
-
-    private static function modifyTwigConfiguration(string $packagesDir): void
-    {
-        $fileName = $packagesDir . '/twig.yaml';
-
-        $twig = [
-            'twig' => [
-                'globals' => [
-                    'pronto_mobile'      => '@Pronto\MobileBundle\Service\ProntoMobile',
-                    'entry_value_parser' => '@Pronto\MobileBundle\Service\Collection\EntryValueParser',
-                    'json_translator'    => '@Pronto\MobileBundle\Service\JsonTranslator',
-                ]
-            ]
-        ];
-
-        file_put_contents($fileName, Yaml::dump($twig, 4));
-    }
-
     private static function modifySecurityConfiguration(string $packagesDir): void
     {
         $fileName = $packagesDir . '/security.yaml';
@@ -184,5 +154,35 @@ class Scripts
         var_dump($fileName);
 
         file_put_contents($fileName, Yaml::dump($security, 4));
+    }
+
+    private static function modifyTwigConfiguration(string $packagesDir): void
+    {
+        $fileName = $packagesDir . '/twig.yaml';
+
+        $twig = [
+            'twig' => [
+                'globals' => [
+                    'pronto_mobile'      => '@Pronto\MobileBundle\Service\ProntoMobile',
+                    'entry_value_parser' => '@Pronto\MobileBundle\Service\Collection\EntryValueParser',
+                    'json_translator'    => '@Pronto\MobileBundle\Service\JsonTranslator',
+                ]
+            ]
+        ];
+
+        file_put_contents($fileName, Yaml::dump($twig, 4));
+    }
+
+    private static function addRoutes(string $routesDir): void
+    {
+        $fileName = $routesDir . '/routes.yaml';
+
+        $routes = [
+            'pronto_mobile' => [
+                'resource' => '@ProntoMobileBundle/Resources/config/routing.yaml',
+            ]
+        ];
+
+        file_put_contents($fileName, Yaml::dump($routes, 4));
     }
 }

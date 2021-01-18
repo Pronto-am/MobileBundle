@@ -1,59 +1,61 @@
 # Learn more about services, parameters and containers at
 # https://symfony.com/doc/current/service_container.html
 parameters:
-    #parameter_name: value
+#parameter_name: value
 
 services:
-    # default configuration for services in *this* file
-    _defaults:
-        # automatically injects dependencies in your services
-        autowire: true
-        # automatically registers your services as commands, event subscribers, etc.
-        autoconfigure: true
-        # this means you cannot fetch services directly from the container via $container->get()
-        # if you need to do this, you can override this setting on individual services
-        public: false
+  # default configuration for services in *this* file
+  _defaults:
+    # automatically injects dependencies in your services
+    autowire: true
+    # automatically registers your services as commands, event subscribers, etc.
+    autoconfigure: true
+    # this means you cannot fetch services directly from the container via $container->get()
+    # if you need to do this, you can override this setting on individual services
+    public: false
 
-    Pronto\MobileBundle\Service\ProntoMobile:
-        autowire: false
-        class: Pronto\MobileBundle\Service\ProntoMobile
-        public: true
-        arguments:
-            - '@request_stack'
-            - '@doctrine.orm.entity_manager'
-            - []
+  Pronto\MobileBundle\Service\ProntoMobile:
+    autowire: false
+    class: Pronto\MobileBundle\Service\ProntoMobile
+    public: true
+    arguments:
+      - '@request_stack'
+      - '@doctrine.orm.entity_manager'
+      - []
 
-    Pronto\MobileBundle\:
-        resource: '../../{Command,Controller,DataFixtures,EventSubscriber,Middleware,Provider,Security,Service,Repository,Validator}'
-        exclude: '../../Service/ProntoMobile.php'
+  Pronto\MobileBundle\:
+    resource: '../../{Command,Controller,DataFixtures,EventSubscriber,Middleware,Provider,Security,Service,Repository,Validator}'
+    exclude: '../../Service/ProntoMobile.php'
 
-    #### TWIG EXTENSIONS ####
-    Pronto\MobileBundle\Twig\:
-        resource: '../../Twig'
-        tags: ['twig.extension']
+  #### TWIG EXTENSIONS ####
+  Pronto\MobileBundle\Twig\:
+    resource: '../../Twig'
+    tags: ['twig.extension']
 
-    #### SERIALIZER ####
-    Pronto\MobileBundle\Serializer\Normalizer\:
-        resource: '../../Serializer/Normalizer'
-        tags: ['serializer.normalizer']
+  #### SERIALIZER ####
+  Pronto\MobileBundle\Serializer\Normalizer\:
+    resource: '../../Serializer/Normalizer'
+    tags: ['serializer.normalizer']
 
-    #### PRONTO MOBILE DOCTRINE EVENT SUBSCRIBERS ####
-    Pronto\MobileBundle\EventSubscriber\Doctrine\:
-        resource: '../../EventSubscriber/Doctrine'
-        tags:
-            - { name: doctrine.event_subscriber, connection: default }
+  #### PRONTO MOBILE DOCTRINE EVENT SUBSCRIBERS ####
+  Pronto\MobileBundle\EventSubscriber\Doctrine\:
+    resource: '../../EventSubscriber/Doctrine'
+    tags:
+      - { name: doctrine.event_subscriber, connection: default }
 
-    #### PRONTO MOBILE DATA FIXTURES ####
-    Pronto\MobileBundle\DataFixtures\:
-        resource: '../../DataFixtures'
-        tags: ['doctrine.fixture.orm']
+  #### PRONTO MOBILE DATA FIXTURES ####
+  Pronto\MobileBundle\DataFixtures\:
+    resource: '../../DataFixtures'
+    tags: ['doctrine.fixture.orm']
 
-    pronto_mobile_app_user_provider:
-        class: Pronto\MobileBundle\Provider\AppUserProvider
+  pronto_mobile_app_user_provider:
+    class: Pronto\MobileBundle\Provider\AppUserProvider
 
-    Pronto\MobileBundle\EventListener\OAuth\UserResolveListener:
-        arguments:
-            - '@pronto_mobile_app_user_provider'
-            - '@security.password_encoder'
-        tags:
-            - { name: kernel.event_listener, event: trikoder.oauth2.user_resolve, method: onUserResolve }
+  Pronto\MobileBundle\EventListener\OAuth\UserResolveListener:
+    arguments:
+      - '@pronto_mobile_app_user_provider'
+      - '@security.password_encoder'
+      - '@doctrine.orm.entity_manager'
+      - '@security.token_storage'
+    tags:
+      - { name: kernel.event_listener, event: trikoder.oauth2.user_resolve, method: onUserResolve }

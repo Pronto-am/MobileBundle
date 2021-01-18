@@ -45,7 +45,7 @@ class TranslationController extends BaseController implements ValidateCustomerSe
     /**
      * @param Request $request
      * @param EntityManagerInterface $entityManager
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function indexAction(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -61,7 +61,7 @@ class TranslationController extends BaseController implements ValidateCustomerSe
      * @param Request $request
      * @param EntityManagerInterface $entityManager
      * @param TranslationKey|null $key
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @return RedirectResponse|Response
      */
     public function editAction(Request $request, EntityManagerInterface $entityManager, TranslationKey $key = null)
     {
@@ -271,7 +271,7 @@ class TranslationController extends BaseController implements ValidateCustomerSe
     /**
      * @param Request $request
      * @param EntityManagerInterface $entityManager
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return RedirectResponse
      */
     public function deleteAction(Request $request, EntityManagerInterface $entityManager): RedirectResponse
     {

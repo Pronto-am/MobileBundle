@@ -4,14 +4,20 @@ declare(strict_types=1);
 
 namespace Pronto\MobileBundle\Controller\Api\V1;
 
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Pronto\MobileBundle\Controller\Api\BaseApiController;
 use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\AppUser;
 use Pronto\MobileBundle\Entity\Device;
+use Pronto\MobileBundle\Exceptions\ApiException;
+use Pronto\MobileBundle\Exceptions\Auth\InvalidAuthorizationHeaderException;
+use Pronto\MobileBundle\Exceptions\Auth\InvalidAuthorizationTokenException;
+use Pronto\MobileBundle\Exceptions\Auth\InvalidPluginStateException;
 use Pronto\MobileBundle\Exceptions\Devices\AlreadyRegisteredException;
 use Pronto\MobileBundle\Exceptions\Devices\MissingTokenException;
 use Pronto\MobileBundle\Exceptions\Devices\NotFoundException;
+use Pronto\MobileBundle\Exceptions\JsonResponseException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 
@@ -86,10 +92,12 @@ class DeviceController extends BaseApiController
      */
 
     /**
-     * @param Request $request
-     * @param EntityManagerInterface $entityManager
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
-     * @throws \Pronto\MobileBundle\Exceptions\ApiException
+     * @throws ApiException
+     * @throws MissingTokenException
+     * @throws InvalidAuthorizationHeaderException
+     * @throws InvalidAuthorizationTokenException
+     * @throws InvalidPluginStateException
+     * @throws JsonResponseException
      */
     public function registerAction(Request $request, EntityManagerInterface $entityManager)
     {
@@ -178,7 +186,7 @@ class DeviceController extends BaseApiController
         $device->setOsVersion($request->request->get('os_version'));
         $device->setAppVersion($request->request->get('app_version'));
         $device->setLanguage($request->request->get('language'));
-        $device->setLastLogin(new \DateTime());
+        $device->setLastLogin(new DateTime());
 
         // Save additional data
         if ($request->request->get('extra_data') !== null) {
@@ -214,10 +222,10 @@ class DeviceController extends BaseApiController
      */
 
     /**
-     * @param EntityManagerInterface $entityManager
-     * @param $deviceIdentifier
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
-     * @throws \Pronto\MobileBundle\Exceptions\ApiException
+     * @throws InvalidAuthorizationHeaderException
+     * @throws InvalidAuthorizationTokenException
+     * @throws InvalidPluginStateException
+     * @throws NotFoundException
      */
     public function deregisterAction(EntityManagerInterface $entityManager, $deviceIdentifier)
     {

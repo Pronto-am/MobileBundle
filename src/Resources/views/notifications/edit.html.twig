@@ -34,14 +34,16 @@
                 <div class="row">
                     <div class="col s12">
                         <label for="{{ language.code ~ '_title' }}" class="required">{{ 'push_notification.title'|trans|capitalize }}</label>
-                        <input name="{{ language.code ~ '_title' }}" placeholder="{{ 'push_notification.title'|trans|capitalize }}" class="title validate" id="{{ language.code ~ '_title' }}" type="text" value="{{ attribute(notification.title, language.code) is defined ? attribute(notification.title, language.code) : '' }}" required data-length="100">
+                        <input name="{{ language.code ~ '_title' }}" placeholder="{{ 'push_notification.title'|trans|capitalize }}" class="title validate" id="{{ language.code ~ '_title' }}" type="text"
+                               value="{{ attribute(notification.title, language.code) is defined ? attribute(notification.title, language.code) : '' }}" required data-length="100">
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col s12">
                         <label for="{{ language.code ~ '_content' }}">{{ 'push_notification.content'|trans|capitalize }}</label>
-                        <input name="{{ language.code ~ '_content' }}" placeholder="{{ 'push_notification.content'|trans|capitalize }}" class="content" id="{{ language.code ~ '_content' }}" type="text" value="{{ attribute(notification.content, language.code) is defined ? attribute(notification.content, language.code) : '' }}" required data-length="200">
+                        <input name="{{ language.code ~ '_content' }}" placeholder="{{ 'push_notification.content'|trans|capitalize }}" class="content" id="{{ language.code ~ '_content' }}" type="text"
+                               value="{{ attribute(notification.content, language.code) is defined ? attribute(notification.content, language.code) : '' }}" required data-length="200">
                     </div>
                 </div>
 
@@ -61,14 +63,16 @@
                 <div class="row click-action url">
                     <div class="col s12">
                         <label for="{{ language.code ~ '_clickActionUrl' }}">{{ 'push_notification.click_action_url'|trans|capitalize }}</label>
-                        <input name="{{ language.code ~ '_clickActionUrl' }}" placeholder="http://" class="click-action-url" id="{{ language.code ~ '_clickActionUrl' }}" type="text" value="{{ attribute(notification.clickActionUrl, language.code) is defined ? attribute(notification.clickActionUrl, language.code) : '' }}" required>
+                        <input name="{{ language.code ~ '_clickActionUrl' }}" placeholder="http://" class="click-action-url" id="{{ language.code ~ '_clickActionUrl' }}" type="text"
+                               value="{{ attribute(notification.clickActionUrl, language.code) is defined ? attribute(notification.clickActionUrl, language.code) : '' }}" required>
                     </div>
                 </div>
 
                 <div class="row click-action html">
                     <div class="col m12 l7">
                         <label for="{{ language.code ~ '_clickActionHtml' }}">{{ 'push_notification.click_action_html'|trans|capitalize }}</label>
-                        <textarea name="{{ language.code ~ '_clickActionHtml' }}" placeholder="{{ 'push_notification.click_action_html'|trans|capitalize }}" class="trumbowyg click-action-html" id="{{ language.code ~ '_clickActionHtml' }}">{{ attribute(notification.clickActionHtml, language.code) is defined ? attribute(notification.clickActionHtml, language.code) : '' }}</textarea>
+                        <textarea name="{{ language.code ~ '_clickActionHtml' }}" placeholder="{{ 'push_notification.click_action_html'|trans|capitalize }}" class="trumbowyg click-action-html"
+                                  id="{{ language.code ~ '_clickActionHtml' }}">{{ attribute(notification.clickActionHtml, language.code) is defined ? attribute(notification.clickActionHtml, language.code) : '' }}</textarea>
                     </div>
 
                     <div class="col m12 l5">

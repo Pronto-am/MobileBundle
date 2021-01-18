@@ -14,8 +14,8 @@ const sweetalert = require('./sweetalert');
 
 require('./colorbrightness');
 
-$(window).on('load', function() {
-    setTimeout(function() {
+$(window).on('load', function () {
+    setTimeout(function () {
         $('.page-loader-container').fadeOut(200);
     }, 500);
 });
@@ -27,7 +27,7 @@ $(document).ready(function () {
     forms.init();
 
     // Adjust the color of the label to the background color
-    $('.label').each(function() {
+    $('.label').each(function () {
         $(this).colourBrightness();
     });
 
@@ -61,8 +61,8 @@ $(document).ready(function () {
     /**
      * Trigger the dropdown toggle when a collection is highlighted
      */
-    $('li.has-sub-menu').each(function() {
-        if($(this).hasClass('submenu-open')) {
+    $('li.has-sub-menu').each(function () {
+        if ($(this).hasClass('submenu-open')) {
             $(this).find('.submenu-dropdown-toggle').trigger('click');
         }
     });
@@ -71,11 +71,11 @@ $(document).ready(function () {
     /**
      * Single deletion of objects
      */
-    $('a[name="single-delete"]').click(function() {
+    $('a[name="single-delete"]').click(function () {
         let id = $(this).data('id');
         let url = $(this).data('url');
 
-        sweetalert.confirm(translations.confirmTitle, translations.confirmText, function() {
+        sweetalert.confirm(translations.confirmTitle, translations.confirmText, function () {
             $('.loader-container').fadeIn(200);
 
             $.ajax({
@@ -86,8 +86,8 @@ $(document).ready(function () {
                     'id': id
                 },
                 success: function (response) {
-                    if(!response.error) {
-                        if(response.data.redirectUrl) {
+                    if (!response.error) {
+                        if (response.data.redirectUrl) {
                             window.location = response.data.redirectUrl;
                         } else {
                             window.location.reload();
@@ -102,12 +102,12 @@ $(document).ready(function () {
     /**
      * Table select all checkboxes
      */
-    $('input[id^="checkAll"]').change(function() {
+    $('input[id^="checkAll"]').change(function () {
         let checkboxes = $(this).closest('table').find(':checkbox');
         checkboxes.prop('checked', $(this).is(':checked'));
     });
 
-    $.each($('form :checkbox'), function(key, value) {
+    $.each($('form :checkbox'), function (key, value) {
         let label = $('label[for="' + this.id + '"]');
 
         $(this).insertBefore(label);
@@ -117,29 +117,29 @@ $(document).ready(function () {
     /**
      * The handle function to delete multiple table records at once
      */
-    $('.multiple-delete').click(function() {
+    $('.multiple-delete').click(function () {
         let parent = $(this).closest('.toolbar');
 
         let form;
 
         // Check if the form is inside a card
-        if(parent.parents('.card-content').length > 0) {
+        if (parent.parents('.card-content').length > 0) {
             form = parent.next('form');
         } else {
             form = parent.next('.card').find('form');
         }
 
         // Find just a form when it's still not set
-        if(form.length === 0) {
+        if (form.length === 0) {
             form = parent.nextAll('form');
         }
 
         let checked = form.find('input:checkbox:checked').length;
 
-        if(checked === 0) {
+        if (checked === 0) {
             materialize.alerts.show('U heeft geen items geselecteerd');
         } else {
-            sweetalert.confirm(translations.confirmTitle, translations.confirmText, function() {
+            sweetalert.confirm(translations.confirmTitle, translations.confirmText, function () {
                 form.submit();
             });
         }

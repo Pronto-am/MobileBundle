@@ -17,129 +17,127 @@ use Pronto\MobileBundle\Utils\Doctrine\LeftJoinClause;
 use Pronto\MobileBundle\Utils\Doctrine\SelectClause;
 use Pronto\MobileBundle\Utils\Doctrine\WhereClause;
 use Pronto\MobileBundle\Utils\PageHelper;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class SegmentController extends BaseController implements ValidateCustomerSelectionInterface, ValidateApplicationSelectionInterface, ValidatePluginStateInterface
 {
-	/**
-	 * Check if the plugin is active
-	 *
-	 * @return string
-	 */
-	public function getPluginIdentifier(): string
-	{
-		return Plugin::PUSH_NOTIFICATIONS;
-	}
+    /**
+     * Check if the plugin is active
+     *
+     * @return string
+     */
+    public function getPluginIdentifier(): string
+    {
+        return Plugin::PUSH_NOTIFICATIONS;
+    }
 
+    /**
+     * Show a list of notification segments
+     *
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @return Response
+     */
+    public function indexAction(Request $request, EntityManagerInterface $entityManager)
+    {
+        $pageHelper = new PageHelper($request, $entityManager, Segment::class, 15);
+        $pageHelper->addClause(new SelectClause(['t.id', 't.name', 'COUNT(d.id) AS deviceCount']));
+        $pageHelper->addClause(new LeftJoinClause('t.deviceSegments', 's'));
+        $pageHelper->addClause(new LeftJoinClause('s.device', 'd', 'with', 'd.tokenState = 1'));
+        $pageHelper->addClause(new WhereClause('t.application', $this->getApplication()));
+        $pageHelper->addClause(new GroupClause('t.id'));
 
-	/**
-	 * Show a list of notification segments
-	 *
-	 * @param Request $request
-	 * @param EntityManagerInterface $entityManager
-	 * @return \Symfony\Component\HttpFoundation\Response
-	 */
-	public function indexAction(Request $request, EntityManagerInterface $entityManager)
-	{
-		$pageHelper = new PageHelper($request, $entityManager, Segment::class, 15);
-		$pageHelper->addClause(new SelectClause(['t.id', 't.name', 'COUNT(d.id) AS deviceCount']));
-		$pageHelper->addClause(new LeftJoinClause('t.deviceSegments', 's'));
-		$pageHelper->addClause(new LeftJoinClause('s.device', 'd', 'with', 'd.tokenState = 1'));
-		$pageHelper->addClause(new WhereClause('t.application', $this->getApplication()));
-		$pageHelper->addClause(new GroupClause('t.id'));
+        return $this->render('@ProntoMobile/notifications/segments/index.html.twig', [
+            'pageHelper' => $pageHelper
+        ]);
+    }
 
-		return $this->render('@ProntoMobile/notifications/segments/index.html.twig', [
-			'pageHelper' => $pageHelper
-		]);
-	}
+    /**
+     * Edit and save a push notification segment
+     *
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @param Segment|null $segment
+     * @return RedirectResponse|Response
+     */
+    public function editAction(Request $request, EntityManagerInterface $entityManager, Segment $segment = null)
+    {
+        $pageHelper = null;
 
+        if ($segment !== null) {
+            $pageHelper = new PageHelper($request, $entityManager, Device::class, 15, 't.lastLogin');
+            $pageHelper->addClause(new LeftJoinClause('t.deviceSegments', 's'));
+            $pageHelper->addClause(new WhereClause('s.segment', $segment));
+            $pageHelper->addClause(new WhereClause('t.tokenState', true));
+        }
 
-	/**
-	 * Edit and save a push notification segment
-	 *
-	 * @param Request $request
-	 * @param EntityManagerInterface $entityManager
-	 * @param Segment|null $segment
-	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-	 */
-	public function editAction(Request $request, EntityManagerInterface $entityManager, Segment $segment = null)
-	{
-		$pageHelper = null;
+        return $this->render('@ProntoMobile/notifications/segments/edit.html.twig', [
+            'segment'    => $segment,
+            'pageHelper' => $pageHelper
+        ]);
+    }
 
-		if ($segment !== null) {
-			$pageHelper = new PageHelper($request, $entityManager, Device::class, 15, 't.lastLogin');
-			$pageHelper->addClause(new LeftJoinClause('t.deviceSegments', 's'));
-			$pageHelper->addClause(new WhereClause('s.segment', $segment));
-			$pageHelper->addClause(new WhereClause('t.tokenState', true));
-		}
+    /**
+     * Save a plugin
+     *
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @param Segment $segment
+     * @return RedirectResponse|Response
+     */
+    public function saveAction(Request $request, EntityManagerInterface $entityManager, Segment $segment = null)
+    {
+        // Create a new segment if it doesn't exist yet
+        if ($segment === null) {
+            $segment = new Segment();
 
-		return $this->render('@ProntoMobile/notifications/segments/edit.html.twig', [
-			'segment'    => $segment,
-			'pageHelper' => $pageHelper
-		]);
-	}
+            $application = $this->getApplication();
 
+            $segment->setApplication($application);
+        }
 
-	/**
-	 * Save a plugin
-	 *
-	 * @param Request $request
-	 * @param EntityManagerInterface $entityManager
-	 * @param Segment $segment
-	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-	 */
-	public function saveAction(Request $request, EntityManagerInterface $entityManager, Segment $segment = null)
-	{
-		// Create a new segment if it doesn't exist yet
-		if ($segment === null) {
-			$segment = new Segment();
+        $body = $request->request->all();
 
-			$application = $this->getApplication();
+        $translations = [];
 
-			$segment->setApplication($application);
-		}
+        // Save the plugin settings
+        foreach ($body as $key => $value) {
+            [$language, $field] = explode('_', $key);
 
-		$body = $request->request->all();
+            $translations[$language] = $value;
+        }
 
-		$translations = [];
+        $segment->setName($translations);
 
-		// Save the plugin settings
-		foreach ($body as $key => $value) {
-			[$language, $field] = explode('_', $key);
+        $entityManager->persist($segment);
+        $entityManager->flush();
 
-			$translations[$language] = $value;
-		}
+        $this->addDataSavedFlash();
 
-		$segment->setName($translations);
+        return $this->redirectToRoute('pronto_mobile_notification_segments');
+    }
 
-		$entityManager->persist($segment);
-		$entityManager->flush();
+    /**
+     * Delete one or more segments
+     *
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @return RedirectResponse
+     */
+    public function deleteAction(Request $request, EntityManagerInterface $entityManager)
+    {
+        $segments = $entityManager->getRepository(Segment::class)->findById($request->get('segments'));
 
-		$this->addDataSavedFlash();
+        foreach ($segments as $segment) {
+            $entityManager->remove($segment);
+        }
 
-		return $this->redirectToRoute('pronto_mobile_notification_segments');
-	}
+        $entityManager->flush();
 
+        $this->addDataRemovedFlash();
 
-	/**
-	 * Delete one or more segments
-	 *
-	 * @param Request $request
-	 * @param EntityManagerInterface $entityManager
-	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
-	 */
-	public function deleteAction(Request $request, EntityManagerInterface $entityManager)
-	{
-		$segments = $entityManager->getRepository(Segment::class)->findById($request->get('segments'));
-
-		foreach ($segments as $segment) {
-			$entityManager->remove($segment);
-		}
-
-		$entityManager->flush();
-
-		$this->addDataRemovedFlash();
-
-		return $this->redirectToRoute('pronto_mobile_notification_segments');
-	}
+        return $this->redirectToRoute('pronto_mobile_notification_segments');
+    }
 }

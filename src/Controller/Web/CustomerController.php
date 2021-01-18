@@ -15,6 +15,7 @@ use Pronto\MobileBundle\Utils\Str;
 use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -84,13 +85,12 @@ class CustomerController extends BaseController
         ]);
     }
 
-
     /**
      * Edit a customers' account
      *
      * @param Request $request
      * @param EntityManagerInterface $entityManager
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @return RedirectResponse|Response
      */
     public function editAction(Request $request, EntityManagerInterface $entityManager)
     {
@@ -140,7 +140,6 @@ class CustomerController extends BaseController
             'customerForm' => $form->createView()
         ]);
     }
-
 
     /**
      * Delete a customers' account

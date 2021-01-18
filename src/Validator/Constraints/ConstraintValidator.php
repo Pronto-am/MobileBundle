@@ -62,22 +62,6 @@ abstract class ConstraintValidator extends BaseConstraintValidator
     }
 
     /**
-     * @return string
-     */
-    public abstract function requiresInstanceOf(): string;
-
-    /**
-     * @return VariableType|null
-     */
-    public abstract function valueIsOfType(): ?VariableType;
-
-    /**
-     * @param $value
-     * @param Constraint $constraint
-     */
-    public abstract function handle($value, Constraint $constraint): void;
-
-    /**
      * Checks if the passed value is valid.
      *
      * @param mixed $value The value that should be validated
@@ -106,6 +90,16 @@ abstract class ConstraintValidator extends BaseConstraintValidator
     }
 
     /**
+     * @return string
+     */
+    public abstract function requiresInstanceOf(): string;
+
+    /**
+     * @return VariableType|null
+     */
+    public abstract function valueIsOfType(): ?VariableType;
+
+    /**
      * @param $value
      * @return bool
      */
@@ -122,6 +116,12 @@ abstract class ConstraintValidator extends BaseConstraintValidator
                 return is_array($value);
         }
     }
+
+    /**
+     * @param $value
+     * @param Constraint $constraint
+     */
+    public abstract function handle($value, Constraint $constraint): void;
 
     /**
      * @return string

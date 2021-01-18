@@ -10,16 +10,16 @@ namespace Pronto\MobileBundle\DTO;
  */
 class AppUserDTO extends BaseDTO
 {
-	/**
-	 * @var bool
-	 */
-	public $activated;
+    /**
+     * @var bool
+     */
+    public $activated;
 
-	/**
-	 * @return array
-	 */
-	public static function getFillable(): array
-	{
-		return ['activated'];
-	}
+    /**
+     * @return array
+     */
+    public static function getFillable(): array
+    {
+        return ['activated'];
+    }
 }

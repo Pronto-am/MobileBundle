@@ -12,31 +12,31 @@ use DateTime;
  */
 class PushNotificationDTO extends BaseDTO
 {
-	/**
-	 * @var bool $schedule
-	 */
-	public $schedule;
+    /**
+     * @var bool $schedule
+     */
+    public $schedule;
 
-	/**
-	 * @var DateTime $scheduledSending
-	 */
-	public $scheduledSending;
+    /**
+     * @var DateTime $scheduledSending
+     */
+    public $scheduledSending;
 
-	/**
-	 * @var int $segment
-	 */
-	public $segment;
+    /**
+     * @var int $segment
+     */
+    public $segment;
 
-	/**
-	 * @var bool $test
-	 */
-	public $test;
+    /**
+     * @var bool $test
+     */
+    public $test;
 
-	/**
-	 * @return array
-	 */
-	public static function getFillable(): array
-	{
-		return ['schedule', 'scheduledSending', 'segment', 'test'];
-	}
+    /**
+     * @return array
+     */
+    public static function getFillable(): array
+    {
+        return ['schedule', 'scheduledSending', 'segment', 'test'];
+    }
 }

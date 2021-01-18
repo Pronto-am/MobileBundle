@@ -4,6 +4,6 @@ errorMessageTitle: This is the error message, in developers' language
 error403message: We've encountered an error. Well, technically you encountered an error. It seems you're not allowed to visit this page. It could be that you don't have the correct access rights, or you're trying to hack your way into Pronto's mind. Either way, you are not allowed access.
 error404message: We couldn't find what you where looking for? As far as we know, the page you are trying to view doesn't exist. You have found a rabbit hole! Your best option here is going back. If you think the page should actually exist and Pronto has to look better, don't be shy and contact us.
 error500message: >
-                We've encountered an error. It could be your own fault, but it's probably ours. We're very sorry this happened. To make it up to you, we've sent 10 emails to our developers with the error message. We're going to make them pay  ̶f̶o̶r̶ ̶t̶h̶e̶ ̶w̶a̶l̶l for letting you go through this. So, don't worry. Come back later and the error should be gone. If not, we're going to be busy interviewing new interns.
+  We've encountered an error. It could be your own fault, but it's probably ours. We're very sorry this happened. To make it up to you, we've sent 10 emails to our developers with the error message. We're going to make them pay  ̶f̶o̶r̶ ̶t̶h̶e̶ ̶w̶a̶l̶l for letting you go through this. So, don't worry. Come back later and the error should be gone. If not, we're going to be busy interviewing new interns.
 backHome: Go to home page
 sendComplaintMail: Or sent a complaint

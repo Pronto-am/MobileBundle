@@ -88,9 +88,9 @@ text-align: center; text-decoration: none; -webkit-text-size-adjust: none;' %}
 
                                     <!-- Greeting -->
                                     {% if _greeting is not empty %}
-                                    <h1 style="{{ header1 }}">
-                                        {{ _greeting|raw }}
-                                    </h1>
+                                        <h1 style="{{ header1 }}">
+                                            {{ _greeting|raw }}
+                                        </h1>
                                     {% endif %}
 
                                     <!-- Intro -->
@@ -100,46 +100,46 @@ text-align: center; text-decoration: none; -webkit-text-size-adjust: none;' %}
 
                                     <!-- Action Button -->
                                     {% if action is defined %}
-                                    <table style="{{ body_action }}" align="center" width="100%" cellpadding="0" cellspacing="0">
-                                        <tr>
-                                            <td align="center">
-                                                <a href="{{ action['url'] }}"
-                                                   style="{{ fontFamily }} {{ button }}"
-                                                   class="button"
-                                                   target="_blank">
-                                                    {{ action['text'] }}
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    </table>
+                                        <table style="{{ body_action }}" align="center" width="100%" cellpadding="0" cellspacing="0">
+                                            <tr>
+                                                <td align="center">
+                                                    <a href="{{ action['url'] }}"
+                                                       style="{{ fontFamily }} {{ button }}"
+                                                       class="button"
+                                                       target="_blank">
+                                                        {{ action['text'] }}
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </table>
                                     {% endif %}
 
                                     {% set _salutation = block('salutation') %}
 
                                     <!-- Salutation -->
                                     {% if _salutation is not empty %}
-                                    <p style="{{ paragraph }}">
-                                        {{ _salutation|raw }}
-                                    </p>
+                                        <p style="{{ paragraph }}">
+                                            {{ _salutation|raw }}
+                                        </p>
                                     {% endif %}
 
                                     <!-- Sub Copy -->
                                     {% if action is defined %}
-                                    <table style="{{ body_sub }}">
-                                        <tr>
-                                            <td style="{{ fontFamily }}">
-                                                <p style="{{ paragraph_sub }}">
-                                                    {{ 'mails.base.link_reference'|trans({'%button%': action['text']}) }}
-                                                </p>
+                                        <table style="{{ body_sub }}">
+                                            <tr>
+                                                <td style="{{ fontFamily }}">
+                                                    <p style="{{ paragraph_sub }}">
+                                                        {{ 'mails.base.link_reference'|trans({'%button%': action['text']}) }}
+                                                    </p>
 
-                                                <p style="{{ paragraph_sub }}">
-                                                    <a style="{{ anchor }}" href="{{ action['url'] }}" target="_blank">
-                                                        {{ action['url'] }}
-                                                    </a>
-                                                </p>
-                                            </td>
-                                        </tr>
-                                    </table>
+                                                    <p style="{{ paragraph_sub }}">
+                                                        <a style="{{ anchor }}" href="{{ action['url'] }}" target="_blank">
+                                                            {{ action['url'] }}
+                                                        </a>
+                                                    </p>
+                                                </td>
+                                            </tr>
+                                        </table>
                                     {% endif %}
                                 </td>
                             </tr>
@@ -155,7 +155,7 @@ text-align: center; text-decoration: none; -webkit-text-size-adjust: none;' %}
                                 <td style="{{ fontFamily }} {{ footer_cell }}">
                                     <p style="{{ paragraph_sub }}">
                                         &copy; {{ 'now'|date('Y') }}
-                                        <a style="{{ anchor }}" href="{{ path('pronto_mobile_login') }}" target="_blank">Pronto - App management</a> {{  customer != null ? 'for ' ~ customer.companyName : '' }}.
+                                        <a style="{{ anchor }}" href="{{ path('pronto_mobile_login') }}" target="_blank">Pronto - App management</a> {{ customer != null ? 'for ' ~ customer.companyName : '' }}.
                                         {{ 'mails.base.rights_reserved'|trans }}
                                     </p>
                                 </td>

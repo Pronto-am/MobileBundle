@@ -43,14 +43,7 @@ class ApplicationController extends BaseController implements ValidateCustomerSe
             return $this->redirectToRoute('pronto_mobile_applications');
         }
 
-        $applicationData = ApplicationDTO::fromEntity($application);
-
-        if ($application !== null) {
-            $applicationData->clientId = $application->getId() . '_' . $application->getRandomId();
-            $applicationData->clientSecret = $application->getSecret();
-        }
-
-        $form = $this->createForm(ApplicationForm::class, $applicationData, [
+        $form = $this->createForm(ApplicationForm::class, ApplicationDTO::fromEntity($application), [
             'languages' => $languagesLoader,
             'locale'    => $request->getLocale()
         ]);

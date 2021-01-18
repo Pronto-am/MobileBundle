@@ -13,6 +13,7 @@ use Pronto\MobileBundle\Exceptions\Auth\InvalidPluginStateException;
 use Pronto\MobileBundle\Repository\CollectionRepository;
 use Pronto\MobileBundle\Service\FileManager;
 use Pronto\MobileBundle\Service\ProntoMobile;
+use Pronto\MobileBundle\Service\TokenInspectionService;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -24,9 +25,13 @@ class FileController extends BaseApiController
     /** @var EntityManagerInterface $entityManager */
     private $entityManager;
 
-    public function __construct(ProntoMobile $prontoMobile, EntityManagerInterface $entityManager, FileManager $fileManager)
-    {
-        parent::__construct($prontoMobile);
+    public function __construct(
+        ProntoMobile $prontoMobile,
+        TokenInspectionService $tokenInspectionService,
+        EntityManagerInterface $entityManager,
+        FileManager $fileManager
+    ) {
+        parent::__construct($prontoMobile, $tokenInspectionService);
         $this->fileManager = $fileManager;
         $this->entityManager = $entityManager;
     }

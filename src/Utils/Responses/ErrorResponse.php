@@ -11,140 +11,133 @@ use Pronto\MobileBundle\Entity\TranslationKey;
 
 class ErrorResponse extends BaseResponse
 {
-	// Entity not found
-	public const NOT_FOUND = [404, 4, '{entity} not found'];
+    // Entity not found
+    public const NOT_FOUND = [404, 4, '{entity} not found'];
 
-	// Error code prefixes per entity
-	public const ERROR_CODE_PREFIXES = [
-		Segment::class          => 10,
-		Device::class           => 11,
-		AppUser::class          => 11,
-		Collection::class       => 12,
-		Collection\Entry::class => 13,
-		TranslationKey::class   => 14,
-		AppVersion::class       => 15
-	];
+    // Error code prefixes per entity
+    public const ERROR_CODE_PREFIXES = [
+        Segment::class          => 10,
+        Device::class           => 11,
+        AppUser::class          => 11,
+        Collection::class       => 12,
+        Collection\Entry::class => 13,
+        TranslationKey::class   => 14,
+        AppVersion::class       => 15
+    ];
 
+    /** @var string $entity */
+    private $entity;
 
-	/** @var string $entity */
-	private $entity;
+    /** @var int $errorCode */
+    private $errorCode;
 
-	/** @var int $errorCode */
-	private $errorCode;
+    /**
+     * ErrorResponse constructor.
+     * @param array $error
+     */
+    public function __construct(array $error)
+    {
+        $this->parseError($error);
+    }
 
+    /**
+     * @param array $error
+     */
+    private function parseError(array $error): void
+    {
+        if (count($error) === 3) {
+            [$httpStatusCode, $errorCode, $message] = $error;
 
-	/**
-	 * ErrorResponse constructor.
-	 * @param array $error
-	 */
-	public function __construct(array $error)
-	{
-		$this->parseError($error);
-	}
+            $this->setErrorCode($errorCode);
+        } else {
+            [$httpStatusCode, $message] = $error;
+        }
 
-	/**
-	 * @param array $error
-	 */
-	private function parseError(array $error): void
-	{
-		if (count($error) === 3) {
-			[$httpStatusCode, $errorCode, $message] = $error;
+        $this->setStatus($httpStatusCode);
+        $this->setMessage($message);
+    }
 
-			$this->setErrorCode($errorCode);
-		} else {
-			[$httpStatusCode, $message] = $error;
-		}
+    /**
+     * @param int $errorCode
+     */
+    private function setErrorCode(int $errorCode): void
+    {
+        $this->errorCode = $errorCode;
+    }
 
-		$this->setStatus($httpStatusCode);
-		$this->setMessage($message);
-	}
+    /**
+     * @param string $entity
+     * @return ErrorResponse
+     */
+    public function forEntity(string $entity): self
+    {
+        if ($entity !== '') {
+            $this->entity = $entity;
+        }
 
+        return $this;
+    }
 
-	/**
-	 * @param int $errorCode
-	 */
-	private function setErrorCode(int $errorCode): void
-	{
-		$this->errorCode = $errorCode;
-	}
+    /**
+     * Create the error message body
+     *
+     * @return self
+     */
+    public function create(): ResponseInterface
+    {
+        // Parse the entities name into the message if it's set
+        if ($this->entity !== null) {
+            $className = explode('\\', $this->entity);
 
+            $message = str_replace('{entity}', end($className), $this->getMessage());
 
-	/**
-	 * @return int
-	 */
-	private function getErrorCode(): int
-	{
-		// Get the prefix
-		$prefix = $this->getErrorCodePrefix();
+            // Prefix the error code with the entity specific code
+            $errorCode = $this->getErrorCode();
+        }
 
-		// Add leading zero's to the error code
-		$errorCode = str_pad($this->errorCode, 2, 0, STR_PAD_LEFT);
+        // Generate the main content
+        $content = [
+            'error' => [
+                'code'    => $errorCode ?? $this->getStatus(),
+                'message' => $message ?? $this->getMessage()
+            ]
+        ];
 
-		return $prefix . $errorCode;
-	}
+        // Set the optional data
+        if ($this->getData() !== null) {
+            $content['data'] = $this->getData();
+        }
 
+        $this->setContent($content);
 
-	/**
-	 * Get the error code prefixes for specific entities
-	 *
-	 * @return int
-	 */
-	private function getErrorCodePrefix(): int
-	{
-		if ($this->entity !== null && isset(self::ERROR_CODE_PREFIXES[$this->entity])) {
-			return self::ERROR_CODE_PREFIXES[$this->entity];
-		}
+        return $this;
+    }
 
-		return 4;
-	}
+    /**
+     * @return int
+     */
+    private function getErrorCode(): int
+    {
+        // Get the prefix
+        $prefix = $this->getErrorCodePrefix();
 
+        // Add leading zero's to the error code
+        $errorCode = str_pad($this->errorCode, 2, 0, STR_PAD_LEFT);
 
-	/**
-	 * @param string $entity
-	 * @return ErrorResponse
-	 */
-	public function forEntity(string $entity): self
-	{
-		if ($entity !== '') {
-			$this->entity = $entity;
-		}
+        return $prefix . $errorCode;
+    }
 
-		return $this;
-	}
+    /**
+     * Get the error code prefixes for specific entities
+     *
+     * @return int
+     */
+    private function getErrorCodePrefix(): int
+    {
+        if ($this->entity !== null && isset(self::ERROR_CODE_PREFIXES[$this->entity])) {
+            return self::ERROR_CODE_PREFIXES[$this->entity];
+        }
 
-
-	/**
-	 * Create the error message body
-	 *
-	 * @return self
-	 */
-	public function create(): ResponseInterface
-	{
-		// Parse the entities name into the message if it's set
-		if ($this->entity !== null) {
-			$className = explode('\\', $this->entity);
-
-			$message = str_replace('{entity}', end($className), $this->getMessage());
-
-			// Prefix the error code with the entity specific code
-			$errorCode = $this->getErrorCode();
-		}
-
-		// Generate the main content
-		$content = [
-			'error' => [
-				'code'    => $errorCode ?? $this->getStatus(),
-				'message' => $message ?? $this->getMessage()
-			]
-		];
-
-		// Set the optional data
-		if ($this->getData() !== null) {
-			$content['data'] = $this->getData();
-		}
-
-		$this->setContent($content);
-
-		return $this;
-	}
+        return 4;
+    }
 }

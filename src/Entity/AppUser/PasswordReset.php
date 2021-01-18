@@ -6,6 +6,7 @@ namespace Pronto\MobileBundle\Entity\AppUser;
 
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use Exception;
 use Pronto\MobileBundle\Entity\AppUser;
 use Ramsey\Uuid\Uuid;
 
@@ -49,12 +50,12 @@ class PasswordReset
      * Triggered on pre persist
      *
      * @ORM\PrePersist
-     * @throws \Exception
+     * @throws Exception
      */
     public function onPrePersist(): void
     {
         $this->token = Uuid::uuid1()->toString();
-        $this->createdAt = new \DateTime();
+        $this->createdAt = new DateTime();
     }
 
     /**

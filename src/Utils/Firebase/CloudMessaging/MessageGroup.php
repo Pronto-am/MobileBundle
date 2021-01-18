@@ -2,7 +2,6 @@
 
 namespace Pronto\MobileBundle\Utils\Firebase\CloudMessaging;
 
-
 use Pronto\MobileBundle\Entity\PushNotification;
 use Pronto\MobileBundle\Service\PushNotification\FirebaseStorage;
 
@@ -59,7 +58,7 @@ class MessageGroup
         if ($this->notification->getClickAction() === PushNotification::TYPE_URL_ACTION) {
             $clickAction = $this->notification->getClickActionUrl();
 
-            $clickAction = ! empty($clickAction[$this->language]) ? $clickAction[$this->language] : $clickAction[$this->defaultLanguage];
+            $clickAction = !empty($clickAction[$this->language]) ? $clickAction[$this->language] : $clickAction[$this->defaultLanguage];
 
             $this->message->addData('clickAction', $clickAction);
         } elseif ($this->notification->getClickAction() === PushNotification::TYPE_HTML_ACTION) {
@@ -75,7 +74,6 @@ class MessageGroup
         $this->message->addData('android_channel_id', 'CHANNEL_ID_DEFAULT');
     }
 
-
     /**
      * Get the translation of a property
      *
@@ -84,7 +82,7 @@ class MessageGroup
      */
     private function getTranslation(array $json): string
     {
-        if ($this->language !== null && isset($json[$this->language]) && ! empty($json[$this->language])) {
+        if ($this->language !== null && isset($json[$this->language]) && !empty($json[$this->language])) {
             return $json[$this->language];
         }
 
@@ -93,7 +91,6 @@ class MessageGroup
         }
     }
 
-
     /**
      * @return Message
      */
@@ -101,7 +98,6 @@ class MessageGroup
     {
         return $this->message;
     }
-
 
     /**
      * @return array

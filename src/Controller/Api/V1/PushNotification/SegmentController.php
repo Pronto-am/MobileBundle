@@ -4,17 +4,18 @@ declare(strict_types=1);
 
 namespace Pronto\MobileBundle\Controller\Api\V1\PushNotification;
 
-use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManagerInterface;
 use Pronto\MobileBundle\Controller\Api\BaseApiController;
 use Pronto\MobileBundle\Entity\Device;
 use Pronto\MobileBundle\Entity\Device\DeviceSegment;
 use Pronto\MobileBundle\Entity\PushNotification\Segment;
 use Pronto\MobileBundle\Exceptions\ApiException;
+use Pronto\MobileBundle\Exceptions\Auth\InvalidAuthorizationHeaderException;
+use Pronto\MobileBundle\Exceptions\Auth\InvalidAuthorizationTokenException;
+use Pronto\MobileBundle\Exceptions\Auth\InvalidPluginStateException;
 use Pronto\MobileBundle\Exceptions\Devices\NotFoundException;
 use Pronto\MobileBundle\Exceptions\PushNotifications\InvalidSegmentException;
 use Pronto\MobileBundle\Exceptions\PushNotifications\Segments\NotFoundException as SegmentNotFoundException;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 class SegmentController extends BaseApiController
@@ -52,11 +53,11 @@ class SegmentController extends BaseApiController
      */
 
     /**
-     * @param EntityManagerInterface $entityManager
-     * @param $deviceIdentifier
-     * @return JsonResponse
-     * @throws ApiException
      * @throws DBALException
+     * @throws NotFoundException
+     * @throws InvalidAuthorizationHeaderException
+     * @throws InvalidAuthorizationTokenException
+     * @throws InvalidPluginStateException
      */
     public function subscribedAction(EntityManagerInterface $entityManager, $deviceIdentifier)
     {
@@ -119,10 +120,13 @@ class SegmentController extends BaseApiController
      */
 
     /**
-     * @param Request $request
-     * @param EntityManagerInterface $entityManager
-     * @return JsonResponse
      * @throws ApiException
+     * @throws InvalidAuthorizationHeaderException
+     * @throws InvalidAuthorizationTokenException
+     * @throws InvalidPluginStateException
+     * @throws InvalidSegmentException
+     * @throws NotFoundException
+     * @throws SegmentNotFoundException
      */
     public function updateAction(Request $request, EntityManagerInterface $entityManager)
     {
@@ -133,7 +137,7 @@ class SegmentController extends BaseApiController
         $this->validateRequestContent($request, ['device_identifier', 'segments']);
 
         // Check if the segments property is an array
-        if (! is_array($request->request->get('segments'))) {
+        if (!is_array($request->request->get('segments'))) {
             throw new InvalidSegmentException();
         }
 

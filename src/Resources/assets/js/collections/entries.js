@@ -73,8 +73,8 @@ $(document).ready(function () {
                         // Remove the file from the existing files field
                         let uploaded = JSON.parse(uploadedFiles.val());
 
-                        $.each(uploaded, function(key, file) {
-                            if(file === filename) {
+                        $.each(uploaded, function (key, file) {
+                            if (file === filename) {
                                 delete uploaded[key];
 
                                 return false;
@@ -94,14 +94,14 @@ $(document).ready(function () {
     /**
      * Change the relation of the entry
      */
-    $('a[name="set-relationship"]').click(function(e) {
+    $('a[name="set-relationship"]').click(function (e) {
         e.preventDefault();
 
         materialize.modals.createModal('large', $(this).data('href'), true);
     });
 
 
-    $('button[type="submit"]').click(function() {
+    $('button[type="submit"]').click(function () {
         forms.removeAlertsFromTabs();
 
         // Mark all fields as valid
@@ -110,35 +110,35 @@ $(document).ready(function () {
 
         let valid = true;
 
-        if(!validTextInput()) {
+        if (!validTextInput()) {
             valid = false;
         }
 
-        if(!validNumberInput()) {
+        if (!validNumberInput()) {
             valid = false;
         }
 
-        if(!validCodeflaskTextarea()) {
+        if (!validCodeflaskTextarea()) {
             valid = false;
         }
 
-        if(!validUrlInput()) {
+        if (!validUrlInput()) {
             valid = false;
         }
 
-        if(!validJson()) {
+        if (!validJson()) {
             valid = false;
         }
 
-        if(!validSelectValues()) {
+        if (!validSelectValues()) {
             valid = false;
         }
 
-        if(!validCheckboxes()) {
+        if (!validCheckboxes()) {
             valid = false;
         }
 
-        if(!validFilePath()) {
+        if (!validFilePath()) {
             valid = false;
         }
 
@@ -155,8 +155,8 @@ $(document).ready(function () {
 function validTextInput() {
     let valid = true;
 
-    $('input[type="text"]:not(.select-dropdown, .file-path), textarea').each(function() {
-        if($(this).prev('label').hasClass('required') && $(this).val() === '') {
+    $('input[type="text"]:not(.select-dropdown, .file-path), textarea').each(function () {
+        if ($(this).prev('label').hasClass('required') && $(this).val() === '') {
             forms.markInvalid($(this));
 
             valid = false;
@@ -175,26 +175,26 @@ function validTextInput() {
 function validNumberInput() {
     let valid = true;
 
-    $('input[type="number"]').each(function() {
-        if($(this).prev('label').hasClass('required') && $(this).val() === '') {
+    $('input[type="number"]').each(function () {
+        if ($(this).prev('label').hasClass('required') && $(this).val() === '') {
             forms.markInvalid($(this));
 
             valid = false;
         }
 
-        if($(this).val() !== '') {
+        if ($(this).val() !== '') {
             let min = $(this).attr('min');
             let max = $(this).attr('max');
 
             let value = parseFloat($(this).val());
 
-            if(min !== 'undefined' && value < min) {
+            if (min !== 'undefined' && value < min) {
                 forms.markInvalid($(this), translations.numberBelowMinimum);
 
                 valid = false;
             }
 
-            if(max !== 'undefined' && value > max) {
+            if (max !== 'undefined' && value > max) {
                 forms.markInvalid($(this), translations.numberExceedsMaximum);
 
                 valid = false;
@@ -214,8 +214,8 @@ function validNumberInput() {
 function validCodeflaskTextarea() {
     let valid = true;
 
-    $('.codeflask textarea').each(function() {
-        if($(this).parent().prev('label').hasClass('required') && $(this).val() === '') {
+    $('.codeflask textarea').each(function () {
+        if ($(this).parent().prev('label').hasClass('required') && $(this).val() === '') {
             forms.markInvalid($(this).parent());
 
             valid = false;
@@ -234,11 +234,10 @@ function validCodeflaskTextarea() {
 function validJson() {
     let valid = true;
 
-    $('.codeflask[data-language="json"] textarea').each(function() {
+    $('.codeflask[data-language="json"] textarea').each(function () {
         try {
             let parsed = JSON.parse($(this).val());
-        }
-        catch (err) {
+        } catch (err) {
             forms.markInvalid($(this).parent(), translations.invalidJson);
 
             valid = false;
@@ -257,8 +256,8 @@ function validJson() {
 function validCheckboxes() {
     let valid = true;
 
-    $('input[type="checkbox"]').each(function() {
-        if($(this).next('label').hasClass('required') && $(this).prop('checked') === false) {
+    $('input[type="checkbox"]').each(function () {
+        if ($(this).next('label').hasClass('required') && $(this).prop('checked') === false) {
             forms.markInvalid($(this));
 
             valid = false;
@@ -277,15 +276,15 @@ function validCheckboxes() {
 function validSelectValues() {
     let valid = true;
 
-    $('select').each(function() {
+    $('select').each(function () {
         let parent = $(this).closest('.select-wrapper');
 
         let value = $('option:selected', this).attr('value');
 
         // .val() returns the option text when the option has no value attribute, so check the option:selected element
         // But, when selection is undefined, the value could still be an array for multi select, so check for that too
-        if(parent.prev('label').hasClass('required')) {
-            if((typeof value === 'undefined' && !$.isArray($(this).val())) || (typeof value === 'undefined' && $.isArray($(this).val()) && $(this).val().length == 0)) {
+        if (parent.prev('label').hasClass('required')) {
+            if ((typeof value === 'undefined' && !$.isArray($(this).val())) || (typeof value === 'undefined' && $.isArray($(this).val()) && $(this).val().length == 0)) {
                 forms.markInvalid(parent);
 
                 valid = false;
@@ -305,17 +304,17 @@ function validSelectValues() {
 function validUrlInput() {
     let valid = true;
 
-    $('input[type="url"]').each(function() {
+    $('input[type="url"]').each(function () {
         // Add http before the url if it doesn't contain that
-        if($(this).val() !== '' && !/^https?:\/\//.test($(this).val())) {
+        if ($(this).val() !== '' && !/^https?:\/\//.test($(this).val())) {
             $(this).val('http://' + $(this).val());
         }
 
-        if($(this).prev('label').hasClass('required') && $(this).val() === '') {
+        if ($(this).prev('label').hasClass('required') && $(this).val() === '') {
             forms.markInvalid($(this));
 
             valid = false;
-        } else if(!isUrlValid($(this).val()) && $(this).val() !== '') {
+        } else if (!isUrlValid($(this).val()) && $(this).val() !== '') {
             forms.markInvalid($(this), translations.invalidFormat);
 
             valid = false;
@@ -339,7 +338,7 @@ function validFilePath() {
     let filePath = $('input.file-path');
     let identifier = filePath.data('identifier');
 
-    if(filePath.val() === '' && $('input[name="' + identifier + '-uploaded"]').val() === '' && filePath.hasClass('required')) {
+    if (filePath.val() === '' && $('input[name="' + identifier + '-uploaded"]').val() === '' && filePath.hasClass('required')) {
         forms.markInvalid(filePath.closest('.file-field'));
 
         return false;

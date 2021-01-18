@@ -8,6 +8,7 @@ use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
+use Exception;
 use Pronto\MobileBundle\Controller\Api\BaseApiController;
 use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\AppUser;
@@ -22,500 +23,464 @@ use Pronto\MobileBundle\Exceptions\Auth\NotAuthorizedException;
 use Pronto\MobileBundle\Form\ResetPasswordForm;
 use Swift_Mailer;
 use Swift_Message;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class AppUserController extends BaseApiController
 {
-	/**
-	 * Get the plugin identifier
-	 *
-	 * @return string
-	 */
-	public function getPluginIdentifier(): string
-	{
-		return Plugin::APP_USERS;
-	}
-
-	/**
-	 * API-docs: Register a new user
-	 *
-	 * @api {post} /v1/users/app/registration Register a user
-	 * @apiName RegisterAppUser
-	 * @apiGroup AppUser
-	 * @apiVersion 1.0.0
-	 *
-	 * @apiUse OAuthAuthorizationHeader
-	 *
-	 * @apiParam {String} first_name        First name of the user.
-	 * @apiParam {String} last_name         Last name of the user.
-	 * @apiParam {String} email             Email address of the user.
-	 * @apiParam {String} password          Password of the user.
-	 * @apiParam {Object} [extra_data]      Extra meta data.
-	 *
-	 * @apiParamExample {json} Content:
-	 *     {
-	 *       "first_name": "John",
-	 *       "last_name": "Doe",
-	 *       "email": "jonhdoe@example.com",
-	 *       "password": "thisisasecretpassword",
-	 *       "extra_data": {
-	 *         "key": "value"
-	 *       }
-	 *     }
-	 *
-	 * @apiSuccessExample Success-Response:
-	 *     HTTP/1.1 200 OK
-	 *     {
-	 *       "data": {
-	 *         "id": "zC9WahWKVTcdG5BfLfHPU9",
-	 *         "first_name": "John",
-	 *         ...
-	 *         "activation_token": "thisisanactivationtoken"
-	 *       }
-	 *     }
-	 *
-	 * @apiError UserAlreadyRegistered      This user is already registered
-	 *
-	 * @apiErrorExample Error-Response:
-	 *     HTTP/1.1 422 UserAlreadyRegistered
-	 *     {
-	 *       "error": {
-	 *         "code": 22,
-	 *         "message": "This user is already registered"
-	 *       }
-	 *     }
-	 *
-	 * @apiUse InvalidParameters
-	 * @apiUse AuthorizationErrors
-	 */
-
     /**
-     * @param Request $request
-     * @param EntityManagerInterface $entityManager
-     * @return JsonResponse
      * @throws ApiException
      * @throws NoResultException
      * @throws NonUniqueResultException
      * @throws NotAuthorizedException
      */
-	public function registerAction(Request $request, EntityManagerInterface $entityManager)
-	{
-		// Validate the authorization
-		$this->validateAuthorization($this->getPluginIdentifier());
+    public function registerAction(Request $request, EntityManagerInterface $entityManager)
+    {
+        // Validate the authorization
+        $this->validateAuthorization($this->getPluginIdentifier());
 
-		// Validate the body
-		$this->validateRequestContent($request, ['first_name', 'last_name', 'email', 'password']);
+        // Validate the body
+        $this->validateRequestContent($request, ['first_name', 'last_name', 'email', 'password']);
 
-		$configuration = $this->prontoMobile->getPluginConfiguration(Plugin::APP_USERS, $this->prontoMobile->getApplication());
+        $configuration = $this->prontoMobile->getPluginConfiguration(Plugin::APP_USERS, $this->prontoMobile->getApplication());
 
-		// Check if registration is enabled
-		if (!$configuration[Plugin::APP_USERS_REGISTRATION_ENABLED]) {
-		    throw new NotAuthorizedException();
-		}
+        // Check if registration is enabled
+        if (!$configuration[Plugin::APP_USERS_REGISTRATION_ENABLED]) {
+            throw new NotAuthorizedException();
+        }
 
-		/** @var AppUser $user */
-		$user = $entityManager->getRepository(AppUser::class)->findOneBy([
-			'email'       => $request->request->get('email'),
-			'application' => $this->prontoMobile->getApplication()
-		]);
+        /** @var AppUser $user */
+        $user = $entityManager->getRepository(AppUser::class)->findOneBy([
+            'email'       => $request->request->get('email'),
+            'application' => $this->prontoMobile->getApplication()
+        ]);
 
-		if ($user !== null) {
-		    throw new UserAlreadyRegisteredException();
-		}
+        if ($user !== null) {
+            throw new UserAlreadyRegisteredException();
+        }
 
-		$user = new AppUser();
-		$user->setApplication($this->prontoMobile->getApplication());
+        $user = new AppUser();
+        $user->setApplication($this->prontoMobile->getApplication());
 
-		$user->setFirstName($request->request->get('first_name'));
-		$user->setLastName($request->request->get('last_name'));
-		$user->setEmail($request->request->get('email'));
-		$user->setPlainPassword($request->request->get('password'));
-		$user->setLastLogin(new \DateTime());
+        $user->setFirstName($request->request->get('first_name'));
+        $user->setLastName($request->request->get('last_name'));
+        $user->setEmail($request->request->get('email'));
+        $user->setPlainPassword($request->request->get('password'));
+        $user->setLastLogin(new DateTime());
 
-		// If account activation via email is not necessary, mark the user as active
-		if (!$configuration[Plugin::APP_USERS_ACTIVATION_REQUIRED]) {
-			$user->setActivated(true);
-		}
+        // If account activation via email is not necessary, mark the user as active
+        if (!$configuration[Plugin::APP_USERS_ACTIVATION_REQUIRED]) {
+            $user->setActivated(true);
+        }
 
-		// Save additional data
-		if ($request->request->get('extra_data') !== null) {
-			$user->setExtraData(json_decode(json_encode($request->request->get('extra_data')), true));
-		}
+        // Save additional data
+        if ($request->request->get('extra_data') !== null) {
+            $user->setExtraData(json_decode(json_encode($request->request->get('extra_data')), true));
+        }
 
-		$entityManager->persist($user);
-		$entityManager->flush();
+        $entityManager->persist($user);
+        $entityManager->flush();
 
-		return $this->successResponse($this->serializer->serialize($user, [new DateTimeNormalizer()]));
-	}
+        return $this->successResponse($this->serializer->serialize($user, [new DateTimeNormalizer()]));
+    }
 
+    /**
+     * API-docs: Register a new user
+     *
+     * @api {post} /v1/users/app/registration Register a user
+     * @apiName RegisterAppUser
+     * @apiGroup AppUser
+     * @apiVersion 1.0.0
+     *
+     * @apiUse OAuthAuthorizationHeader
+     *
+     * @apiParam {String} first_name        First name of the user.
+     * @apiParam {String} last_name         Last name of the user.
+     * @apiParam {String} email             Email address of the user.
+     * @apiParam {String} password          Password of the user.
+     * @apiParam {Object} [extra_data]      Extra meta data.
+     *
+     * @apiParamExample {json} Content:
+     *     {
+     *       "first_name": "John",
+     *       "last_name": "Doe",
+     *       "email": "jonhdoe@example.com",
+     *       "password": "thisisasecretpassword",
+     *       "extra_data": {
+     *         "key": "value"
+     *       }
+     *     }
+     *
+     * @apiSuccessExample Success-Response:
+     *     HTTP/1.1 200 OK
+     *     {
+     *       "data": {
+     *         "id": "zC9WahWKVTcdG5BfLfHPU9",
+     *         "first_name": "John",
+     *         ...
+     *         "activation_token": "thisisanactivationtoken"
+     *       }
+     *     }
+     *
+     * @apiError UserAlreadyRegistered      This user is already registered
+     *
+     * @apiErrorExample Error-Response:
+     *     HTTP/1.1 422 UserAlreadyRegistered
+     *     {
+     *       "error": {
+     *         "code": 22,
+     *         "message": "This user is already registered"
+     *       }
+     *     }
+     *
+     * @apiUse InvalidParameters
+     * @apiUse AuthorizationErrors
+     */
 
-	/**
-	 * Deregister an app user
-	 *
-	 * @api {delete} /v1/users/app/registration/{userIdentifier} Deregister a user
-	 * @apiName DeregisterAppUser
-	 * @apiGroup AppUser
-	 * @apiVersion 1.0.0
-	 *
-	 * @apiParam {String} userIdentifier Identifier of the user
-	 * @apiUse OAuthAuthorizationHeader
-	 *
-	 * @apiSuccessExample Success-Response:
-	 *     HTTP/1.1 200 OK
-	 *     {
-	 *       "message": "The user is unregistered and removed"
-	 *     }
-	 *
-	 * @apiUse ObjectNotFound
-	 * @apiUse AuthorizationErrors
-	 */
+    public function getPluginIdentifier(): string
+    {
+        return Plugin::APP_USERS;
+    }
 
-	/**
-	 * @param EntityManagerInterface $entityManager
-	 * @param $userIdentifier
-	 * @return JsonResponse
-	 * @throws ApiException
-	 */
-	public function deregisterAction(EntityManagerInterface $entityManager, $userIdentifier)
-	{
-		$this->validateAuthorization($this->getPluginIdentifier());
+    /**
+     * Deregister an app user
+     *
+     * @api {delete} /v1/users/app/registration/{userIdentifier} Deregister a user
+     * @apiName DeregisterAppUser
+     * @apiGroup AppUser
+     * @apiVersion 1.0.0
+     *
+     * @apiParam {String} userIdentifier Identifier of the user
+     * @apiUse OAuthAuthorizationHeader
+     *
+     * @apiSuccessExample Success-Response:
+     *     HTTP/1.1 200 OK
+     *     {
+     *       "message": "The user is unregistered and removed"
+     *     }
+     *
+     * @apiUse ObjectNotFound
+     * @apiUse AuthorizationErrors
+     */
 
-		/** @var AppUser $user */
-		$user = $entityManager->getRepository(AppUser::class)->find($userIdentifier);
+    /**
+     * @throws ApiException
+     */
+    public function deregisterAction(EntityManagerInterface $entityManager, $userIdentifier)
+    {
+        $this->validateAuthorization($this->getPluginIdentifier());
 
-		if ($user === null) {
-		    throw new NotFoundException();
-		}
+        /** @var AppUser $user */
+        $user = $entityManager->getRepository(AppUser::class)->find($userIdentifier);
 
-		// Remove the user
-		$entityManager->remove($user);
-		$entityManager->flush();
+        if ($user === null) {
+            throw new NotFoundException();
+        }
 
-		return $this->successResponse(null, 'The user is unregistered and removed');
-	}
+        // Remove the user
+        $entityManager->remove($user);
+        $entityManager->flush();
 
-
-	/**
-	 * Request a password reset link
-	 *
-	 * @api {post} /v1/users/app/password/reset Password reset request
-	 * @apiName PasswordResetAppUser
-	 * @apiGroup AppUser
-	 * @apiVersion 1.0.0
-	 *
-	 * @apiUse OAuthAuthorizationHeader
-	 *
-	 * @apiParam {String} email Email address of the user.
-	 *
-	 * @apiParamExample {json} Content:
-	 *     {
-	 *       "email": "johndoe@example.com"
-	 *     }
-	 *
-	 * @apiSuccessExample Success-Response:
-	 *     HTTP/1.1 200 OK
-	 *     {
-	 *       "message": "The user has received a password reset link"
-	 *     }
-	 *
-	 * @apiUse AuthorizationErrors
-	 */
-
-	/**
-	 * @param Request $request
-	 * @param Swift_Mailer $mailer
-	 * @param EntityManagerInterface $entityManager
-	 * @param TranslatorInterface $translator
-	 * @return JsonResponse
-	 * @throws ApiException
-	 */
-	public function requestPasswordResetLinkAction(Request $request, Swift_Mailer $mailer, EntityManagerInterface $entityManager, TranslatorInterface $translator)
-	{
-		// Validate the authorization header
-		$this->validateAuthorization($this->getPluginIdentifier());
-
-		// Validate the body
-		$this->validateRequestContent($request, ['email']);
-
-		/** @var Application $application */
-		$application = $this->prontoMobile->getApplication();
-
-		/** @var AppUser $user */
-		$user = $entityManager->getRepository(AppUser::class)->findOneBy([
-			'application' => $application,
-			'email'       => $request->request->get('email')
-		]);
-
-		// Return a 404
-		if ($user === null) {
-			return $this->successResponse(null, 'If a user with the provided email address exists, he or she has received a password reset link');
-		}
-
-		// Create a new password reset token
-		$passwordReset = new PasswordReset($user);
-
-		$entityManager->persist($passwordReset);
-		$entityManager->flush();
-
-		// Lowercase and strip spaces from the company name
-		$companyEmail = strtolower(str_replace(' ', '', $application->getCustomer()->getCompanyName()));
-
-		// Get the domain name of the CMS
-		$domain = $this->prontoMobile->getConfiguration('domain', 'pronto.am');
-
-		// Build the message with the password reset link
-		$message = (new Swift_Message($application->getName() . ' | ' . $translator->trans('authentication.reset_password')))
-			->setFrom($companyEmail . '@' . $domain, $application->getCustomer()->getCompanyName())
-			->setTo($user->getEmail(), $user->getFullName())
-			->setBody(
-				$this->renderView(
-					'@ProntoMobile/mails/users/app/password.html.twig',
-					[
-						'application' => $application,
-						'customer'    => $application->getCustomer(),
-						'user'        => $user,
-						'action'      => [
-							'url'  => $this->generateUrl('pronto_mobile_app_users_reset_password', ['token' => $passwordReset->getToken()], UrlGeneratorInterface::ABSOLUTE_URL),
-							'text' => $translator->trans('authentication.reset_password')
-						]
-					]
-				),
-				'text/html'
-			);
-
-		$mailer->send($message);
-
-		return $this->successResponse(null, 'If a user with the provided email address exists, he or she has received a password reset link');
-	}
+        return $this->successResponse(null, 'The user is unregistered and removed');
+    }
 
 
     /**
-     * Show the reset password form
+     * Request a password reset link
      *
-     * @param Request $request
-     * @param EntityManagerInterface $entityManager
-     * @param TranslatorInterface $translator
-     * @param $token
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-     * @throws \Exception
+     * @api {post} /v1/users/app/password/reset Password reset request
+     * @apiName PasswordResetAppUser
+     * @apiGroup AppUser
+     * @apiVersion 1.0.0
+     *
+     * @apiUse OAuthAuthorizationHeader
+     *
+     * @apiParam {String} email Email address of the user.
+     *
+     * @apiParamExample {json} Content:
+     *     {
+     *       "email": "johndoe@example.com"
+     *     }
+     *
+     * @apiSuccessExample Success-Response:
+     *     HTTP/1.1 200 OK
+     *     {
+     *       "message": "The user has received a password reset link"
+     *     }
+     *
+     * @apiUse AuthorizationErrors
      */
-	public function resetPasswordAction(Request $request, EntityManagerInterface $entityManager, TranslatorInterface $translator, $token)
-	{
-		/** @var PasswordReset $passwordReset */
-		$passwordReset = $entityManager->getRepository(PasswordReset::class)->findOneBy([
-			'token' => $token
-		]);
 
-		if ($passwordReset === null) {
-			return $this->redirectToRoute('pronto_mobile_login');
-		}
+    /**
+     * @throws ApiException
+     */
+    public function requestPasswordResetLinkAction(Request $request, Swift_Mailer $mailer, EntityManagerInterface $entityManager, TranslatorInterface $translator)
+    {
+        // Validate the authorization header
+        $this->validateAuthorization($this->getPluginIdentifier());
 
-		/** @var Customer $customer */
-		$customer = $passwordReset->getUser()->getApplication()->getCustomer();
+        // Validate the body
+        $this->validateRequestContent($request, ['email']);
 
-		// Check if the reset link has expired (1 hour)
-		$now = new DateTime();
-		$difference = $now->diff($passwordReset->getCreatedAt());
-		$hours = $difference->h + ($difference->days * 24);
+        /** @var Application $application */
+        $application = $this->prontoMobile->getApplication();
 
-		if ($hours > 1) {
-			$entityManager->remove($passwordReset);
-			$entityManager->flush();
+        /** @var AppUser $user */
+        $user = $entityManager->getRepository(AppUser::class)->findOneBy([
+            'application' => $application,
+            'email'       => $request->request->get('email')
+        ]);
 
-			$this->addFlash('alert-danger', $translator->trans('user.password_reset_link_expired'));
-			return $this->redirectToRoute('pronto_mobile_login');
-		}
+        // Return a 404
+        if ($user === null) {
+            return $this->successResponse(null, 'If a user with the provided email address exists, he or she has received a password reset link');
+        }
 
-		$form = $this->createForm(ResetPasswordForm::class);
+        // Create a new password reset token
+        $passwordReset = new PasswordReset($user);
 
-		$form->handleRequest($request);
+        $entityManager->persist($passwordReset);
+        $entityManager->flush();
 
-		if ($form->isSubmitted() && $form->isValid()) {
-			$data = $form->getData();
+        // Lowercase and strip spaces from the company name
+        $companyEmail = strtolower(str_replace(' ', '', $application->getCustomer()->getCompanyName()));
 
-			/** @var AppUser $user */
-			$user = $passwordReset->getUser();
-			$user->setPlainPassword($data['password']);
+        // Get the domain name of the CMS
+        $domain = $this->prontoMobile->getConfiguration('domain', 'pronto.am');
 
-			// Save the users' new password
-			$entityManager->persist($user);
-			$entityManager->remove($passwordReset);
-			$entityManager->flush();
+        // Build the message with the password reset link
+        $message = (new Swift_Message($application->getName() . ' | ' . $translator->trans('authentication.reset_password')))
+            ->setFrom($companyEmail . '@' . $domain, $application->getCustomer()->getCompanyName())
+            ->setTo($user->getEmail(), $user->getFullName())
+            ->setBody(
+                $this->renderView(
+                    '@ProntoMobile/mails/users/app/password.html.twig',
+                    [
+                        'application' => $application,
+                        'customer'    => $application->getCustomer(),
+                        'user'        => $user,
+                        'action'      => [
+                            'url'  => $this->generateUrl('pronto_mobile_app_users_reset_password', ['token' => $passwordReset->getToken()], UrlGeneratorInterface::ABSOLUTE_URL),
+                            'text' => $translator->trans('authentication.reset_password')
+                        ]
+                    ]
+                ),
+                'text/html'
+            );
 
-			$resetting = false;
-		}
+        $mailer->send($message);
 
-		return $this->render('@ProntoMobile/authentication/app/password-reset.html.twig', [
-			'form'      => $form->createView(),
-			'resetting' => $resetting ?? true,
-			'customer'  => $customer
-		]);
-	}
+        return $this->successResponse(null, 'If a user with the provided email address exists, he or she has received a password reset link');
+    }
 
+    /**
+     * @throws Exception
+     */
+    public function resetPasswordAction(Request $request, EntityManagerInterface $entityManager, TranslatorInterface $translator, $token)
+    {
+        /** @var PasswordReset $passwordReset */
+        $passwordReset = $entityManager->getRepository(PasswordReset::class)->findOneBy([
+            'token' => $token
+        ]);
 
-	/**
-	 * API-docs: Get the app users' profile
-	 *
-	 * @api {get} /v1/users/app/profile Get the users' profile
-	 * @apiName GetAppUserProfile
-	 * @apiGroup AppUser
-	 * @apiVersion 1.0.0
-	 *
-	 * @apiUse OAuthAuthorizationHeader
-	 *
-	 * @apiSuccessExample Success-Response:
-	 *     HTTP/1.1 200 OK
-	 *     {
-	 *       "data": {
-	 *         "id": "zC9WahWKVTcdG5BfLfHPU9",
-	 *         "first_name": "John",
-	 *         ...
-	 *         "activation_token": "thisisanactivationtoken",
-	 *         "meta_data": {
-	 *           "gender": "male"
-	 *         }
-	 *       }
-	 *     }
-	 *
-	 * @apiUse OAuthAuthorizationErrors
-	 * @apiUse NotAuthorized
-	 */
+        if ($passwordReset === null) {
+            return $this->redirectToRoute('pronto_mobile_login');
+        }
 
-	/**
-	 * Get the profile off a user
-	 *
-	 * @return JsonResponse
-	 * @throws ApiException
-	 */
-	public function getProfileAction()
-	{
-		// Validate the authorization
-		$this->validateAuthorization($this->getPluginIdentifier());
+        /** @var Customer $customer */
+        $customer = $passwordReset->getUser()->getApplication()->getCustomer();
 
-		$user = $this->getUser();
+        // Check if the reset link has expired (1 hour)
+        $now = new DateTime();
+        $difference = $now->diff($passwordReset->getCreatedAt());
+        $hours = $difference->h + ($difference->days * 24);
 
-		if ($user === null) {
+        if ($hours > 1) {
+            $entityManager->remove($passwordReset);
+            $entityManager->flush();
+
+            $this->addFlash('alert-danger', $translator->trans('user.password_reset_link_expired'));
+            return $this->redirectToRoute('pronto_mobile_login');
+        }
+
+        $form = $this->createForm(ResetPasswordForm::class);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+
+            /** @var AppUser $user */
+            $user = $passwordReset->getUser();
+            $user->setPlainPassword($data['password']);
+
+            // Save the users' new password
+            $entityManager->persist($user);
+            $entityManager->remove($passwordReset);
+            $entityManager->flush();
+
+            $resetting = false;
+        }
+
+        return $this->render('@ProntoMobile/authentication/app/password-reset.html.twig', [
+            'form'      => $form->createView(),
+            'resetting' => $resetting ?? true,
+            'customer'  => $customer
+        ]);
+    }
+
+    /**
+     * API-docs: Get the app users' profile
+     *
+     * @api {get} /v1/users/app/profile Get the users' profile
+     * @apiName GetAppUserProfile
+     * @apiGroup AppUser
+     * @apiVersion 1.0.0
+     *
+     * @apiUse OAuthAuthorizationHeader
+     *
+     * @apiSuccessExample Success-Response:
+     *     HTTP/1.1 200 OK
+     *     {
+     *       "data": {
+     *         "id": "zC9WahWKVTcdG5BfLfHPU9",
+     *         "first_name": "John",
+     *         ...
+     *         "activation_token": "thisisanactivationtoken",
+     *         "meta_data": {
+     *           "gender": "male"
+     *         }
+     *       }
+     *     }
+     *
+     * @apiUse OAuthAuthorizationErrors
+     * @apiUse NotAuthorized
+     */
+
+    /**
+     * @throws ApiException
+     */
+    public function getProfileAction()
+    {
+        // Validate the authorization
+        $this->validateAuthorization($this->getPluginIdentifier());
+
+        $user = $this->getUser();
+
+        if ($user === null) {
             throw new NotAuthorizedException();
-		}
+        }
 
-		return $this->successResponse($this->serializer->serialize($user, [new DateTimeNormalizer()]));
-	}
+        return $this->successResponse($this->serializer->serialize($user, [new DateTimeNormalizer()]));
+    }
 
+    /**
+     * API-docs: Update the app users' profile
+     *
+     * @api {put} /v1/users/app/profile Update the users' profile
+     * @apiName UpdateAppUserProfile
+     * @apiGroup AppUser
+     * @apiVersion 1.0.0
+     *
+     * @apiUse OAuthAuthorizationHeader
+     *
+     * @apiParam {String} first_name        First name of the user.
+     * @apiParam {String} last_name         Last name of the user.
+     * @apiParam {String} email             Email address of the user.
+     * @apiParam {String} [password]        Password of the user.
+     * @apiParam {Object} [extra_data]      Extra meta data.
+     *
+     * @apiParamExample {json} Content:
+     *     {
+     *       "first_name": "John",
+     *       "last_name": "Doe",
+     *       "email": "johndoe@example.com",
+     *       "password": "thisisasecretpassword",
+     *       "extra_data": {
+     *         "key": "value"
+     *       }
+     *     }
+     *
+     * @apiSuccessExample Success-Response:
+     *     HTTP/1.1 200 OK
+     *     {
+     *       "data": {
+     *         "id": "zC9WahWKVTcdG5BfLfHPU9",
+     *         "first_name": "John",
+     *         ...
+     *         "activation_token": "thisisanactivationtoken",
+     *         "meta_data": {
+     *           "key": "value"
+     *         }
+     *       }
+     *     }
+     *
+     * @apiError EmailAlreadyExists      The provided email address is already registered
+     *
+     * @apiErrorExample Error-Response:
+     *     HTTP/1.1 422 EmailAlreadyExists
+     *     {
+     *       "error": {
+     *         "code": 1122,
+     *         "message": "An account with the provided email address already exists"
+     *       }
+     *     }
+     *
+     * @apiUse InvalidParameters
+     * @apiUse OAuthAuthorizationErrors
+     * @apiUse NotAuthorized
+     */
 
-	/**
-	 * API-docs: Update the app users' profile
-	 *
-	 * @api {put} /v1/users/app/profile Update the users' profile
-	 * @apiName UpdateAppUserProfile
-	 * @apiGroup AppUser
-	 * @apiVersion 1.0.0
-	 *
-	 * @apiUse OAuthAuthorizationHeader
-	 *
-	 * @apiParam {String} first_name        First name of the user.
-	 * @apiParam {String} last_name         Last name of the user.
-	 * @apiParam {String} email             Email address of the user.
-	 * @apiParam {String} [password]        Password of the user.
-	 * @apiParam {Object} [extra_data]      Extra meta data.
-	 *
-	 * @apiParamExample {json} Content:
-	 *     {
-	 *       "first_name": "John",
-	 *       "last_name": "Doe",
-	 *       "email": "johndoe@example.com",
-	 *       "password": "thisisasecretpassword",
-	 *       "extra_data": {
-	 *         "key": "value"
-	 *       }
-	 *     }
-	 *
-	 * @apiSuccessExample Success-Response:
-	 *     HTTP/1.1 200 OK
-	 *     {
-	 *       "data": {
-	 *         "id": "zC9WahWKVTcdG5BfLfHPU9",
-	 *         "first_name": "John",
-	 *         ...
-	 *         "activation_token": "thisisanactivationtoken",
-	 *         "meta_data": {
-	 *           "key": "value"
-	 *         }
-	 *       }
-	 *     }
-	 *
-	 * @apiError EmailAlreadyExists      The provided email address is already registered
-	 *
-	 * @apiErrorExample Error-Response:
-	 *     HTTP/1.1 422 EmailAlreadyExists
-	 *     {
-	 *       "error": {
-	 *         "code": 1122,
-	 *         "message": "An account with the provided email address already exists"
-	 *       }
-	 *     }
-	 *
-	 * @apiUse InvalidParameters
-	 * @apiUse OAuthAuthorizationErrors
-	 * @apiUse NotAuthorized
-	 */
+    /**
+     * @throws ApiException
+     */
+    public function updateProfileAction(Request $request, EntityManagerInterface $entityManager)
+    {
+        // Validate the body
+        $this->validateRequestContent($request, ['first_name', 'last_name', 'email']);
 
-	/**
-	 * Update the users' profile
-	 *
-	 * @param Request $request
-	 * @param EntityManagerInterface $entityManager
-	 * @return JsonResponse
-	 * @throws ApiException
-	 */
-	public function updateProfileAction(Request $request, EntityManagerInterface $entityManager)
-	{
-		// Validate the body
-		$this->validateRequestContent($request, ['first_name', 'last_name', 'email']);
+        // Validate the authorization
+        $this->validateAuthorization($this->getPluginIdentifier());
 
-		// Validate the authorization
-		$this->validateAuthorization($this->getPluginIdentifier());
+        /** @var AppUser $user */
+        $user = $this->getUser();
 
-		/** @var AppUser $user */
-		$user = $this->getUser();
-
-		if ($user === null) {
+        if ($user === null) {
             throw new NotAuthorizedException();
-		}
+        }
 
-		// Check if the new email address already exists
-		if ($user->getEmail() !== $request->request->get('email')) {
-			$existingUsers = $entityManager->getRepository(AppUser::class)->findBy([
-				'email'       => $request->request->get('email'),
-				'application' => $this->prontoMobile->getApplication()
-			]);
+        // Check if the new email address already exists
+        if ($user->getEmail() !== $request->request->get('email')) {
+            $existingUsers = $entityManager->getRepository(AppUser::class)->findBy([
+                'email'       => $request->request->get('email'),
+                'application' => $this->prontoMobile->getApplication()
+            ]);
 
-			if (count($existingUsers) > 0) {
-			    throw new EmailAlreadyExistsException();
-			}
-		}
+            if (count($existingUsers) > 0) {
+                throw new EmailAlreadyExistsException();
+            }
+        }
 
-		// Update the users' info
-		$user->setFirstName($request->request->get('first_name'));
-		$user->setLastName($request->request->get('last_name'));
-		$user->setEmail($request->request->get('email'));
+        // Update the users' info
+        $user->setFirstName($request->request->get('first_name'));
+        $user->setLastName($request->request->get('last_name'));
+        $user->setEmail($request->request->get('email'));
 
-		// Update the password if it's been provided
-		if ($request->request->get('password') !== null) {
-			$user->setPlainPassword($request->request->get('password'));
-		}
+        // Update the password if it's been provided
+        if ($request->request->get('password') !== null) {
+            $user->setPlainPassword($request->request->get('password'));
+        }
 
-		// Save additional data
-		if ($request->request->get('extra_data') !== null) {
-			$user->setExtraData(json_decode(json_encode($request->request->get('extra_data')), true));
-		}
+        // Save additional data
+        if ($request->request->get('extra_data') !== null) {
+            $user->setExtraData(json_decode(json_encode($request->request->get('extra_data')), true));
+        }
 
-		$entityManager->persist($user);
-		$entityManager->flush();
+        $entityManager->persist($user);
+        $entityManager->flush();
 
-		return $this->successResponse($this->serializer->serialize($user, [new DateTimeNormalizer()]));
-	}
+        return $this->successResponse($this->serializer->serialize($user, [new DateTimeNormalizer()]));
+    }
 }

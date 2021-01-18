@@ -18,7 +18,9 @@ use Pronto\MobileBundle\Exceptions\EntityNotFoundException;
 use Pronto\MobileBundle\Form\Collection\PropertyForm;
 use Pronto\MobileBundle\Utils\Responses\SuccessResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class PropertyController extends BaseController implements ValidatePluginStateInterface, ValidateApplicationSelectionInterface, ValidateCustomerSelectionInterface
@@ -37,7 +39,7 @@ class PropertyController extends BaseController implements ValidatePluginStateIn
      * A fancy redirect to set the properties as active tab when navigating back
      *
      * @param $identifier
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return RedirectResponse
      */
     public function indexAction($identifier)
     {
@@ -53,7 +55,7 @@ class PropertyController extends BaseController implements ValidatePluginStateIn
      * @param TranslatorInterface $translator
      * @param $identifier
      * @param Property|null $property
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @return RedirectResponse|Response
      */
     public function editAction(EntityManagerInterface $entityManager, TranslatorInterface $translator, $identifier, Property $property = null)
     {
@@ -92,7 +94,7 @@ class PropertyController extends BaseController implements ValidatePluginStateIn
      * @param EntityManagerInterface $entityManager
      * @param $identifier
      * @param Property $property
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @return RedirectResponse|Response
      */
     public function saveAction(Request $request, EntityManagerInterface $entityManager, $identifier, Property $property = null)
     {
@@ -199,7 +201,7 @@ class PropertyController extends BaseController implements ValidatePluginStateIn
      * @param Request $request
      * @param EntityManagerInterface $entityManager
      * @param $identifier
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return RedirectResponse
      */
     public function deleteAction(Request $request, EntityManagerInterface $entityManager, $identifier)
     {

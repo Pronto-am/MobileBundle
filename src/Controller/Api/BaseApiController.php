@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Pronto\MobileBundle\Controller\Api;
 
-use Pronto\MobileBundle\Entity\AccessToken;
 use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\Application\ApplicationPlugin;
 use Pronto\MobileBundle\Entity\Plugin;
@@ -15,38 +14,35 @@ use Pronto\MobileBundle\Exceptions\Auth\InvalidPluginStateException;
 use Pronto\MobileBundle\Service\JsonSerializer;
 use Pronto\MobileBundle\Service\ProntoMobile;
 use Pronto\MobileBundle\Service\RequestBodyValidator;
+use Pronto\MobileBundle\Service\TokenInspectionService;
 use Pronto\MobileBundle\Traits\JsonResponseGenerators;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 
 class BaseApiController extends AbstractController
 {
     use JsonResponseGenerators;
 
-    /**
-     * @var ProntoMobile $prontoMobile
-     */
+    /** @var ProntoMobile $prontoMobile */
     protected $prontoMobile;
 
-    /**
-     * @var RequestBodyValidator $requestValidator
-     */
+    /** @var RequestBodyValidator $requestValidator */
     protected $requestValidator;
 
-    /**
-     * @var JsonSerializer $serializer
-     */
+    /** @var JsonSerializer $serializer */
     protected $serializer;
 
-    public function __construct(ProntoMobile $prontoMobile)
+    /** @var TokenInspectionService $tokenInspectionService */
+    private $tokenInspectionService;
+
+    public function __construct(ProntoMobile $prontoMobile, TokenInspectionService $tokenInspectionService)
     {
         $this->prontoMobile = $prontoMobile;
+        $this->tokenInspectionService = $tokenInspectionService;
     }
 
     /**
      * @required
-     * @param RequestBodyValidator $requestValidator
      */
     public function setRequestBodyValidator(RequestBodyValidator $requestValidator): void
     {
@@ -55,7 +51,6 @@ class BaseApiController extends AbstractController
 
     /**
      * @required
-     * @param JsonSerializer $serializer
      */
     public function setJsonSerializer(JsonSerializer $serializer): void
     {
@@ -139,21 +134,17 @@ class BaseApiController extends AbstractController
      */
 
     /**
-     * @param Request $request
-     * @param array $required
-     * @return bool|\Symfony\Component\HttpFoundation\JsonResponse
      * @throws ApiException
      */
     public function validateRequestContent(Request $request, array $required = [])
     {
         // Validate the required parameters
-        if (! $this->requestValidator->isValid($request, $required)) {
+        if (!$this->requestValidator->isValid($request, $required)) {
             $this->invalidParametersResponse($this->requestValidator->getMessage());
         }
 
         return true;
     }
-
 
     /**
      * API-docs: Validate authorization
@@ -199,37 +190,21 @@ class BaseApiController extends AbstractController
      */
     public function validateAuthorization(string $pluginIdentifier = null): void
     {
-        if (! $this->isGranted('IS_AUTHENTICATED_FULLY')) {
+        if (!$this->isGranted('IS_AUTHENTICATED_FULLY')) {
             throw new InvalidAuthorizationHeaderException();
         }
 
-        /** @var TokenStorage $tokenStorage */
-        $tokenStorage = $this->get('security.token_storage');
-
-        $entityManager = $this->getDoctrine()->getManager();
-
-        /** @var AccessToken $accessToken */
-        $accessToken = $entityManager->getRepository(AccessToken::class)->findOneBy([
-            'token' => $tokenStorage->getToken()->getCredentials()
-        ]);
-
-        /** @var Application $application */
-        $application = $accessToken->getClient();
-
-        // Check if the application exists
-        if ($application === null) {
-            throw new InvalidAuthorizationTokenException();
-        }
+        // The token must be an instance of the OAuth2 library token model
+        $application = $this->tokenInspectionService->getApplication();
 
         // Check if the plugin is active
-        if ($pluginIdentifier !== null && ! $this->validatePluginState($application, $pluginIdentifier)) {
+        if ($pluginIdentifier !== null && !$this->validatePluginState($application, $pluginIdentifier)) {
             throw new InvalidPluginStateException();
         }
 
         // Save the application for later use
         $this->prontoMobile->setApplication($application);
     }
-
 
     /**
      * Validate the state of a plugin

@@ -2,7 +2,6 @@
 
 namespace Pronto\MobileBundle\Validator\Constraints\Translation\Upload;
 
-
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;

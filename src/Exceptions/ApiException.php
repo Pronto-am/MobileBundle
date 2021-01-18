@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Pronto\MobileBundle\Exceptions;
 
-
 use Exception;
 use Pronto\MobileBundle\Utils\Responses\ErrorResponse;
 use Throwable;
@@ -14,7 +13,6 @@ class ApiException extends Exception
 
     /** @var ErrorResponse */
     private $response;
-
 
     /**
      * ApiException constructor.
@@ -27,7 +25,6 @@ class ApiException extends Exception
 
         parent::__construct($response->getMessage(), $response->getStatus(), $previous);
     }
-
 
     /**
      * Get the SuccessResponse

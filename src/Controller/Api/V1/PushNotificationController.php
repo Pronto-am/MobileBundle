@@ -9,7 +9,9 @@ use Doctrine\ORM\EntityManagerInterface;
 use Pronto\MobileBundle\Controller\Api\BaseApiController;
 use Pronto\MobileBundle\Entity\Device;
 use Pronto\MobileBundle\Entity\PushNotification;
-use Pronto\MobileBundle\Service\PushNotification\FirebaseStorage;
+use Pronto\MobileBundle\Exceptions\Auth\InvalidAuthorizationHeaderException;
+use Pronto\MobileBundle\Exceptions\Auth\InvalidAuthorizationTokenException;
+use Pronto\MobileBundle\Exceptions\Auth\InvalidPluginStateException;
 use Symfony\Component\Serializer\SerializerInterface;
 
 class PushNotificationController extends BaseApiController
@@ -71,8 +73,11 @@ class PushNotificationController extends BaseApiController
 
     /**
      * @throws DBALException
+     * @throws InvalidAuthorizationHeaderException
+     * @throws InvalidAuthorizationTokenException
+     * @throws InvalidPluginStateException
      */
-    public function listAction(EntityManagerInterface $entityManager, SerializerInterface $serializer, FirebaseStorage $firebaseStorage, string $deviceIdentifier)
+    public function listAction(EntityManagerInterface $entityManager, SerializerInterface $serializer, string $deviceIdentifier)
     {
         $this->validateAuthorization();
 

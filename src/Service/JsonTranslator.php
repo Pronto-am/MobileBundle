@@ -2,7 +2,6 @@
 
 namespace Pronto\MobileBundle\Service;
 
-
 use Doctrine\ORM\EntityManagerInterface;
 use Pronto\MobileBundle\Entity\Application\Version;
 use Symfony\Component\HttpFoundation\Request;
@@ -10,86 +9,83 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class JsonTranslator
 {
-	/** @var Request $request */
-	private $request;
+    /** @var Request $request */
+    private $request;
 
-	/** @var Version $applicationVersion */
-	private $applicationVersion;
+    /** @var Version $applicationVersion */
+    private $applicationVersion;
 
+    /**
+     * JsonTranslator constructor.
+     * @param RequestStack $requestStack
+     * @param EntityManagerInterface $entityManager
+     */
+    public function __construct(RequestStack $requestStack, EntityManagerInterface $entityManager)
+    {
+        $this->request = $requestStack->getCurrentRequest();
 
-	/**
-	 * JsonTranslator constructor.
-	 * @param RequestStack $requestStack
-	 * @param EntityManagerInterface $entityManager
-	 */
-	public function __construct(RequestStack $requestStack, EntityManagerInterface $entityManager)
-	{
-		$this->request = $requestStack->getCurrentRequest();
+        if ($this->request !== null) {
+            $id = $this->request->getSession()->get(Version::SESSION_IDENTIFIER);
 
-		if ($this->request !== null) {
-			$id = $this->request->getSession()->get(Version::SESSION_IDENTIFIER);
+            if ($id !== null) {
+                $this->applicationVersion = $entityManager->getRepository(Version::class)->find($id);
+            }
+        }
+    }
 
-			if($id !== null) {
-				$this->applicationVersion = $entityManager->getRepository(Version::class)->find($id);
-			}
-		}
-	}
+    /**
+     * Get the language to use
+     *
+     * @param array $json
+     * @return mixed
+     */
+    public function getLanguage(array $json)
+    {
+        $language = $this->request->getLocale();
 
+        // Return the requested language if set
+        if (isset($json[$language])) {
+            return $language;
+        }
 
-	/**
-	 * Get the language to use
-	 *
-	 * @param array $json
-	 * @return mixed
-	 */
-	public function getLanguage(array $json)
-	{
-		$language = $this->request->getLocale();
+        // Else, return the application's default language
+        if (isset($json[$this->applicationVersion->getApplication()->getDefaultLanguage()])) {
+            return $this->applicationVersion->getApplication()->getDefaultLanguage();
+        }
+    }
 
-		// Return the requested language if set
-		if (isset($json[$language])) {
-			return $language;
-		}
+    /**
+     * Get the translation of a json object
+     *
+     * @param mixed $json
+     * @param null $language
+     * @return mixed
+     */
+    public function getTranslation($json, $language = null)
+    {
+        // Stop if it's not an array of translations
+        if (empty($json)) {
+            return '';
+        }
 
-		// Else, return the application's default language
-		if (isset($json[$this->applicationVersion->getApplication()->getDefaultLanguage()])) {
-			return $this->applicationVersion->getApplication()->getDefaultLanguage();
-		}
-	}
+        if ($language === null) {
+            $language = $this->request->getLocale();
+        }
 
+        // Return the requested language if set
+        if (isset($json[$language]) && !empty($json[$language])) {
+            return $json[$language];
+        }
 
-	/**
-	 * Get the translation of a json object
-	 *
-	 * @param mixed $json
-	 * @param null $language
-	 * @return mixed
-	 */
-	public function getTranslation($json, $language = null)
-	{
-		// Stop if it's not an array of translations
-		if(empty($json)) {
-			return '';
-		}
+        // Get the applications' default language
+        $defaultLanguage = $this->applicationVersion->getApplication()->getDefaultLanguage();
 
-		if ($language === null) {
-			$language = $this->request->getLocale();
-		}
+        // Else, return the application's default language
+        if (isset($json[$defaultLanguage]) && !empty($json[$defaultLanguage])) {
+            return $json[$defaultLanguage];
+        }
 
-		// Return the requested language if set
-		if (isset($json[$language]) && !empty($json[$language])) {
-			return $json[$language];
-		}
-
-		// Get the applications' default language
-		$defaultLanguage = $this->applicationVersion->getApplication()->getDefaultLanguage();
-
-		// Else, return the application's default language
-		if (isset($json[$defaultLanguage]) && !empty($json[$defaultLanguage])) {
-			return $json[$defaultLanguage];
-		}
-
-		// If both don't exist, return the first existing translation
-		return array_values($json)[0];
-	}
+        // If both don't exist, return the first existing translation
+        return array_values($json)[0];
+    }
 }

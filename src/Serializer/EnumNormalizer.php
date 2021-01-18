@@ -2,7 +2,6 @@
 
 namespace Pronto\MobileBundle\Serializer;
 
-
 use MyCLabs\Enum\Enum;
 use Symfony\Component\Serializer\Exception\CircularReferenceException;
 use Symfony\Component\Serializer\Exception\InvalidArgumentException;

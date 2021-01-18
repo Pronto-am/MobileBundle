@@ -127,8 +127,8 @@ user.roles.regular: Reguliere gebruiker
 user.roles.admin: Administrator
 user.roles.super_admin: Super administrator
 
-application: applicatie
 applications: applicaties
+application: applicatie
 application.name: Naam
 application.label: Label
 application.versions: Versies
@@ -136,6 +136,7 @@ application.new_version: Nieuwe versie
 application.color: Kleur
 application.android_bundle_identifier: Android bundle identifier
 application.ios_bundle_identifier: iOS bundle identifier
+application.clients: Clients
 application.client_id: Client ID
 application.client_secret: Client secret
 application.default_language: Standaard taal

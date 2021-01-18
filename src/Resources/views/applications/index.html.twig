@@ -23,7 +23,8 @@
                                     {% if loop.first %}{{ key + 1 }}{% endif %}
                                 </td>
                                 <td>
-                                    {% if loop.first %}<a href="{{ path('pronto_mobile_applications_edit', {id: application.id}) }}" class="regular">{{ application.name }}</a> {% if application.label != '' %}<span class="label" style="background-color: #{{ application.color }};">{{ application.label }}</span>{% endif %}{% endif %}
+                                    {% if loop.first %}<a href="{{ path('pronto_mobile_applications_edit', {id: application.id}) }}" class="regular">{{ application.name }}</a> {% if application.label != '' %}<span class="label"
+                                                                                                                                                                                                                      style="background-color: #{{ application.color }};">{{ application.label }}</span>{% endif %}{% endif %}
                                 </td>
                                 <td>
                                     <a href="{{ path('pronto_mobile_application_versions_edit', {applicationId: application.id, 'id': version.id}) }}" class="regular">{{ version.name|capitalize }}</a>

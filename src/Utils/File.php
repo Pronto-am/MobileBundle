@@ -2,7 +2,6 @@
 
 namespace Pronto\MobileBundle\Utils;
 
-
 use Exception;
 
 class File
@@ -24,7 +23,7 @@ class File
 
         try {
             rmdir($directory);
-        } catch(Exception $exception) {
+        } catch (Exception $exception) {
             //
         }
     }

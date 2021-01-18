@@ -15,6 +15,7 @@ html, body {
 
 div > a {
   border-bottom: 1px dotted;
+
   &:hover {
     color: $primary-color;
     border-bottom: 1px solid;
@@ -36,13 +37,15 @@ h1 {
 }
 
 footer.authentication-footer {
-  margin-top:50px;
+  margin-top: 50px;
   text-align: center;
   color: #999;
-  font-size:12px;
+  font-size: 12px;
+
   a {
     color: #ff004c;
     border-bottom: 1px solid #ff004c;
+
     &:hover {
       color: black;
       border-bottom: 1px solid black;

@@ -68,7 +68,7 @@
     {{ parent() }}
 
     <script type="text/javascript">
-       let manyEntries = {{ relationship.type.many ? 'true' : 'false' }};
+        let manyEntries = {{ relationship.type.many ? 'true' : 'false' }};
     </script>
 
     <script type="text/javascript" src="{{ mix('/js/collections/relationships.js') }}"></script>

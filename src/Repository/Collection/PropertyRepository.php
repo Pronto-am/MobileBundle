@@ -14,12 +14,13 @@ class PropertyRepository extends EntityRepository
      * @param bool $translatable
      * @return mixed
      */
-    public function findAllByCollection(Collection $collection, bool $translatable = false) {
+    public function findAllByCollection(Collection $collection, bool $translatable = false)
+    {
         return $this->createQueryBuilder('property')
             ->where('property.collection = :collection')
             ->setParameter('collection', $collection)
-			->andWhere('property.translatable = :translatable')
-			->setParameter('translatable', $translatable)
+            ->andWhere('property.translatable = :translatable')
+            ->setParameter('translatable', $translatable)
             ->orderBy('property.ordering')
             ->getQuery()
             ->execute();

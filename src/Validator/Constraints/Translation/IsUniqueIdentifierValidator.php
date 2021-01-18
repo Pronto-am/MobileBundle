@@ -2,7 +2,6 @@
 
 namespace Pronto\MobileBundle\Validator\Constraints\Translation;
 
-
 use Doctrine\ORM\EntityManagerInterface;
 use Pronto\MobileBundle\Entity\TranslationKey;
 use Pronto\MobileBundle\Service\ProntoMobile;

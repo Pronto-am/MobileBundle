@@ -1,10 +1,10 @@
 const moment = require('moment');
 
 module.exports = {
-    format: function(format) {
+    format: function (format) {
         return moment().format(format);
     },
-    toDate: function(string) {
+    toDate: function (string) {
         return moment(string);
     }
 };

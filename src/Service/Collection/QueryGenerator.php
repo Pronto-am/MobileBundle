@@ -2,7 +2,7 @@
 
 namespace Pronto\MobileBundle\Service\Collection;
 
-
+use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Driver\Statement;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Types\Types;
@@ -12,6 +12,7 @@ use Pronto\MobileBundle\Entity\Collection;
 use Pronto\MobileBundle\Utils\Collect;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use function in_array;
 
 class QueryGenerator
 {
@@ -53,7 +54,6 @@ class QueryGenerator
     /** @var bool $listView */
     private $listView = false;
 
-
     /**
      * QueryGenerator constructor.
      * @param EntityManagerInterface $entityManager
@@ -64,7 +64,6 @@ class QueryGenerator
         $this->entityManager = $entityManager;
         $this->request = $requestStack->getCurrentRequest();
     }
-
 
     /**
      * Set the collection for the queries
@@ -78,7 +77,6 @@ class QueryGenerator
         $this->mapProperties();
     }
 
-
     /**
      * Map the properties of the collection
      */
@@ -87,7 +85,6 @@ class QueryGenerator
         // Create a properties array of this relationship
         $this->properties = Collect::keyBy($this->collection->getProperties()->getValues(), 'identifier');
     }
-
 
     /**
      * Parse the query from the HTTP request
@@ -106,7 +103,6 @@ class QueryGenerator
 
         $this->validateQueryParameters();
     }
-
 
     /**
      * Validate the http query parameters to be used inside the query
@@ -131,7 +127,7 @@ class QueryGenerator
 
         // Filter out non-existing columns
         $this->propertyFilters = array_filter($this->propertyFilters, function ($key) use ($validColumnNames) {
-            return \in_array($key, $validColumnNames, true);
+            return in_array($key, $validColumnNames, true);
         }, ARRAY_FILTER_USE_KEY);
 
         // Map the property filters to a consistent array
@@ -145,12 +141,24 @@ class QueryGenerator
             // Replace operands like 'gte' with '>='
             return array_reduce(array_keys($filter), function ($result, $key) use ($filter) {
                 switch ($key) {
-                    case 'e': $result['='] = $filter[$key]; break;
-                    case 'gt': $result['>'] = $filter[$key]; break;
-                    case 'gte': $result['>='] = $filter[$key]; break;
-                    case 'lt': $result['<'] = $filter[$key]; break;
-                    case 'lte': $result['<='] = $filter[$key]; break;
-                    case 'lk': $result['LIKE'] = $filter[$key]; break;
+                    case 'e':
+                        $result['='] = $filter[$key];
+                        break;
+                    case 'gt':
+                        $result['>'] = $filter[$key];
+                        break;
+                    case 'gte':
+                        $result['>='] = $filter[$key];
+                        break;
+                    case 'lt':
+                        $result['<'] = $filter[$key];
+                        break;
+                    case 'lte':
+                        $result['<='] = $filter[$key];
+                        break;
+                    case 'lk':
+                        $result['LIKE'] = $filter[$key];
+                        break;
                 }
 
                 return $result;
@@ -158,62 +166,16 @@ class QueryGenerator
         }, $this->propertyFilters);
 
         // Validate the order by column and direction
-        $this->orderBy = \in_array($this->orderBy, $validColumnNames, true) ? $this->orderBy : 'created_at';
-        $this->direction = \in_array(strtoupper($this->direction), ['ASC', 'DESC']) ? strtoupper($this->direction) : 'ASC';
+        $this->orderBy = in_array($this->orderBy, $validColumnNames, true) ? $this->orderBy : 'created_at';
+        $this->direction = in_array(strtoupper($this->direction), ['ASC', 'DESC']) ? strtoupper($this->direction) : 'ASC';
     }
-
-
-    /**
-     * Get the count of the collection with filters
-     *
-     * @return int
-     * @throws \Doctrine\DBAL\DBALException
-     */
-    public function getEntryCount(): int
-    {
-        $parameters = [
-            new Parameter('collection_id', $this->collection->getId(), Types::INTEGER),
-        ];
-
-        // Create the query
-        $query = $this->createListQuery($parameters, true);
-
-        // Surround the query with a new query to count the results
-        $countQuery = 'SELECT COUNT(*) FROM (' . $query . ') as count';
-
-        // Execute the query
-        $statement = $this->executeStatement($countQuery, $parameters);
-
-        return (int) $statement->fetchColumn(0);
-    }
-
-
-    /**
-     * Create a single result query
-     *
-     * @param array $queryParameters
-     * @return string
-     */
-    private function createSingleResultQuery(array &$queryParameters): string
-    {
-        // Get the base query
-        $query = $this->createBaseQuery();
-
-        // Add the ID to the query
-        $query .= 'AND entries.id = ? ';
-
-        $queryParameters[] = $this->propertyFilters['id'];
-
-        return $query;
-    }
-
 
     /**
      * Get a single entry
      *
      * @param string $id
      * @return mixed
-     * @throws \Doctrine\DBAL\DBALException
+     * @throws DBALException
      */
     public function getEntry(string $id)
     {
@@ -234,12 +196,100 @@ class QueryGenerator
         return $parsedEntry[0] ?? null;
     }
 
+    /**
+     * Create a single result query
+     *
+     * @param array $queryParameters
+     * @return string
+     */
+    private function createSingleResultQuery(array &$queryParameters): string
+    {
+        // Get the base query
+        $query = $this->createBaseQuery();
+
+        // Add the ID to the query
+        $query .= 'AND entries.id = ? ';
+
+        $queryParameters[] = $this->propertyFilters['id'];
+
+        return $query;
+    }
+
+    /**
+     * Create the base query
+     *
+     * @return string
+     */
+    private function createBaseQuery(): string
+    {
+        // Prefix the table columns with 'entries.'
+        $tableColumns = array_map(function ($column) {
+            return 'entries.' . $column;
+        }, self::TABLE_COLUMNS);
+
+        if ($this->listView) {
+            // Filter out the properties that are not available to the listview
+            $jsonColumns = array_filter($this->properties, function (Collection\Property $property) {
+                return $property->getIncludeInJsonListView();
+            });
+        }
+
+        // Create the select syntax for the json data column
+        $jsonColumns = array_map(function (Collection\Property $property) {
+            return $this->jsonUnquote($property->getIdentifier()) . ' AS `' . $property->getIdentifier() . '`';
+        }, $jsonColumns ?? $this->properties);
+
+        // Merge both of the above
+        $columns = array_merge($tableColumns, $jsonColumns);
+
+        // Create the select statement
+        $select = implode(', ', $columns);
+
+        // Create the query
+        // We need the entries.data to be able to perform a HAVING query on it, when parsing the entry, the DATA object is removed
+        return 'SELECT entries.data, ' . $select . ' FROM collection_entries AS entries WHERE entries.collection_id = :collection_id AND entries.active = 1 ';
+    }
+
+    /**
+     * MariaDB JSON_UNQUOTE function
+     *
+     * @param string $field
+     * @return string
+     */
+    private function jsonUnquote(string $field): string
+    {
+        return 'JSON_UNQUOTE(JSON_EXTRACT(entries.data, "$.' . $field . '"))';
+    }
+
+    /**
+     * Execute a query statement
+     *
+     * @param string $query
+     * @param array $parameters
+     * @return Statement
+     * @throws DBALException
+     */
+    private function executeStatement(string $query, array $parameters): Statement
+    {
+        // Execute the query
+        $entityManager = $this->entityManager;
+        $statement = $entityManager->getConnection()->prepare($query);
+
+        /** @var Parameter $parameter */
+        foreach ($parameters as $parameter) {
+            $statement->bindValue($parameter->getName(), $parameter->getValue(), $parameter->getType() === Types::FLOAT ? ParameterType::INTEGER : ParameterType::STRING);
+        }
+
+        $statement->execute();
+
+        return $statement;
+    }
 
     /**
      * Get the entries
      *
      * @return mixed
-     * @throws \Doctrine\DBAL\DBALException
+     * @throws DBALException
      */
     public function getEntries(): array
     {
@@ -258,81 +308,6 @@ class QueryGenerator
         // Parse the results of the query to a readable json object
         return $statement->fetchAll();
     }
-
-
-    /**
-     * Get the related entries by ID's
-     *
-     * @param array $entryIds
-     * @return array
-     * @throws \Doctrine\DBAL\DBALException
-     */
-    public function getRelatedEntries(array $entryIds): array
-    {
-        // Don't query if the array is empty
-        if (empty($entryIds)) {
-            return [];
-        }
-
-        $entryIds = array_map(function ($id) {
-            return '\'' . $id . '\'';
-        }, $entryIds);
-
-        $query = $this->createRelatedEntriesQuery($entryIds);
-
-        $parameters = [
-            new Parameter('collection_id', $this->collection->getId(), Types::INTEGER),
-        ];
-
-        // Execute the query
-        $statement = $this->executeStatement($query, $parameters);
-
-        return $statement->fetchAll();
-    }
-
-
-    /**
-     * Execute a query statement
-     *
-     * @param string $query
-     * @param array $parameters
-     * @return Statement
-     * @throws \Doctrine\DBAL\DBALException
-     */
-    private function executeStatement(string $query, array $parameters): Statement
-    {
-        // Execute the query
-        $entityManager = $this->entityManager;
-        $statement = $entityManager->getConnection()->prepare($query);
-
-        /** @var Parameter $parameter */
-        foreach($parameters as $parameter) {
-            $statement->bindValue($parameter->getName(), $parameter->getValue(), $parameter->getType() === Types::FLOAT ? ParameterType::INTEGER : ParameterType::STRING);
-        }
-
-        $statement->execute();
-
-        return $statement;
-    }
-
-
-    /**
-     * Get the query to retrieve the related entries
-     *
-     * @param $entryIds
-     * @return string
-     */
-    private function createRelatedEntriesQuery($entryIds): string
-    {
-        // Get the base query
-        $query = $this->createBaseQuery();
-
-        // Add the ID to the query
-        $query .= 'AND entries.id IN (' . implode(', ', $entryIds) . ') ';
-
-        return $query;
-    }
-
 
     /**
      * Create the query for the collection retrieval
@@ -398,7 +373,7 @@ class QueryGenerator
                 $query .= sprintf('(%s OR %s) ', $leftSide, $rightSide);
 
                 $type = Types::STRING;
-                if(in_array($operand, ['>', '>=', '<', '<='])) {
+                if (in_array($operand, ['>', '>=', '<', '<='])) {
                     $type = Types::FLOAT;
                 }
 
@@ -423,60 +398,58 @@ class QueryGenerator
         return $query . 'ORDER BY ' . $orderBy . ' ' . $this->direction . ' LIMIT ' . $this->limit . ' OFFSET ' . $this->offset;
     }
 
-
     /**
-     * Create the base query
+     * Get the related entries by ID's
      *
-     * @return string
+     * @param array $entryIds
+     * @return array
+     * @throws DBALException
      */
-    private function createBaseQuery(): string
+    public function getRelatedEntries(array $entryIds): array
     {
-        // Prefix the table columns with 'entries.'
-        $tableColumns = array_map(function ($column) {
-            return 'entries.' . $column;
-        }, self::TABLE_COLUMNS);
-
-        if ($this->listView) {
-            // Filter out the properties that are not available to the listview
-            $jsonColumns = array_filter($this->properties, function (Collection\Property $property) {
-                return $property->getIncludeInJsonListView();
-            });
+        // Don't query if the array is empty
+        if (empty($entryIds)) {
+            return [];
         }
 
-        // Create the select syntax for the json data column
-        $jsonColumns = array_map(function (Collection\Property $property) {
-            return $this->jsonUnquote($property->getIdentifier()) . ' AS `' . $property->getIdentifier() . '`';
-        }, $jsonColumns ?? $this->properties);
+        $entryIds = array_map(function ($id) {
+            return '\'' . $id . '\'';
+        }, $entryIds);
 
-        // Merge both of the above
-        $columns = array_merge($tableColumns, $jsonColumns);
+        $query = $this->createRelatedEntriesQuery($entryIds);
 
-        // Create the select statement
-        $select = implode(', ', $columns);
+        $parameters = [
+            new Parameter('collection_id', $this->collection->getId(), Types::INTEGER),
+        ];
 
-        // Create the query
-        // We need the entries.data to be able to perform a HAVING query on it, when parsing the entry, the DATA object is removed
-        return 'SELECT entries.data, ' . $select . ' FROM collection_entries AS entries WHERE entries.collection_id = :collection_id AND entries.active = 1 ';
+        // Execute the query
+        $statement = $this->executeStatement($query, $parameters);
+
+        return $statement->fetchAll();
     }
-
 
     /**
-     * MariaDB JSON_UNQUOTE function
+     * Get the query to retrieve the related entries
      *
-     * @param string $field
+     * @param $entryIds
      * @return string
      */
-    private function jsonUnquote(string $field): string
+    private function createRelatedEntriesQuery($entryIds): string
     {
-        return 'JSON_UNQUOTE(JSON_EXTRACT(entries.data, "$.' . $field . '"))';
-    }
+        // Get the base query
+        $query = $this->createBaseQuery();
 
+        // Add the ID to the query
+        $query .= 'AND entries.id IN (' . implode(', ', $entryIds) . ') ';
+
+        return $query;
+    }
 
     /**
      * Get the pagination info object
      *
      * @return array
-     * @throws \Doctrine\DBAL\DBALException
+     * @throws DBALException
      */
     public function getPaginationInfo(): array
     {
@@ -485,5 +458,29 @@ class QueryGenerator
             'offset' => $this->offset,
             'limit'  => $this->limit
         ];
+    }
+
+    /**
+     * Get the count of the collection with filters
+     *
+     * @return int
+     * @throws DBALException
+     */
+    public function getEntryCount(): int
+    {
+        $parameters = [
+            new Parameter('collection_id', $this->collection->getId(), Types::INTEGER),
+        ];
+
+        // Create the query
+        $query = $this->createListQuery($parameters, true);
+
+        // Surround the query with a new query to count the results
+        $countQuery = 'SELECT COUNT(*) FROM (' . $query . ') as count';
+
+        // Execute the query
+        $statement = $this->executeStatement($countQuery, $parameters);
+
+        return (int) $statement->fetchColumn(0);
     }
 }

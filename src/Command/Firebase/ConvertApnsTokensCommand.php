@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Pronto\MobileBundle\Command\Firebase;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\ORMException;
 use Exception;
+use GuzzleHttp\Exception\GuzzleException;
 use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\Device;
 use Pronto\MobileBundle\Entity\Plugin;
@@ -63,8 +65,8 @@ class ConvertApnsTokensCommand extends Command
      * @param InputInterface $input
      * @param OutputInterface $output
      * @return int|null|void
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws ORMException
+     * @throws GuzzleException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {

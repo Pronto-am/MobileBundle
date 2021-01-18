@@ -111,7 +111,10 @@
                 </li>
                 {% if customer.applications|length != 0 %}
                     <li>
-                        <a href="{{ path('pronto_mobile_select_application') }}" class="{% if customer.applications|length == 1 and customer.applications[0].applicationVersions|length == 1 %}disabled{% endif %}">{{ applicationVersion.application.name }} {% if applicationVersion.application.label != '' %}<span class="label" style="background-color: {{ '#' ~ applicationVersion.application.color }};">{{ applicationVersion.application.label }}</span>{% endif %} <span class="text-primary bold">/</span> {{ applicationVersion.name }}{% if customer.applications|length > 1 or customer.applications[0].applicationVersions|length > 1 %} <i class="fa fa-caret-down text-primary" aria-hidden="true"></i>{% endif %}</a>
+                        <a href="{{ path('pronto_mobile_select_application') }}"
+                           class="{% if customer.applications|length == 1 and customer.applications[0].applicationVersions|length == 1 %}disabled{% endif %}">{{ applicationVersion.application.name }} {% if applicationVersion.application.label != '' %}<span class="label"
+                                                                                                                                                                                                                                                                 style="background-color: {{ '#' ~ applicationVersion.application.color }};">{{ applicationVersion.application.label }}</span>{% endif %}
+                            <span class="text-primary bold">/</span> {{ applicationVersion.name }}{% if customer.applications|length > 1 or customer.applications[0].applicationVersions|length > 1 %} <i class="fa fa-caret-down text-primary" aria-hidden="true"></i>{% endif %}</a>
                     </li>
                 {% endif %}
             </ul>
@@ -124,7 +127,8 @@
 
         {% if is_granted('ROLE_PREVIOUS_ADMIN') %}
             <div id="impersonating">
-                {{ 'default.impersonating'|trans({'%user%': app.user.fullName})|raw }} <a href="{{ path('pronto_mobile_users', {'_switch_user': '_exit'}) }}" class="btn white custom-background text-red"><i class="material-icons left">keyboard_backspace</i>{{ 'default.impersonating.go_back'|trans }}</a> {{ 'default.impersonating.to_your_own_account'|trans }}
+                {{ 'default.impersonating'|trans({'%user%': app.user.fullName})|raw }} <a href="{{ path('pronto_mobile_users', {'_switch_user': '_exit'}) }}" class="btn white custom-background text-red"><i class="material-icons left">keyboard_backspace</i>{{ 'default.impersonating.go_back'|trans }}
+                </a> {{ 'default.impersonating.to_your_own_account'|trans }}
             </div>
         {% endif %}
 

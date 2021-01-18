@@ -12,7 +12,7 @@ $(document).ready(function () {
     });
 
     // Adjust the color of the label to the background color
-    $('.label').each(function() {
+    $('.label').each(function () {
         $(this).colourBrightness();
     });
 });

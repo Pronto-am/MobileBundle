@@ -2,7 +2,6 @@
 
 namespace Pronto\MobileBundle\Twig;
 
-
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\PersistentCollection;
 use Pronto\MobileBundle\Utils\Collect;
@@ -28,7 +27,7 @@ class KeyBy extends AbstractExtension
      */
     public function keyBy($array, string $key): array
     {
-        if($array instanceof PersistentCollection || $array instanceof ArrayCollection) {
+        if ($array instanceof PersistentCollection || $array instanceof ArrayCollection) {
             $array = $array->toArray();
         }
 

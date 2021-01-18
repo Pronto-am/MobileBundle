@@ -1,5 +1,5 @@
 const codeflask = require('./codeflask');
 
-$(document).ready(function() {
+$(document).ready(function () {
     codeflask.initPushNotifications();
 });

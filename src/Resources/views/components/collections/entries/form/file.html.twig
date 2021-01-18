@@ -29,7 +29,8 @@
                 {% for key, filename in attribute(entry.data, property.identifier) %}
                     <tr>
                         <td><a href="uploads/collections/{{ property.collection.identifier ~ '/' ~ filename }}" target="_blank">{{ filename }}</a></td>
-                        <td class="center-align"><a href="#!" data-url="{{ path('pronto_mobile_collection_entry_files_delete', {identifier: property.collection.identifier, id: entry.id}) }}" data-filename="{{ filename }}" data-property-identifier="{{ property.identifier }}" name="delete-file" class="btn-flat red-text">{{ 'buttons.delete'|trans }}</a></td>
+                        <td class="center-align"><a href="#!" data-url="{{ path('pronto_mobile_collection_entry_files_delete', {identifier: property.collection.identifier, id: entry.id}) }}" data-filename="{{ filename }}" data-property-identifier="{{ property.identifier }}" name="delete-file"
+                                                    class="btn-flat red-text">{{ 'buttons.delete'|trans }}</a></td>
                     </tr>
                 {% endfor %}
                 </tbody>

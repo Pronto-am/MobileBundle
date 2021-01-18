@@ -2,7 +2,6 @@
 
 namespace Pronto\MobileBundle\Validator\Constraints\Translation;
 
-
 use Pronto\MobileBundle\Validator\Constraints\TranslatableConstraint;
 
 /**

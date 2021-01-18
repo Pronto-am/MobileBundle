@@ -121,7 +121,7 @@ class SendPushNotificationsCommand extends Command
 
                 // Set the notification to sent and remove the scheduled datetime
                 if ($notification->getSent() === null) {
-                    $notification->setSent(new \DateTime());
+                    $notification->setSent(new DateTime());
                 }
 
                 $notification->setScheduledSending(null);

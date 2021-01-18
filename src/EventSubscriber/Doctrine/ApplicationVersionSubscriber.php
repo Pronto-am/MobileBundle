@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Pronto\MobileBundle\EventSubscriber\Doctrine;
 
-
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Events;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\Application\Version;
 use Pronto\MobileBundle\Entity\Plugin;
@@ -86,7 +87,7 @@ class ApplicationVersionSubscriber implements EventSubscriber
      * Handle the post persist event of an application object
      *
      * @param LifecycleEventArgs $args
-     * @throws \Doctrine\ORM\ORMException
+     * @throws ORMException
      */
     public function postPersist(LifecycleEventArgs $args): void
     {
@@ -103,8 +104,8 @@ class ApplicationVersionSubscriber implements EventSubscriber
 
     /**
      * @param EntityManager $entityManager
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     private function initializeFirstVersion(EntityManager $entityManager): void
     {

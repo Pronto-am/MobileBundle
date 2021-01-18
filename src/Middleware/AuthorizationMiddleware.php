@@ -2,16 +2,16 @@
 
 namespace Pronto\MobileBundle\Middleware;
 
-
 use Doctrine\ORM\EntityManagerInterface;
-use Pronto\MobileBundle\Entity\AccessToken;
-use Pronto\MobileBundle\Entity\Application;
+use Pronto\MobileBundle\Entity\Application\ApplicationClient;
 use Pronto\MobileBundle\Exceptions\Auth\InvalidAuthorizationHeaderException;
 use Pronto\MobileBundle\Exceptions\Auth\InvalidAuthorizationTokenException;
 use Pronto\MobileBundle\Service\ProntoMobile;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Trikoder\Bundle\OAuth2Bundle\Model\AccessToken;
+use Trikoder\Bundle\OAuth2Bundle\Security\Authentication\Token\OAuth2Token;
 
 /**
  * Class AuthorizationMiddleware
@@ -19,31 +19,18 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
  */
 class AuthorizationMiddleware extends Middleware
 {
-    /**
-     * @var AuthorizationCheckerInterface $authorizationChecker
-     */
+    /** @var AuthorizationCheckerInterface $authorizationChecker */
     private $authorizationChecker;
 
-    /**
-     * @var TokenStorageInterface $tokenStorage
-     */
+    /** @var TokenStorageInterface $tokenStorage */
     private $tokenStorage;
 
-    /**
-     * @var EntityManagerInterface $entityManager
-     */
+    /** @var EntityManagerInterface $entityManager */
     private $entityManager;
 
-    /**
-     * @var ProntoMobile $prontoMobile
-     */
+    /** @var ProntoMobile $prontoMobile */
     private $prontoMobile;
 
-    /**
-     * AuthorizationMiddleware constructor.
-     * @param ContainerInterface $container
-     * @param EntityManagerInterface $entityManager
-     */
     public function __construct(ContainerInterface $container, EntityManagerInterface $entityManager)
     {
         $this->authorizationChecker = $container->get('security.authorization_checker');
@@ -55,28 +42,38 @@ class AuthorizationMiddleware extends Middleware
     }
 
     /**
-     * @return void
      * @throws InvalidAuthorizationHeaderException
      * @throws InvalidAuthorizationTokenException
      */
     public function handle(): void
     {
-        if (! $this->authorizationChecker->isGranted('IS_AUTHENTICATED_FULLY')) {
+        if (!$this->authorizationChecker->isGranted('IS_AUTHENTICATED_FULLY')) {
             throw new InvalidAuthorizationHeaderException();
         }
 
-        /** @var AccessToken $accessToken */
-        $accessToken = $this->entityManager->getRepository(AccessToken::class)->findOneBy([
-            'token' => $this->tokenStorage->getToken()->getCredentials()
-        ]);
-
-        /** @var Application $application */
-        $application = $accessToken->getClient();
-
-        // Check if the application exists
-        if ($application === null) {
+        // The token must be an instance of the OAuth2 library token model
+        $token = $this->tokenStorage->getToken();
+        if (!$token instanceof OAuth2Token) {
             throw new InvalidAuthorizationTokenException();
         }
+
+        $accessToken = $this->entityManager->getRepository(AccessToken::class)->findOneBy([
+            'identifier' => $token->getCredentials()
+        ]);
+
+        if (!$accessToken instanceof AccessToken) {
+            throw new InvalidAuthorizationTokenException();
+        }
+
+        $applicationClient = $this->entityManager->getRepository(ApplicationClient::class)->findOneBy([
+            'client' => $accessToken->getClient(),
+        ]);
+
+        if (!$applicationClient instanceof ApplicationClient) {
+            throw new InvalidAuthorizationTokenException();
+        }
+
+        $application = $applicationClient->getApplication();
 
         // Save the application for later use
         $this->prontoMobile->setApplication($application);

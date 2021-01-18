@@ -16,7 +16,7 @@ $(document).ready(function () {
     /**
      * Table select all checkboxes
      */
-    $('input[id="checkAllRelationships"]').change(function() {
+    $('input[id="checkAllRelationships"]').change(function () {
         let checkboxes = $(this).closest('table').find(':checkbox');
         checkboxes.prop('checked', $(this).is(':checked'));
     });
@@ -48,12 +48,12 @@ $(document).ready(function () {
     /**
      * Disable or enable checkboxes when it's a one - one relationship
      */
-    $('.modal .table tbody tr td input:checkbox').change(function() {
-        if(!manyEntries) {
+    $('.modal .table tbody tr td input:checkbox').change(function () {
+        if (!manyEntries) {
 
             let tbody = $(this).closest('tbody');
 
-            if($(this).prop('checked')) {
+            if ($(this).prop('checked')) {
                 // Disable the rest
                 $('input:checkbox:not(:checked)', tbody).prop('disabled', true);
             } else {
@@ -62,7 +62,7 @@ $(document).ready(function () {
         }
     });
 
-    if(!manyEntries) {
+    if (!manyEntries) {
         $('.modal .table tbody tr td input:checkbox:checked').trigger('change');
     }
 

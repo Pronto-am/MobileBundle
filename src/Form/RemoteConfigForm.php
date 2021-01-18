@@ -2,7 +2,6 @@
 
 namespace Pronto\MobileBundle\Form;
 
-
 use Pronto\MobileBundle\DTO\RemoteConfigDTO;
 use Pronto\MobileBundle\Enum\RemoteConfigType;
 use Symfony\Component\Form\AbstractType;
@@ -12,6 +11,7 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\Exception\AccessException;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -82,7 +82,7 @@ class RemoteConfigForm extends AbstractType
             'label_attr' => [
                 'class' => 'no-asterisk'
             ],
-            'attr' => $editingDisabled ? [
+            'attr'       => $editingDisabled ? [
                 'disabled' => 'disabled'
             ] : [],
         ])->add('ios', CheckboxType::class, [
@@ -90,7 +90,7 @@ class RemoteConfigForm extends AbstractType
             'label_attr' => [
                 'class' => 'no-asterisk'
             ],
-            'attr' => $editingDisabled ? [
+            'attr'       => $editingDisabled ? [
                 'disabled' => 'disabled'
             ] : [],
         ])->add('id', HiddenType::class);
@@ -98,7 +98,7 @@ class RemoteConfigForm extends AbstractType
 
     /**
      * @param OptionsResolver $resolver
-     * @throws \Symfony\Component\OptionsResolver\Exception\AccessException
+     * @throws AccessException
      */
     public function configureOptions(OptionsResolver $resolver): void
     {

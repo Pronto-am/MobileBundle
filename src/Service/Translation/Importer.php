@@ -2,7 +2,7 @@
 
 namespace Pronto\MobileBundle\Service\Translation;
 
-
+use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Pronto\MobileBundle\DTO\Translation\UploadDTO;
@@ -35,12 +35,12 @@ class Importer
     private $prontoMobile;
 
     /**
-     * @var \Doctrine\Common\Persistence\ObjectRepository $translationKeyRepository
+     * @var ObjectRepository $translationKeyRepository
      */
     private $translationKeyRepository;
 
     /**
-     * @var \Doctrine\Common\Persistence\ObjectRepository $translationRepository
+     * @var ObjectRepository $translationRepository
      */
     private $translationRepository;
 
@@ -104,6 +104,17 @@ class Importer
     }
 
     /**
+     * @param string $string
+     * @return bool
+     */
+    private function isXml(string $string): bool
+    {
+        $xml = @simplexml_load_string($string);
+
+        return $xml !== false;
+    }
+
+    /**
      * @param string $contents
      * @param string $language
      * @param string $type
@@ -134,111 +145,6 @@ class Importer
     }
 
     /**
-     * @param UploadedFile $file
-     * @param string $language
-     * @param string $type
-     * @param bool $android
-     * @param bool $ios
-     */
-    private function fromPlainText(UploadedFile $file, string $language, string $type = 'app', bool $android = true, bool $ios = true): void
-    {
-        $handle = $file->openFile();
-
-        if ($handle) {
-
-            // Loop through the lines of the file
-            while (($line = $handle->fgets()) !== false) {
-                // The line must match: "<string>" = "<string>";
-                preg_match('/(["])([a-zA-Z.-_]+)(["]\s+[=]+\s+["])(.*)(["][;]?)/', $line, $matches);
-
-                // With above regex, a valid key value pair exists of five keys
-                if (count($matches) === 6) {
-                    $translationKey = $this->saveTranslationKey($matches[2], $type, $android, $ios);
-                    $this->entityManager->flush();
-
-                    $this->saveTranslation($translationKey, $language, $matches[4]);
-                }
-
-                // Stop at the end of the file
-                if ($handle->eof()) {
-                    break;
-                }
-            }
-        }
-    }
-
-    /**
-     * @param string $contents
-     */
-    private function fromJson(string $contents): void
-    {
-        try {
-            $translations = json_decode($contents, true);
-        } catch (Exception $exception) {
-            return;
-        }
-
-        foreach ($translations as $key) {
-            $translationKey = $this->saveTranslationKey($key['identifier'], $key['type'], $key['android'] ?? true, $key['ios'] ?? true);
-            $this->entityManager->flush();
-
-            foreach ($this->availableLanguages as $language) {
-                $translated = $this->filterTranslationsByLanguage($key['translations'], $language);
-
-                $this->saveTranslation($translationKey, $translated['language'], $translated['text']);
-            }
-
-            $this->entityManager->flush();
-        }
-    }
-
-    /**
-     * @param UploadedFile $file
-     */
-    private function fromCsv(UploadedFile $file): void
-    {
-        $first = true;
-        $languages = [];
-
-        if ($handle = $file->openFile()) {
-
-            while (($data = $handle->fgetcsv(';')) !== false) {
-                if ($first) {
-                    // Validate the headers
-                    if ($data !== $this->getCsvHeaders()) {
-                        return;
-                    }
-
-                    for ($index = 5; $index < count($data); $index++) {
-                        preg_match('/\(([a-zA-Z]+)\)/', $data[$index], $matches);
-
-                        if ($matches[1]) {
-                            $languages[$index] = strtolower($matches[1]);
-                        }
-                    }
-
-                    $first = false;
-                } else {
-                    [$identifier, $type, $description, $android, $ios] = $data;
-
-                    $translationKey = $this->saveTranslationKey($identifier, $type, (int) $android === 1, (int) $ios === 1, $description);
-
-                    foreach ($languages as $index => $code) {
-                        $this->saveTranslation($translationKey, $code, $data[$index]);
-                    }
-
-                    // Stop at the end of the file
-                    if ($handle->eof()) {
-                        break;
-                    }
-                }
-            }
-
-            $this->entityManager->flush();
-        }
-    }
-
-    /**
      * @param string $identifier
      * @param string $type
      * @param bool $android
@@ -258,7 +164,7 @@ class Importer
         $translationKey->setIdentifier($identifier);
         $translationKey->setType($type);
 
-        if($description !== null) {
+        if ($description !== null) {
             $translationKey->setDescription($description);
         }
 
@@ -308,6 +214,42 @@ class Importer
     }
 
     /**
+     * @param string $string
+     * @return bool
+     */
+    private function isJson(string $string): bool
+    {
+        json_decode($string);
+
+        return json_last_error() === JSON_ERROR_NONE;
+    }
+
+    /**
+     * @param string $contents
+     */
+    private function fromJson(string $contents): void
+    {
+        try {
+            $translations = json_decode($contents, true);
+        } catch (Exception $exception) {
+            return;
+        }
+
+        foreach ($translations as $key) {
+            $translationKey = $this->saveTranslationKey($key['identifier'], $key['type'], $key['android'] ?? true, $key['ios'] ?? true);
+            $this->entityManager->flush();
+
+            foreach ($this->availableLanguages as $language) {
+                $translated = $this->filterTranslationsByLanguage($key['translations'], $language);
+
+                $this->saveTranslation($translationKey, $translated['language'], $translated['text']);
+            }
+
+            $this->entityManager->flush();
+        }
+    }
+
+    /**
      * @param array $translations
      * @param string $language
      * @return array
@@ -331,34 +273,58 @@ class Importer
     }
 
     /**
-     * @param string $string
-     * @return bool
-     */
-    private function isJson(string $string): bool
-    {
-        json_decode($string);
-
-        return json_last_error() === JSON_ERROR_NONE;
-    }
-
-    /**
-     * @param string $string
-     * @return bool
-     */
-    private function isXml(string $string): bool
-    {
-        $xml = @simplexml_load_string($string);
-
-        return $xml !== false;
-    }
-
-    /**
      * @param UploadedFile $file
      * @return bool
      */
     private function isCsv(UploadedFile $file): bool
     {
         return $file->getClientOriginalExtension() === 'csv';
+    }
+
+    /**
+     * @param UploadedFile $file
+     */
+    private function fromCsv(UploadedFile $file): void
+    {
+        $first = true;
+        $languages = [];
+
+        if ($handle = $file->openFile()) {
+
+            while (($data = $handle->fgetcsv(';')) !== false) {
+                if ($first) {
+                    // Validate the headers
+                    if ($data !== $this->getCsvHeaders()) {
+                        return;
+                    }
+
+                    for ($index = 5; $index < count($data); $index++) {
+                        preg_match('/\(([a-zA-Z]+)\)/', $data[$index], $matches);
+
+                        if ($matches[1]) {
+                            $languages[$index] = strtolower($matches[1]);
+                        }
+                    }
+
+                    $first = false;
+                } else {
+                    [$identifier, $type, $description, $android, $ios] = $data;
+
+                    $translationKey = $this->saveTranslationKey($identifier, $type, (int) $android === 1, (int) $ios === 1, $description);
+
+                    foreach ($languages as $index => $code) {
+                        $this->saveTranslation($translationKey, $code, $data[$index]);
+                    }
+
+                    // Stop at the end of the file
+                    if ($handle->eof()) {
+                        break;
+                    }
+                }
+            }
+
+            $this->entityManager->flush();
+        }
     }
 
     /**
@@ -375,5 +341,39 @@ class Importer
         }
 
         return $headers;
+    }
+
+    /**
+     * @param UploadedFile $file
+     * @param string $language
+     * @param string $type
+     * @param bool $android
+     * @param bool $ios
+     */
+    private function fromPlainText(UploadedFile $file, string $language, string $type = 'app', bool $android = true, bool $ios = true): void
+    {
+        $handle = $file->openFile();
+
+        if ($handle) {
+
+            // Loop through the lines of the file
+            while (($line = $handle->fgets()) !== false) {
+                // The line must match: "<string>" = "<string>";
+                preg_match('/(["])([a-zA-Z.-_]+)(["]\s+[=]+\s+["])(.*)(["][;]?)/', $line, $matches);
+
+                // With above regex, a valid key value pair exists of five keys
+                if (count($matches) === 6) {
+                    $translationKey = $this->saveTranslationKey($matches[2], $type, $android, $ios);
+                    $this->entityManager->flush();
+
+                    $this->saveTranslation($translationKey, $language, $matches[4]);
+                }
+
+                // Stop at the end of the file
+                if ($handle->eof()) {
+                    break;
+                }
+            }
+        }
     }
 }

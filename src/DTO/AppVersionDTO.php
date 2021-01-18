@@ -57,17 +57,6 @@ class AppVersionDTO extends BaseDTO
     public $file;
 
     /**
-     * @Assert\Callback
-     * @param ExecutionContextInterface $context
-     */
-    public function validate(ExecutionContextInterface $context)
-    {
-        if ($this->url === null && $this->file === null) {
-            $context->buildViolation('Een bestand of url dient aangeleverd te worden.')->atPath('url')->addViolation();
-        }
-    }
-
-    /**
      * @return array
      */
     public static function getFillable(): array
@@ -80,5 +69,16 @@ class AppVersionDTO extends BaseDTO
             'description',
             'url'
         ];
+    }
+
+    /**
+     * @Assert\Callback
+     * @param ExecutionContextInterface $context
+     */
+    public function validate(ExecutionContextInterface $context)
+    {
+        if ($this->url === null && $this->file === null) {
+            $context->buildViolation('Een bestand of url dient aangeleverd te worden.')->atPath('url')->addViolation();
+        }
     }
 }

@@ -1,7 +1,8 @@
 <?php
 
-namespace Pronto\MobileBundle\Validator\Constraints\AppVersion;
+declare(strict_types=1);
 
+namespace Pronto\MobileBundle\Validator\Constraints\AppVersion;
 
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraint;

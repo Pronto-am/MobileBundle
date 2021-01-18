@@ -38,7 +38,6 @@ class TokenRequestSubscriber implements EventSubscriberInterface
 
         if ($request->headers->has('authorization')) {
             $credentials = $this->getCredentialsFromHeaders($request);
-
             if ($credentials !== null) {
                 [
                     'clientId'     => $clientId,
@@ -53,29 +52,10 @@ class TokenRequestSubscriber implements EventSubscriberInterface
         // Get the client id from the parameters
         if ($request->request->has('client_id')) {
             $clientId = $this->getClientIdFromBody($request);
-
             if ($clientId !== null) {
                 $event->getRequest()->request->set('client_id', $clientId);
             }
         }
-    }
-
-    private function getClientIdFromBody(Request $request): ?string
-    {
-        $clientId = $request->request->get('client_id');
-        $clientSecret = $request->request->get('client_secret');
-
-        // The identifiers are located in the body
-        if ($clientId === null || $clientSecret === null) {
-            return null;
-        }
-
-        $client = $this->getClient($clientId, $clientSecret);
-        if ($client === null) {
-            return null;
-        }
-
-        return $client->getIdentifier();
     }
 
     private function getCredentialsFromHeaders(Request $request): ?array
@@ -146,5 +126,23 @@ class TokenRequestSubscriber implements EventSubscriberInterface
             'id'       => $parts[0],
             'randomId' => $parts[1],
         ];
+    }
+
+    private function getClientIdFromBody(Request $request): ?string
+    {
+        $clientId = $request->request->get('client_id');
+        $clientSecret = $request->request->get('client_secret');
+
+        // The identifiers are located in the body
+        if ($clientId === null || $clientSecret === null) {
+            return null;
+        }
+
+        $client = $this->getClient($clientId, $clientSecret);
+        if ($client === null) {
+            return null;
+        }
+
+        return $client->getIdentifier();
     }
 }

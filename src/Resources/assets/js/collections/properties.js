@@ -38,7 +38,7 @@ $(document).ready(function () {
 
             $('.type-config.type-' + option.data('identifier')).show();
 
-            if(option.data('translatable') === 1) {
+            if (option.data('translatable') === 1) {
                 $('.type-config.type-config-translatable').show();
             }
         }

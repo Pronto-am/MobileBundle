@@ -32,6 +32,14 @@ class BaseController extends AbstractController
         $this->addFlashWithMessage($this->translator->trans('alert.success.data_saved'));
     }
 
+    private function addFlashWithMessage($message, $type = 'success'): void
+    {
+        $this->addFlash(
+            $type,
+            sprintf($message)
+        );
+    }
+
     public function addDataRemovedFlash(): void
     {
         $this->addFlashWithMessage($this->translator->trans('alert.success.data_removed'));
@@ -40,14 +48,6 @@ class BaseController extends AbstractController
     public function addNoPermissionFlash(): void
     {
         $this->addFlashWithMessage($this->translator->trans('alert.warning.no_permission'), 'danger');
-    }
-
-    private function addFlashWithMessage($message, $type = 'success'): void
-    {
-        $this->addFlash(
-            $type,
-            sprintf($message)
-        );
     }
 
     public function generateAbsoluteUrl(string $route, array $parameters = []): string

@@ -17,7 +17,7 @@ $(document).ready(function () {
                 'id': id
             },
             success: function (response) {
-                if(!response.error) {
+                if (!response.error) {
                     window.location = response.data.url;
                 }
             }

@@ -7,6 +7,7 @@ namespace Pronto\MobileBundle\Entity;
 use DateTime;
 use Doctrine\Common\Collections\Collection as DoctrineCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Exception;
 use Pronto\MobileBundle\Entity\PushNotification\Segment;
 use Pronto\MobileBundle\Traits\ApiEntityTrait;
 use Ramsey\Uuid\Uuid;
@@ -112,7 +113,7 @@ class PushNotification implements ApiEntityInterface
      * Triggered on pre persist
      *
      * @ORM\PrePersist
-     * @throws \Exception
+     * @throws Exception
      */
     public function onPrePersist(): void
     {

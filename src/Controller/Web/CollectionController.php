@@ -15,7 +15,9 @@ use Pronto\MobileBundle\EventSubscriber\ValidatePluginStateInterface;
 use Pronto\MobileBundle\Form\CollectionForm;
 use Pronto\MobileBundle\Service\FontAwesomeLoader;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class CollectionController extends BaseController implements ValidatePluginStateInterface, ValidateApplicationSelectionInterface, ValidateCustomerSelectionInterface
@@ -34,7 +36,7 @@ class CollectionController extends BaseController implements ValidatePluginState
      * Show a list of collections
      *
      * @param EntityManagerInterface $entityManager
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function indexAction(EntityManagerInterface $entityManager)
     {
@@ -55,7 +57,7 @@ class CollectionController extends BaseController implements ValidatePluginState
      * @param FontAwesomeLoader $fontAwesomeLoader
      * @param EntityManagerInterface $entityManager
      * @param string|null $identifier
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @return RedirectResponse|Response
      */
     public function editAction(Request $request, FontAwesomeLoader $fontAwesomeLoader, EntityManagerInterface $entityManager, string $identifier = null)
     {
@@ -72,22 +74,22 @@ class CollectionController extends BaseController implements ValidatePluginState
             'identifier'         => $identifier
         ]);
 
-		// The user is not allowed to edit collections belonging to other customers
-		if ($collection !== null && $collection->getApplicationVersion()->getId() !== $applicationVersion->getId()) {
+        // The user is not allowed to edit collections belonging to other customers
+        if ($collection !== null && $collection->getApplicationVersion()->getId() !== $applicationVersion->getId()) {
             return $this->redirectToRoute('pronto_mobile_collections');
         }
 
-		$originalIdentifier = $collection !== null ? $collection->getIdentifier() : '';
+        $originalIdentifier = $collection !== null ? $collection->getIdentifier() : '';
 
-		$collectionDTO = CollectionDTO::fromEntity($collection);
+        $collectionDTO = CollectionDTO::fromEntity($collection);
 
-		$form = $this->createForm(CollectionForm::class, $collectionDTO, [
+        $form = $this->createForm(CollectionForm::class, $collectionDTO, [
             'fontAwesome' => $fontAwesomeLoader
         ]);
 
-		$form->handleRequest($request);
+        $form->handleRequest($request);
 
-		if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $collectionDTO = $form->getData();
 
             /** @var Collection $collection */
@@ -108,12 +110,11 @@ class CollectionController extends BaseController implements ValidatePluginState
             return $this->redirectToRoute('pronto_mobile_collections');
         }
 
-		return $this->render('@ProntoMobile/collections/edit.html.twig', [
+        return $this->render('@ProntoMobile/collections/edit.html.twig', [
             'collectionForm' => $form->createView(),
             'collection'     => $collection,
         ]);
-	}
-
+    }
 
     /**
      * Delete a collection

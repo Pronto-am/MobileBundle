@@ -33,7 +33,6 @@ class DeviceRepository extends EntityRepository
         return $query->getQuery()->getSingleScalarResult();
     }
 
-
     /**
      * Find notification recipients by application
      *
@@ -54,7 +53,6 @@ class DeviceRepository extends EntityRepository
 
         return $query->getQuery()->execute();
     }
-
 
     /**
      * Find device recipients by notification details
@@ -88,7 +86,6 @@ class DeviceRepository extends EntityRepository
         return $query->getQuery()->execute();
     }
 
-
     /**
      * Find device recipients by notification details
      *
@@ -121,7 +118,6 @@ class DeviceRepository extends EntityRepository
         return $query->getQuery()->execute();
     }
 
-
     /**
      * Find devices without a firebase token
      *
@@ -136,7 +132,6 @@ class DeviceRepository extends EntityRepository
             ->getQuery()
             ->execute();
     }
-
 
     /**
      * Set devices disabled by expired or invalid tokens
@@ -153,7 +148,6 @@ class DeviceRepository extends EntityRepository
             ->getQuery()
             ->execute();
     }
-
 
     /**
      * Update a token
@@ -173,7 +167,6 @@ class DeviceRepository extends EntityRepository
             ->execute();
     }
 
-
     /**
      * Get devices which lack a firebase token
      *
@@ -190,7 +183,6 @@ class DeviceRepository extends EntityRepository
             ->getQuery()
             ->execute();
     }
-
 
     /**
      * Update a token

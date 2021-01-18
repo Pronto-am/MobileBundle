@@ -4,74 +4,117 @@
 
     {% include '@ProntoMobile/components/pageTitle.html.twig' with {entity: 'application', exists: application != null, backButton: path('pronto_mobile_applications')} %}
 
-    <div class="row card">
-        <div class="card-content">
-            {{ form_start(applicationForm) }}
+    <div class="row">
+        <div class="col s12">
+            <div class="card">
+                <div class="card-content">
+                    {{ form_start(applicationForm) }}
 
-            <div class="row">
-                <div class="col s12">
-                    {{ form_row(applicationForm.name) }}
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col s12">
-                    {{ form_row(applicationForm.label) }}
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col s12">
-                    {{ form_row(applicationForm.color) }}
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col s12">
-                    {{ form_row(applicationForm.androidBundleIdentifier) }}
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col s12">
-                    {{ form_row(applicationForm.iosBundleIdentifier) }}
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col s12">
-                    {{ form_row(applicationForm.defaultLanguage) }}
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col s12">
-                    {{ form_row(applicationForm.availableLanguages) }}
-                </div>
-            </div>
-
-            {% if application != null %}
-                <div class="row">
-                    <div class="col s6">
-                        {{ form_row(applicationForm.clientId) }}
+                    <div class="row">
+                        <div class="col s12">
+                            {{ form_row(applicationForm.name) }}
+                        </div>
                     </div>
-                    <div class="col s6">
-                        {{ form_row(applicationForm.clientSecret) }}
+
+                    <div class="row">
+                        <div class="col s12">
+                            {{ form_row(applicationForm.label) }}
+                        </div>
                     </div>
+
+                    <div class="row">
+                        <div class="col s12">
+                            {{ form_row(applicationForm.color) }}
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col s12">
+                            {{ form_row(applicationForm.androidBundleIdentifier) }}
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col s12">
+                            {{ form_row(applicationForm.iosBundleIdentifier) }}
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col s12">
+                            {{ form_row(applicationForm.defaultLanguage) }}
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col s12">
+                            {{ form_row(applicationForm.availableLanguages) }}
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col s12">
+                            <button type="submit" class="btn btn-primary" formnovalidate>{{ 'buttons.save'|trans }}</button>
+
+                            {% if application != null %}
+                                <a href="#!" name="single-delete" data-id="{{ application.id }}" data-url="{{ path('pronto_mobile_applications_delete') }}" class="btn-flat btn-text-red">{{ 'buttons.delete'|trans }}</a>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    {{ form_end(applicationForm) }}
                 </div>
-            {% endif %}
+            </div>
+        </div>
+    </div>
 
-            <div class="row">
-                <div class="col s12">
-                    <button type="submit" class="btn btn-primary" formnovalidate>{{ 'buttons.save'|trans }}</button>
+    <div class="row">
+        <div class="col s12">
+            <div class="card">
+                <div class="card-content">
+                    <div class="row">
+                        <div class="col s12">
+                            <h1><span>/</span> {{ 'application.clients'|trans }}</h1>
+                        </div>
+                    </div>
 
-                    {% if application != null %}
-                        <a href="#!" name="single-delete" data-id="{{ application.id }}" data-url="{{ path('pronto_mobile_applications_delete') }}" class="btn-flat btn-text-red">{{ 'buttons.delete'|trans }}</a>
+                    {% if application.secret %}
+                        <div class="row">
+                            <div class="col s12">
+                                <h2 style="margin: 0;"><span>/</span>Deprecated</h2>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col s12 m6">
+                                <b>{{ 'application.client_id'|trans }}</b><br>
+                                <pre style="padding: 12px;">{{ application.publicId }}</pre>
+                            </div>
+                            <div class="col s12 m6">
+                                <b>{{ 'application.client_secret'|trans }}</b><br>
+                                <pre style="padding: 12px;">{{ application.secret }}</pre>
+                            </div>
+                        </div>
                     {% endif %}
+
+                    {% for client in application.applicationClients %}
+                        <div class="row">
+                            <div class="col s12">
+                                <h2 style="margin: 0;"><span>/</span>{{ client.name }}</h2>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col s12 m6">
+                                <b>{{ 'application.client_id'|trans }}</b><br>
+                                <pre style="padding: 12px;">{{ client.client.identifier }}</pre>
+                            </div>
+                            <div class="col s12 m6">
+                                <b>{{ 'application.client_secret'|trans }}</b><br>
+                                <pre style="padding: 12px;">{{ client.client.secret }}</pre>
+                            </div>
+                        </div>
+                    {% endfor %}
                 </div>
             </div>
-
-            {{ form_end(applicationForm) }}
         </div>
     </div>
 {% endblock %}

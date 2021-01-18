@@ -2,7 +2,6 @@
 
 namespace Pronto\MobileBundle\Twig;
 
-
 use Symfony\Component\HttpKernel\KernelInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;

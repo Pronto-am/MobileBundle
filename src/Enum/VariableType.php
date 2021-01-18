@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Pronto\MobileBundle\Enum;
 
-
 use MyCLabs\Enum\Enum;
 
 /**

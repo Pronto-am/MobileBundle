@@ -6,6 +6,7 @@ namespace Pronto\MobileBundle\Entity\User;
 
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use Exception;
 use Pronto\MobileBundle\Entity\User;
 use Ramsey\Uuid\Uuid;
 
@@ -90,7 +91,7 @@ class UserLogin
      * Triggered on pre persist
      *
      * @ORM\PrePersist
-     * @throws \Exception
+     * @throws Exception
      */
     public function onPrePersist(): void
     {

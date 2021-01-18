@@ -77,6 +77,14 @@ class UpgradeCommand extends Command
         $this->entityManager->flush();
     }
 
+    /**
+     * @throws Exception
+     */
+    private function createIdentifier(): string
+    {
+        return hash('md5', random_bytes(16));
+    }
+
     private function createGrantTypes(): array
     {
         return [
@@ -84,13 +92,5 @@ class UpgradeCommand extends Command
             new Grant('password'),
             new Grant('refresh_token')
         ];
-    }
-
-    /**
-     * @throws Exception
-     */
-    private function createIdentifier(): string
-    {
-        return hash('md5', random_bytes(16));
     }
 }

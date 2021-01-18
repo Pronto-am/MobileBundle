@@ -33,7 +33,7 @@ class FirebaseStorage
         }
 
         $storageUrl = 'https://firebasestorage.googleapis.com/v0/b/' . $projectId . '.appspot.com/o/notifications%2F' . $identifier . '%2F';
-        $storageUrl .= ! empty($clickActionHtml[$language]) ? $language : $defaultLanguage;
+        $storageUrl .= !empty($clickActionHtml[$language]) ? $language : $defaultLanguage;
         $storageUrl .= '%2F' . $identifier . '.html?alt=media';
 
         return $storageUrl;

@@ -18,33 +18,7 @@ use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 
 class AppVersionController extends BaseApiController
 {
-	/**
-	 * Get the plugin identifier
-	 *
-	 * @return string
-	 */
-	public function getPluginIdentifier(): string
-	{
-		return Plugin::APP_VERSIONS;
-	}
-
     /**
-     * API-docs: Register a new user
-     *
-     * @api {get} /v1/versions/app/{id} Get a specific app version
-     * @apiName GetAppVersion
-     * @apiGroup AppVersion
-     * @apiVersion 1.0.0
-     *
-     * @apiUse OAuthAuthorizationHeader
-     * @apiUse InvalidParameters
-     * @apiUse AuthorizationErrors
-     */
-
-    /**
-     * @param EntityManagerInterface $entityManager
-     * @param int $id
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
      * @throws ApiException
      */
     public function getAction(EntityManagerInterface $entityManager, int $id): JsonResponse
@@ -68,6 +42,24 @@ class AppVersionController extends BaseApiController
     /**
      * API-docs: Register a new user
      *
+     * @api {get} /v1/versions/app/{id} Get a specific app version
+     * @apiName GetAppVersion
+     * @apiGroup AppVersion
+     * @apiVersion 1.0.0
+     *
+     * @apiUse OAuthAuthorizationHeader
+     * @apiUse InvalidParameters
+     * @apiUse AuthorizationErrors
+     */
+
+    public function getPluginIdentifier(): string
+    {
+        return Plugin::APP_VERSIONS;
+    }
+
+    /**
+     * API-docs: Register a new user
+     *
      * @api {get} /v1/versions/app/{id}/file Download a new version of the app
      * @apiName DownloadAppVersion
      * @apiGroup AppVersion
@@ -79,10 +71,6 @@ class AppVersionController extends BaseApiController
      */
 
     /**
-     * @param EntityManagerInterface $entityManager
-     * @param FileManager $fileManager
-     * @param int $id
-     * @return BinaryFileResponse
      * @throws ApiException
      */
     public function downloadAction(EntityManagerInterface $entityManager, FileManager $fileManager, int $id): BinaryFileResponse
@@ -102,7 +90,7 @@ class AppVersionController extends BaseApiController
 
         $file = $fileManager->get(FileManager::APP_VERSIONS_DIRECTORY . '/' . $version->getFileName());
 
-        if($file === null) {
+        if ($file === null) {
             throw new FileNotFoundException();
         }
 

@@ -2,44 +2,43 @@
 
 namespace Pronto\MobileBundle\Form;
 
-
 use Pronto\MobileBundle\DTO\AppUserDTO;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\Exception\AccessException;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class AppUserForm extends AbstractType
 {
-	/**
-	 * @param FormBuilderInterface $builder
-	 * @param array $options
-	 */
-	public function buildForm(FormBuilderInterface $builder, array $options): void
-	{
-		$builder
-			->add('activated', CheckboxType::class, [
-				'label'      => 'user.activated',
-				'attr'       => [
-					'class' => 'filled-in'
-				],
-				'label_attr' => [
-					'class' => 'no-asterisk'
-				]
-			]);
-	}
+    /**
+     * @param FormBuilderInterface $builder
+     * @param array $options
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options): void
+    {
+        $builder
+            ->add('activated', CheckboxType::class, [
+                'label'      => 'user.activated',
+                'attr'       => [
+                    'class' => 'filled-in'
+                ],
+                'label_attr' => [
+                    'class' => 'no-asterisk'
+                ]
+            ]);
+    }
 
-
-	/**
-	 *
-	 *
-	 * @param OptionsResolver $resolver
-	 * @throws \Symfony\Component\OptionsResolver\Exception\AccessException
-	 */
-	public function configureOptions(OptionsResolver $resolver): void
-	{
-		$resolver->setDefaults([
-			'data_class' => AppUserDTO::class
-		]);
-	}
+    /**
+     *
+     *
+     * @param OptionsResolver $resolver
+     * @throws AccessException
+     */
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefaults([
+            'data_class' => AppUserDTO::class
+        ]);
+    }
 }

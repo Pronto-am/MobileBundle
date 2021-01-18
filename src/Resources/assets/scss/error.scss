@@ -84,11 +84,31 @@ html, body {
   }
 
   @keyframes hinge {
-    0% { transform: rotate(0); transform-origin: top right; animation-timing-function: ease-in-out; }
-    20%, 50%, 80% { transform: rotate(-80deg); transform-origin: top right; animation-timing-function: ease-in-out; }
-    35%, 65% { transform: rotate(-60deg); transform-origin: top right; animation-timing-function: ease-in-out; }
-    90% { transform: rotate(-60deg) translateY(0); opacity: 1; transform-origin: top right; animation-timing-function: ease-in-out; }
-    100% { transform: translateY(150vh); opacity: 0; }
+    0% {
+      transform: rotate(0);
+      transform-origin: top right;
+      animation-timing-function: ease-in-out;
+    }
+    20%, 50%, 80% {
+      transform: rotate(-80deg);
+      transform-origin: top right;
+      animation-timing-function: ease-in-out;
+    }
+    35%, 65% {
+      transform: rotate(-60deg);
+      transform-origin: top right;
+      animation-timing-function: ease-in-out;
+    }
+    90% {
+      transform: rotate(-60deg) translateY(0);
+      opacity: 1;
+      transform-origin: top right;
+      animation-timing-function: ease-in-out;
+    }
+    100% {
+      transform: translateY(150vh);
+      opacity: 0;
+    }
   }
 
   .hinge {

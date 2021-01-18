@@ -12,12 +12,12 @@ use Pronto\MobileBundle\EventSubscriber\ValidateCustomerSelectionInterface;
 
 class DefaultController extends BaseController implements ValidateCustomerSelectionInterface, ValidateApplicationSelectionInterface
 {
-	public function indexAction(EntityManagerInterface $entityManager)
-	{
-		$plugins = $entityManager->getRepository(ApplicationPlugin::class)->findAllByApplication($this->getApplication());
+    public function indexAction(EntityManagerInterface $entityManager)
+    {
+        $plugins = $entityManager->getRepository(ApplicationPlugin::class)->findAllByApplication($this->getApplication());
 
-		return $this->render('@ProntoMobile/default/index.html.twig', [
-			'plugins' => $plugins
-		]);
+        return $this->render('@ProntoMobile/default/index.html.twig', [
+            'plugins' => $plugins
+        ]);
     }
 }

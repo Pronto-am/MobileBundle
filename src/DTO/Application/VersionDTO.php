@@ -9,17 +9,17 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class VersionDTO extends BaseDTO
 {
-	/**
-	 * @Assert\NotBlank()
-	 * @var string
-	 */
-	public $name;
+    /**
+     * @Assert\NotBlank()
+     * @var string
+     */
+    public $name;
 
-	/**
-	 * @return array
-	 */
-	public static function getFillable(): array
-	{
-		return ['name'];
-	}
+    /**
+     * @return array
+     */
+    public static function getFillable(): array
+    {
+        return ['name'];
+    }
 }
