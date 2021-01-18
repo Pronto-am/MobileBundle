@@ -8,10 +8,10 @@ use Pronto\MobileBundle\Service\ProntoMobile;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use UnexpectedValueException;
 
 class IsUniqueIdentifierValidator extends ConstraintValidator
@@ -36,27 +36,18 @@ class IsUniqueIdentifierValidator extends ConstraintValidator
      */
     private $request;
 
-    /**
-     * IsUniqueIdentifierValidator constructor.
-     * @param EntityManagerInterface $entityManager
-     * @param ContainerInterface $container
-     * @param TranslatorInterface $translator
-     * @param RequestStack $requestStack
-     */
-    public function __construct(EntityManagerInterface $entityManager, ContainerInterface $container, TranslatorInterface $translator, RequestStack $requestStack)
-    {
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        ContainerInterface $container,
+        TranslatorInterface $translator,
+        RequestStack $requestStack
+    ) {
         $this->entityManager = $entityManager;
-        $this->prontoMobile = $container->get('Pronto\MobileBundle\Service\ProntoMobile');
+        $this->prontoMobile = $container->get(ProntoMobile::class);
         $this->translator = $translator;
         $this->request = $requestStack->getCurrentRequest();
     }
 
-    /**
-     * Checks if the passed value is valid.
-     *
-     * @param mixed $value The value that should be validated
-     * @param Constraint $constraint The constraint for the validation
-     */
     public function validate($value, Constraint $constraint)
     {
         if (!$constraint instanceof IsUniqueIdentifier) {

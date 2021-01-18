@@ -70,7 +70,7 @@ class UpgradeCommand extends Command
 
             $this->entityManager->persist($client);
 
-            $applicationClient = new Application\ApplicationClient($application, $client, 'default');
+            $applicationClient = new Application\ApplicationClient($application, $client, 'Default');
             $this->entityManager->persist($applicationClient);
         }
 

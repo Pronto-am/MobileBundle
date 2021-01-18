@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pronto\MobileBundle\Validator\Constraints;
 
 use Doctrine\ORM\EntityManagerInterface;
@@ -8,11 +10,11 @@ use Pronto\MobileBundle\Service\ProntoMobile;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator as BaseConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 use Symfony\Component\Validator\Exception\UnexpectedValueException;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 abstract class ConstraintValidator extends BaseConstraintValidator
 {
@@ -46,27 +48,18 @@ abstract class ConstraintValidator extends BaseConstraintValidator
      */
     protected $skipNullValues = true;
 
-    /**
-     * IsUniqueIdentifierValidator constructor.
-     * @param EntityManagerInterface $entityManager
-     * @param ContainerInterface $container
-     * @param TranslatorInterface $translator
-     * @param RequestStack $requestStack
-     */
-    public function __construct(EntityManagerInterface $entityManager, ContainerInterface $container, TranslatorInterface $translator, RequestStack $requestStack)
-    {
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        ContainerInterface $container,
+        TranslatorInterface $translator,
+        RequestStack $requestStack
+    ) {
         $this->entityManager = $entityManager;
-        $this->prontoMobile = $container->get('Pronto\MobileBundle\Service\ProntoMobile');
+        $this->prontoMobile = $container->get(ProntoMobile::class);
         $this->translator = $translator;
         $this->request = $requestStack->getCurrentRequest();
     }
 
-    /**
-     * Checks if the passed value is valid.
-     *
-     * @param mixed $value The value that should be validated
-     * @param Constraint $constraint The constraint for the validation
-     */
     public function validate($value, Constraint $constraint)
     {
         $this->constraint = $constraint;
@@ -89,20 +82,10 @@ abstract class ConstraintValidator extends BaseConstraintValidator
         $this->handle($value, $constraint);
     }
 
-    /**
-     * @return string
-     */
     public abstract function requiresInstanceOf(): string;
 
-    /**
-     * @return VariableType|null
-     */
     public abstract function valueIsOfType(): ?VariableType;
 
-    /**
-     * @param $value
-     * @return bool
-     */
     private function valueTypeIsValid($value): bool
     {
         switch ($this->valueIsOfType()->getValue()) {
@@ -117,15 +100,8 @@ abstract class ConstraintValidator extends BaseConstraintValidator
         }
     }
 
-    /**
-     * @param $value
-     * @param Constraint $constraint
-     */
     public abstract function handle($value, Constraint $constraint): void;
 
-    /**
-     * @return string
-     */
     protected function getErrorMessage(): string
     {
         $translationKey = 'form.invalid_value';

@@ -7,9 +7,6 @@ namespace Pronto\MobileBundle\Enum;
 use MyCLabs\Enum\Enum;
 
 /**
- * Class VariableType
- * @package Pronto\MobileBundle\Entity
- *
  * @method static VariableType STRING()
  * @method static VariableType BOOL()
  * @method static VariableType INTEGER()

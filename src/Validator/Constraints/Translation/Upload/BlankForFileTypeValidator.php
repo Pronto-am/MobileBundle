@@ -1,14 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pronto\MobileBundle\Validator\Constraints\Translation\Upload;
 
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use UnexpectedValueException;
 
 class BlankForFileTypeValidator extends ConstraintValidator
@@ -23,20 +25,12 @@ class BlankForFileTypeValidator extends ConstraintValidator
      */
     private $request;
 
-    /**
-     * @param TranslatorInterface $translator
-     * @param RequestStack $requestStack
-     */
     public function __construct(TranslatorInterface $translator, RequestStack $requestStack)
     {
         $this->translator = $translator;
         $this->request = $requestStack->getCurrentRequest();
     }
 
-    /**
-     * @param mixed $value The value that should be validated
-     * @param Constraint $constraint The constraint for the validation
-     */
     public function validate($value, Constraint $constraint)
     {
         if (!$constraint instanceof BlankForFileType) {

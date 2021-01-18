@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pronto\MobileBundle\Validator\Constraints\Config;
 
 use Pronto\MobileBundle\Enum\RemoteConfigType;
@@ -14,26 +16,16 @@ class IsValidForTypeValidator extends ConstraintValidator
      */
     protected $skipNullValues = false;
 
-    /**
-     * @return string
-     */
     public function requiresInstanceOf(): string
     {
         return IsValidForType::class;
     }
 
-    /**
-     * @return VariableType|null
-     */
     public function valueIsOfType(): ?VariableType
     {
         return null;
     }
 
-    /**
-     * @param $value
-     * @param Constraint $constraint
-     */
     public function handle($value, Constraint $constraint): void
     {
         $data = $this->request->request->get('remote_config_form');
@@ -46,12 +38,6 @@ class IsValidForTypeValidator extends ConstraintValidator
         }
     }
 
-    /**
-     * @param RemoteConfigType $type
-     * @param null $value
-     * @param null $options
-     * @return bool
-     */
     private function isValid(RemoteConfigType $type, $value = null, $options = null)
     {
         if ($type->equals(RemoteConfigType::INTEGER())) {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pronto\MobileBundle\Validator\Constraints\Config;
 
 use Pronto\MobileBundle\Validator\Constraints\TranslatableConstraint;
@@ -9,9 +11,6 @@ use Pronto\MobileBundle\Validator\Constraints\TranslatableConstraint;
  */
 class IsValidForType extends TranslatableConstraint
 {
-    /**
-     * @return string
-     */
     public function getTranslationKey(): string
     {
         return 'remote_config.value.invalid';

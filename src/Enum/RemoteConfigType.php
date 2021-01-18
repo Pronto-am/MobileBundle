@@ -7,9 +7,6 @@ namespace Pronto\MobileBundle\Enum;
 use MyCLabs\Enum\Enum;
 
 /**
- * Class RemoteConfigType
- * @package Pronto\MobileBundle\Entity
- *
  * @method static RemoteConfigType STRING()
  * @method static RemoteConfigType BOOL()
  * @method static RemoteConfigType INTEGER()
@@ -23,9 +20,4 @@ class RemoteConfigType extends Enum
     private const INTEGER = 'integer';
     private const ENUM = 'enum';
     private const JSON = 'json';
-
-    public function getText()
-    {
-
-    }
 }
