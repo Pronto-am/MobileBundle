@@ -9,15 +9,6 @@ use Symfony\Component\HttpFoundation\FileBag;
 interface PropertyType
 {
 	/**
-	 * PropertyType constructor.
-	 *
-	 * @param array $formData
-	 * @param Property $property
-	 * @param FileBag|null $fileBag
-	 */
-	public function __construct(array $formData, Property $property, FileBag $fileBag = null);
-
-	/**
 	 * Parse the form data as entry value
 	 *
 	 * @return array

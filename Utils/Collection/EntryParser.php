@@ -42,12 +42,17 @@ class EntryParser
 		'file'        => FileProperty::class
 	];
 
-	/**
+    /**
+     * @var string|null $uploadsDir
+     */
+    private $uploadsDir;
+
+    /**
 	 * EntryParser constructor.
 	 *
 	 * @param Request $request
 	 */
-	public function __construct(Request $request)
+	public function __construct(Request $request, ?string $uploadsDir = null)
 	{
 		$this->formData = $request->request->all();
 
@@ -56,7 +61,8 @@ class EntryParser
 
 		// Set the additional files
 		$this->files = $request->files;
-	}
+        $this->uploadsDir = $uploadsDir;
+    }
 
     /**
      * @param array $initial
@@ -96,7 +102,7 @@ class EntryParser
 				return new $class($this->formData, $property);
 			}
 
-			return new $class($this->formData, $property, $this->files);
+			return new $class($this->formData, $property, $this->files, $this->uploadsDir);
 		}
 
 		return new BaseType($this->formData, $property);

@@ -19,11 +19,6 @@ class BaseType implements PropertyType
 	public $property;
 
 	/**
-     * @var array $fileBag
-     */
-	public $fileBag;
-
-	/**
      * @var array $parsed
      */
 	public $parsed;
@@ -33,17 +28,9 @@ class BaseType implements PropertyType
      */
 	public $identifier;
 
-	/**
-	 * PropertyType constructor.
-	 *
-	 * @param array $formData
-	 * @param Property $property
-	 * @param FileBag|null $fileBag
-	 */
-	public function __construct(array $formData, Property $property, FileBag $fileBag = null)
+	public function __construct(array $formData, Property $property)
 	{
 		$this->property = $property;
-		$this->fileBag = $fileBag;
 
 		// Filter out the form fields belonging to this property
 		$this->fields = array_filter($formData, function ($key) {

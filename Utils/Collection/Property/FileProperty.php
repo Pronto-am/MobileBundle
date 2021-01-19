@@ -3,12 +3,31 @@
 namespace Pronto\MobileBundle\Utils\Collection\Property;
 
 
+use Pronto\MobileBundle\Entity\Collection\Property;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\FileBag;
 
 class FileProperty extends BaseType
 {
+    /**
+     * @var array $fileBag
+     */
+    private $fileBag;
 
-	/**
+    /**
+     * @var string|null
+     */
+    private $uploadsDir;
+
+    public function __construct(array $formData, Property $property, ?FileBag $fileBag = null, ?string $uploadsDir = null)
+    {
+        parent::__construct($formData, $property);
+
+        $this->fileBag = $fileBag;
+        $this->uploadsDir = $uploadsDir;
+    }
+
+    /**
 	 * Parse the form data as entry value
 	 *
 	 * @return array
@@ -16,7 +35,7 @@ class FileProperty extends BaseType
 	public function parse(): array
 	{
 		// Set the upload directory
-		$directory = 'uploads/collections/' . $this->property->getCollection()->getId();
+		$directory = rtrim($this->uploadsDir, '/') . '/collections/' . $this->property->getCollection()->getId();
 
 		$parsed = [];
 
