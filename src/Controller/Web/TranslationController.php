@@ -17,6 +17,7 @@ use Pronto\MobileBundle\EventSubscriber\ValidatePluginStateInterface;
 use Pronto\MobileBundle\Exceptions\EntityNotFoundException;
 use Pronto\MobileBundle\Form\Translation\UploadForm;
 use Pronto\MobileBundle\Form\TranslationForm;
+use Pronto\MobileBundle\Service\JsonSerializer;
 use Pronto\MobileBundle\Service\Translation\Importer;
 use Pronto\MobileBundle\Utils\Collect;
 use Pronto\MobileBundle\Utils\Doctrine\WhereClause;
@@ -47,14 +48,31 @@ class TranslationController extends BaseController implements ValidateCustomerSe
      * @param EntityManagerInterface $entityManager
      * @return Response
      */
-    public function indexAction(Request $request, EntityManagerInterface $entityManager): Response
+    public function indexAction(Request $request, EntityManagerInterface $entityManager, JsonSerializer $jsonSerializer): Response
     {
-        $pageHelper = new PageHelper($request, $entityManager, TranslationKey::class, 500, 't.identifier');
-        $pageHelper->addClause(new WhereClause('t.application', $this->getApplication()));
+        if ($request->isXmlHttpRequest()) {
+            $translations = $entityManager->getRepository(TranslationKey::class)->getList(
+                $this->getApplication(),
+                $request->query->get('search'),
+                $request->query->get('order'),
+                (int) $request->query->get('page', 1)
+            );
 
-        return $this->render('@ProntoMobile/translations/index.html.twig', [
-            'pageHelper' => $pageHelper
-        ]);
+            $translationCount = $entityManager->getRepository(TranslationKey::class)->getCount(
+                $this->getApplication()
+            );
+
+            return new JsonResponse([
+                'data'       => json_decode($jsonSerializer->serialize($translations)),
+                'pagination' => [
+                    'total'        => $translationCount,
+                    'current_page' => (int) $request->query->get('page', 1),
+                    'total_pages'  => ceil($translationCount / 100),
+                ]
+            ]);
+        }
+
+        return $this->render('@ProntoMobile/translations/index.html.twig');
     }
 
     /**
@@ -143,15 +161,7 @@ class TranslationController extends BaseController implements ValidateCustomerSe
             $translation->setLanguage($request->request->get('language'))->setTranslationKey($translationKey);
         }
 
-        // Convert <br> tags to \n
-        $text = str_replace([
-            '<br>', '<br/>', '<br />'
-        ], '\n', $request->request->get('text'));
-
-        // Remove HTMl tags
-        $text = preg_replace('/<[^>]+>/', '', $text);
-
-        $translation->setText($text);
+        $translation->setText($request->request->get('text'));
 
         $entityManager->persist($translation);
         $entityManager->flush();
@@ -162,7 +172,7 @@ class TranslationController extends BaseController implements ValidateCustomerSe
     /**
      * @throws EntityNotFoundException
      */
-    public function togglePlatformAction(Request $request, EntityManagerInterface $entityManager)
+    public function togglePlatformAction(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
         /** @var TranslationKey $translationKey */
         $translationKey = $entityManager->getRepository(TranslationKey::class)->findOrFail($request->request->get('translation_key_id'));
@@ -254,7 +264,7 @@ class TranslationController extends BaseController implements ValidateCustomerSe
             ];
 
             foreach ($languageCodes as $languageCode) {
-                $text = Optional::get($translations[$languageCode])->getText();
+                $text = isset($translations[$languageCode]) ? $translations[$languageCode]->getText() : null;
                 $fields[] = $text !== ' ' && !empty($text) ? $text : '';
             }
 

@@ -24,6 +24,7 @@ class TranslationKey extends TimestampedEntity implements ApiEntityInterface
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      * @ORM\Column(type="integer")
+     * @Groups({"TranslationKey"})
      */
     private $id;
 

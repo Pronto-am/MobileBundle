@@ -2,6 +2,8 @@
 
 namespace Pronto\MobileBundle\Repository;
 
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Pronto\MobileBundle\Entity\Application;
 
 class TranslationKeyRepository extends EntityRepository
@@ -31,5 +33,40 @@ class TranslationKeyRepository extends EntityRepository
         $results = $query->getQuery()->execute($parameters);
 
         return count($results) === 0;
+    }
+
+    public function getList(Application $application, string $search = null, string $order = null, int $page = 1): array
+    {
+        $query = $this->createQueryBuilder('translationKey')
+            ->andWhere('translationKey.application = :application')
+            ->setParameter('application', $application);
+
+        if ($search !== null) {
+            $query = $query->andWhere('translationKey.identifier LIKE :identifier')
+                ->setParameter('identifier', '%' . $search . '%');
+        }
+
+        if ($order !== null) {
+            [$field, $direction] = explode('.', $order);
+            $query = $query->orderBy('translationKey.' . $field, $direction);
+        } else {
+            $query = $query->orderBy('translationKey.identifier', 'asc');
+        }
+
+        return $query->setMaxResults(100)->setFirstResult(($page - 1) * 100)->getQuery()->execute();
+    }
+
+    /**
+     * @throws NoResultException
+     * @throws NonUniqueResultException
+     */
+    public function getCount(Application $application): int
+    {
+        return $this->createQueryBuilder('translationKey')
+            ->select('count(translationKey.id)')
+            ->andWhere('translationKey.application = :application')
+            ->setParameter('application', $application)
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 }

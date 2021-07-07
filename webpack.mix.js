@@ -11,8 +11,8 @@ let mix = require('laravel-mix');
  |
  */
 
-const src = 'Resources/assets/';
-const dest = 'Resources/public/';
+const src = 'src/Resources/assets/';
+const dest = 'src/Resources/public/';
 
 let img = {
     src: src + 'images/',
@@ -30,7 +30,8 @@ let css = {
 };
 
 // Compile and copy the assets to the public folder
-mix.js(js.src + 'app.js', js.dest)
+mix
+    .js(js.src + 'app.js', js.dest)
     .js(js.src + 'modal.js', js.dest)
     .js(js.src + 'error.js', js.dest)
     .js(js.src + 'login.js', js.dest)
@@ -38,6 +39,10 @@ mix.js(js.src + 'app.js', js.dest)
     .js(js.src + 'codeflask.js', js.dest)
     .js(js.src + 'jscolor.js', js.dest)
     .js(js.src + 'plugins.js', js.dest)
+
+    // New vue resources
+    .sass('assets/sass/app.scss', 'src/Resources/public/build/css')
+    .js('assets/js/app.js', 'src/Resources/public/build/js').vue()
 
     .js(js.src + 'notifications/statistics.js', js.dest + '/notifications')
     .js(js.src + 'notifications/notifications.js', js.dest + '/notifications')
@@ -51,8 +56,6 @@ mix.js(js.src + 'app.js', js.dest)
     .js(js.src + 'collections/entries.js', js.dest + '/collections')
     .js(js.src + 'collections/relationships.js', js.dest + '/collections')
 
-    .js(js.src + 'translations/translations.js', js.dest + '/translations')
-
     .js(js.src + 'configurations/configurations.js', js.dest + '/configurations')
 
     .sass(css.src + 'login.scss', css.dest)
@@ -64,15 +67,12 @@ mix.js(js.src + 'app.js', js.dest)
 
     .sass(css.src + '/collections/collections.scss', css.dest + '/collections')
 
-    .sass(css.src + '/translations/translations.scss', css.dest + '/translations')
-
     .copy(img.src + '/logo-login.png', img.dest)
     .copy(img.src + '/logo-sidemenu.png', img.dest)
     .copy(img.src + '/favicon.ico', img.dest)
-    .copy('Resources/assets/styles/customer.php', 'Resources/public/styles')
-    .copy('Resources/assets/bundles/select2/js/select2.min.js', 'Resources/public/libraries/select2/js/select2.min.js')
-    .copy('Resources/assets/bundles/jquery-ui/js/jquery-ui.min.js', 'Resources/public/libraries/jquery-ui/js/jquery-ui.min.js')
+    .copy('src/Resources/assets/bundles/select2/js/select2.min.js', 'src/Resources/public/libraries/select2/js/select2.min.js')
+    .copy('src/Resources/assets/bundles/jquery-ui/js/jquery-ui.min.js', 'src/Resources/public/libraries/jquery-ui/js/jquery-ui.min.js')
 
     .version()
     .setPublicPath(dest)
-    .setResourceRoot('../');
+    .setResourceRoot('../../');

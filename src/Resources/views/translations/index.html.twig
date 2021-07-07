@@ -1,102 +1,10 @@
 {% extends '@ProntoMobile/base.html.twig' %}
 
-{% block stylesheets %}
-    {{ parent() }}
-
-    <link rel="stylesheet" type="text/css" href="{{ mix('/css/translations/translations.css') }}"/>
-{% endblock %}
-
 {% block body %}
-
-    {% include '@ProntoMobile/components/toolbar.html.twig' with {
-        pageTitle: 'translations'|trans|capitalize,
-        newObjectUrl: 'pronto_mobile_translations_edit',
-        delete: pageHelper.getList()|length > 0,
-        customActions: [
-            {
-                path: path('pronto_mobile_translations_upload'),
-                color: 'blue-grey lighten-3',
-                icon: 'upload'
-            }, {
-                path: path('pronto_mobile_translations_export'),
-                color: 'blue-grey lighten-3',
-                icon: 'download'
-            }
-        ]
-    } %}
-
-    {% if pageHelper.getList()|length > 0 %}
-        <div class="card">
-            <div class="card-content">
-                <form action="{{ path('pronto_mobile_translations_delete') }}" method="POST">
-                    <table class="table striped bordered highlight responsive-table">
-                        <thead>
-                        <tr>
-                            <th width="60" class="has-checkbox">
-                                <input type="checkbox" id="checkAll">
-                                <label for="checkAll"></label>
-                            </th>
-                            <th width="275">{{ pageHelper.createSortableLink('translation.identifier'|trans|capitalize, 't.identifier') }}</th>
-                            <th>Vertalingen</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for key, translationKey in pageHelper.getList() %}
-                            <tr data-translation-key-id="{{ translationKey.id }}">
-                                <td class="has-checkbox" valign="top">
-                                    <input type="checkbox" id="translationsCheckbox{{ translationKey.id }}" name="translations[]" value="{{ translationKey.id }}">
-                                    <label for="translationsCheckbox{{ translationKey.id }}"></label>
-                                </td>
-                                <td valign="top">
-                                    <div>
-                                        <a href="{{ path('pronto_mobile_translations_edit', {'id': translationKey.id}) }}" class="regular">
-                                            {{ translationKey.identifier }}
-                                        </a>
-
-                                        <a href="#!" class="platform {{ translationKey.android ? 'active' : '' }}"><i class="fa fa-android"></i></a>
-                                        <a href="#!" class="platform {{ translationKey.ios ? 'active' : '' }}"><i class="fa fa-apple"></i></a>
-                                    </div>
-
-                                    <div>
-                                        {{ translationKey.description }}
-                                    </div>
-                                </td>
-                                <td>
-                                    {% set translations = translationKey.translations|keyBy('language') %}
-
-                                    {% for language in pronto_mobile.application.availableLanguages %}
-                                        <div class="inline-field">
-                                            <span>{{ language.code }}</span>
-
-                                            {% set text = translations[language.code].text|replace({"\\n": "<br>"}) %}
-
-                                            <textarea class="materialize-textarea toggle-field" data-original-height="30" data-translation-key-id="{{ translationKey.id }}" data-lang="{{ language.code }}">{{ text|raw }}</textarea>
-
-                                            {% if loop.first == false %}
-                                                <span><a href="#!" class="btn btn-primary"><i class="fa fa-language"></i></a></span>
-                                            {% endif %}
-                                        </div>
-                                    {% endfor %}
-                                </td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                </form>
-            </div>
-        </div>
-
-        {% include '@ProntoMobile/components/pagination.html.twig' with {pageHelper: pageHelper} %}
-    {% else %}
-        {% include '@ProntoMobile/components/alert.html.twig' with {type: 'info', collection: 'translations'} %}
-    {% endif %}
-
-    {% include '@ProntoMobile/components/confirm.html.twig' with {postUrl: path('pronto_mobile_translations_delete')} %}
+    <translations-index :languages="{{ pronto_mobile.application.availableLanguages|json_encode() }}"></translations-index>
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
-
-    <script type="text/javascript" src="{{ mix('/js/translations/translations.js') }}"></script>
 
 {% endblock %}

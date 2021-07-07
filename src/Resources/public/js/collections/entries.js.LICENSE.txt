@@ -1,0 +1,10 @@
+/*! jquery-locationpicker - v0.1.16 - 2017-10-02 */
+
+/**
+ * Prism: Lightweight, robust, elegant syntax highlighting
+ *
+ * @license MIT <https://opensource.org/licenses/MIT>
+ * @author Lea Verou <https://lea.verou.me>
+ * @namespace
+ * @public
+ */

@@ -8,17 +8,16 @@
     <title>{% block title %}Pronto - App management{% endblock %}</title>
 
     {% block stylesheets %}
+        <link href="{{ mix('/build/css/app.css') }}" rel="stylesheet"/>
         <link href="{{ mix('/css/app.css') }}" rel="stylesheet"/>
     {% endblock %}
 
     <link rel="icon" type="image/x-icon" href="{{ mix('/images/favicon.ico') }}"/>
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
-    <link rel="stylesheet" type="text/css" href="/bundles/prontomobile/styles/customer.php?primaryColor={{ customer.primaryColor~ '&secondaryColor=' ~ customer.secondaryColor ~ '&sidebarColor=' ~ customer.sidebarColor }}"/>
 </head>
 <body>
-<div id="container">
+<div id="container" class="vue-app">
     <div id="side-nav">
         <a href="{{ path('pronto_mobile_homepage') }}">
             {% if customer.logo != null %}
@@ -180,7 +179,12 @@
         };
 
         let globalVariables = {};
+
+        window.vueConfig = {
+            locale: '{{ app.request.locale }}'
+        };
     </script>
+    <script src="{{ mix('/build/js/app.js') }}"></script>
     <script src="{{ mix('/js/app.js') }}"></script>
 {% endblock %}
 </body>

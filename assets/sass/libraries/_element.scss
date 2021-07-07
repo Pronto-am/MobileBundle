@@ -1,0 +1,80 @@
+$--color-primary: #FADB4A;
+$--font-path: "/bundles/prontomobile/build/fonts";
+
+@import "~element-ui/packages/theme-chalk/src/index";
+
+.el-checkbox {
+    .el-checkbox__input {
+        &.is-checked .el-checkbox__inner {
+        }
+    }
+
+    &.is-checked {
+        .el-checkbox__label {
+            color: var(--primary-color-dark);
+        }
+    }
+}
+
+.el-divider {
+    &.dark {
+        background-color: rgba(var(--secondary-color-rgb), 0.7);
+    }
+}
+
+.el-dropdown-menu {
+    .el-dropdown-menu__item:hover {
+        color: #cab13b;
+    }
+}
+
+.el-notification {
+    border-radius: 2px;
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+
+    .el-notification__title, .el-notification__content {
+        color: #ffffff;
+        text-align: left !important;
+    }
+
+    h2:after {
+        display: none;
+    }
+
+    &.el-notification--loading {
+        .el-notification__icon {
+            color: #ffffff;
+        }
+    }
+}
+
+.el-radio-group {
+    .el-radio-button {
+        &.is-active {
+            .el-radio-button__inner {
+                color: var(--secondary-color) !important;
+            }
+        }
+    }
+}
+
+.el-select {
+    width: 100%;
+}
+
+.el-tag {
+    border-radius: 2px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+
+    &.el-tag--primary {
+        color: var(--secondary-color);
+    }
+
+    &.el-tag--secondary {
+        border-color: var(--secondary-color);
+        background-color: var(--secondary-color);
+        color: var(--primary-color);
+    }
+}

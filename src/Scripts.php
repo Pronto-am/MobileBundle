@@ -153,8 +153,6 @@ class Scripts
             ['path' => '^/admin', 'roles' => ['ROLE_USER']],
         ];
 
-        var_dump($fileName);
-
         file_put_contents($fileName, Yaml::dump($security, 4));
     }
 

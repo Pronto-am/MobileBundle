@@ -1,1 +1,132 @@
-!function(t){var e={};function a(n){if(e[n])return e[n].exports;var i=e[n]={i:n,l:!1,exports:{}};return t[n].call(i.exports,i,i.exports,a),i.l=!0,i.exports}a.m=t,a.c=e,a.d=function(t,e,n){a.o(t,e)||Object.defineProperty(t,e,{enumerable:!0,get:n})},a.r=function(t){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(t,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(t,"__esModule",{value:!0})},a.t=function(t,e){if(1&e&&(t=a(t)),8&e)return t;if(4&e&&"object"==typeof t&&t&&t.__esModule)return t;var n=Object.create(null);if(a.r(n),Object.defineProperty(n,"default",{enumerable:!0,value:t}),2&e&&"string"!=typeof t)for(var i in t)a.d(n,i,function(e){return t[e]}.bind(null,i));return n},a.n=function(t){var e=t&&t.__esModule?function(){return t.default}:function(){return t};return a.d(e,"a",e),e},a.o=function(t,e){return Object.prototype.hasOwnProperty.call(t,e)},a.p="/",a(a.s=16)}({16:function(t,e,a){t.exports=a("JsGY")},JsGY:function(t,e){function a(t){$.ajax({url:"/admin/translations/inline",type:"POST",dataType:"json",data:{translation_key_id:t.data("translation-key-id"),language:t.data("lang"),text:t.val()},success:function(t){t.error&&console.log(t.error)}})}function n(t,e,a,n){$.getJSON("https://translate.yandex.net/api/v1.5/tr.json/translate",{key:"trnsl.1.1.20190131T085112Z.66ef20c1cb0c5e71.8172f269bcb719c15c75f1a6d0560192b1174ee1",lang:t+"-"+e,text:a},n)}$("a.btn-translate").click(function(t){t.preventDefault();var e=$("#translations_0").val(),a=$(this).closest(".row").find('textarea[id^="translations_"]'),i=$("#translations_0").data("lang"),r=a.data("lang");$(this).addClass("disabled"),$(a).prop("disabled",!0),n(i,r,e,function(t){t.text&&t.text.length>0&&a.val(t.text[0])}),$(this).removeClass("disabled"),$(a).prop("disabled",!1)}),$("#translations_0").keyup(function(){$("a.btn-translate").removeClass("disabled"),""===$(this).val()&&$("a.btn-translate").addClass("disabled")}),$(document).ready(function(){document.execCommand("defaultParagraphSeparator",!1,"br"),$("#translations_0").trigger("keyup");var t=$(".inline-field textarea.toggle-field");t.focus(function(){$(this).closest(".inline-field").addClass("focused")}),t.focusout(function(){$(this).closest(".inline-field").removeClass("focused")}),t.on("blur",function(t){a($(this).closest(".inline-field").find("textarea"))}),$("a.platform").click(function(t){var e,a;t.preventDefault(),e=$(this).find("i.fa"),a=e.parent(),$.ajax({url:"/admin/translations/platform",type:"POST",dataType:"json",data:{translation_key_id:e.closest("tr").data("translation-key-id"),platform:e.hasClass("fa-android")?"android":"ios",active:!a.hasClass("active")},success:function(t){t.error||(a.hasClass("active")?a.removeClass("active"):a.addClass("active"))}})}),$(".inline-field").find(".btn").click(function(t){t.preventDefault();var e=$(this).closest(".inline-field").find("textarea"),i=$(this).closest("td").find(".inline-field:first-child textarea"),r=$(this).closest(".inline-field").find("textarea");n(i.data("lang"),r.data("lang"),i.val(),function(t){t.text&&t.text.length>0&&(r.val(t.text[0]),a(e))})})})}});
+/******/ (() => { // webpackBootstrap
+var __webpack_exports__ = {};
+/*!**************************************************************!*\
+  !*** ./src/Resources/assets/js/translations/translations.js ***!
+  \**************************************************************/
+$('a.btn-translate').click(function (e) {
+  e.preventDefault();
+  var defaultValue = $('#translations_0').val();
+  var fieldToFill = $(this).closest('.row').find('textarea[id^="translations_"]');
+  var from = $('#translations_0').data('lang');
+  var to = fieldToFill.data('lang');
+  $(this).addClass('disabled');
+  $(fieldToFill).prop('disabled', true);
+  translate(from, to, defaultValue, function (response) {
+    if (response.text && response.text.length > 0) {
+      fieldToFill.val(response.text[0]);
+    }
+  });
+  $(this).removeClass('disabled');
+  $(fieldToFill).prop('disabled', false);
+});
+$('#translations_0').keyup(function () {
+  $('a.btn-translate').removeClass('disabled');
+
+  if ($(this).val() === '') {
+    $('a.btn-translate').addClass('disabled');
+  }
+});
+$(document).ready(function () {
+  document.execCommand("defaultParagraphSeparator", false, 'br');
+  $('#translations_0').trigger('keyup');
+  var toggleField = $('.inline-field textarea.toggle-field');
+  toggleField.focus(function () {
+    var field = $(this).closest('.inline-field');
+    field.addClass('focused');
+  });
+  toggleField.focusout(function () {
+    var field = $(this).closest('.inline-field');
+    field.removeClass('focused');
+  });
+  toggleField.on('blur', function (e) {
+    var field = $(this).closest('.inline-field').find('textarea');
+    updateTranslation(field);
+  });
+  $('a.platform').click(function (e) {
+    e.preventDefault();
+    updatePlatform($(this).find('i.fa'));
+  });
+  $('.inline-field').find('.btn').click(function (e) {
+    e.preventDefault();
+    var field = $(this).closest('.inline-field').find('textarea');
+    var fieldToTranslate = $(this).closest('td').find('.inline-field:first-child textarea');
+    var fieldToFill = $(this).closest('.inline-field').find('textarea');
+    var from = fieldToTranslate.data('lang');
+    var to = fieldToFill.data('lang');
+    translate(from, to, fieldToTranslate.val(), function (response) {
+      if (response.text && response.text.length > 0) {
+        fieldToFill.val(response.text[0]); // Save the translation in our database
+
+        updateTranslation(field);
+      }
+    });
+  });
+});
+/**
+ * Update the translation
+ * @param field
+ */
+
+function updateTranslation(field) {
+  $.ajax({
+    url: '/admin/translations/inline',
+    type: 'POST',
+    dataType: 'json',
+    data: {
+      translation_key_id: field.data('translation-key-id'),
+      language: field.data('lang'),
+      text: field.val()
+    },
+    success: function success(response) {
+      if (response.error) {
+        console.log(response.error);
+      }
+    }
+  });
+}
+/**
+ * Toggle the platform
+ * @param icon
+ */
+
+
+function updatePlatform(icon) {
+  var link = icon.parent();
+  $.ajax({
+    url: '/admin/translations/platform',
+    type: 'POST',
+    dataType: 'json',
+    data: {
+      translation_key_id: icon.closest('tr').data('translation-key-id'),
+      platform: icon.hasClass('fa-android') ? 'android' : 'ios',
+      active: !link.hasClass('active')
+    },
+    success: function success(response) {
+      if (!response.error) {
+        if (link.hasClass('active')) {
+          link.removeClass('active');
+        } else {
+          link.addClass('active');
+        }
+      }
+    }
+  });
+}
+/**
+ * Translate the text for the default language to the requested language
+ * @param from
+ * @param to
+ * @param text
+ * @param callback
+ */
+
+
+function translate(from, to, text, callback) {
+  $.getJSON('https://translate.yandex.net/api/v1.5/tr.json/translate', {
+    key: 'trnsl.1.1.20190131T085112Z.66ef20c1cb0c5e71.8172f269bcb719c15c75f1a6d0560192b1174ee1',
+    lang: from + '-' + to,
+    text: text
+  }, callback);
+}
+/******/ })()
+;
