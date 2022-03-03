@@ -86,7 +86,7 @@ openssl rsa -in config/security/oauth/private.key -passin pass:_passphrase_ -pub
 ```
 
 ### Update your database
-Publish a migrations file or run migrastions directly to create the new oauth2 tables.
+Publish a migrations file or run migrations directly to create the new oauth2 tables.
 
 ### Migrate existing clients
 The information of the existing clients which are linked to the `Application`, is still available. We need to migrate this info and create new OAuth clients. Do so by running the upgrade assistent:
