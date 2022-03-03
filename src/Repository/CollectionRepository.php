@@ -5,11 +5,15 @@ declare(strict_types=1);
 namespace Pronto\MobileBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\Collection;
 
 class CollectionRepository extends EntityRepository
 {
+    /**
+     * @throws NonUniqueResultException
+     */
     public function findByApplication(Application $application, string $id): ?Collection
     {
         return $this->createQueryBuilder('collection')

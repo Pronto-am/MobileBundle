@@ -23,24 +23,12 @@ use Symfony\Component\HttpFoundation\Response;
 
 class SegmentController extends BaseController implements ValidateCustomerSelectionInterface, ValidateApplicationSelectionInterface, ValidatePluginStateInterface
 {
-    /**
-     * Check if the plugin is active
-     *
-     * @return string
-     */
     public function getPluginIdentifier(): string
     {
         return Plugin::PUSH_NOTIFICATIONS;
     }
 
-    /**
-     * Show a list of notification segments
-     *
-     * @param Request $request
-     * @param EntityManagerInterface $entityManager
-     * @return Response
-     */
-    public function indexAction(Request $request, EntityManagerInterface $entityManager)
+    public function indexAction(Request $request, EntityManagerInterface $entityManager): Response
     {
         $pageHelper = new PageHelper($request, $entityManager, Segment::class, 15);
         $pageHelper->addClause(new SelectClause(['t.id', 't.name', 'COUNT(d.id) AS deviceCount']));
@@ -54,15 +42,7 @@ class SegmentController extends BaseController implements ValidateCustomerSelect
         ]);
     }
 
-    /**
-     * Edit and save a push notification segment
-     *
-     * @param Request $request
-     * @param EntityManagerInterface $entityManager
-     * @param Segment|null $segment
-     * @return RedirectResponse|Response
-     */
-    public function editAction(Request $request, EntityManagerInterface $entityManager, Segment $segment = null)
+    public function editAction(Request $request, EntityManagerInterface $entityManager, Segment $segment = null): Response
     {
         $pageHelper = null;
 
@@ -79,15 +59,7 @@ class SegmentController extends BaseController implements ValidateCustomerSelect
         ]);
     }
 
-    /**
-     * Save a plugin
-     *
-     * @param Request $request
-     * @param EntityManagerInterface $entityManager
-     * @param Segment $segment
-     * @return RedirectResponse|Response
-     */
-    public function saveAction(Request $request, EntityManagerInterface $entityManager, Segment $segment = null)
+    public function saveAction(Request $request, EntityManagerInterface $entityManager, Segment $segment = null): RedirectResponse
     {
         // Create a new segment if it doesn't exist yet
         if ($segment === null) {
@@ -119,14 +91,7 @@ class SegmentController extends BaseController implements ValidateCustomerSelect
         return $this->redirectToRoute('pronto_mobile_notification_segments');
     }
 
-    /**
-     * Delete one or more segments
-     *
-     * @param Request $request
-     * @param EntityManagerInterface $entityManager
-     * @return RedirectResponse
-     */
-    public function deleteAction(Request $request, EntityManagerInterface $entityManager)
+    public function deleteAction(Request $request, EntityManagerInterface $entityManager): RedirectResponse
     {
         $segments = $entityManager->getRepository(Segment::class)->findById($request->get('segments'));
 

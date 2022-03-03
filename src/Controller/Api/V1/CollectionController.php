@@ -14,6 +14,7 @@ use Pronto\MobileBundle\Exceptions\ApiException;
 use Pronto\MobileBundle\Exceptions\Auth\NotAuthorizedException;
 use Pronto\MobileBundle\Exceptions\Collections\NotFoundException;
 use Pronto\MobileBundle\Service\Collection\Retriever;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class CollectionController extends BaseApiController
 {
@@ -57,9 +58,8 @@ class CollectionController extends BaseApiController
 
     /**
      * @throws ApiException
-     * @throws DBALException
      */
-    public function getEntriesAction(Retriever $retriever, $version, $identifier)
+    public function getEntriesAction(Retriever $retriever, $version, $identifier): JsonResponse
     {
         // Validate the authorization
         $this->validateAuthorization();
@@ -137,7 +137,7 @@ class CollectionController extends BaseApiController
      * @throws DBALException
      * @throws ApiException
      */
-    public function getEntryAction(Retriever $retriever, $version, $identifier, $id)
+    public function getEntryAction(Retriever $retriever, $version, $identifier, $id): JsonResponse
     {
         // Validate the authorization
         $this->validateAuthorization();

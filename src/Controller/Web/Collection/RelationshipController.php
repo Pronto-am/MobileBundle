@@ -23,39 +23,18 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class RelationshipController extends BaseController implements ValidatePluginStateInterface, ValidateApplicationSelectionInterface, ValidateCustomerSelectionInterface
 {
-    /**
-     * Check if the plugin is active
-     *
-     * @return string
-     */
     public function getPluginIdentifier(): string
     {
         return Plugin::COLLECTIONS;
     }
 
-    /**
-     * A fancy redirect to set the properties as active tab when navigating back
-     *
-     * @param $identifier
-     * @return RedirectResponse
-     */
-    public function indexAction(string $identifier)
+    public function indexAction(string $identifier): RedirectResponse
     {
         $this->addFlash('activeTab', 'relationships');
 
         return $this->redirectToRoute('pronto_mobile_collections_edit', ['identifier' => $identifier]);
     }
 
-    /**
-     * Edit a collections relationship
-     *
-     * @param Request $request
-     * @param EntityManagerInterface $entityManager
-     * @param TranslatorInterface $translator
-     * @param $identifier
-     * @param Collection\Relationship|null $relationship
-     * @return RedirectResponse|Response
-     */
     public function editAction(Request $request, EntityManagerInterface $entityManager, TranslatorInterface $translator, $identifier, Collection\Relationship $relationship = null)
     {
         /** @var Collection $collection */
@@ -109,15 +88,7 @@ class RelationshipController extends BaseController implements ValidatePluginSta
         ]);
     }
 
-    /**
-     * Save the relationship
-     *
-     * @param EntityManagerInterface $entityManager
-     * @param $identifier
-     * @param Collection\Relationship|null $relationship
-     * @return RedirectResponse
-     */
-    public function saveAction(EntityManagerInterface $entityManager, $identifier, Collection\Relationship $relationship = null)
+    public function saveAction(EntityManagerInterface $entityManager, $identifier, Collection\Relationship $relationship = null): RedirectResponse
     {
         /** @var Collection $collection */
         $collection = $entityManager->getRepository(Collection::class)->findOneBy([
@@ -144,15 +115,7 @@ class RelationshipController extends BaseController implements ValidatePluginSta
         return $this->redirectToRoute('pronto_mobile_collection_relationships', ['identifier' => $identifier]);
     }
 
-    /**
-     * Delete one or multiple relationships
-     *
-     * @param Request $request
-     * @param EntityManagerInterface $entityManager
-     * @param $identifier
-     * @return RedirectResponse
-     */
-    public function deleteAction(Request $request, EntityManagerInterface $entityManager, $identifier)
+    public function deleteAction(Request $request, EntityManagerInterface $entityManager, $identifier): RedirectResponse
     {
         $collection = $entityManager->getRepository(Collection::class)->findOneBy([
             'identifier'         => $identifier,
@@ -181,15 +144,6 @@ class RelationshipController extends BaseController implements ValidatePluginSta
         return $this->redirectToRoute('pronto_mobile_collection_relationships', ['identifier' => $identifier]);
     }
 
-    /**
-     * Edit the relation of an entry
-     *
-     * @param EntityManagerInterface $entityManager
-     * @param Collection\Entry $entry
-     * @param Collection\Relationship $relationship
-     * @return RedirectResponse|Response
-     * @throws DBALException
-     */
     public function editRelationshipsAction(EntityManagerInterface $entityManager, Collection\Entry $entry, Collection\Relationship $relationship)
     {
         if ($relationship->getCollection()->getName() !== $entry->getCollection()->getName()) {
@@ -219,16 +173,9 @@ class RelationshipController extends BaseController implements ValidatePluginSta
     }
 
     /**
-     * Edit the relation of an entry
-     *
-     * @param Request $request
-     * @param EntityManagerInterface $entityManager
-     * @param Collection\Entry $entry
-     * @param Collection\Relationship $relationship
-     * @return RedirectResponse|Response
      * @throws ORMException
      */
-    public function saveRelationshipsAction(Request $request, EntityManagerInterface $entityManager, Collection\Entry $entry, Collection\Relationship $relationship)
+    public function saveRelationshipsAction(Request $request, EntityManagerInterface $entityManager, Collection\Entry $entry, Collection\Relationship $relationship): RedirectResponse
     {
         // Delete the old relationships
         $mappers = $entityManager->getRepository(Collection\Relationship\Mapper::class)->findBy([

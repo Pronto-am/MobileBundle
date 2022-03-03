@@ -23,14 +23,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class DeviceController extends BaseController implements ValidateCustomerSelectionInterface, ValidateApplicationSelectionInterface
 {
-    /**
-     * Show a list of CMS users
-     *
-     * @param Request $request
-     * @param EntityManagerInterface $entityManager
-     * @return Response
-     */
-    public function indexAction(Request $request, EntityManagerInterface $entityManager)
+    public function indexAction(Request $request, EntityManagerInterface $entityManager): Response
     {
         $pageHelper = new PageHelper($request, $entityManager, Device::class, 15, 't.lastLogin');
         $pageHelper->addClause(new WhereClause('t.application', $this->getApplication()));
@@ -42,14 +35,6 @@ class DeviceController extends BaseController implements ValidateCustomerSelecti
             ]);
     }
 
-    /**
-     * Show the details of a device
-     *
-     * @param Request $request
-     * @param EntityManagerInterface $entityManager
-     * @param $identifier
-     * @return RedirectResponse|Response
-     */
     public function detailsAction(Request $request, EntityManagerInterface $entityManager, $identifier)
     {
         /** @var Device $device */
@@ -97,14 +82,7 @@ class DeviceController extends BaseController implements ValidateCustomerSelecti
         ]);
     }
 
-    /**
-     * Delete one or more devices
-     *
-     * @param Request $request
-     * @param EntityManagerInterface $entityManager
-     * @return RedirectResponse
-     */
-    public function deleteAction(Request $request, EntityManagerInterface $entityManager)
+    public function deleteAction(Request $request, EntityManagerInterface $entityManager): RedirectResponse
     {
         $devices = $entityManager->getRepository(Device::class)->findBy([
             'id'          => $request->get('devices'),

@@ -9,10 +9,6 @@ use Pronto\MobileBundle\Entity\Customer;
 class UserRepository extends EntityRepository
 {
     /**
-     * Get the user by email and active state
-     *
-     * @param string $email
-     * @return mixed
      * @throws NonUniqueResultException
      */
     public function findActiveByEmail(string $email)
@@ -26,14 +22,6 @@ class UserRepository extends EntityRepository
             ->getOneOrNullResult();
     }
 
-    /**
-     * Get all users by customer with optionally the super administrators
-     *
-     * @param Customer $customer
-     * @param bool $superAdministratorsIncluded
-     * @param array $select
-     * @return mixed
-     */
     public function findAllByCustomer(Customer $customer, bool $superAdministratorsIncluded = false, array $select = [])
     {
         $query = $this->createQueryBuilder('user');

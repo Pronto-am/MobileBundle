@@ -14,29 +14,11 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class AppUserProvider implements UserProviderInterface
 {
-    /**
-     * @var EntityManagerInterface $entityManager
-     */
-    protected $entityManager;
+    protected EntityManagerInterface $entityManager;
 
-    /**
-     * @var Request $request
-     */
-    private $request;
-
-    /**
-     * @var TokenInspectionService $tokenInspectionService
-     */
-    private $tokenInspectionService;
-
-    public function __construct(
-        EntityManagerInterface $entityManager,
-        RequestStack $requestStack,
-        TokenInspectionService $tokenInspectionService
-    ) {
+    public function __construct(EntityManagerInterface $entityManager)
+    {
         $this->entityManager = $entityManager;
-        $this->request = $requestStack->getCurrentRequest();
-        $this->tokenInspectionService = $tokenInspectionService;
     }
 
     public function loadUserByUsername($email): UserInterface

@@ -23,20 +23,11 @@ class EntryParser
     // These properties need json decoding
     public const JSON = ['json', 'coordinates', 'file'];
 
-    /** @var EntityManagerInterface $entityManager */
-    private $entityManager;
-
-    /** @var Collection $collection */
-    private $collection;
-
-    /** @var array $users */
-    private $users;
-
-    /** @var array $properties */
-    private $properties;
-
-    /** @var UrlGeneratorInterface $urlGenerator */
-    private $urlGenerator;
+    private EntityManagerInterface $entityManager;
+    private Collection $collection;
+    private array $users;
+    private array $properties;
+    private UrlGeneratorInterface $urlGenerator;
 
     public function __construct(EntityManagerInterface $entityManager, UrlGeneratorInterface $urlGenerator)
     {

@@ -6,12 +6,6 @@ use Doctrine\ORM\EntityRepository;
 
 class EntryRepository extends EntityRepository
 {
-    /**
-     * Get the entries by ID and index them by ID
-     *
-     * @param array $ids
-     * @return mixed
-     */
     public function getWhereIdIn(array $ids)
     {
         return $this->createQueryBuilder('entry', 'entry.id')

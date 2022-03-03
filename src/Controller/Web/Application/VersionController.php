@@ -13,6 +13,7 @@ use Pronto\MobileBundle\Exceptions\Applications\OneVersionRequiredException;
 use Pronto\MobileBundle\Exceptions\EntityNotFoundException;
 use Pronto\MobileBundle\Form\Application\VersionForm;
 use Pronto\MobileBundle\Utils\Responses\SuccessResponse;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 class VersionController extends BaseController
@@ -56,7 +57,7 @@ class VersionController extends BaseController
     /**
      * @throws EntityNotFoundException
      */
-    public function deleteAction(Request $request, EntityManagerInterface $entityManager)
+    public function deleteAction(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
         $id = $request->request->get('id');
 

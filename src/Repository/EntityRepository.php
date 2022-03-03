@@ -10,7 +10,6 @@ use Pronto\MobileBundle\Exceptions\EntityNotFoundException;
 class EntityRepository extends BaseEntityRepository
 {
     /**
-     * @return object|null
      * @throws EntityNotFoundException
      */
     public function findOrFail($id, $lockMode = null, $lockVersion = null): object
@@ -25,7 +24,6 @@ class EntityRepository extends BaseEntityRepository
     }
 
     /**
-     * @return object|null
      * @throws EntityNotFoundException
      */
     public function findOneByOrFail(array $criteria, array $orderBy = null)

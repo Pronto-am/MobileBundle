@@ -3,6 +3,7 @@
 namespace Pronto\MobileBundle\Service\Collection;
 
 use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManagerInterface;
 use Pronto\MobileBundle\Entity\Collection;
 use Pronto\MobileBundle\Repository\Collection\Relationship\MapperRepository;
@@ -12,42 +13,13 @@ use function in_array;
 
 class Retriever
 {
-    /**
-     * @var QueryGenerator $queryGenerator
-     */
-    private $queryGenerator;
+    private QueryGenerator $queryGenerator;
+    private Collection $collection;
+    private MapperRepository $mapperRepository;
+    private EntryParser $entryParser;
+    private array $cachedEntries = [];
+    private array $mappedRelationships = [];
 
-    /**
-     * @var Collection $collection
-     */
-    private $collection;
-
-    /**
-     * @var MapperRepository $mapperRepository
-     */
-    private $mapperRepository;
-
-    /**
-     * @var EntryParser $entryParser
-     */
-    private $entryParser;
-
-    /**
-     * @var array $cachedEntries
-     */
-    private $cachedEntries = [];
-
-    /**
-     * @var array $mappedRelationships
-     */
-    private $mappedRelationships = [];
-
-    /**
-     * Retriever constructor.
-     * @param QueryGenerator $queryGenerator
-     * @param EntityManagerInterface $entityManager
-     * @param EntryParser $entryParser
-     */
     public function __construct(QueryGenerator $queryGenerator, EntityManagerInterface $entityManager, EntryParser $entryParser)
     {
         $this->queryGenerator = $queryGenerator;
@@ -55,10 +27,6 @@ class Retriever
         $this->entryParser = $entryParser;
     }
 
-    /**
-     * Set the collection
-     * @param Collection $collection
-     */
     public function setCollection(Collection $collection): void
     {
         $this->collection = $collection;
@@ -68,11 +36,7 @@ class Retriever
     }
 
     /**
-     * Get a single entry of the collection
-     *
-     * @param string $id
-     * @return array|null
-     * @throws DBALException
+     * @throws Exception
      */
     public function getEntry(string $id): ?array
     {
@@ -91,12 +55,9 @@ class Retriever
     }
 
     /**
-     * Load the relationships of all entries
-     * @param array $results
-     * @param bool $singleResult
-     * @throws DBALException
+     * @throws Exception
      */
-    private function loadRelationships(array $results, $singleResult = false): void
+    private function loadRelationships(array $results, bool $singleResult = false): void
     {
         $relationships = $this->collection->getRelationships();
 
@@ -149,23 +110,13 @@ class Retriever
         $this->entryParser->setCollection($this->collection);
     }
 
-    /**
-     * Parse the entries
-     *
-     * @param array $entries
-     * @param array $mappedRelationships
-     * @return array
-     */
     private function parseEntries(array $entries, array $mappedRelationships = []): array
     {
         return $this->entryParser->parse($entries, $mappedRelationships);
     }
 
     /**
-     * Get a paginated list of entries
-     *
-     * @return array
-     * @throws DBALException
+     * @throws Exception
      */
     public function getEntries(): array
     {
@@ -179,12 +130,6 @@ class Retriever
         return $this->parseEntries($results, $this->mappedRelationships);
     }
 
-    /**
-     * Get pagination info object
-     *
-     * @return array
-     * @throws DBALException
-     */
     public function getPaginationInfo(): array
     {
         return $this->queryGenerator->getPaginationInfo();

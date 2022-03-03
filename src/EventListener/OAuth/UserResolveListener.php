@@ -7,6 +7,7 @@ namespace Pronto\MobileBundle\EventListener\OAuth;
 use Doctrine\ORM\EntityManagerInterface;
 use Pronto\MobileBundle\Entity\Application\ApplicationClient;
 use Pronto\MobileBundle\Entity\AppUser;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
@@ -15,27 +16,19 @@ use Trikoder\Bundle\OAuth2Bundle\Model\Client;
 
 final class UserResolveListener
 {
-    /** @var UserProviderInterface $userProvider */
-    private $userProvider;
+    private UserProviderInterface $userProvider;
 
-    /** @var UserPasswordEncoderInterface $userPasswordEncoder */
-    private $userPasswordEncoder;
+    private UserPasswordHasherInterface $passwordHasher;
 
-    /** @var TokenStorageInterface $tokenStorage */
-    private $tokenStorage;
-
-    /** @var EntityManagerInterface $entityManager */
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
     public function __construct(
-        UserProviderInterface $userProvider,
-        UserPasswordEncoderInterface $userPasswordEncoder,
-        EntityManagerInterface $entityManager,
-        TokenStorageInterface $tokenStorage
+        UserProviderInterface       $userProvider,
+        UserPasswordHasherInterface $passwordHasher,
+        EntityManagerInterface      $entityManager
     ) {
         $this->userProvider = $userProvider;
-        $this->userPasswordEncoder = $userPasswordEncoder;
-        $this->tokenStorage = $tokenStorage;
+        $this->passwordHasher = $passwordHasher;
         $this->entityManager = $entityManager;
     }
 
@@ -51,7 +44,7 @@ final class UserResolveListener
             return;
         }
 
-        if (!$this->userPasswordEncoder->isPasswordValid($user, $event->getPassword())) {
+        if (!$this->passwordHasher->isPasswordValid($user, $event->getPassword())) {
             return;
         }
 

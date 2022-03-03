@@ -98,7 +98,7 @@ class TranslationController extends BaseApiController
     /**
      * @throws ZipFileNotCreatedException
      */
-    private function exportXml(array $translations, KernelInterface $kernel, Application $application)
+    private function exportXml(array $translations, KernelInterface $kernel, Application $application): Response
     {
         $directory = time();
 

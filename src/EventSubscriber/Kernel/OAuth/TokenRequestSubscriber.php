@@ -14,8 +14,7 @@ use Trikoder\Bundle\OAuth2Bundle\Model\Client;
 
 class TokenRequestSubscriber implements EventSubscriberInterface
 {
-    /** @var EntityManagerInterface $entityManager */
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
     public function __construct(EntityManagerInterface $entityManager)
     {

@@ -26,14 +26,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class UserController extends BaseController implements ValidateCustomerSelectionInterface
 {
-    /**
-     * Show a list of CMS users
-     *
-     * @param Request $request
-     * @param EntityManagerInterface $entityManager
-     * @return Response
-     */
-    public function indexAction(Request $request, EntityManagerInterface $entityManager)
+    public function indexAction(Request $request, EntityManagerInterface $entityManager): Response
     {
         $pageHelper = new PageHelper($request, $entityManager, User::class, 15, 't.lastName');
         $pageHelper->addClause(new WhereClause('t.customer', $this->getCustomer()));
@@ -44,14 +37,6 @@ class UserController extends BaseController implements ValidateCustomerSelection
             ]);
     }
 
-    /**
-     * Update the users' profile
-     *
-     * @param Request $request
-     * @param EntityManagerInterface $entityManager
-     * @param UserInterface $user
-     * @return Response
-     */
     public function profileAction(Request $request, EntityManagerInterface $entityManager, UserInterface $user)
     {
         $profileDTO = ProfileDTO::fromEntity($user);
@@ -98,22 +83,13 @@ class UserController extends BaseController implements ValidateCustomerSelection
         ]);
     }
 
-    /**
-     * Add or edit a user
-     *
-     * @param Request $request
-     * @param EntityManagerInterface $entityManager
-     * @param TranslatorInterface $translator
-     * @param Swift_Mailer $mailer
-     * @param User|null $user
-     * @return RedirectResponse|Response
-     */
-    public function editAction(Request $request,
-                               EntityManagerInterface $entityManager,
-                               TranslatorInterface $translator,
-                               Swift_Mailer $mailer,
-                               User $user = null)
-    {
+    public function editAction(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        TranslatorInterface $translator,
+        Swift_Mailer $mailer,
+        User $user = null
+    ) {
         $customer = $this->getCustomer();
 
         // The user is not allowed to edit users belonging to other customers
@@ -175,14 +151,7 @@ class UserController extends BaseController implements ValidateCustomerSelection
         ]);
     }
 
-    /**
-     * Delete one or more users
-     *
-     * @param Request $request
-     * @param EntityManagerInterface $entityManager
-     * @return RedirectResponse
-     */
-    public function deleteAction(Request $request, EntityManagerInterface $entityManager)
+    public function deleteAction(Request $request, EntityManagerInterface $entityManager): RedirectResponse
     {
         // Find users by id and the current customer
         $users = $entityManager->getRepository(User::class)->findBy([

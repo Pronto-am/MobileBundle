@@ -9,12 +9,6 @@ use Pronto\MobileBundle\Entity\Application;
 
 class PluginRepository extends EntityRepository
 {
-    /**
-     * Find the applications plugins by application
-     *
-     * @param Application $application
-     * @return mixed
-     */
     public function findAllByApplication(Application $application)
     {
         return $this->createQueryBuilder('application_plugin')
@@ -25,11 +19,6 @@ class PluginRepository extends EntityRepository
     }
 
     /**
-     * Get an applications plugin by application and plugin identifier
-     *
-     * @param Application $application
-     * @param string $identifier
-     * @return mixed
      * @throws NoResultException
      * @throws NonUniqueResultException
      */

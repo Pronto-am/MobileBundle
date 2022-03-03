@@ -8,43 +8,21 @@ use Pronto\MobileBundle\Utils\Firebase\Tokens\Client;
 
 class ApnsTokenConverter
 {
-    /** @var int $numberOfTokens */
-    private $numberOfTokens = 0;
+    private int $numberOfTokens = 0;
+    private array $chunks = [];
+    private string $bundle;
+    private string $serverKey;
 
-    /** @var array $chunks */
-    private $chunks = [];
-
-    /** @var string $bundle */
-    private $bundle;
-
-    /** @var string $serverKey */
-    private $serverKey;
-
-    /**
-     * Set the bundle
-     *
-     * @param $bundle
-     */
     public function setBundle(string $bundle): void
     {
         $this->bundle = $bundle;
     }
 
-    /**
-     * Set the devices that need token conversion
-     *
-     * @param array $devices
-     */
     public function setDevices(array $devices): void
     {
         $this->convertDevicesToTokens($devices);
     }
 
-    /**
-     * Get the tokens from the array of devices
-     *
-     * @param array $devices
-     */
     private function convertDevicesToTokens(array $devices): void
     {
         // Convert to a single array of tokens
@@ -58,20 +36,12 @@ class ApnsTokenConverter
         $this->chunks = array_chunk($tokens, 100);
     }
 
-    /**
-     * Set the server key
-     *
-     * @param $serverKey
-     */
     public function setServerKey(string $serverKey): void
     {
         $this->serverKey = $serverKey;
     }
 
     /**
-     * Convert the tokens
-     *
-     * @return bool|array
      * @throws GuzzleException
      */
     public function convert()
@@ -102,21 +72,12 @@ class ApnsTokenConverter
         return $results;
     }
 
-    /**
-     * Check if we can execute the request
-     *
-     * @return bool
-     */
     private function canConvert(): bool
     {
         return $this->numberOfTokens !== 0 && !empty($this->serverKey) && !empty($this->bundle);
     }
 
     /**
-     * Execute the request
-     *
-     * @param $chunk
-     * @return mixed
      * @throws GuzzleException
      */
     private function execute(array $chunk)

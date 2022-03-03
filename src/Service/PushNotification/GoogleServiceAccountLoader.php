@@ -7,23 +7,13 @@ use Symfony\Component\HttpKernel\Config\FileLocator;
 
 class GoogleServiceAccountLoader
 {
-    /**
-     * @var FileLocator $fileLocator
-     */
-    private $fileLocator;
+    private FileLocator $fileLocator;
 
-    /**
-     * GoogleServiceAccountLoader constructor.
-     * @param FileLocator $fileLocator
-     */
     public function __construct(FileLocator $fileLocator)
     {
         $this->fileLocator = $fileLocator;
     }
 
-    /**
-     * @return ServiceAccount
-     */
     public function fromFile(): ServiceAccount
     {
         $file = $this->fileLocator->locate('../google-service-account.json');

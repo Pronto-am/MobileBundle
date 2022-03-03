@@ -3,16 +3,14 @@
 namespace Pronto\MobileBundle\Repository;
 
 use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Exception;
 use Doctrine\ORM\ORMException;
 use Pronto\MobileBundle\Entity\Application;
 
 class ApplicationRepository extends EntityRepository
 {
     /**
-     * Get the applications for which there are firebase tokens
-     *
-     * @return array
-     * @throws DBALException
+     * @throws Exception
      */
     public function getWithMissingFirebaseTokens(): array
     {
@@ -28,17 +26,13 @@ class ApplicationRepository extends EntityRepository
         $entityManager = $this->getEntityManager();
         $statement = $entityManager->getConnection()->prepare($query);
 
-        $statement->execute();
-
-        return $statement->fetchAll();
+        $result = $statement->executeQuery();
+        return $result->fetchAllAssociative();
     }
 
     /**
-     * @param string $randomId
-     * @param string $secret
-     * @return Application|null
-     * @throws DBALException
      * @throws ORMException
+     * @throws Exception
      */
     public function findByOAuthCredentials(string $randomId, string $secret): ?Application
     {
@@ -47,9 +41,9 @@ class ApplicationRepository extends EntityRepository
         $statement = $connection->prepare($query);
         $statement->bindValue('randomId', $randomId);
         $statement->bindValue('secret', $secret);
-        $statement->execute();
+        $result = $statement->executeQuery();
 
-        $data = $statement->fetchAll();
+        $data = $result->fetchAllAssociative();
 
         if (isset($data[0])) {
             return $this->getEntityManager()->getReference(Application::class, $data[0]['id']);

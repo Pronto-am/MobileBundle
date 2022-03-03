@@ -23,6 +23,7 @@ use Pronto\MobileBundle\Exceptions\Auth\NotAuthorizedException;
 use Pronto\MobileBundle\Form\ResetPasswordForm;
 use Swift_Mailer;
 use Swift_Message;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
@@ -36,7 +37,7 @@ class AppUserController extends BaseApiController
      * @throws NonUniqueResultException
      * @throws NotAuthorizedException
      */
-    public function registerAction(Request $request, EntityManagerInterface $entityManager)
+    public function registerAction(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
         // Validate the authorization
         $this->validateAuthorization($this->getPluginIdentifier());
@@ -168,7 +169,7 @@ class AppUserController extends BaseApiController
     /**
      * @throws ApiException
      */
-    public function deregisterAction(EntityManagerInterface $entityManager, $userIdentifier)
+    public function deregisterAction(EntityManagerInterface $entityManager, $userIdentifier): JsonResponse
     {
         $this->validateAuthorization($this->getPluginIdentifier());
 
@@ -216,7 +217,7 @@ class AppUserController extends BaseApiController
     /**
      * @throws ApiException
      */
-    public function requestPasswordResetLinkAction(Request $request, Swift_Mailer $mailer, EntityManagerInterface $entityManager, TranslatorInterface $translator)
+    public function requestPasswordResetLinkAction(Request $request, Swift_Mailer $mailer, EntityManagerInterface $entityManager, TranslatorInterface $translator): JsonResponse
     {
         // Validate the authorization header
         $this->validateAuthorization($this->getPluginIdentifier());
@@ -362,7 +363,7 @@ class AppUserController extends BaseApiController
     /**
      * @throws ApiException
      */
-    public function getProfileAction()
+    public function getProfileAction(): JsonResponse
     {
         // Validate the authorization
         $this->validateAuthorization($this->getPluginIdentifier());
@@ -436,7 +437,7 @@ class AppUserController extends BaseApiController
     /**
      * @throws ApiException
      */
-    public function updateProfileAction(Request $request, EntityManagerInterface $entityManager)
+    public function updateProfileAction(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
         // Validate the body
         $this->validateRequestContent($request, ['first_name', 'last_name', 'email']);

@@ -20,27 +20,12 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CustomerSubscriber implements EventSubscriber
 {
-    /**
-     * @var FileManager $fileManager
-     */
-    private $fileManager;
+    private FileManager $fileManager;
 
-    /**
-     * @var ProntoMobile $prontoMobile
-     */
-    private $prontoMobile;
+    private ProntoMobile $prontoMobile;
 
-    /**
-     * @var TranslatorInterface $translator
-     */
-    private $translator;
+    private TranslatorInterface $translator;
 
-    /**
-     * CustomerSubscriber constructor.
-     * @param FileManager $fileManager
-     * @param ContainerInterface $container
-     * @param TranslatorInterface $translator
-     */
     public function __construct(FileManager $fileManager, ContainerInterface $container, TranslatorInterface $translator)
     {
         $this->prontoMobile = $container->get('Pronto\MobileBundle\Service\ProntoMobile');
@@ -48,21 +33,11 @@ class CustomerSubscriber implements EventSubscriber
         $this->translator = $translator;
     }
 
-    /**
-     * Returns an array of events this subscriber wants to listen to.
-     *
-     * @return string[]
-     */
     public function getSubscribedEvents(): array
     {
         return [Events::prePersist, Events::postPersist, Events::preUpdate, Events::postLoad, Events::postRemove];
     }
 
-    /**
-     * Pre persist event
-     *
-     * @param LifecycleEventArgs $args
-     */
     public function prePersist(LifecycleEventArgs $args): void
     {
         $entity = $args->getEntity();
@@ -70,11 +45,6 @@ class CustomerSubscriber implements EventSubscriber
         $this->uploadFile($entity);
     }
 
-    /**
-     * Upload the file
-     *
-     * @param $entity
-     */
     private function uploadFile($entity): void
     {
         if (!$entity instanceof Customer) {
@@ -94,11 +64,6 @@ class CustomerSubscriber implements EventSubscriber
         }
     }
 
-    /**
-     * Pre update event
-     *
-     * @param LifecycleEventArgs $args
-     */
     public function preUpdate(LifecycleEventArgs $args): void
     {
         $entity = $args->getEntity();
@@ -107,9 +72,6 @@ class CustomerSubscriber implements EventSubscriber
     }
 
     /**
-     * Handle the post persist event of a customer object
-     *
-     * @param LifecycleEventArgs $args
      * @throws ORMException
      */
     public function postPersist(LifecycleEventArgs $args): void
@@ -125,8 +87,6 @@ class CustomerSubscriber implements EventSubscriber
     }
 
     /**
-     * @param Customer $entity
-     * @param EntityManager $entityManager
      * @throws ORMException
      */
     private function initializeAccount(Customer $entity, EntityManager $entityManager): void
@@ -155,11 +115,6 @@ class CustomerSubscriber implements EventSubscriber
         $entityManager->flush();
     }
 
-    /**
-     * Post load event, to use the file object inside Twig templates
-     *
-     * @param LifecycleEventArgs $args
-     */
     public function postLoad(LifecycleEventArgs $args): void
     {
         $entity = $args->getEntity();
@@ -177,11 +132,6 @@ class CustomerSubscriber implements EventSubscriber
         }
     }
 
-    /**
-     * Pre update event
-     *
-     * @param LifecycleEventArgs $args
-     */
     public function postRemove(LifecycleEventArgs $args): void
     {
         $entity = $args->getEntity();
@@ -189,9 +139,6 @@ class CustomerSubscriber implements EventSubscriber
         $this->removeFile($entity);
     }
 
-    /**
-     * @param $entity
-     */
     private function removeFile($entity): void
     {
         if (!$entity instanceof Customer) {

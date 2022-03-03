@@ -12,6 +12,7 @@ use Pronto\MobileBundle\Entity\RemoteConfig;
 use Pronto\MobileBundle\Middleware\AuthorizationMiddleware;
 use Pronto\MobileBundle\Serializer\EnumNormalizer;
 use Pronto\MobileBundle\Serializer\RemoteConfigNormalizer;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 class RemoteConfigController extends BaseApiController
@@ -53,24 +54,15 @@ class RemoteConfigController extends BaseApiController
         AuthorizationMiddleware $authorizationMiddleware,
         // Injection:
         Request $request,
-        EntityManagerInterface $entityManager)
+        EntityManagerInterface $entityManager): JsonResponse
     {
 
         $platform = $request->query->get('platform');
         $application = $this->prontoMobile->getApplication();
 
-        $filters = [
-            'application' => $application,
-            'releaseDate' => new DateTime(),
-        ];
-
         // Filter by platform when provided
         if ($platform !== null) {
             $platform = strtolower($platform);
-
-            if (in_array($platform, ['android', 'ios'], true)) {
-                $filters[$platform] = true;
-            }
         }
 
         $remoteConfig = $entityManager->getRepository(RemoteConfig::class)->byPlatform($application, $platform, new DateTime());

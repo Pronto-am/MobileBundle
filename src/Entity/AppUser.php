@@ -28,13 +28,13 @@ class AppUser extends TimestampedEntity implements UserInterface, ApiEntityInter
      *
      * @Groups({"AppUser", "Device"})
      */
-    private $id;
+    private ?string $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Application")
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
-    private $application;
+    private Application $application;
 
     /**
      * @ORM\Column(type="string")
@@ -42,7 +42,7 @@ class AppUser extends TimestampedEntity implements UserInterface, ApiEntityInter
      *
      * @Groups({"AppUser", "Device"})
      */
-    private $firstName;
+    private string $firstName;
 
     /**
      * @ORM\Column(type="string")
@@ -50,7 +50,7 @@ class AppUser extends TimestampedEntity implements UserInterface, ApiEntityInter
      *
      * @Groups({"AppUser", "Device"})
      */
-    private $lastName;
+    private string $lastName;
 
     /**
      * @ORM\Column(type="string")
@@ -59,48 +59,43 @@ class AppUser extends TimestampedEntity implements UserInterface, ApiEntityInter
      *
      * @Groups({"AppUser", "Device"})
      */
-    private $email;
+    private string $email;
 
     /**
      * @ORM\Column(type="string")
      */
-    private $password;
+    private ?string $password;
 
-    /**
-     * A non-persisted field that's used to create the encoded password.
-     *
-     * @var string
-     */
-    private $plainPassword;
+    private ?string $plainPassword;
 
     /**
      * @ORM\Column(type="boolean")
      *
      * @Groups({"AppUser", "Device"})
      */
-    private $activated = false;
+    private bool $activated = false;
 
     /**
      * @ORM\Column(type="string")
      */
-    private $activationToken;
+    private string $activationToken;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
      *
      * @Groups({"AppUser", "Device"})
      */
-    private $lastLogin;
+    private ?DateTime $lastLogin;
 
     /**
      * @ORM\Column(type="json_array", nullable=true)
      */
-    private $extraData;
+    private ?array $extraData;
 
     /**
      * @ORM\OneToMany(targetEntity="Pronto\MobileBundle\Entity\Device", mappedBy="appUser")
      */
-    private $devices;
+    private DoctrineCollection $devices;
 
     public static function getSerializerCallbacks(): array
     {
@@ -112,8 +107,6 @@ class AppUser extends TimestampedEntity implements UserInterface, ApiEntityInter
     }
 
     /**
-     * Triggered on pre persist
-     *
      * @ORM\PrePersist
      * @throws Exception
      */
@@ -267,5 +260,10 @@ class AppUser extends TimestampedEntity implements UserInterface, ApiEntityInter
     public function eraseCredentials(): void
     {
         $this->plainPassword = null;
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return $this->email;
     }
 }

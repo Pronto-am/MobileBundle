@@ -19,7 +19,7 @@ class UpgradeCommand extends Command
 {
     private const ASSISTABLE_VERSIONS = ['2.0.0'];
 
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
     public function __construct(EntityManagerInterface $entityManager, $name = null)
     {
@@ -35,14 +35,14 @@ class UpgradeCommand extends Command
             ->setHelp('Run actions needed when upgrading to a specific version');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $version = $input->getArgument('version');
         $outputStyle = new SymfonyStyle($input, $output);
 
         if (!in_array($version, self::ASSISTABLE_VERSIONS)) {
             $outputStyle->error('We can only assist when upgrading to one of: [' . implode(', ', self::ASSISTABLE_VERSIONS) . ']');
-            return;
+            return Command::INVALID;
         }
 
         // Version for now is only 2.0.0

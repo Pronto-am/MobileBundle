@@ -14,12 +14,14 @@ class Scripts
         $vendorDir = $event->getComposer()->getConfig()->get('vendor-dir');
         $packagesDir = $vendorDir . '/../config/packages/';
         $routesDir = $vendorDir . '/../config/routes/';
+        $configDir = $vendorDir . '/../config/';
 
         // Modify the contents of the YAML files
         self::modifyProntoMobileConfiguration($packagesDir);
         self::modifyOauthServerConfiguration($packagesDir);
         self::modifySecurityConfiguration($packagesDir);
         self::modifyTwigConfiguration($packagesDir);
+        self::modifyServicesConfiguration($configDir);
 
         self::addRoutes($routesDir);
     }
@@ -100,7 +102,7 @@ class Scripts
             ]
         ];
 
-        $security['security']['encoders'] = [
+        $security['security']['password_hashers'] = [
             'Pronto\MobileBundle\Entity\User'    => 'bcrypt',
             'Pronto\MobileBundle\Entity\AppUser' => 'bcrypt'
         ];
@@ -184,5 +186,15 @@ class Scripts
         ];
 
         file_put_contents($fileName, Yaml::dump($routes, 4));
+    }
+
+    private static function modifyServicesConfiguration(string $configDir): void
+    {
+        $fileName = $configDir . '/services.yaml';
+
+        $services = Yaml::parse(file_get_contents($fileName));
+        $services['services']['Symfony\Component\DependencyInjection\ContainerInterface'] = '@service_container';
+
+        file_put_contents($fileName, Yaml::dump($services, 4));
     }
 }

@@ -11,11 +11,13 @@ use Pronto\MobileBundle\Entity\Plugin;
 use Pronto\MobileBundle\EventSubscriber\ValidateApplicationSelectionInterface;
 use Pronto\MobileBundle\EventSubscriber\ValidateCustomerSelectionInterface;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class PluginController extends BaseController implements ValidateApplicationSelectionInterface, ValidateCustomerSelectionInterface
 {
-    public function indexAction(EntityManagerInterface $entityManager)
+    public function indexAction(EntityManagerInterface $entityManager): Response
     {
         $plugins = $entityManager->getRepository(ApplicationPlugin::class)->findAllByApplication($this->getApplication());
 
@@ -25,7 +27,7 @@ class PluginController extends BaseController implements ValidateApplicationSele
             ]);
     }
 
-    public function editAction(Plugin $plugin, EntityManagerInterface $entityManager)
+    public function editAction(Plugin $plugin, EntityManagerInterface $entityManager): Response
     {
         $applicationPlugin = $entityManager->getRepository(ApplicationPlugin::class)->findOneBy([
             'plugin'      => $plugin,
@@ -41,7 +43,7 @@ class PluginController extends BaseController implements ValidateApplicationSele
         ]);
     }
 
-    public function saveAction(Request $request, EntityManagerInterface $entityManager, Plugin $plugin)
+    public function saveAction(Request $request, EntityManagerInterface $entityManager, Plugin $plugin): RedirectResponse
     {
         /** @var ApplicationPlugin $applicationPlugin */
         $applicationPlugin = $entityManager->getRepository(ApplicationPlugin::class)->findOneBy([

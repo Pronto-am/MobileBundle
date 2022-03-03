@@ -13,34 +13,19 @@ use Pronto\MobileBundle\Service\ProntoMobile;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\Event\ControllerEvent;
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ValidateCustomerSelectionSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var UrlGeneratorInterface
-     */
-    private $router;
+    private UrlGeneratorInterface $router;
 
-    /**
-     * @var ProntoMobile $prontoMobile
-     */
-    private $prontoMobile;
+    private ProntoMobile $prontoMobile;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
-    /**
-     * ValidateCustomerSelectionSubscriber constructor.
-     * @param UrlGeneratorInterface $router
-     * @param ContainerInterface $container
-     * @param EntityManagerInterface $entityManager
-     */
     public function __construct(UrlGeneratorInterface $router, ContainerInterface $container, EntityManagerInterface $entityManager)
     {
         $this->router = $router;
@@ -48,24 +33,6 @@ class ValidateCustomerSelectionSubscriber implements EventSubscriberInterface
         $this->entityManager = $entityManager;
     }
 
-    /**
-     * Returns an array of event names this subscriber wants to listen to.
-     *
-     * The array keys are event names and the value can be:
-     *
-     *  * The method name to call (priority defaults to 0)
-     *  * An array composed of the method name to call and the priority
-     *  * An array of arrays composed of the method names to call and respective
-     *    priorities, or 0 if unset
-     *
-     * For instance:
-     *
-     *  * array('eventName' => 'methodName')
-     *  * array('eventName' => array('methodName', $priority))
-     *  * array('eventName' => array(array('methodName1', $priority), array('methodName2')))
-     *
-     * @return array The event names to listen to
-     */
     public static function getSubscribedEvents(): array
     {
         return [
@@ -75,17 +42,14 @@ class ValidateCustomerSelectionSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * Check whether the controller is an instance of the required interface
-     *
-     * @param FilterControllerEvent $event
      * @throws InvalidCustomerSelectionException
      */
-    public function onKernelController(FilterControllerEvent $event): void
+    public function onKernelController(ControllerEvent $event): void
     {
-        try {
+        if (is_array($event->getController())) {
             [$controller] = $event->getController();
-        } catch (Exception $exception) {
-            return;
+        } else {
+            $controller = $event->getController();
         }
 
         $session = $event->getRequest()->getSession();
@@ -108,15 +72,9 @@ class ValidateCustomerSelectionSubscriber implements EventSubscriberInterface
         }
     }
 
-    /**
-     * Catch the InvalidCustomerSelectionException to redirect users to the select view
-     *
-     * @param GetResponseForExceptionEvent $event
-     * @throws InvalidArgumentException
-     */
-    public function onKernelException(GetResponseForExceptionEvent $event): void
+    public function onKernelException(ExceptionEvent $event): void
     {
-        $exception = $event->getException();
+        $exception = $event->getThrowable();
 
         if (!$exception instanceof InvalidCustomerSelectionException) {
             return;

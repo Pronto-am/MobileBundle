@@ -13,33 +13,18 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class AppVersionSubscriber implements EventSubscriber
 {
-    /**
-     * @var FileManager $fileManager
-     */
-    private $fileManager;
+    private FileManager $fileManager;
 
-    /**
-     * CustomerSubscriber constructor.
-     * @param FileManager $fileManager
-     */
     public function __construct(FileManager $fileManager)
     {
         $this->fileManager = $fileManager;
     }
 
-    /**
-     * Returns an array of events this subscriber wants to listen to.
-     *
-     * @return string[]
-     */
     public function getSubscribedEvents(): array
     {
         return [Events::prePersist, Events::preUpdate, Events::postRemove];
     }
 
-    /**
-     * @param LifecycleEventArgs $args
-     */
     public function prePersist(LifecycleEventArgs $args): void
     {
         $entity = $args->getEntity();
@@ -47,9 +32,6 @@ class AppVersionSubscriber implements EventSubscriber
         $this->uploadFile($entity);
     }
 
-    /**
-     * @param $entity
-     */
     private function uploadFile($entity): void
     {
         if (!$entity instanceof AppVersion) {
@@ -66,9 +48,6 @@ class AppVersionSubscriber implements EventSubscriber
         }
     }
 
-    /**
-     * @param LifecycleEventArgs $args
-     */
     public function preUpdate(LifecycleEventArgs $args): void
     {
         $entity = $args->getEntity();
@@ -76,9 +55,6 @@ class AppVersionSubscriber implements EventSubscriber
         $this->uploadFile($entity);
     }
 
-    /**
-     * @param LifecycleEventArgs $args
-     */
     public function postRemove(LifecycleEventArgs $args): void
     {
         $entity = $args->getEntity();
@@ -86,9 +62,6 @@ class AppVersionSubscriber implements EventSubscriber
         $this->removeFile($entity);
     }
 
-    /**
-     * @param $entity
-     */
     private function removeFile($entity): void
     {
         if (!$entity instanceof AppVersion) {

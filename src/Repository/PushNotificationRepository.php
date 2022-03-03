@@ -3,18 +3,12 @@
 namespace Pronto\MobileBundle\Repository;
 
 use DateTime;
-use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityRepository;
 use Pronto\MobileBundle\Entity\Application;
 
 class PushNotificationRepository extends EntityRepository
 {
-    /**
-     * Get the scheduled push notifications by date
-     *
-     * @param DateTime $dateTime
-     * @return mixed
-     */
     public function retrieveScheduledTasksByDate(DateTime $dateTime)
     {
         return $this->createQueryBuilder('notifications')
@@ -26,12 +20,6 @@ class PushNotificationRepository extends EntityRepository
             ->execute();
     }
 
-    /**
-     * Set notifications as being processed by an array of id's
-     *
-     * @param array $ids
-     * @return mixed
-     */
     public function setBeingProcessedByIds(array $ids)
     {
         return $this->createQueryBuilder('notifications')->update()
@@ -43,16 +31,16 @@ class PushNotificationRepository extends EntityRepository
     }
 
     /**
-     * @throws DBALException
+     * @throws Exception
      */
     public function findForDevice(string $id, Application $application)
     {
         // Select the notification id's from the recipients table
         $entityManager = $this->getEntityManager();
         $statement = $entityManager->getConnection()->prepare("SELECT DISTINCT(push_notification_id) as id FROM push_notification_recipients WHERE device_id = ?");
-        $statement->execute([$id]);
+        $result = $statement->executeQuery([$id]);
 
-        $ids = array_column($statement->fetchAll(), 'id');
+        $ids = array_column($result->fetchAllAssociative(), 'id');
 
         return $this->createQueryBuilder('notifications')
             ->where('notifications.id IN (:ids)')
@@ -66,16 +54,9 @@ class PushNotificationRepository extends EntityRepository
     }
 
     /**
-     * Get the recipient count by where clauses
-     *
-     * @param Application $application
-     * @param int $segment
-     * @param bool $test
-     * @param array $testDevices
-     * @return bool|string
-     * @throws DBALException
+     * @throws Exception
      */
-    public function getRecipientCount(Application $application, int $segment, bool $test = false, array $testDevices = [])
+    public function getRecipientCount(Application $application, int $segment, bool $test = false, array $testDevices = []): array
     {
         $query = 'SELECT COUNT(DISTINCT(devices.id)) AS recipients FROM devices LEFT JOIN device_segments AS segments ON segments.device_id = devices.id';
 
@@ -94,8 +75,8 @@ class PushNotificationRepository extends EntityRepository
         $entityManager = $this->getEntityManager();
         $statement = $entityManager->getConnection()->prepare($query);
 
-        $statement->execute();
+        $result = $statement->executeQuery();
 
-        return $statement->fetchColumn();
+        return $result->fetchFirstColumn();
     }
 }

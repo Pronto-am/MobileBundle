@@ -21,7 +21,7 @@ class ExceptionSubscriber implements EventSubscriberInterface
 
     public function onKernelException(ExceptionEvent $event): void
     {
-        $exception = $event->getException();
+        $exception = $event->getThrowable();
 
         if ($exception instanceof ApiException) {
             $errorResponse = $exception->getResponse();

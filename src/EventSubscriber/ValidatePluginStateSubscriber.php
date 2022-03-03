@@ -12,8 +12,8 @@ use Pronto\MobileBundle\Service\ProntoMobile;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\Event\ControllerEvent;
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -29,35 +29,12 @@ class ValidatePluginStateSubscriber implements EventSubscriberInterface
      */
     private $prontoMobile;
 
-    /**
-     * ValidatePluginStateSubscriber constructor.
-     * @param UrlGeneratorInterface $router
-     * @param ContainerInterface $container
-     */
     public function __construct(UrlGeneratorInterface $router, ContainerInterface $container)
     {
         $this->router = $router;
         $this->prontoMobile = $container->get(ProntoMobile::class);
     }
 
-    /**
-     * Returns an array of event names this subscriber wants to listen to.
-     *
-     * The array keys are event names and the value can be:
-     *
-     *  * The method name to call (priority defaults to 0)
-     *  * An array composed of the method name to call and the priority
-     *  * An array of arrays composed of the method names to call and respective
-     *    priorities, or 0 if unset
-     *
-     * For instance:
-     *
-     *  * array('eventName' => 'methodName')
-     *  * array('eventName' => array('methodName', $priority))
-     *  * array('eventName' => array(array('methodName1', $priority), array('methodName2')))
-     *
-     * @return array The event names to listen to
-     */
     public static function getSubscribedEvents(): array
     {
         return [
@@ -67,15 +44,14 @@ class ValidatePluginStateSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * @param FilterControllerEvent $event
      * @throws InactivePluginException
      */
-    public function onKernelController(FilterControllerEvent $event): void
+    public function onKernelController(ControllerEvent $event): void
     {
-        try {
+        if (is_array($event->getController())) {
             [$controller] = $event->getController();
-        } catch (Exception $exception) {
-            return;
+        } else {
+            $controller = $event->getController();
         }
 
         if ($controller instanceof ValidatePluginStateInterface) {
@@ -94,15 +70,9 @@ class ValidatePluginStateSubscriber implements EventSubscriberInterface
         }
     }
 
-    /**
-     * If user requested a plugin specific page, but the plugin isn't active, redirect back
-     * FOSUserBundle controllers
-     *
-     * @param GetResponseForExceptionEvent $event
-     */
-    public function onKernelException(GetResponseForExceptionEvent $event): void
+    public function onKernelException(ExceptionEvent $event): void
     {
-        $exception = $event->getException();
+        $exception = $event->getThrowable();
 
         if (!$exception instanceof InactivePluginException) {
             return;

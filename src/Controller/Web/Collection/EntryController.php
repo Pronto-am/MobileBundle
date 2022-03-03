@@ -27,24 +27,11 @@ use function count;
 
 class EntryController extends BaseController implements ValidatePluginStateInterface, ValidateApplicationSelectionInterface, ValidateCustomerSelectionInterface
 {
-
-    /**
-     * Check if the plugin is active
-     *
-     * @return string
-     */
     public function getPluginIdentifier(): string
     {
         return Plugin::COLLECTIONS;
     }
 
-    /**
-     * Show a list of collections
-     *
-     * @param EntityManagerInterface $entityManager
-     * @param $identifier
-     * @return Response
-     */
     public function indexAction(EntityManagerInterface $entityManager, $identifier)
     {
         /** @var Collection $collection */
@@ -85,16 +72,6 @@ class EntryController extends BaseController implements ValidatePluginStateInter
         ]);
     }
 
-    /**
-     * Edit a collection entry
-     *
-     * @param EntryValueParser $entryValueParser
-     * @param EntityManagerInterface $entityManager
-     * @param $identifier
-     * @param Collection\Entry|null $entry
-     * @return RedirectResponse|Response
-     * @throws DBALException
-     */
     public function editAction(EntryValueParser $entryValueParser, EntityManagerInterface $entityManager, $identifier, Collection\Entry $entry = null)
     {
         /** @var Collection $collection */
@@ -162,17 +139,7 @@ class EntryController extends BaseController implements ValidatePluginStateInter
         ]);
     }
 
-    /**
-     * Save the entry
-     *
-     * @param Request $request
-     * @param EntityManagerInterface $entityManager
-     * @param IsGrantedMinimal $isGranted
-     * @param $identifier
-     * @param Collection\Entry|null $entry
-     * @return RedirectResponse
-     */
-    public function saveAction(Request $request, EntityManagerInterface $entityManager, IsGrantedMinimal $isGranted, $identifier, Collection\Entry $entry = null)
+    public function saveAction(Request $request, EntityManagerInterface $entityManager, IsGrantedMinimal $isGranted, $identifier, Collection\Entry $entry = null): RedirectResponse
     {
         /** @var Collection $collection */
         $collection = $entityManager->getRepository(Collection::class)->findOneBy([
@@ -227,16 +194,7 @@ class EntryController extends BaseController implements ValidatePluginStateInter
         return $this->redirectToRoute('pronto_mobile_collection_entries', ['identifier' => $identifier]);
     }
 
-    /**
-     * Delete one or multiple properties
-     *
-     * @param Request $request
-     * @param EntityManagerInterface $entityManager
-     * @param $identifier
-     * @param $id
-     * @return JsonResponse
-     */
-    public function deleteFileAction(Request $request, EntityManagerInterface $entityManager, $identifier, $id)
+    public function deleteFileAction(Request $request, EntityManagerInterface $entityManager, $identifier, $id): JsonResponse
     {
         $filename = $request->request->get('filename');
         $property = $request->request->get('property');
@@ -282,15 +240,7 @@ class EntryController extends BaseController implements ValidatePluginStateInter
         return $response->create()->getJsonResponse();
     }
 
-    /**
-     * Delete one or multiple entries
-     *
-     * @param Request $request
-     * @param EntityManagerInterface $entityManager
-     * @param $identifier
-     * @return RedirectResponse
-     */
-    public function deleteAction(Request $request, EntityManagerInterface $entityManager, $identifier)
+    public function deleteAction(Request $request, EntityManagerInterface $entityManager, $identifier): RedirectResponse
     {
         $collection = $entityManager->getRepository(Collection::class)->findOneBy([
             'identifier'         => $identifier,

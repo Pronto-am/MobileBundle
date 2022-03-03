@@ -22,13 +22,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CustomerController extends BaseController
 {
-    /**
-     * Let the user select a customer from the list
-     *
-     * @param EntityManagerInterface $entityManager
-     * @return Response
-     */
-    public function selectCustomerAction(EntityManagerInterface $entityManager)
+    public function selectCustomerAction(EntityManagerInterface $entityManager): Response
     {
         $customers = $entityManager->getRepository(Customer::class)->findBy([], ['companyName' => 'asc']);
 
@@ -40,7 +34,7 @@ class CustomerController extends BaseController
     /**
      * @throws EntityNotFoundException
      */
-    public function setCustomerAction(Request $request)
+    public function setCustomerAction(Request $request): JsonResponse
     {
         // Get the Id from the request
         $id = $request->request->getInt('id');
@@ -85,13 +79,6 @@ class CustomerController extends BaseController
         ]);
     }
 
-    /**
-     * Edit a customers' account
-     *
-     * @param Request $request
-     * @param EntityManagerInterface $entityManager
-     * @return RedirectResponse|Response
-     */
     public function editAction(Request $request, EntityManagerInterface $entityManager)
     {
         /** @var Customer $originalCustomer */
@@ -141,15 +128,7 @@ class CustomerController extends BaseController
         ]);
     }
 
-    /**
-     * Delete a customers' account
-     *
-     * @param Request $request
-     * @param EntityManagerInterface $entityManager
-     * @param TranslatorInterface $translator
-     * @return JsonResponse
-     */
-    public function deleteAction(Request $request, EntityManagerInterface $entityManager, TranslatorInterface $translator)
+    public function deleteAction(Request $request, EntityManagerInterface $entityManager, TranslatorInterface $translator): JsonResponse
     {
         $customer = $entityManager->getRepository(Customer::class)->findOneBy(['id' => $request->request->get('id')]);
 
@@ -158,7 +137,7 @@ class CustomerController extends BaseController
 
         $this->addFlash(
             'success',
-            sprintf($translator->trans('account.removed'))
+            $translator->trans('account.removed')
         );
 
         $response = new SuccessResponse(['redirectUrl' => $this->generateAbsoluteUrl('pronto_mobile_select_customer')]);

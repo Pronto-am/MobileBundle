@@ -12,7 +12,7 @@ use Pronto\MobileBundle\EventSubscriber\ValidateCustomerSelectionInterface;
 
 class DefaultController extends BaseController implements ValidateCustomerSelectionInterface, ValidateApplicationSelectionInterface
 {
-    public function indexAction(EntityManagerInterface $entityManager)
+    public function indexAction(EntityManagerInterface $entityManager): \Symfony\Component\HttpFoundation\Response
     {
         $plugins = $entityManager->getRepository(ApplicationPlugin::class)->findAllByApplication($this->getApplication());
 

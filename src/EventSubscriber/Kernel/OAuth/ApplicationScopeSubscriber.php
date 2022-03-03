@@ -14,7 +14,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class ApplicationScopeSubscriber implements EventSubscriberInterface
 {
-    private $tokenInspectionService;
+    private TokenInspectionService $tokenInspectionService;
 
     public function __construct(TokenInspectionService $tokenInspectionService)
     {

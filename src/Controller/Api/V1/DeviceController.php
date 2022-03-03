@@ -18,6 +18,7 @@ use Pronto\MobileBundle\Exceptions\Devices\AlreadyRegisteredException;
 use Pronto\MobileBundle\Exceptions\Devices\MissingTokenException;
 use Pronto\MobileBundle\Exceptions\Devices\NotFoundException;
 use Pronto\MobileBundle\Exceptions\JsonResponseException;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 
@@ -99,7 +100,7 @@ class DeviceController extends BaseApiController
      * @throws InvalidPluginStateException
      * @throws JsonResponseException
      */
-    public function registerAction(Request $request, EntityManagerInterface $entityManager)
+    public function registerAction(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
         // Validate the authorization
         $this->validateAuthorization();
@@ -227,7 +228,7 @@ class DeviceController extends BaseApiController
      * @throws InvalidPluginStateException
      * @throws NotFoundException
      */
-    public function deregisterAction(EntityManagerInterface $entityManager, $deviceIdentifier)
+    public function deregisterAction(EntityManagerInterface $entityManager, $deviceIdentifier): JsonResponse
     {
         $this->validateAuthorization();
 

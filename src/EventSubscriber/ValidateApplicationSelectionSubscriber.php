@@ -20,14 +20,11 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ValidateApplicationSelectionSubscriber implements EventSubscriberInterface
 {
-    /** @var UrlGeneratorInterface $router */
-    private $router;
+    private UrlGeneratorInterface $router;
 
-    /** @var EntityManagerInterface $entityManager */
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
-    /** @var ProntoMobile $prontoMobile */
-    private $prontoMobile;
+    private ProntoMobile $prontoMobile;
 
     public function __construct(
         UrlGeneratorInterface $router,
@@ -39,24 +36,6 @@ class ValidateApplicationSelectionSubscriber implements EventSubscriberInterface
         $this->entityManager = $entityManager;
     }
 
-    /**
-     * Returns an array of event names this subscriber wants to listen to.
-     *
-     * The array keys are event names and the value can be:
-     *
-     *  * The method name to call (priority defaults to 0)
-     *  * An array composed of the method name to call and the priority
-     *  * An array of arrays composed of the method names to call and respective
-     *    priorities, or 0 if unset
-     *
-     * For instance:
-     *
-     *  * array('eventName' => 'methodName')
-     *  * array('eventName' => array('methodName', $priority))
-     *  * array('eventName' => array(array('methodName1', $priority), array('methodName2')))
-     *
-     * @return array The event names to listen to
-     */
     public static function getSubscribedEvents(): array
     {
         return [
@@ -66,15 +45,14 @@ class ValidateApplicationSelectionSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * Check whether the controller is an instance of the required interface
      * @throws InvalidApplicationSelectionException
      */
     public function onKernelController(ControllerEvent $event): void
     {
-        try {
+        if (is_array($event->getController())) {
             [$controller] = $event->getController();
-        } catch (Exception $exception) {
-            return;
+        } else {
+            $controller = $event->getController();
         }
 
         $session = $event->getRequest()->getSession();

@@ -22,23 +22,12 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AppVersionController extends BaseController implements ValidateCustomerSelectionInterface, ValidateApplicationSelectionInterface, ValidatePluginStateInterface
 {
-
-    /**
-     * Check if the plugin is active
-     *
-     * @return string
-     */
     public function getPluginIdentifier(): string
     {
         return Plugin::APP_VERSIONS;
     }
 
-    /**
-     * @param Request $request
-     * @param EntityManagerInterface $entityManager
-     * @return Response
-     */
-    public function indexAction(Request $request, EntityManagerInterface $entityManager)
+    public function indexAction(Request $request, EntityManagerInterface $entityManager): Response
     {
         $pageHelper = new PageHelper($request, $entityManager, AppVersion::class, 15, 't.releaseDate');
         $pageHelper->addClause(new WhereClause('t.application', $this->getApplication()));
@@ -48,12 +37,6 @@ class AppVersionController extends BaseController implements ValidateCustomerSel
         ]);
     }
 
-    /**
-     * @param Request $request
-     * @param EntityManagerInterface $entityManager
-     * @param AppVersion|null $version
-     * @return RedirectResponse|Response
-     */
     public function editAction(Request $request, EntityManagerInterface $entityManager, AppVersion $version = null)
     {
         $originalFileName = Optional::get($version)->getFileName();
@@ -99,11 +82,6 @@ class AppVersionController extends BaseController implements ValidateCustomerSel
         ]);
     }
 
-    /**
-     * @param Request $request
-     * @param EntityManagerInterface $entityManager
-     * @return RedirectResponse
-     */
     public function deleteAction(Request $request, EntityManagerInterface $entityManager): RedirectResponse
     {
         // Find users by id and the current customer

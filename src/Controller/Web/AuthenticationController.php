@@ -30,12 +30,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class AuthenticationController extends BaseController implements RedirectWhenAuthenticatedInterface
 {
-    /**
-     * Show the login form
-     *
-     * @param AuthenticationUtils $authenticationUtils
-     * @return Response
-     */
     public function loginAction(AuthenticationUtils $authenticationUtils): Response
     {
         // get the login error if there is one
@@ -54,11 +48,6 @@ class AuthenticationController extends BaseController implements RedirectWhenAut
         ]);
     }
 
-    /**
-     * Let the user select a customer from the list
-     *
-     * @return Response
-     */
     public function selectCustomerAction(): Response
     {
         $user = $this->getUser();
@@ -71,10 +60,6 @@ class AuthenticationController extends BaseController implements RedirectWhenAut
     }
 
     /**
-     * Set the customer using the selection list
-     *
-     * @param Request $request
-     * @return JsonResponse
      * @throws EntityNotFoundException
      */
     public function setCustomerAction(Request $request): JsonResponse
@@ -93,22 +78,13 @@ class AuthenticationController extends BaseController implements RedirectWhenAut
         return $response;
     }
 
-    /**
-     * Show the reset password form
-     *
-     * @param Request $request
-     * @param EntityManagerInterface $entityManager
-     * @param AuthenticationUtils $authenticationUtils
-     * @param Swift_Mailer $mailer
-     * @param TranslatorInterface $translator
-     * @return Response
-     */
-    public function resetPasswordFormAction(Request $request,
-                                            EntityManagerInterface $entityManager,
-                                            AuthenticationUtils $authenticationUtils,
-                                            Swift_Mailer $mailer,
-                                            TranslatorInterface $translator): Response
-    {
+    public function resetPasswordFormAction(
+        Request                $request,
+        EntityManagerInterface $entityManager,
+        AuthenticationUtils    $authenticationUtils,
+        Swift_Mailer           $mailer,
+        TranslatorInterface    $translator
+    ): Response {
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
 
@@ -171,15 +147,6 @@ class AuthenticationController extends BaseController implements RedirectWhenAut
             ]);
     }
 
-    /**
-     * Show the reset password form
-     *
-     * @param Request $request
-     * @param EntityManagerInterface $entityManager
-     * @param TranslatorInterface $translator
-     * @param $token
-     * @return Response
-     */
     public function resetPasswordAction(Request $request, EntityManagerInterface $entityManager, TranslatorInterface $translator, $token): Response
     {
         /** @var PasswordReset $passwordReset */
@@ -244,14 +211,6 @@ class AuthenticationController extends BaseController implements RedirectWhenAut
         ]);
     }
 
-    /**
-     * Show the create password form
-     *
-     * @param Request $request
-     * @param EntityManagerInterface $entityManager
-     * @param $token
-     * @return Response
-     */
     public function createPasswordAction(Request $request, EntityManagerInterface $entityManager, $token): Response
     {
         /** @var User $user */
@@ -299,9 +258,6 @@ class AuthenticationController extends BaseController implements RedirectWhenAut
             ]);
     }
 
-    /**
-     * Log the user out
-     */
     public function logoutAction()
     {
         throw new RuntimeException('this should not be reached!');

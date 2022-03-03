@@ -7,13 +7,6 @@ use Pronto\MobileBundle\Repository\EntityRepository;
 
 class PropertyRepository extends EntityRepository
 {
-    /**
-     * Get all properties of a collection
-     *
-     * @param Collection $collection
-     * @param bool $translatable
-     * @return mixed
-     */
     public function findAllByCollection(Collection $collection, bool $translatable = false)
     {
         return $this->createQueryBuilder('property')

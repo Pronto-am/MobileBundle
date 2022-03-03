@@ -20,55 +20,35 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class ConvertApnsTokensCommand extends Command
 {
-    /**
-     * @var EntityManagerInterface $entityManager
-     */
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
-    /**
-     * @var ApnsTokenConverter $apnsTokenConverter
-     */
-    private $apnsTokenConverter;
+    private ApnsTokenConverter $apnsTokenConverter;
 
-    /**
-     * @var ProntoMobile $prontoMobile
-     */
-    private $prontoMobile;
+    private ProntoMobile $prontoMobile;
 
-    /**
-     * ConvertApnsTokensCommand constructor.
-     * @param EntityManagerInterface $entityManager
-     * @param ContainerInterface $container
-     * @param ApnsTokenConverter $apnsTokenConverter
-     * @param null $name
-     */
-    public function __construct(EntityManagerInterface $entityManager, ContainerInterface $container, ApnsTokenConverter $apnsTokenConverter, $name = null)
-    {
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        ContainerInterface     $container,
+        ApnsTokenConverter     $apnsTokenConverter,
+                               $name = null
+    ) {
         $this->entityManager = $entityManager;
         $this->apnsTokenConverter = $apnsTokenConverter;
-        $this->prontoMobile = $container->get('Pronto\MobileBundle\Service\ProntoMobile');
+        $this->prontoMobile = $container->get(ProntoMobile::class);
 
         parent::__construct($name);
     }
 
-    /**
-     * Configure the command
-     */
     protected function configure(): void
     {
         $this->setName('firebase:tokens:convert')->setDescription('Convert APNS tokens to Firebase tokens');
     }
 
     /**
-     * Execute the command
-     *
-     * @param InputInterface $input
-     * @param OutputInterface $output
-     * @return int|null|void
      * @throws ORMException
      * @throws GuzzleException
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         // Select the applications which contain empty firebase tokens
         $applications = $this->entityManager->getRepository(Application::class)->getWithMissingFirebaseTokens();
@@ -93,7 +73,7 @@ class ConvertApnsTokensCommand extends Command
 
             try {
                 // Get the configuration of the push notifications plugin
-                $config = $this->prontoMobile->getPluginConfiguration(Plugin::PUSH_NOTIFICATIONS, (int) $application['id']);
+                $config = $this->prontoMobile->getPluginConfiguration(Plugin::PUSH_NOTIFICATIONS, (int)$application['id']);
 
                 // Set the necessary information
                 $this->apnsTokenConverter->setBundle($application['ios_bundle_identifier']);

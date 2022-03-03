@@ -19,11 +19,9 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class FileController extends BaseApiController
 {
-    /** @var FileManager $fileManager */
-    private $fileManager;
+    private FileManager $fileManager;
 
-    /** @var EntityManagerInterface $entityManager */
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
     public function __construct(
         ProntoMobile $prontoMobile,

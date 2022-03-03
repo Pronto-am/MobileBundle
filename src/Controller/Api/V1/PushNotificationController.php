@@ -12,6 +12,7 @@ use Pronto\MobileBundle\Entity\PushNotification;
 use Pronto\MobileBundle\Exceptions\Auth\InvalidAuthorizationHeaderException;
 use Pronto\MobileBundle\Exceptions\Auth\InvalidAuthorizationTokenException;
 use Pronto\MobileBundle\Exceptions\Auth\InvalidPluginStateException;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\SerializerInterface;
 
 class PushNotificationController extends BaseApiController
@@ -77,7 +78,7 @@ class PushNotificationController extends BaseApiController
      * @throws InvalidAuthorizationTokenException
      * @throws InvalidPluginStateException
      */
-    public function listAction(EntityManagerInterface $entityManager, SerializerInterface $serializer, string $deviceIdentifier)
+    public function listAction(EntityManagerInterface $entityManager, SerializerInterface $serializer, string $deviceIdentifier): JsonResponse
     {
         $this->validateAuthorization();
 

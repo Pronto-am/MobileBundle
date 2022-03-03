@@ -14,8 +14,7 @@ use Symfony\Component\Serializer\Normalizer\ContextAwareNormalizerInterface;
 
 class PushNotificationNormalizer implements ContextAwareNormalizerInterface
 {
-    /** @var FirebaseStorage $firebaseStorage */
-    private $firebaseStorage;
+    private FirebaseStorage $firebaseStorage;
 
     public function __construct(FirebaseStorage $firebaseStorage)
     {
@@ -27,15 +26,12 @@ class PushNotificationNormalizer implements ContextAwareNormalizerInterface
      * @throws CircularReferenceException
      * @throws LogicException
      */
-    public function normalize($object, $format = null, array $context = [])
+    public function normalize($object, $format = null, array $context = []): array
     {
         /** @var PushNotification $object */
         $clickActionHtmlUrl = null;
 
-        if (
-            $object->getClickActionHtml() !== null &&
-            is_array($object->getClickActionHtml())
-        ) {
+        if (is_array($object->getClickActionHtml())) {
             $languages = array_keys($object->getClickActionHtml());
             $clickActionHtmlUrl = [];
 
@@ -70,7 +66,7 @@ class PushNotificationNormalizer implements ContextAwareNormalizerInterface
         ];
     }
 
-    public function supportsNormalization($data, $format = null, array $context = [])
+    public function supportsNormalization($data, $format = null, array $context = []): bool
     {
         return $data instanceof PushNotification;
     }

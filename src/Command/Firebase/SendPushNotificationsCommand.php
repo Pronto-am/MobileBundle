@@ -19,28 +19,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class SendPushNotificationsCommand extends Command
 {
-    /**
-     * @var EntityManagerInterface $entityManager
-     */
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
-    /**
-     * @var Sender $sender
-     */
-    private $sender;
+    private Sender $sender;
 
-    /**
-     * @var ProntoMobile $prontoMobile
-     */
-    private $prontoMobile;
+    private ProntoMobile $prontoMobile;
 
-    /**
-     * SendPushNotificationsCommand constructor.
-     * @param EntityManagerInterface $entityManager
-     * @param ContainerInterface $container
-     * @param Sender $sender
-     * @param null $name
-     */
     public function __construct(EntityManagerInterface $entityManager, ContainerInterface $container, Sender $sender, $name = null)
     {
         $this->entityManager = $entityManager;
@@ -50,9 +34,6 @@ class SendPushNotificationsCommand extends Command
         parent::__construct($name);
     }
 
-    /**
-     * Configure the command
-     */
     protected function configure()
     {
         $this->setName('firebase:notifications:send')
@@ -61,14 +42,9 @@ class SendPushNotificationsCommand extends Command
     }
 
     /**
-     * Execute the command
-     *
-     * @param InputInterface $input
-     * @param OutputInterface $output
-     * @return int|null|void
      * @throws Exception
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $currentDate = new DateTime();
 
@@ -86,7 +62,7 @@ class SendPushNotificationsCommand extends Command
                 'No notifications to be send',
             ]);
 
-            return;
+            return Command::SUCCESS;
         }
 
         $ids = [];
@@ -134,5 +110,6 @@ class SendPushNotificationsCommand extends Command
         }
 
         $this->entityManager->flush();
+        return Command::SUCCESS;
     }
 }

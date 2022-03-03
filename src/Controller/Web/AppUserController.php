@@ -22,25 +22,12 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AppUserController extends BaseController implements ValidateCustomerSelectionInterface, ValidateApplicationSelectionInterface, ValidatePluginStateInterface
 {
-
-    /**
-     * Check if the plugin is active
-     *
-     * @return string
-     */
     public function getPluginIdentifier(): string
     {
         return Plugin::APP_USERS;
     }
 
-    /**
-     * Show a list of app users
-     *
-     * @param Request $request
-     * @param EntityManagerInterface $entityManager
-     * @return Response
-     */
-    public function indexAction(Request $request, EntityManagerInterface $entityManager)
+    public function indexAction(Request $request, EntityManagerInterface $entityManager): Response
     {
         $pageHelper = new PageHelper($request, $entityManager, AppUser::class, 15, 't.lastName');
         $pageHelper->addClause(new WhereClause('t.application', $this->getApplication()));
@@ -51,14 +38,6 @@ class AppUserController extends BaseController implements ValidateCustomerSelect
             ]);
     }
 
-    /**
-     * Show the details of a device
-     *
-     * @param Request $request
-     * @param EntityManagerInterface $entityManager
-     * @param $identifier
-     * @return RedirectResponse|Response
-     */
     public function detailsAction(Request $request, EntityManagerInterface $entityManager, $identifier)
     {
         /** @var AppUser $user */
@@ -99,14 +78,7 @@ class AppUserController extends BaseController implements ValidateCustomerSelect
         ]);
     }
 
-    /**
-     * Delete one or more users
-     *
-     * @param Request $request
-     * @param EntityManagerInterface $entityManager
-     * @return RedirectResponse
-     */
-    public function deleteAction(Request $request, EntityManagerInterface $entityManager)
+    public function deleteAction(Request $request, EntityManagerInterface $entityManager): RedirectResponse
     {
         // Find users by id and the current customer
         $users = $entityManager->getRepository(AppUser::class)->findBy([

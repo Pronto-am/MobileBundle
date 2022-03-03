@@ -2,9 +2,10 @@
 
 namespace Pronto\MobileBundle\Service\Collection;
 
-use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Driver\Statement;
+use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\ParameterType;
+use Doctrine\DBAL\Result;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\Parameter;
@@ -18,58 +19,25 @@ class QueryGenerator
 {
     public const TABLE_COLUMNS = ['id', 'created_at', 'updated_at', 'created_by_id', 'updated_by_id'];
 
-    /** @var EntityManagerInterface $entityManager */
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
+    private ?Request $request;
+    private Collection $collection;
+    private array $collectionRelationships;
+    private array $properties;
+    private string $orderBy;
+    private string $direction;
+    private int $offset;
+    private int $limit;
+    private array $propertyFilters;
+    private array $relationshipFilters;
+    private bool $listView = false;
 
-    /** @var null|Request $request */
-    private $request;
-
-    /** @var Collection $collection */
-    private $collection;
-
-    /** @var array $collectionRelationships */
-    private $collectionRelationships;
-
-    /** @var array $properties */
-    private $properties;
-
-    /** @var string $orderBy */
-    private $orderBy;
-
-    /** @var string $direction */
-    private $direction;
-
-    /** @var int $offset */
-    private $offset;
-
-    /** @var int $limit */
-    private $limit;
-
-    /** @var array $propertyFilters */
-    private $propertyFilters;
-
-    /** @var array $relationshipFilters */
-    private $relationshipFilters;
-
-    /** @var bool $listView */
-    private $listView = false;
-
-    /**
-     * QueryGenerator constructor.
-     * @param EntityManagerInterface $entityManager
-     * @param RequestStack $requestStack
-     */
     public function __construct(EntityManagerInterface $entityManager, RequestStack $requestStack)
     {
         $this->entityManager = $entityManager;
         $this->request = $requestStack->getCurrentRequest();
     }
 
-    /**
-     * Set the collection for the queries
-     *
-     * @param Collection $collection
-     */
     public function setCollection(Collection $collection): void
     {
         $this->collection = $collection;
@@ -77,18 +45,12 @@ class QueryGenerator
         $this->mapProperties();
     }
 
-    /**
-     * Map the properties of the collection
-     */
     private function mapProperties(): void
     {
         // Create a properties array of this relationship
         $this->properties = Collect::keyBy($this->collection->getProperties()->getValues(), 'identifier');
     }
 
-    /**
-     * Parse the query from the HTTP request
-     */
     public function parseHttpQuery(): void
     {
         $query = $this->request->query;
@@ -171,11 +133,7 @@ class QueryGenerator
     }
 
     /**
-     * Get a single entry
-     *
-     * @param string $id
-     * @return mixed
-     * @throws DBALException
+     * @throws Exception
      */
     public function getEntry(string $id)
     {
@@ -191,7 +149,7 @@ class QueryGenerator
         // Execute the query
         $statement = $this->executeStatement($query, $parameters);
 
-        $parsedEntry = $statement->fetchAll();
+        $parsedEntry = $statement->fetchAllAssociative();
 
         return $parsedEntry[0] ?? null;
     }
@@ -262,14 +220,9 @@ class QueryGenerator
     }
 
     /**
-     * Execute a query statement
-     *
-     * @param string $query
-     * @param array $parameters
-     * @return Statement
-     * @throws DBALException
+     * @throws Exception
      */
-    private function executeStatement(string $query, array $parameters): Statement
+    private function executeStatement(string $query, array $parameters): Result
     {
         // Execute the query
         $entityManager = $this->entityManager;
@@ -280,16 +233,11 @@ class QueryGenerator
             $statement->bindValue($parameter->getName(), $parameter->getValue(), $parameter->getType() === Types::FLOAT ? ParameterType::INTEGER : ParameterType::STRING);
         }
 
-        $statement->execute();
-
-        return $statement;
+        return $statement->executeQuery();
     }
 
     /**
-     * Get the entries
-     *
-     * @return mixed
-     * @throws DBALException
+     * @throws Exception
      */
     public function getEntries(): array
     {
@@ -306,17 +254,10 @@ class QueryGenerator
         $statement = $this->executeStatement($query, $parameters);
 
         // Parse the results of the query to a readable json object
-        return $statement->fetchAll();
+        return $statement->fetchAllAssociative();
     }
 
-    /**
-     * Create the query for the collection retrieval
-     *
-     * @param array $queryParameters
-     * @param bool $countingEntries
-     * @return string
-     */
-    private function createListQuery(array &$queryParameters, $countingEntries = false): string
+    private function createListQuery(array &$queryParameters, bool $countingEntries = false): string
     {
         // Get the base query
         $query = $this->createBaseQuery();
@@ -399,11 +340,7 @@ class QueryGenerator
     }
 
     /**
-     * Get the related entries by ID's
-     *
-     * @param array $entryIds
-     * @return array
-     * @throws DBALException
+     * @throws Exception
      */
     public function getRelatedEntries(array $entryIds): array
     {
@@ -425,15 +362,9 @@ class QueryGenerator
         // Execute the query
         $statement = $this->executeStatement($query, $parameters);
 
-        return $statement->fetchAll();
+        return $statement->fetchAllAssociative();
     }
 
-    /**
-     * Get the query to retrieve the related entries
-     *
-     * @param $entryIds
-     * @return string
-     */
     private function createRelatedEntriesQuery($entryIds): string
     {
         // Get the base query
@@ -445,12 +376,6 @@ class QueryGenerator
         return $query;
     }
 
-    /**
-     * Get the pagination info object
-     *
-     * @return array
-     * @throws DBALException
-     */
     public function getPaginationInfo(): array
     {
         return [
@@ -461,10 +386,7 @@ class QueryGenerator
     }
 
     /**
-     * Get the count of the collection with filters
-     *
-     * @return int
-     * @throws DBALException
+     * @throws Exception
      */
     public function getEntryCount(): int
     {
@@ -481,6 +403,6 @@ class QueryGenerator
         // Execute the query
         $statement = $this->executeStatement($countQuery, $parameters);
 
-        return (int) $statement->fetchColumn(0);
+        return (int) $statement->fetchFirstColumn();
     }
 }

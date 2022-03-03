@@ -33,21 +33,11 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TranslationController extends BaseController implements ValidateCustomerSelectionInterface, ValidateApplicationSelectionInterface, ValidatePluginStateInterface
 {
-    /**
-     * Check if the plugin is active
-     *
-     * @return string
-     */
     public function getPluginIdentifier(): string
     {
         return Plugin::TRANSLATIONS;
     }
 
-    /**
-     * @param Request $request
-     * @param EntityManagerInterface $entityManager
-     * @return Response
-     */
     public function indexAction(Request $request, EntityManagerInterface $entityManager, JsonSerializer $jsonSerializer): Response
     {
         if ($request->isXmlHttpRequest()) {
@@ -75,12 +65,6 @@ class TranslationController extends BaseController implements ValidateCustomerSe
         return $this->render('@ProntoMobile/translations/index.html.twig');
     }
 
-    /**
-     * @param Request $request
-     * @param EntityManagerInterface $entityManager
-     * @param TranslationKey|null $key
-     * @return RedirectResponse|Response
-     */
     public function editAction(Request $request, EntityManagerInterface $entityManager, TranslationKey $key = null)
     {
         $data = TranslationDTO::fromEntity($key);
@@ -189,12 +173,6 @@ class TranslationController extends BaseController implements ValidateCustomerSe
         return new JsonResponse();
     }
 
-    /**
-     * @param Request $request
-     * @param Importer $importer
-     * @param TranslatorInterface $translator
-     * @return Response
-     */
     public function uploadAction(Request $request, Importer $importer, TranslatorInterface $translator): Response
     {
         $uploadData = new UploadDTO();
@@ -223,12 +201,7 @@ class TranslationController extends BaseController implements ValidateCustomerSe
         ]);
     }
 
-    /**
-     * @param EntityManagerInterface $entityManager
-     * @param ContainerInterface $container
-     * @return Response
-     */
-    public function exportAction(EntityManagerInterface $entityManager, ContainerInterface $container)
+    public function exportAction(EntityManagerInterface $entityManager, ContainerInterface $container): Response
     {
         $translationKeys = $entityManager->getRepository(TranslationKey::class)->findBy([
             'application' => $this->getApplication()
@@ -278,11 +251,6 @@ class TranslationController extends BaseController implements ValidateCustomerSe
         return $response;
     }
 
-    /**
-     * @param Request $request
-     * @param EntityManagerInterface $entityManager
-     * @return RedirectResponse
-     */
     public function deleteAction(Request $request, EntityManagerInterface $entityManager): RedirectResponse
     {
         $translations = $entityManager->getRepository(TranslationKey::class)->findBy([

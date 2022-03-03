@@ -20,25 +20,11 @@ use Symfony\Component\HttpFoundation\Response;
 
 class RecipientController extends BaseController implements ValidateCustomerSelectionInterface, ValidateApplicationSelectionInterface, ValidatePluginStateInterface
 {
-    /**
-     * Check if the plugin is active
-     *
-     * @return string
-     */
     public function getPluginIdentifier(): string
     {
         return Plugin::PUSH_NOTIFICATIONS;
     }
 
-    /**
-     * Show the successful recipients of a notification
-     *
-     * @param Request $request
-     * @param EntityManagerInterface $entityManager
-     * @param $identifier
-     * @param $sent
-     * @return RedirectResponse|Response
-     */
     public function indexAction(Request $request, EntityManagerInterface $entityManager, $identifier, $sent)
     {
         $application = $this->getApplication();

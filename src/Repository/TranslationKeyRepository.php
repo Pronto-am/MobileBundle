@@ -8,12 +8,6 @@ use Pronto\MobileBundle\Entity\Application;
 
 class TranslationKeyRepository extends EntityRepository
 {
-    /**
-     * @param Application $application
-     * @param string $identifier
-     * @param int|null $id
-     * @return bool
-     */
     public function isUnique(Application $application, string $identifier, int $id = null): bool
     {
         $parameters = [

@@ -25,39 +25,19 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PropertyController extends BaseController implements ValidatePluginStateInterface, ValidateApplicationSelectionInterface, ValidateCustomerSelectionInterface
 {
-    /**
-     * Check if the plugin is active
-     *
-     * @return string
-     */
     public function getPluginIdentifier(): string
     {
         return Plugin::COLLECTIONS;
     }
 
-    /**
-     * A fancy redirect to set the properties as active tab when navigating back
-     *
-     * @param $identifier
-     * @return RedirectResponse
-     */
-    public function indexAction($identifier)
+    public function indexAction($identifier): RedirectResponse
     {
         $this->addFlash('activeTab', 'properties');
 
         return $this->redirectToRoute('pronto_mobile_collections_edit', ['identifier' => $identifier]);
     }
 
-    /**
-     * Edit a property
-     *
-     * @param EntityManagerInterface $entityManager
-     * @param TranslatorInterface $translator
-     * @param $identifier
-     * @param Property|null $property
-     * @return RedirectResponse|Response
-     */
-    public function editAction(EntityManagerInterface $entityManager, TranslatorInterface $translator, $identifier, Property $property = null)
+    public function editAction(EntityManagerInterface $entityManager, TranslatorInterface $translator, $identifier, Property $property = null): Response
     {
         $types = $entityManager->getRepository(Type::class)->findBy([], ['ordering' => 'asc']);
 
@@ -87,16 +67,7 @@ class PropertyController extends BaseController implements ValidatePluginStateIn
         ]);
     }
 
-    /**
-     * Save a collection property
-     *
-     * @param Request $request
-     * @param EntityManagerInterface $entityManager
-     * @param $identifier
-     * @param Property $property
-     * @return RedirectResponse|Response
-     */
-    public function saveAction(Request $request, EntityManagerInterface $entityManager, $identifier, Property $property = null)
+    public function saveAction(Request $request, EntityManagerInterface $entityManager, $identifier, Property $property = null): RedirectResponse
     {
         $body = $request->request->all();
 
@@ -195,15 +166,7 @@ class PropertyController extends BaseController implements ValidatePluginStateIn
         return $this->redirectToRoute('pronto_mobile_collections_edit', ['identifier' => $identifier]);
     }
 
-    /**
-     * Delete one or multiple properties
-     *
-     * @param Request $request
-     * @param EntityManagerInterface $entityManager
-     * @param $identifier
-     * @return RedirectResponse
-     */
-    public function deleteAction(Request $request, EntityManagerInterface $entityManager, $identifier)
+    public function deleteAction(Request $request, EntityManagerInterface $entityManager, $identifier): RedirectResponse
     {
         $collection = $entityManager->getRepository(Collection::class)->findOneBy([
             'identifier'         => $identifier,
@@ -236,13 +199,6 @@ class PropertyController extends BaseController implements ValidatePluginStateIn
         return $this->redirectToRoute('pronto_mobile_collections_edit', ['identifier' => $identifier]);
     }
 
-    /**
-     * Update the ordering of properties
-     *
-     * @param Request $request
-     * @param EntityManagerInterface $entityManager
-     * @return JsonResponse
-     */
     public function orderAction(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
         $properties = $request->request->get('property');

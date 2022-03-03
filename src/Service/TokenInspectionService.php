@@ -15,20 +15,11 @@ use Trikoder\Bundle\OAuth2Bundle\Security\Authentication\Token\OAuth2Token;
 
 class TokenInspectionService
 {
-    /**
-     * @var EntityManagerInterface $entityManager
-     */
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
-    /**
-     * @var TokenStorageInterface $tokenStorage
-     */
-    private $tokenStorage;
+    private TokenStorageInterface $tokenStorage;
 
-    /**
-     * @var Application|null $application
-     */
-    private $application = null;
+    private ?Application $application = null;
 
     public function __construct(EntityManagerInterface $entityManager, TokenStorageInterface $tokenStorage)
     {

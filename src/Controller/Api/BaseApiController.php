@@ -23,17 +23,13 @@ class BaseApiController extends AbstractController
 {
     use JsonResponseGenerators;
 
-    /** @var ProntoMobile $prontoMobile */
-    protected $prontoMobile;
+    protected ProntoMobile $prontoMobile;
 
-    /** @var RequestBodyValidator $requestValidator */
-    protected $requestValidator;
+    protected RequestBodyValidator $requestValidator;
 
-    /** @var JsonSerializer $serializer */
-    protected $serializer;
+    protected JsonSerializer $serializer;
 
-    /** @var TokenInspectionService $tokenInspectionService */
-    private $tokenInspectionService;
+    private TokenInspectionService $tokenInspectionService;
 
     public function __construct(ProntoMobile $prontoMobile, TokenInspectionService $tokenInspectionService)
     {
@@ -136,7 +132,7 @@ class BaseApiController extends AbstractController
     /**
      * @throws ApiException
      */
-    public function validateRequestContent(Request $request, array $required = [])
+    public function validateRequestContent(Request $request, array $required = []): bool
     {
         // Validate the required parameters
         if (!$this->requestValidator->isValid($request, $required)) {

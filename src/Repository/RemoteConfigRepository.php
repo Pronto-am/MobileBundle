@@ -7,12 +7,6 @@ use Pronto\MobileBundle\Entity\Application;
 
 class RemoteConfigRepository extends EntityRepository
 {
-    /**
-     * @param Application $application
-     * @param string $identifier
-     * @param int|null $excludeId
-     * @return bool
-     */
     public function isUnique(Application $application, string $identifier, int $excludeId = null): bool
     {
         $parameters = [
@@ -34,12 +28,6 @@ class RemoteConfigRepository extends EntityRepository
         return count($results) === 0;
     }
 
-    /**
-     * @param Application $application
-     * @param string|null $platform
-     * @param DateTime|null $afterDate
-     * @return mixed
-     */
     public function byPlatform(Application $application, string $platform = null, DateTime $afterDate = null)
     {
         $query = $this->createQueryBuilder('config')->where('config.application = :application');

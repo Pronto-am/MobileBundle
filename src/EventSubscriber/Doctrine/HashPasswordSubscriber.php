@@ -9,18 +9,16 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Events;
 use Pronto\MobileBundle\Entity\AppUser;
 use Pronto\MobileBundle\Entity\User;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class HashPasswordSubscriber implements EventSubscriber
 {
-    /**
-     * @var UserPasswordEncoderInterface $passwordEncoder
-     */
-    private $passwordEncoder;
+    private UserPasswordHasherInterface $passwordHasher;
 
-    public function __construct(UserPasswordEncoderInterface $passwordEncoder)
+    public function __construct(UserPasswordHasherInterface $passwordHasher)
     {
-        $this->passwordEncoder = $passwordEncoder;
+        $this->passwordHasher = $passwordHasher;
     }
 
     public function getSubscribedEvents(): array
@@ -46,7 +44,7 @@ class HashPasswordSubscriber implements EventSubscriber
             return;
         }
 
-        $encoded = $this->passwordEncoder->encodePassword(
+        $encoded = $this->passwordHasher->hashPassword(
             $user,
             $user->getPlainPassword()
         );

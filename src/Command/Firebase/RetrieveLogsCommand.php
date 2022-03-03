@@ -30,33 +30,14 @@ class RetrieveLogsCommand extends Command
     // Decryption method for the table contents
     public const DECRYPTION_METHOD = 'aes-256-cbc';
 
-    /**
-     * @var EntityManagerInterface $entityManager
-     */
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
-    /**
-     * @var GoogleServiceAccountLoader $googleServiceAccountLoader
-     */
-    private $googleServiceAccountLoader;
+    private GoogleServiceAccountLoader $googleServiceAccountLoader;
 
-    /**
-     * @var ProntoMobile $prontoMobile
-     */
-    private $prontoMobile;
+    private ProntoMobile $prontoMobile;
 
-    /**
-     * @var OutputInterface $output
-     */
-    private $output;
+    private OutputInterface $output;
 
-    /**
-     * RetrieveLogsCommand constructor.
-     * @param EntityManagerInterface $entityManager
-     * @param GoogleServiceAccountLoader $googleServiceAccountLoader
-     * @param ContainerInterface $container
-     * @param null $name
-     */
     public function __construct(EntityManagerInterface $entityManager, GoogleServiceAccountLoader $googleServiceAccountLoader, ContainerInterface $container, $name = null)
     {
         $this->entityManager = $entityManager;
@@ -66,9 +47,6 @@ class RetrieveLogsCommand extends Command
         parent::__construct($name);
     }
 
-    /**
-     * Configure the command
-     */
     protected function configure()
     {
         $this->setName('firebase:database:logs')
@@ -77,14 +55,9 @@ class RetrieveLogsCommand extends Command
     }
 
     /**
-     * Execute the command
-     *
-     * @param InputInterface $input
-     * @param OutputInterface $output
-     * @return int|null|void
      * @throws Exception
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->output = $output;
 
@@ -96,7 +69,7 @@ class RetrieveLogsCommand extends Command
                 'E: ' . $exception->getMessage()
             ]);
 
-            return;
+            return Command::FAILURE;
         }
 
         $output->writeln('- Creating the connection with Firebase');
@@ -115,7 +88,7 @@ class RetrieveLogsCommand extends Command
         // Check if the snapshot has values
         if ($snapshot->getValue() === null) {
             $output->writeln(' - There are no logs to retrieve');
-            return;
+            return Command::SUCCESS;
         }
 
         $output->writeln('- Looping through all of the logged records');
@@ -177,14 +150,9 @@ class RetrieveLogsCommand extends Command
 
         // Save the changes to all records to the database
         $this->entityManager->flush();
+        return Command::SUCCESS;
     }
 
-    /**
-     * Update the device and set the last active date
-     *
-     * @param $data
-     * @param $date
-     */
     private function insertDeviceSignIn($data, $date): void
     {
         // Put code inside try catch to prevent crashing the cronjob
@@ -230,12 +198,6 @@ class RetrieveLogsCommand extends Command
         }
     }
 
-    /**
-     * Update the user and set the last active date
-     *
-     * @param $data
-     * @param $date
-     */
     private function insertUserSignIn($data, $date): void
     {
         // Put code inside try catch to prevent crashing the cronjob
@@ -257,12 +219,6 @@ class RetrieveLogsCommand extends Command
         }
     }
 
-    /**
-     * Update the status of the notification recipient
-     *
-     * @param $data
-     * @param $date
-     */
     private function logOpenedNotification($data, $date): void
     {
         // Put code inside try catch to prevent crashing the cronjob

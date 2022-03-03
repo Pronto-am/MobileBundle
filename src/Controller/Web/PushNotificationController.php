@@ -44,7 +44,7 @@ class PushNotificationController extends BaseController implements ValidateCusto
         return Plugin::PUSH_NOTIFICATIONS;
     }
 
-    public function indexAction(Request $request, EntityManagerInterface $entityManager)
+    public function indexAction(Request $request, EntityManagerInterface $entityManager): Response
     {
         $application = $this->getApplication();
 
@@ -74,12 +74,6 @@ class PushNotificationController extends BaseController implements ValidateCusto
     }
 
     /**
-     * Create a new push notification
-     *
-     * @param JsonTranslator $jsonTranslator
-     * @param EntityManagerInterface $entityManager
-     * @param null $identifier
-     * @return RedirectResponse|Response
      * @throws NoResultException
      * @throws NonUniqueResultException
      */
@@ -131,16 +125,9 @@ class PushNotificationController extends BaseController implements ValidateCusto
     }
 
     /**
-     * Save the push notification
-     *
-     * @param Request $request
-     * @param EntityManagerInterface $entityManager
-     * @param UserInterface $user
-     * @param null $identifier
-     * @return RedirectResponse|Response
      * @throws ORMException
      */
-    public function saveAction(Request $request, EntityManagerInterface $entityManager, UserInterface $user, $identifier = null)
+    public function saveAction(Request $request, EntityManagerInterface $entityManager, UserInterface $user, $identifier = null): RedirectResponse
     {
         $notification = null;
 
@@ -223,13 +210,6 @@ class PushNotificationController extends BaseController implements ValidateCusto
         return $this->redirectToRoute('pronto_mobile_notifications');
     }
 
-    /**
-     * Show the details of a push notification
-     *
-     * @param EntityManagerInterface $entityManager
-     * @param $identifier
-     * @return RedirectResponse|Response
-     */
     public function detailsAction(EntityManagerInterface $entityManager, $identifier)
     {
         $notification = $entityManager->getRepository(PushNotification::class)->find($identifier);
@@ -279,13 +259,6 @@ class PushNotificationController extends BaseController implements ValidateCusto
         ]);
     }
 
-    /**
-     * Get the recipient count of the notification
-     *
-     * @param Request $request
-     * @param EntityManagerInterface $entityManager
-     * @return JsonResponse
-     */
     public function recipientsAction(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
         $test = $request->request->getBoolean('test');

@@ -22,23 +22,12 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class CollectionController extends BaseController implements ValidatePluginStateInterface, ValidateApplicationSelectionInterface, ValidateCustomerSelectionInterface
 {
-    /**
-     * Check if the plugin is active
-     *
-     * @return string
-     */
     public function getPluginIdentifier(): string
     {
         return Plugin::COLLECTIONS;
     }
 
-    /**
-     * Show a list of collections
-     *
-     * @param EntityManagerInterface $entityManager
-     * @return Response
-     */
-    public function indexAction(EntityManagerInterface $entityManager)
+    public function indexAction(EntityManagerInterface $entityManager): Response
     {
         $collections = $entityManager->getRepository(Collection::class)->findBy([
             'applicationVersion' => $this->getApplicationVersion()
@@ -50,15 +39,6 @@ class CollectionController extends BaseController implements ValidatePluginState
             ]);
     }
 
-    /**
-     * Edit a collection
-     *
-     * @param Request $request
-     * @param FontAwesomeLoader $fontAwesomeLoader
-     * @param EntityManagerInterface $entityManager
-     * @param string|null $identifier
-     * @return RedirectResponse|Response
-     */
     public function editAction(Request $request, FontAwesomeLoader $fontAwesomeLoader, EntityManagerInterface $entityManager, string $identifier = null)
     {
         if (!$this->isGranted('ROLE_SUPER_ADMIN')) {
@@ -116,14 +96,7 @@ class CollectionController extends BaseController implements ValidatePluginState
         ]);
     }
 
-    /**
-     * Delete a collection
-     *
-     * @param Request $request
-     * @param EntityManagerInterface $entityManager
-     * @return JsonResponse
-     */
-    public function deleteAction(Request $request, EntityManagerInterface $entityManager)
+    public function deleteAction(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
         $id = $request->request->get('id');
 

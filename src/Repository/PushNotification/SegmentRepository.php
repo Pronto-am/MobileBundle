@@ -2,24 +2,17 @@
 
 namespace Pronto\MobileBundle\Repository\PushNotification;
 
-use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityRepository;
-use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\Device;
 
 class SegmentRepository extends EntityRepository
 {
-
     /**
-     * Get the number of successfully delivered notifications
-     *
-     * @param Device $device
-     * @return array
-     * @throws DBALException
+     * @throws Exception
      */
     public function getWithSubscribedStatus(Device $device): array
     {
-        /** @var Application $application */
         $application = $device->getApplication();
 
         $query = 'SELECT 
@@ -31,8 +24,8 @@ class SegmentRepository extends EntityRepository
 
         $entityManager = $this->getEntityManager();
         $statement = $entityManager->getConnection()->prepare($query);
-        $statement->execute([$device->getId(), $application->getId()]);
+        $result = $statement->executeQuery([$device->getId(), $application->getId()]);
 
-        return $statement->fetchAll();
+        return $result->fetchAllAssociative();
     }
 }

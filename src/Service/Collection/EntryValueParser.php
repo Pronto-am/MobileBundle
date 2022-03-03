@@ -10,35 +10,15 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class EntryValueParser
 {
-    /**
-     * @var TranslatorInterface $translator
-     */
-    private $translator;
+    private TranslatorInterface $translator;
+    private JsonTranslator $jsonTranslator;
 
-    /**
-     * @var JsonTranslator $jsonTranslator
-     */
-    private $jsonTranslator;
-
-    /**
-     * EntryValueParser constructor.
-     *
-     * @param TranslatorInterface $translator
-     * @param JsonTranslator $jsonTranslator
-     */
     public function __construct(TranslatorInterface $translator, JsonTranslator $jsonTranslator)
     {
         $this->translator = $translator;
         $this->jsonTranslator = $jsonTranslator;
     }
 
-    /**
-     * Parse an entry property
-     *
-     * @param Property $property
-     * @param mixed $value
-     * @return string
-     */
     public function parse(Property $property, $value): string
     {
         $type = $property->getType();
@@ -54,12 +34,6 @@ class EntryValueParser
         return $this->parseText($value);
     }
 
-    /**
-     * Return plain text
-     *
-     * @param string|array|null $value
-     * @return string
-     */
     public function parseText($value = null): string
     {
         // When making a field non translatable, instead of translatable, the param will still be an array
@@ -72,10 +46,6 @@ class EntryValueParser
     }
 
     /**
-     * Return date string
-     *
-     * @param string $value
-     * @return string
      * @throws Exception
      */
     public function parseDate(string $value): string
@@ -86,10 +56,6 @@ class EntryValueParser
     }
 
     /**
-     * Return date string
-     *
-     * @param string $value
-     * @return string
      * @throws Exception
      */
     public function parseDateTime(string $value): string
@@ -99,12 +65,6 @@ class EntryValueParser
         return $this->translator->trans('format.date_and_time', ['%date%' => $dateTime->format('d-m-Y'), '%time%' => $dateTime->format('H:i')]);
     }
 
-    /**
-     * Parse a boolean
-     *
-     * @param bool $value
-     * @return string
-     */
     public function parseBoolean(bool $value): string
     {
         return $this->translator->trans('collection.entry.value_' . ($value ? 'true' : 'false'));

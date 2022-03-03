@@ -10,11 +10,6 @@ use Pronto\MobileBundle\Entity\PushNotification;
 class DeviceRepository extends EntityRepository
 {
     /**
-     * Find notification recipients by application
-     *
-     * @param Application $application
-     * @param bool $isTest
-     * @return mixed
      * @throws NoResultException
      * @throws NonUniqueResultException
      */
@@ -33,13 +28,6 @@ class DeviceRepository extends EntityRepository
         return $query->getQuery()->getSingleScalarResult();
     }
 
-    /**
-     * Find notification recipients by application
-     *
-     * @param Application $application
-     * @param $isTest
-     * @return mixed
-     */
     public function findRecipientsByApplication(Application $application, bool $isTest)
     {
         $query = $this->createQueryBuilder('devices')
@@ -54,14 +42,6 @@ class DeviceRepository extends EntityRepository
         return $query->getQuery()->execute();
     }
 
-    /**
-     * Find device recipients by notification details
-     *
-     * @param PushNotification $notification
-     * @param string $language
-     * @param bool $isTest
-     * @return mixed
-     */
     public function findNotificationRecipientsByLanguage(PushNotification $notification, string $language, bool $isTest)
     {
         $query = $this->createQueryBuilder('devices')
@@ -86,14 +66,6 @@ class DeviceRepository extends EntityRepository
         return $query->getQuery()->execute();
     }
 
-    /**
-     * Find device recipients by notification details
-     *
-     * @param PushNotification $notification
-     * @param array $excludeLanguages
-     * @param $isTest
-     * @return mixed
-     */
     public function findNotificationRecipientsByExcludeLanguages(PushNotification $notification, array $excludeLanguages, bool $isTest)
     {
         $query = $this->createQueryBuilder('devices')
@@ -118,11 +90,6 @@ class DeviceRepository extends EntityRepository
         return $query->getQuery()->execute();
     }
 
-    /**
-     * Find devices without a firebase token
-     *
-     * @return mixed
-     */
     public function findDevicesWithoutFirebaseToken()
     {
         return $this->createQueryBuilder('devices')
@@ -133,12 +100,6 @@ class DeviceRepository extends EntityRepository
             ->execute();
     }
 
-    /**
-     * Set devices disabled by expired or invalid tokens
-     *
-     * @param array $tokens
-     * @return mixed
-     */
     public function setDisabledByTokens(array $tokens)
     {
         return $this->createQueryBuilder('devices')->update()
@@ -149,13 +110,6 @@ class DeviceRepository extends EntityRepository
             ->execute();
     }
 
-    /**
-     * Update a token
-     *
-     * @param $oldToken
-     * @param $newToken
-     * @return mixed
-     */
     public function updateToken($oldToken, $newToken)
     {
         return $this->createQueryBuilder('devices')->update()
@@ -167,12 +121,6 @@ class DeviceRepository extends EntityRepository
             ->execute();
     }
 
-    /**
-     * Get devices which lack a firebase token
-     *
-     * @param Application $application
-     * @return mixed
-     */
     public function getByMissingFirebaseToken(Application $application)
     {
         return $this->createQueryBuilder('devices')
@@ -184,14 +132,6 @@ class DeviceRepository extends EntityRepository
             ->execute();
     }
 
-    /**
-     * Update a token
-     *
-     * @param int $applicationId
-     * @param string $apnsToken
-     * @param string $firebaseToken
-     * @return mixed
-     */
     public function addFirebaseToken(int $applicationId, string $apnsToken, string $firebaseToken)
     {
         return $this->createQueryBuilder('devices')->update()

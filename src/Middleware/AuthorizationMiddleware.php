@@ -13,23 +13,12 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Trikoder\Bundle\OAuth2Bundle\Model\AccessToken;
 use Trikoder\Bundle\OAuth2Bundle\Security\Authentication\Token\OAuth2Token;
 
-/**
- * Class AuthorizationMiddleware
- * @package Pronto\MobileBundle\Middleware
- */
 class AuthorizationMiddleware extends Middleware
 {
-    /** @var AuthorizationCheckerInterface $authorizationChecker */
-    private $authorizationChecker;
-
-    /** @var TokenStorageInterface $tokenStorage */
-    private $tokenStorage;
-
-    /** @var EntityManagerInterface $entityManager */
-    private $entityManager;
-
-    /** @var ProntoMobile $prontoMobile */
-    private $prontoMobile;
+    private AuthorizationCheckerInterface $authorizationChecker;
+    private TokenStorageInterface $tokenStorage;
+    private EntityManagerInterface $entityManager;
+    private ProntoMobile $prontoMobile;
 
     public function __construct(ContainerInterface $container, EntityManagerInterface $entityManager)
     {

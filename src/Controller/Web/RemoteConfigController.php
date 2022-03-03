@@ -21,6 +21,7 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -32,7 +33,7 @@ class RemoteConfigController extends BaseController implements ValidateCustomerS
         return Plugin::REMOTE_CONFIG;
     }
 
-    public function indexAction(Request $request, EntityManagerInterface $entityManager)
+    public function indexAction(Request $request, EntityManagerInterface $entityManager): Response
     {
         $pageHelper = new PageHelper($request, $entityManager, RemoteConfig::class, 15);
         $pageHelper->addClause(new WhereClause('t.application', $this->getApplication()));
@@ -42,8 +43,13 @@ class RemoteConfigController extends BaseController implements ValidateCustomerS
         ]);
     }
 
-    public function editAction(Request $request, EntityManagerInterface $entityManager, TranslatorInterface $translator, AuthorizationCheckerInterface $authorizationChecker, RemoteConfig $configuration = null)
-    {
+    public function editAction(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        TranslatorInterface $translator,
+        AuthorizationCheckerInterface $authorizationChecker,
+        RemoteConfig $configuration = null
+    ) {
         $configDTO = RemoteConfigDTO::fromEntity($configuration);
 
         if ($configuration !== null) {
@@ -123,7 +129,7 @@ class RemoteConfigController extends BaseController implements ValidateCustomerS
         ]);
     }
 
-    public function togglePlatformAction(Request $request, EntityManagerInterface $entityManager)
+    public function togglePlatformAction(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
         /** @var RemoteConfig $configuration */
         $configuration = $entityManager->getRepository(RemoteConfig::class)->findOrFail($request->request->get('remote_config_id'));

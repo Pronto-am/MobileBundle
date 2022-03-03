@@ -13,23 +13,12 @@ use Pronto\MobileBundle\Utils\Firebase\CloudMessaging\Response;
 
 class Sender
 {
-    /** @var Client */
-    private $client;
-
-    /** @var array */
-    private $devices = [];
-
-    /** @var Response */
-    private $response;
-
-    /** @var EntityManagerInterface */
-    private $entityManager;
-
-    /** @var PushNotification */
-    private $notification;
-
-    /** @var FirebaseStorage */
-    private $firebaseStorage;
+    private Client $client;
+    private array $devices = [];
+    private Response $response;
+    private EntityManagerInterface $entityManager;
+    private PushNotification $notification;
+    private FirebaseStorage $firebaseStorage;
 
     public function __construct(EntityManagerInterface $entityManager, FirebaseStorage $firebaseStorage)
     {

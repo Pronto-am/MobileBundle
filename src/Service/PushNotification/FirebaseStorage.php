@@ -9,17 +9,14 @@ use Pronto\MobileBundle\Entity\PushNotification;
 
 class FirebaseStorage
 {
-    /**
-     * @var GoogleServiceAccountLoader
-     */
-    private $googleServiceAccountLoader;
+    private GoogleServiceAccountLoader $googleServiceAccountLoader;
 
     public function __construct(GoogleServiceAccountLoader $googleServiceAccountLoader)
     {
         $this->googleServiceAccountLoader = $googleServiceAccountLoader;
     }
 
-    public function generateUrlForPushNotification(PushNotification $pushNotification, string $language)
+    public function generateUrlForPushNotification(PushNotification $pushNotification, string $language): string
     {
         $defaultLanguage = $pushNotification->getApplication()->getDefaultLanguage();
 

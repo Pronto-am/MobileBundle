@@ -4,17 +4,15 @@ namespace Pronto\MobileBundle\Repository\PushNotification;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\QueryBuilder;
 use Pronto\MobileBundle\Entity\PushNotification;
 
 class RecipientRepository extends EntityRepository
 {
     /**
-     * Get the number of successfully delivered notifications
-     *
-     * @param PushNotification $notification
-     * @return mixed
      * @throws NonUniqueResultException
+     * @throws NoResultException
      */
     public function getSuccessfulSentCountByNotification(PushNotification $notification)
     {
@@ -24,12 +22,6 @@ class RecipientRepository extends EntityRepository
             ->getSingleScalarResult();
     }
 
-    /**
-     * Get the reusable basic query builder
-     *
-     * @param PushNotification $notification
-     * @return QueryBuilder
-     */
     private function getBasicCountQuery(PushNotification $notification): QueryBuilder
     {
         return $this->createQueryBuilder('recipients')
@@ -39,11 +31,8 @@ class RecipientRepository extends EntityRepository
     }
 
     /**
-     * Get the number of bounced notifications
-     *
-     * @param PushNotification $notification
-     * @return mixed
      * @throws NonUniqueResultException
+     * @throws NoResultException
      */
     public function getBounceCountByNotification(PushNotification $notification)
     {
@@ -54,11 +43,8 @@ class RecipientRepository extends EntityRepository
     }
 
     /**
-     * Get the number of bounced notifications
-     *
-     * @param PushNotification $notification
-     * @return mixed
      * @throws NonUniqueResultException
+     * @throws NoResultException
      */
     public function getOpenedCountByNotification(PushNotification $notification)
     {
@@ -68,12 +54,6 @@ class RecipientRepository extends EntityRepository
             ->getSingleScalarResult();
     }
 
-    /**
-     * Get the clicked statistics, grouped by date
-     *
-     * @param PushNotification $notification
-     * @return mixed
-     */
     public function getClickedCountByNotification(PushNotification $notification)
     {
         return $this->createQueryBuilder('recipients')
@@ -86,12 +66,6 @@ class RecipientRepository extends EntityRepository
             ->execute();
     }
 
-    /**
-     * Get the number of successfully delivered notifications
-     *
-     * @param PushNotification $notification
-     * @return mixed
-     */
     public function getSuccessfulSentCountByNotificationGroupByPlatform(PushNotification $notification)
     {
         return $this->createQueryBuilder('recipients')

@@ -4,17 +4,12 @@ namespace Pronto\MobileBundle\Repository\Device;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Pronto\MobileBundle\Entity\Device;
 use Pronto\MobileBundle\Entity\PushNotification\Segment;
 
 class SegmentRepository extends EntityRepository
 {
-    /**
-     * Find the devices' segments
-     *
-     * @param Device $device
-     * @return mixed
-     */
     public function findSegmentsByDevice(Device $device)
     {
         return $this->createQueryBuilder('t')
@@ -27,11 +22,8 @@ class SegmentRepository extends EntityRepository
     }
 
     /**
-     * Get the device count by segment
-     *
-     * @param Segment $segment
-     * @return mixed
      * @throws NonUniqueResultException
+     * @throws NoResultException
      */
     public function getDeviceCountBySegment(Segment $segment)
     {

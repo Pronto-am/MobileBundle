@@ -14,40 +14,21 @@ use Pronto\MobileBundle\Service\PluginInitializer;
 
 class PluginSubscriber implements EventSubscriber
 {
-    /**
-     * @var PluginInitializer $initializer
-     */
-    private $initializer;
+    private PluginInitializer $initializer;
 
-    /**
-     * @var EntityManagerInterface $entityManager
-     */
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
-    /**
-     * PluginSubscriber constructor.
-     * @param PluginInitializer $initializer
-     * @param EntityManagerInterface $entityManager
-     */
     public function __construct(PluginInitializer $initializer, EntityManagerInterface $entityManager)
     {
         $this->initializer = $initializer;
         $this->entityManager = $entityManager;
     }
 
-    /**
-     * Returns an array of events this subscriber wants to listen to.
-     *
-     * @return string[]
-     */
     public function getSubscribedEvents(): array
     {
         return [Events::postPersist];
     }
 
-    /**
-     * @param LifecycleEventArgs $args
-     */
     public function postPersist(LifecycleEventArgs $args): void
     {
         $entity = $args->getEntity();
@@ -59,9 +40,6 @@ class PluginSubscriber implements EventSubscriber
         $this->initializeFirstVersion($entity);
     }
 
-    /**
-     * @param Plugin $plugin
-     */
     private function initializeFirstVersion(Plugin $plugin): void
     {
         $applications = $this->entityManager->getRepository(Application::class)->findAll();

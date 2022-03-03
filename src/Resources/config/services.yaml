@@ -54,7 +54,7 @@ services:
   Pronto\MobileBundle\EventListener\OAuth\UserResolveListener:
     arguments:
       - '@pronto_mobile_app_user_provider'
-      - '@security.password_encoder'
+      - '@security.password_hasher'
       - '@doctrine.orm.entity_manager'
       - '@security.token_storage'
     tags:

@@ -16,6 +16,7 @@ use Pronto\MobileBundle\Exceptions\Auth\InvalidPluginStateException;
 use Pronto\MobileBundle\Exceptions\Devices\NotFoundException;
 use Pronto\MobileBundle\Exceptions\PushNotifications\InvalidSegmentException;
 use Pronto\MobileBundle\Exceptions\PushNotifications\Segments\NotFoundException as SegmentNotFoundException;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 class SegmentController extends BaseApiController
@@ -53,13 +54,12 @@ class SegmentController extends BaseApiController
      */
 
     /**
-     * @throws DBALException
      * @throws NotFoundException
      * @throws InvalidAuthorizationHeaderException
      * @throws InvalidAuthorizationTokenException
      * @throws InvalidPluginStateException
      */
-    public function subscribedAction(EntityManagerInterface $entityManager, $deviceIdentifier)
+    public function subscribedAction(EntityManagerInterface $entityManager, $deviceIdentifier): JsonResponse
     {
         $this->validateAuthorization();
 
@@ -128,7 +128,7 @@ class SegmentController extends BaseApiController
      * @throws NotFoundException
      * @throws SegmentNotFoundException
      */
-    public function updateAction(Request $request, EntityManagerInterface $entityManager)
+    public function updateAction(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
         // Validate the authorization
         $this->validateAuthorization();

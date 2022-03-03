@@ -20,32 +20,14 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class ApplicationVersionSubscriber implements EventSubscriber
 {
-    /**
-     * @var TokenStorageInterface
-     */
-    private $tokenStorage;
+    private TokenStorageInterface $tokenStorage;
 
-    /**
-     * @var Request
-     */
-    private $request;
+    private ?Request $request;
 
-    /**
-     * @var PluginInitializer $initializer
-     */
-    private $initializer;
+    private PluginInitializer $initializer;
 
-    /**
-     * @var Application $application
-     */
-    private $application;
+    private Application $application;
 
-    /**
-     * ApplicationVersionSubscriber constructor.
-     * @param RequestStack $requestStack
-     * @param TokenStorageInterface $tokenStorage
-     * @param PluginInitializer $initializer
-     */
     public function __construct(RequestStack $requestStack, TokenStorageInterface $tokenStorage, PluginInitializer $initializer)
     {
         $this->tokenStorage = $tokenStorage;
@@ -53,19 +35,11 @@ class ApplicationVersionSubscriber implements EventSubscriber
         $this->initializer = $initializer;
     }
 
-    /**
-     * Returns an array of events this subscriber wants to listen to.
-     *
-     * @return string[]
-     */
     public function getSubscribedEvents(): array
     {
         return [Events::prePersist, Events::postPersist];
     }
 
-    /**
-     * @param LifecycleEventArgs $args
-     */
     public function prePersist(LifecycleEventArgs $args)
     {
         $entity = $args->getEntity();
@@ -84,9 +58,6 @@ class ApplicationVersionSubscriber implements EventSubscriber
     }
 
     /**
-     * Handle the post persist event of an application object
-     *
-     * @param LifecycleEventArgs $args
      * @throws ORMException
      */
     public function postPersist(LifecycleEventArgs $args): void
@@ -103,7 +74,6 @@ class ApplicationVersionSubscriber implements EventSubscriber
     }
 
     /**
-     * @param EntityManager $entityManager
      * @throws ORMException
      * @throws OptimisticLockException
      */

@@ -20,27 +20,12 @@ use Psr\Log\LoggerInterface;
 
 class NotificationSubscriber implements EventSubscriber
 {
-    /**
-     * @var GoogleServiceAccountLoader $googleServiceAccountLoader
-     */
-    private $googleServiceAccountLoader;
+    private GoogleServiceAccountLoader $googleServiceAccountLoader;
 
-    /**
-     * @var EntityManagerInterface $entityManager
-     */
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
-    /**
-     * @var LoggerInterface $logger
-     */
-    private $logger;
+    private LoggerInterface $logger;
 
-    /**
-     * NotificationSubscriber constructor.
-     * @param LoggerInterface $logger
-     * @param EntityManagerInterface $entityManager
-     * @param GoogleServiceAccountLoader $googleServiceAccountLoader
-     */
     public function __construct(LoggerInterface $logger, EntityManagerInterface $entityManager, GoogleServiceAccountLoader $googleServiceAccountLoader)
     {
         $this->googleServiceAccountLoader = $googleServiceAccountLoader;
@@ -48,21 +33,11 @@ class NotificationSubscriber implements EventSubscriber
         $this->logger = $logger;
     }
 
-    /**
-     * Returns an array of events this subscriber wants to listen to.
-     *
-     * @return string[]
-     */
     public function getSubscribedEvents(): array
     {
         return [Events::prePersist, Events::preUpdate];
     }
 
-    /**
-     * Pre persist event
-     *
-     * @param LifecycleEventArgs $args
-     */
     public function prePersist(LifecycleEventArgs $args): void
     {
         $entity = $args->getEntity();
@@ -70,11 +45,6 @@ class NotificationSubscriber implements EventSubscriber
         $this->handleFile($entity);
     }
 
-    /**
-     * Upload or update the HTML click action file
-     *
-     * @param $entity
-     */
     private function handleFile($entity): void
     {
         // The entity must be a push notification with HTML webview
@@ -129,11 +99,6 @@ class NotificationSubscriber implements EventSubscriber
         }
     }
 
-    /**
-     * Pre update event
-     *
-     * @param LifecycleEventArgs $args
-     */
     public function preUpdate(LifecycleEventArgs $args): void
     {
         $entity = $args->getEntity();

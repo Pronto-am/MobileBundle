@@ -15,11 +15,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class BaseController extends AbstractController
 {
-    /** @var ProntoMobile $prontoMobile */
-    protected $prontoMobile;
-
-    /** @var TranslatorInterface $translator */
-    private $translator;
+    protected ProntoMobile $prontoMobile;
+    private TranslatorInterface $translator;
 
     public function __construct(TranslatorInterface $translator, ContainerInterface $container)
     {
