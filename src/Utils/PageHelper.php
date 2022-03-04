@@ -28,8 +28,8 @@ class PageHelper
     private int $currentPage;
     private int $totalPages;
     private int $totalRecords;
-    private ?array $list;
-    private ?string $query;
+    private ?array $list = null;
+    private ?QueryBuilder $query = null;
     private string $countField;
 
     public function __construct(

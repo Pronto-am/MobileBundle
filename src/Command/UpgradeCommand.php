@@ -6,25 +6,28 @@ namespace Pronto\MobileBundle\Command;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use League\Bundle\OAuth2ServerBundle\Manager\ClientManagerInterface;
+use League\Bundle\OAuth2ServerBundle\Model\Client;
+use League\Bundle\OAuth2ServerBundle\Model\Grant;
 use Pronto\MobileBundle\Entity\Application;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Trikoder\Bundle\OAuth2Bundle\Model\Client;
-use Trikoder\Bundle\OAuth2Bundle\Model\Grant;
 
 class UpgradeCommand extends Command
 {
     private const ASSISTABLE_VERSIONS = ['2.0.0'];
 
     private EntityManagerInterface $entityManager;
+    private ClientManagerInterface $clientManager;
 
-    public function __construct(EntityManagerInterface $entityManager, $name = null)
+    public function __construct(ClientManagerInterface $clientManager, EntityManagerInterface $entityManager, $name = null)
     {
         parent::__construct($name);
         $this->entityManager = $entityManager;
+        $this->clientManager = $clientManager;
     }
 
     protected function configure()
@@ -35,6 +38,9 @@ class UpgradeCommand extends Command
             ->setHelp('Run actions needed when upgrading to a specific version');
     }
 
+    /**
+     * @throws Exception
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $version = $input->getArgument('version');
@@ -47,8 +53,13 @@ class UpgradeCommand extends Command
 
         // Version for now is only 2.0.0
         $this->migrateOAuthClients();
+
+        return Command::SUCCESS;
     }
 
+    /**
+     * @throws Exception
+     */
     private function migrateOAuthClients(): void
     {
         $applications = $this->entityManager->getRepository(Application::class)->findAll();
@@ -59,6 +70,7 @@ class UpgradeCommand extends Command
         /** @var Application $application */
         foreach ($applications as $application) {
             $client = new Client(
+                $application->getName() . ' Client',
                 $this->createIdentifier(),
                 $application->getSecret()
             );
@@ -66,7 +78,7 @@ class UpgradeCommand extends Command
             $client->setGrants(...$this->createGrantTypes());
             $client->setActive(true);
 
-            $this->entityManager->persist($client);
+            $this->clientManager->save($client);
 
             $applicationClient = new Application\ApplicationClient($application, $client, 'Default');
             $this->entityManager->persist($applicationClient);

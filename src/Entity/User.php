@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection as DoctrineCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Exception;
 use Ramsey\Uuid\Uuid;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -19,7 +20,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ORM\Table(name="users")
  * @ORM\HasLifecycleCallbacks
  */
-class User extends TimestampedEntity implements UserInterface
+class User extends TimestampedEntity implements UserInterface, PasswordAuthenticatedUserInterface
 {
     /**
      * @ORM\Id
@@ -28,7 +29,7 @@ class User extends TimestampedEntity implements UserInterface
      *
      * @Groups({"TimestampedWithUserEntity"})
      */
-    private ?int $id;
+    private ?int $id = null;
 
     /**
      * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Customer")
@@ -48,7 +49,7 @@ class User extends TimestampedEntity implements UserInterface
      *
      * @Groups({"TimestampedWithUserEntity"})
      */
-    private ?string $insertion;
+    private ?string $insertion = null;
 
     /**
      * @ORM\Column(type="string")
@@ -65,19 +66,17 @@ class User extends TimestampedEntity implements UserInterface
     /**
      * @ORM\Column(type="string", nullable=true)
      */
-    private ?string $password;
+    private ?string $password = null;
 
     /**
      * @ORM\Column(type="string", nullable=true)
      */
-    private ?string $activationToken;
+    private ?string $activationToken = null;
 
     /**
      * A non-persisted field that's used to create the encoded password.
-     *
-     * @var string
      */
-    private ?string $plainPassword;
+    private ?string $plainPassword = null;
 
     /**
      * @ORM\Column(type="json_array")

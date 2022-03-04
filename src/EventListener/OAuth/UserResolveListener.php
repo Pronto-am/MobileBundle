@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace Pronto\MobileBundle\EventListener\OAuth;
 
 use Doctrine\ORM\EntityManagerInterface;
+use League\Bundle\OAuth2ServerBundle\Event\UserResolveEvent;
+use League\Bundle\OAuth2ServerBundle\Model\AbstractClient;
 use Pronto\MobileBundle\Entity\Application\ApplicationClient;
 use Pronto\MobileBundle\Entity\AppUser;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
-use Trikoder\Bundle\OAuth2Bundle\Event\UserResolveEvent;
-use Trikoder\Bundle\OAuth2Bundle\Model\Client;
 
 final class UserResolveListener
 {
@@ -23,9 +21,9 @@ final class UserResolveListener
     private EntityManagerInterface $entityManager;
 
     public function __construct(
-        UserProviderInterface       $userProvider,
+        UserProviderInterface $userProvider,
         UserPasswordHasherInterface $passwordHasher,
-        EntityManagerInterface      $entityManager
+        EntityManagerInterface $entityManager
     ) {
         $this->userProvider = $userProvider;
         $this->passwordHasher = $passwordHasher;
@@ -51,11 +49,11 @@ final class UserResolveListener
         $event->setUser($user);
     }
 
-    private function userIsAllowedToUseClient(AppUser $user, Client $client): bool
+    private function userIsAllowedToUseClient(AppUser $user, AbstractClient $client): bool
     {
         $repository = $this->entityManager->getRepository(ApplicationClient::class);
         $applicationClient = $repository->findOneBy([
-            'client' => $client
+            'clientIdentifier' => $client->getIdentifier()
         ]);
 
         if (!$applicationClient instanceof ApplicationClient) {

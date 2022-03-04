@@ -4,15 +4,13 @@ namespace Pronto\MobileBundle\Provider;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Pronto\MobileBundle\Entity\AppUser;
-use Pronto\MobileBundle\Service\TokenInspectionService;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Symfony\Component\Security\Core\Exception\UserNotFoundException;
+use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
-class AppUserProvider implements UserProviderInterface
+class AppUserProvider implements UserProviderInterface, PasswordUpgraderInterface
 {
     protected EntityManagerInterface $entityManager;
 
@@ -21,16 +19,21 @@ class AppUserProvider implements UserProviderInterface
         $this->entityManager = $entityManager;
     }
 
-    public function loadUserByUsername($email): UserInterface
+    public function loadUserByUsername(string $username): UserInterface
+    {
+        return $this->loadUserByIdentifier($username);
+    }
+
+    public function loadUserByIdentifier(string $identifier): UserInterface
     {
         $user = $this->entityManager->getRepository(AppUser::class)->findOneBy([
-            'email'     => $email,
+            'email'     => $identifier,
             'activated' => true,
         ]);
 
         if (!$user instanceof AppUser) {
-            $message = sprintf('Unable to find an active AppUser identified by "%s".', $email);
-            throw new UsernameNotFoundException($message, 404);
+            $message = sprintf('Unable to find an active AppUser identified by "%s".', $identifier);
+            throw new UserNotFoundException($message, 404);
         }
 
         return $user;
@@ -55,5 +58,10 @@ class AppUserProvider implements UserProviderInterface
     public function supportsClass($class): bool
     {
         return AppUser::class === $class || is_subclass_of($class, AppUser::class);
+    }
+
+    public function upgradePassword(UserInterface $user, string $newHashedPassword): void
+    {
+        $user->setPassword($newHashedPassword);
     }
 }

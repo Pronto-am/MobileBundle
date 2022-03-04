@@ -2,12 +2,27 @@
 
 namespace Pronto\MobileBundle\Repository;
 
-use Doctrine\ORM\EntityRepository;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Pronto\MobileBundle\Entity\Customer;
+use Pronto\MobileBundle\Entity\User;
+use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
+use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
-class UserRepository extends EntityRepository
+class UserRepository extends EntityRepository implements PasswordUpgraderInterface, UserLoaderInterface
 {
+    public function loadUserByIdentifier(string $identifier): ?User
+    {
+        return $this->findActiveByEmail($identifier);
+    }
+
+    /** @deprecated since Symfony 5.3 */
+    public function loadUserByUsername(string $username): ?User
+    {
+        return $this->loadUserByIdentifier($username);
+    }
+
     /**
      * @throws NonUniqueResultException
      */
@@ -41,5 +56,11 @@ class UserRepository extends EntityRepository
         return $query->setParameter('customer', $customer)
             ->getQuery()
             ->execute();
+    }
+
+    public function upgradePassword(UserInterface $user, string $newHashedPassword): void
+    {
+        $user->setPassword($newHashedPassword);
+        $this->getEntityManager()->flush($user);
     }
 }

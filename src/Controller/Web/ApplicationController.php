@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Pronto\MobileBundle\Controller\Web;
 
 use Doctrine\ORM\EntityManagerInterface;
+use League\Bundle\OAuth2ServerBundle\Manager\ClientManagerInterface;
 use Pronto\MobileBundle\Controller\BaseController;
 use Pronto\MobileBundle\DTO\ApplicationDTO;
 use Pronto\MobileBundle\Entity\Application;
@@ -34,9 +35,21 @@ class ApplicationController extends BaseController implements ValidateCustomerSe
         ]);
     }
 
-    public function editAction(Request $request, LanguagesLoader $languagesLoader, EntityManagerInterface $entityManager, Application $application = null): Response
-    {
+    public function editAction(
+        Request $request,
+        LanguagesLoader $languagesLoader,
+        EntityManagerInterface $entityManager,
+        ClientManagerInterface $clientManager,
+        Application $application = null
+    ): Response {
         $customer = $this->getCustomer();
+
+        $clients = [];
+        if ($application !== null) {
+            $clients = array_map(function (Application\ApplicationClient $applicationClient) use ($clientManager) {
+                return $clientManager->find($applicationClient->getClientIdentifier());
+            }, $application->getApplicationClients()->toArray());
+        }
 
         // The user is not allowed to edit applications belonging to other customers
         if ($application !== null && $application->getCustomer()->getId() !== $customer->getId()) {
@@ -88,7 +101,8 @@ class ApplicationController extends BaseController implements ValidateCustomerSe
 
         return $this->render('@ProntoMobile/applications/edit.html.twig', [
             'applicationForm' => $form->createView(),
-            'application'     => $application
+            'application'     => $application,
+            'clients'         => $clients,
         ]);
     }
 

@@ -3,6 +3,8 @@
 namespace Pronto\MobileBundle\Middleware;
 
 use Doctrine\ORM\EntityManagerInterface;
+use League\Bundle\OAuth2ServerBundle\Entity\AccessToken;
+use League\Bundle\OAuth2ServerBundle\Security\Authentication\Token\OAuth2Token;
 use Pronto\MobileBundle\Entity\Application\ApplicationClient;
 use Pronto\MobileBundle\Exceptions\Auth\InvalidAuthorizationHeaderException;
 use Pronto\MobileBundle\Exceptions\Auth\InvalidAuthorizationTokenException;
@@ -10,8 +12,6 @@ use Pronto\MobileBundle\Service\ProntoMobile;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Trikoder\Bundle\OAuth2Bundle\Model\AccessToken;
-use Trikoder\Bundle\OAuth2Bundle\Security\Authentication\Token\OAuth2Token;
 
 class AuthorizationMiddleware extends Middleware
 {
@@ -55,7 +55,7 @@ class AuthorizationMiddleware extends Middleware
         }
 
         $applicationClient = $this->entityManager->getRepository(ApplicationClient::class)->findOneBy([
-            'client' => $accessToken->getClient(),
+            'clientIdentifier' => $accessToken->getClient()->getIdentifier(),
         ]);
 
         if (!$applicationClient instanceof ApplicationClient) {

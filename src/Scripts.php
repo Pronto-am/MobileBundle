@@ -45,10 +45,10 @@ class Scripts
 
     private static function modifyOauthServerConfiguration(string $packagesDir): void
     {
-        $fileName = $packagesDir . '/trikoder_oauth2.yaml';
+        $fileName = $packagesDir . '/league_oauth2_server.yaml';
 
         $oauth = [
-            'trikoder_oauth2' => [
+            'league_oauth2_server' => [
                 'authorization_server' => [
                     'private_key'                               => '%kernel.project_dir%/config/security/oauth/private.key',
                     'private_key_passphrase'                    => null,

@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace Pronto\MobileBundle\Service;
 
 use Doctrine\ORM\EntityManagerInterface;
+use League\Bundle\OAuth2ServerBundle\Entity\AccessToken;
+use League\Bundle\OAuth2ServerBundle\Security\Authentication\Token\OAuth2Token;
 use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\Application\ApplicationClient;
 use Pronto\MobileBundle\Exceptions\Auth\InvalidAuthorizationTokenException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Trikoder\Bundle\OAuth2Bundle\Model\AccessToken;
-use Trikoder\Bundle\OAuth2Bundle\Security\Authentication\Token\OAuth2Token;
 
 class TokenInspectionService
 {
@@ -64,7 +64,7 @@ class TokenInspectionService
         }
 
         $applicationClient = $this->entityManager->getRepository(ApplicationClient::class)->findOneBy([
-            'client' => $accessToken->getClient(),
+            'clientIdentifier' => $accessToken->getClient()->getIdentifier(),
         ]);
 
         if (!$applicationClient instanceof ApplicationClient) {

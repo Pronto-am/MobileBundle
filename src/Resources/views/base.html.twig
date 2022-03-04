@@ -124,7 +124,7 @@
             </ul>
         </div>
 
-        {% if is_granted('ROLE_PREVIOUS_ADMIN') %}
+        {% if is_granted('IS_IMPERSONATOR') %}
             <div id="impersonating">
                 {{ 'default.impersonating'|trans({'%user%': app.user.fullName})|raw }} <a href="{{ path('pronto_mobile_users', {'_switch_user': '_exit'}) }}" class="btn white custom-background text-red"><i class="material-icons left">keyboard_backspace</i>{{ 'default.impersonating.go_back'|trans }}
                 </a> {{ 'default.impersonating.to_your_own_account'|trans }}

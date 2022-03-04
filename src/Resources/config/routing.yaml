@@ -1,5 +1,6 @@
 oauth2:
-  resource: '@TrikoderOAuth2Bundle/Resources/config/routes.xml'
+  resource: '@LeagueOAuth2ServerBundle/Resources/config/routes.php'
+  type: php
   prefix: /oauth/v2
 
 #### LOGIN AND PASSWORD RESET ####
@@ -8,7 +9,7 @@ pronto_mobile_login:
   path: /login
   schemes: [https]
   defaults:
-    _controller: Pronto\MobileBundle\Controller\Web\AuthenticationController:loginAction
+    _controller: Pronto\MobileBundle\Controller\Web\AuthenticationController::loginAction
 
 pronto_mobile_logout:
   path: /logout

@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Exception;
 use Pronto\MobileBundle\Traits\ApiEntityTrait;
 use Ramsey\Uuid\Uuid;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -18,7 +19,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity
  * @ORM\Table(name="app_users")
  */
-class AppUser extends TimestampedEntity implements UserInterface, ApiEntityInterface
+class AppUser extends TimestampedEntity implements UserInterface, ApiEntityInterface, PasswordAuthenticatedUserInterface
 {
     use ApiEntityTrait;
 

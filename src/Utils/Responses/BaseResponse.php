@@ -6,26 +6,25 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class BaseResponse implements ResponseInterface
 {
-    private string $message;
-    private array $data;
+    private ?string $message;
+    private ?array $data;
     private int $status;
     private array $content;
 
     public function getMessage(): ?string
     {
-        return $this->message;
+        return $this->message ?? null;
     }
 
     public function setMessage(?string $message): ResponseInterface
     {
         $this->message = $message;
-
         return $this;
     }
 
     public function getData()
     {
-        return $this->data;
+        return $this->data ?? null;
     }
 
     public function setData(?array $data): ResponseInterface

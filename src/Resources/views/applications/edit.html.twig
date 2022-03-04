@@ -96,7 +96,7 @@
                         </div>
                     {% endif %}
 
-                    {% for client in application.applicationClients %}
+                    {% for client in clients %}
                         <div class="row">
                             <div class="col s12">
                                 <h2 style="margin: 0;"><span>/</span>{{ client.name }}</h2>
@@ -105,11 +105,11 @@
                         <div class="row">
                             <div class="col s12 m6">
                                 <b>{{ 'application.client_id'|trans }}</b><br>
-                                <pre style="padding: 12px;">{{ client.client.identifier }}</pre>
+                                <pre style="padding: 12px;">{{ client.identifier }}</pre>
                             </div>
                             <div class="col s12 m6">
                                 <b>{{ 'application.client_secret'|trans }}</b><br>
-                                <pre style="padding: 12px;">{{ client.client.secret }}</pre>
+                                <pre style="padding: 12px;">{{ client.secret }}</pre>
                             </div>
                         </div>
                     {% endfor %}

@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Pronto\MobileBundle\Entity\Application;
 
-use Doctrine\ORM\Mapping as ORM;
+use League\Bundle\OAuth2ServerBundle\Model\Client;
 use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\HasUuid;
 use Ramsey\Uuid\Uuid;
+use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-use Trikoder\Bundle\OAuth2Bundle\Model\Client;
 
 /**
  * @ORM\Entity()
@@ -23,25 +23,24 @@ class ApplicationClient
      * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Application", inversedBy="applicationClients")
      * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
-    private $application;
+    private Application $application;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Trikoder\Bundle\OAuth2Bundle\Model\Client")
-     * @ORM\JoinColumn(nullable=false, referencedColumnName="identifier", onDelete="CASCADE")
+     * @ORM\Column(type="string")
      */
-    private $client;
+    private string $clientIdentifier;
 
     /**
      * @ORM\Column(type="string")
      * @Assert\NotBlank()
      */
-    private $name;
+    private string $name;
 
     public function __construct(Application $application, Client $client, string $name)
     {
         $this->id = Uuid::uuid4()->toString();
         $this->application = $application;
-        $this->client = $client;
+        $this->clientIdentifier = $client->getIdentifier();
         $this->name = $name;
     }
 
@@ -55,14 +54,14 @@ class ApplicationClient
         $this->application = $application;
     }
 
-    public function getClient(): Client
+    public function getClientIdentifier(): string
     {
-        return $this->client;
+        return $this->clientIdentifier;
     }
 
-    public function setClient(Client $client): ApplicationClient
+    public function setClientIdentifier(string $clientIdentifier): ApplicationClient
     {
-        $this->client = $client;
+        $this->clientIdentifier = $clientIdentifier;
         return $this;
     }
 
