@@ -27,6 +27,9 @@ class TokenInspectionService
         $this->tokenStorage = $tokenStorage;
     }
 
+    /**
+     * @throws InvalidAuthorizationTokenException
+     */
     public function getUser(): ?UserInterface
     {
         $token = $this->tokenStorage->getToken();

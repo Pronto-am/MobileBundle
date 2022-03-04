@@ -7,15 +7,8 @@ class Message
     public const PRIORITY_NORMAL = 'normal';
     public const PRIORITY_HIGH = 'high';
 
-    /**
-     * Message fields
-     * @var array
-     */
-    private $fields;
+    private array $fields;
 
-    /**
-     * Message constructor.
-     */
     public function __construct()
     {
         // Set the default fields
@@ -25,32 +18,16 @@ class Message
         ];
     }
 
-    /**
-     * Set the title of the push notification
-     *
-     * @param $title
-     */
     public function setTitle(string $title): void
     {
         $this->fields['notification']['title'] = $title;
     }
 
-    /**
-     * Set the content of the push notification
-     *
-     * @param $content
-     */
     public function setContent(string $content): void
     {
         $this->fields['notification']['body'] = $content ?? '';
     }
 
-    /**
-     * Add a pair of data to the message
-     *
-     * @param string $key
-     * @param string $value
-     */
     public function addData(string $key, string $value): void
     {
         if (!isset($this->fields['data'])) {
@@ -77,8 +54,6 @@ class Message
      * no guarantee which 4 collapse keys the FCM connection server will keep.
      *
      * For more information see: {@link https://firebase.google.com/docs/cloud-messaging/http-server-ref}
-     *
-     * @param string $key The Collapse Key
      */
     public function setCollapseKey(string $key): void
     {
@@ -99,8 +74,6 @@ class Message
      * app can wake a sleeping device and open a network connection to your server.
      *
      * For more information, see {@link https://firebase.google.com/docs/cloud-messaging/concept-options#setting-the-priority-of-a-message}
-     *
-     * @param string $priority Message Priority
      */
     public function setPriority(string $priority): void
     {
@@ -113,8 +86,6 @@ class Message
      * supported is 4 weeks, and the default value is 4 weeks.
      *
      * For more information, see {@link https://firebase.google.com/docs/cloud-messaging/concept-options#ttl}
-     *
-     * @param int $time Time to live
      */
     public function setTimeToLive(int $time): void
     {
@@ -124,8 +95,6 @@ class Message
     /**
      * Specifies the package name of the application where the registration
      * tokens must match in order to receive the message.
-     *
-     * @param string $packageName Restricted package name
      */
     public function setRestrictedPackageName(string $packageName): void
     {
@@ -135,19 +104,12 @@ class Message
     /**
      * When set to true, allows developers to test a request without actually
      * sending a message. The default value is false.
-     *
-     * @param bool $dryRun Dry Run ?
      */
     public function setDryRun(bool $dryRun = true): void
     {
         $this->fields['dry_run'] = $dryRun;
     }
 
-    /**
-     * Get the body of the message
-     *
-     * @return array
-     */
     public function getFields(): array
     {
         return $this->fields;

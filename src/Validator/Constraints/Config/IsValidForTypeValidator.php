@@ -11,10 +11,7 @@ use Symfony\Component\Validator\Constraint;
 
 class IsValidForTypeValidator extends ConstraintValidator
 {
-    /**
-     * @var bool $skipNullValues
-     */
-    protected $skipNullValues = false;
+    protected bool $skipNullValues = false;
 
     public function requiresInstanceOf(): string
     {
@@ -38,7 +35,7 @@ class IsValidForTypeValidator extends ConstraintValidator
         }
     }
 
-    private function isValid(RemoteConfigType $type, $value = null, $options = null)
+    private function isValid(RemoteConfigType $type, $value = null, $options = null): bool
     {
         if ($type->equals(RemoteConfigType::INTEGER())) {
             $float = (float) $value;

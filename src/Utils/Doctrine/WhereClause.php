@@ -6,21 +6,13 @@ use Doctrine\ORM\QueryBuilder;
 
 class WhereClause implements Clause
 {
-    /** @var string $field */
-    private $field;
+    private string $field;
 
     /** @var mixed $parameter */
     private $parameter;
 
-    /** @var string $type */
-    private $type;
+    private string $type;
 
-    /**
-     * WhereClause constructor.
-     * @param string $field
-     * @param mixed $parameter
-     * @param string $type
-     */
     public function __construct(string $field, $parameter, string $type = '=')
     {
         $this->field = $field;
@@ -28,13 +20,7 @@ class WhereClause implements Clause
         $this->type = $type;
     }
 
-    /**
-     * Add the clause to the query
-     *
-     * @param QueryBuilder $query
-     * @return void
-     */
-    public function addToQuery(&$query): void
+    public function addToQuery(QueryBuilder &$query): void
     {
         $field = explode('.', $this->field);
         $parameter = end($field);

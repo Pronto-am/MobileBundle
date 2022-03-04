@@ -10,43 +10,48 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
 use Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader;
 use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 
 class JsonSerializer
 {
-    /**
-     * @var ClassMetadataFactory classMetadataFactory
-     */
-    private $classMetadataFactory;
+    private ClassMetadataFactory $classMetadataFactory;
 
-    /**
-     * JsonSerializer constructor.
-     * @throws AnnotationException
-     */
     public function __construct()
     {
-        $this->classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
+        $this->classMetadataFactory = new ClassMetadataFactory(
+            new AnnotationLoader(
+                new AnnotationReader()
+            )
+        );
     }
 
-    /**
-     * Serialize an entity
-     *
-     * @param object|array $entity
-     * @param array $normalizers
-     * @param array $groups
-     * @param bool $snakeCasedProperties
-     * @return bool|float|int|string
-     */
-    public function serialize($entity, array $normalizers = [], array $groups = [], bool $snakeCasedProperties = true)
+    public function serialize($entity, array $normalizers = [], array $groups = [], bool $snakeCasedProperties = true): string
     {
-        // conversion of property names to snake_case instead of CamelCase
-        $objectNormalizer = $snakeCasedProperties ? new ObjectNormalizer($this->classMetadataFactory, new CamelCaseToSnakeCaseNameConverter()) : new ObjectNormalizer($this->classMetadataFactory);
+        $callbacks = [];
 
         // Set property callbacks
         if ($entity instanceof ApiEntityInterface) {
-            $objectNormalizer->setCallbacks($entity::getSerializerCallbacks());
+            $callbacks = $entity::getSerializerCallbacks();
         }
+
+        $defaultContext = [
+            AbstractNormalizer::CALLBACKS => $callbacks,
+        ];
+
+        $nameConverter = $snakeCasedProperties ? new CamelCaseToSnakeCaseNameConverter() : null;
+
+        // conversion of property names to snake_case instead of CamelCase
+        $objectNormalizer = new ObjectNormalizer(
+            $this->classMetadataFactory,
+            $nameConverter,
+            null,
+            null,
+            null,
+            null,
+            $defaultContext
+        );
 
         $normalizers[] = $objectNormalizer;
 
@@ -59,12 +64,6 @@ class JsonSerializer
         ]);
     }
 
-    /**
-     * Set the groups of the serialization
-     *
-     * @param object|array $entity
-     * @param array $groups
-     */
     private function setGroups($entity, array &$groups): void
     {
         // Get the full class namespace
@@ -79,12 +78,6 @@ class JsonSerializer
         $groups[] = 'TimestampedWithUserEntity';
     }
 
-    /**
-     * Get the class name by entity or array of entities
-     *
-     * @param $entity
-     * @return array|null
-     */
     private function getClassName($entity): ?array
     {
         if (is_array($entity) && count($entity) > 0) {

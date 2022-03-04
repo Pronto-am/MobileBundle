@@ -4,11 +4,7 @@ namespace Pronto\MobileBundle\Utils\Responses;
 
 class SuccessResponse extends BaseResponse
 {
-    /**
-     * SuccessResponse constructor.
-     * @param array|null $data
-     */
-    public function __construct(array $data = null)
+    public function __construct(?array $data = null)
     {
         $this->setStatus(200);
 
@@ -17,11 +13,6 @@ class SuccessResponse extends BaseResponse
         }
     }
 
-    /**
-     * Create the response object
-     *
-     * @return self
-     */
     public function create(): ResponseInterface
     {
         $response = [];

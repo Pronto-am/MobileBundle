@@ -4,12 +4,6 @@ namespace Pronto\MobileBundle\Utils\Collection\Property;
 
 class DateTimeProperty extends BaseType
 {
-
-    /**
-     * Parse the form data as entry value
-     *
-     * @return array
-     */
     public function parse(): array
     {
         $parsed = [
@@ -18,7 +12,7 @@ class DateTimeProperty extends BaseType
         ];
 
         foreach ($this->fields as $field => $value) {
-            [$identifier, $subfield] = explode('-', $field);
+            [, $subfield] = explode('-', $field);
 
             $parsed[$subfield] = $value;
         }

@@ -13,40 +13,14 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class ProntoMobile
 {
-    /**
-     * @var array $configuration
-     */
-    public $configuration;
-    /**
-     * @var Request $request
-     */
-    private $request;
-    /**
-     * @var string $activeModule
-     */
-    private $activeModule;
-    /**
-     * @var EntityManagerInterface $entityManager
-     */
-    private $entityManager;
-    /**
-     * @var Application\Version $applicationVersion
-     */
-    private $applicationVersion;
-    /**
-     * @var Application $application
-     */
-    private $application;
-    /**
-     * @var Customer $customer
-     */
-    private $customer;
+    public array $configuration;
+    private ?Request $request;
+    private string $activeModule;
+    private EntityManagerInterface $entityManager;
+    private ?Application\Version $applicationVersion;
+    private Application $application;
+    private Customer $customer;
 
-    /**
-     * AppInitiator constructor.
-     * @param RequestStack $requestStack
-     * @param EntityManagerInterface $entityManager
-     */
     public function __construct(RequestStack $requestStack, EntityManagerInterface $entityManager, array $config)
     {
         $this->request = $requestStack->getCurrentRequest();
@@ -57,17 +31,11 @@ class ProntoMobile
         $this->initialize();
     }
 
-    /**
-     * Initialize the Pronto Mobile service with it's properties
-     */
     private function initialize(): void
     {
         $this->setActiveModule();
     }
 
-    /**
-     * Set the active module
-     */
     private function setActiveModule(): void
     {
         // This part of the code doesn't work inside the terminal, so check for existance of the request object
@@ -91,27 +59,16 @@ class ProntoMobile
         }
     }
 
-    /**
-     * Get the active module
-     *
-     * @return string|null
-     */
     public function getActiveModule(): ?string
     {
         return $this->activeModule;
     }
 
-    /**
-     * @return Application\Version|null
-     */
     public function getApplicationVersion(): ?Application\Version
     {
         return $this->applicationVersion;
     }
 
-    /**
-     * @param Application\Version $applicationVersion
-     */
     public function setApplicationVersion(Application\Version $applicationVersion): void
     {
         $this->applicationVersion = $applicationVersion;
@@ -120,44 +77,26 @@ class ProntoMobile
         $this->setApplication($applicationVersion->getApplication());
     }
 
-    /**
-     * @return Application|null
-     */
     public function getApplication(): ?Application
     {
         return $this->application;
     }
 
-    /**
-     * @param Application $application
-     */
     public function setApplication(Application $application): void
     {
         $this->application = $application;
     }
 
-    /**
-     * @return Customer|null
-     */
     public function getCustomer(): ?Customer
     {
         return $this->customer;
     }
 
-    /**
-     * @param Customer $customer
-     */
     public function setCustomer(Customer $customer): void
     {
         $this->customer = $customer;
     }
 
-    /**
-     * Check if a plugin is active
-     *
-     * @param $identifier
-     * @return bool
-     */
     public function pluginIsActive($identifier): bool
     {
         if ($this->applicationVersion === null) {
@@ -176,15 +115,11 @@ class ProntoMobile
     }
 
     /**
-     * Get the plugin configuration
-     *
-     * @param $plugin
-     * @param Application|int|null $application
-     * @return array
+     * @param int|Application|null $application
      * @throws NoResultException
      * @throws NonUniqueResultException
      */
-    public function getPluginConfiguration($plugin, $application = null): array
+    public function getPluginConfiguration(string $plugin, $application = null): array
     {
         $application = $application ?? $this->application;
 
@@ -198,13 +133,6 @@ class ProntoMobile
         return $plugin->getConfig();
     }
 
-    /**
-     * Get the configuration of the bundle
-     *
-     * @param null $node
-     * @param null $default
-     * @return array|string|integer
-     */
     public function getConfiguration($node = null, $default = null)
     {
         // Return a specific node if it exists

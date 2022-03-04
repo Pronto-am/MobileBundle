@@ -11,14 +11,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 trait JsonResponseGenerators
 {
-
-    /**
-     * 200 - OK
-     *
-     * @param mixed $data
-     * @param null $message
-     * @return JsonResponse
-     */
     public function successResponse($data = null, $message = null): JsonResponse
     {
         // Convert json to an array when necessary
@@ -30,24 +22,11 @@ trait JsonResponseGenerators
         return $this->response($response);
     }
 
-    /**
-     * Generate a json response
-     *
-     * @param ResponseInterface $response
-     * @return JsonResponse
-     */
     private function response(ResponseInterface $response): JsonResponse
     {
         return $response->getJsonResponse();
     }
 
-    /**
-     * Return a paginated response
-     *
-     * @param null $data
-     * @param null $pagination
-     * @return JsonResponse
-     */
     public function paginatedResponse($data = null, $pagination = null): JsonResponse
     {
         $data = is_string($data) ? json_decode($data, true) : $data;
@@ -60,10 +39,6 @@ trait JsonResponseGenerators
 
     /**
      * 422 - Query parameters missing
-     *
-     * @param array|string $message
-     * @param string $entity
-     * @return void
      * @throws ApiException
      */
     public function invalidParametersResponse($message, string $entity = ''): void

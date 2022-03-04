@@ -9,17 +9,9 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class JsonTranslator
 {
-    /** @var Request $request */
-    private $request;
+    private ?Request $request;
+    private Version $applicationVersion;
 
-    /** @var Version $applicationVersion */
-    private $applicationVersion;
-
-    /**
-     * JsonTranslator constructor.
-     * @param RequestStack $requestStack
-     * @param EntityManagerInterface $entityManager
-     */
     public function __construct(RequestStack $requestStack, EntityManagerInterface $entityManager)
     {
         $this->request = $requestStack->getCurrentRequest();
@@ -33,12 +25,6 @@ class JsonTranslator
         }
     }
 
-    /**
-     * Get the language to use
-     *
-     * @param array $json
-     * @return mixed
-     */
     public function getLanguage(array $json)
     {
         $language = $this->request->getLocale();
@@ -54,13 +40,6 @@ class JsonTranslator
         }
     }
 
-    /**
-     * Get the translation of a json object
-     *
-     * @param mixed $json
-     * @param null $language
-     * @return mixed
-     */
     public function getTranslation($json, $language = null)
     {
         // Stop if it's not an array of translations

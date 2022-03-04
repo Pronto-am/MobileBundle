@@ -12,8 +12,7 @@ use UnexpectedValueException;
 
 class IsSemanticVersionValidator extends ConstraintValidator
 {
-    /** @var TranslatorInterface $translator */
-    private $translator;
+    private TranslatorInterface $translator;
 
     public function __construct(TranslatorInterface $translator)
     {

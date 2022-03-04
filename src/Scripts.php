@@ -55,13 +55,26 @@ class Scripts
                     'encryption_key'                            => '%env(string:OAUTH2_ENCRYPTION_KEY)%',
                     'access_token_ttl'                          => 'PT1H',
                     'refresh_token_ttl'                         => 'P1M',
-                    'auth_code_ttl'                             => 'PT10M',
                     'require_code_challenge_for_public_clients' => null,
-                    'enable_auth_code_grant'                    => false,
-                    'enable_client_credentials_grant'           => false,
-                    'enable_implicit_grant'                     => false,
-                    'enable_password_grant'                     => false,
-                    'enable_refresh_token_grant'                => false,
+
+                    'grant_types' => [
+                        'authorization_code' => [
+                            'enable'        => false,
+                            'auth_code_ttl' => 'PT10M',
+                        ],
+                        'client_credentials' => [
+                            'enable' => true,
+                        ],
+                        'implicit'           => [
+                            'enable' => false,
+                        ],
+                        'password'           => [
+                            'enable' => true,
+                        ],
+                        'refresh_token'      => [
+                            'enable' => true,
+                        ],
+                    ],
                 ],
 
                 'resource_server' => [
@@ -164,7 +177,8 @@ class Scripts
 
         $twig = [
             'twig' => [
-                'globals' => [
+                'strict_variables' => '%kernel.debug%',
+                'globals'          => [
                     'pronto_mobile'      => '@Pronto\MobileBundle\Service\ProntoMobile',
                     'entry_value_parser' => '@Pronto\MobileBundle\Service\Collection\EntryValueParser',
                     'json_translator'    => '@Pronto\MobileBundle\Service\JsonTranslator',

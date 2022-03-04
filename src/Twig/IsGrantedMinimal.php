@@ -10,29 +10,19 @@ use Twig_Function;
 
 class IsGrantedMinimal extends AbstractExtension
 {
-    /**
-     * @var array $roles
-     */
-    private $roles = [
+    private array $roles = [
         'ROLE_USER', 'ROLE_ADMIN', 'ROLE_SUPER_ADMIN'
     ];
 
-    /**
-     * @var User|null $user
-     */
-    private $user;
+    private ?User $user;
 
-    /**
-     * IsGrantedMinimal constructor.
-     * @param Security $security
-     */
     public function __construct(Security $security)
     {
         $this->user = $security->getUser();
     }
 
     /**
-     * @return array|Twig_Function[]
+     * @return array|TwigFunction[]
      */
     public function getFunctions(): array
     {
@@ -41,10 +31,6 @@ class IsGrantedMinimal extends AbstractExtension
         ];
     }
 
-    /**
-     * @param string $role
-     * @return bool
-     */
     public function isGrantedMinimal(string $role): bool
     {
         if (!in_array($role, $this->roles)) {

@@ -8,9 +8,6 @@ interface Clause
 {
     /**
      * Add the clause to the query
-     *
-     * @param QueryBuilder $query
-     * @return void
      */
-    public function addToQuery(&$query): void;
+    public function addToQuery(QueryBuilder &$query): void;
 }

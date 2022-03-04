@@ -8,55 +8,27 @@ use Psr\Http\Message\ResponseInterface;
 
 class BaseClient implements ClientInterface
 {
+    private string $baseUrl = '';
+    private array $headers = [];
+    private array $query = [];
+    private array $body = [];
 
-    /** @var string Base url of the API */
-    private $baseUrl = '';
-
-    /** @var array $headers */
-    private $headers = [];
-
-    /** @var array $query */
-    private $query = [];
-
-    /** @var array $body */
-    private $body = [];
-
-    /**
-     * Set the base url
-     *
-     * @param string $baseUrl
-     */
     public function setBaseUrl(string $baseUrl): void
     {
         $this->baseUrl = $baseUrl;
     }
 
-    /**
-     * Add parameters to the query
-     *
-     * @param array $parameters
-     */
     public function addQueryParameter(array $parameters = []): void
     {
         $this->query = array_merge($this->query, $parameters);
     }
 
-    /**
-     * Set the json body for the request
-     *
-     * @param array $body
-     */
     public function setBody(array $body = []): void
     {
         $this->body = $body;
     }
 
     /**
-     * Send the request
-     *
-     * @param string $endpoint
-     * @param string $method
-     * @return mixed
      * @throws GuzzleException
      */
     public function send(string $endpoint = '', string $method = 'GET')
@@ -79,11 +51,6 @@ class BaseClient implements ClientInterface
         return $this->parseResponse($response);
     }
 
-    /**
-     * Generate the config for the request
-     *
-     * @return array
-     */
     public function getConfig(): array
     {
         return [
@@ -92,31 +59,16 @@ class BaseClient implements ClientInterface
         ];
     }
 
-    /**
-     * Get the query for the request
-     *
-     * @return array
-     */
     public function getQuery(): array
     {
         return $this->query;
     }
 
-    /**
-     * Set the query for the request
-     *
-     * @param array $query
-     */
     public function setQuery(array $query = []): void
     {
         $this->query = $query;
     }
 
-    /**
-     * Generate the headers for the request
-     *
-     * @return array
-     */
     public function getHeaders(): array
     {
         // Always send request as json
@@ -125,22 +77,11 @@ class BaseClient implements ClientInterface
         ], $this->headers);
     }
 
-    /**
-     * Set the headers for the request
-     *
-     * @param array $headers
-     */
     public function setHeaders(array $headers = []): void
     {
         $this->headers = $headers;
     }
 
-    /**
-     * Parse the response
-     *
-     * @param ResponseInterface $response
-     * @return mixed
-     */
     public function parseResponse(ResponseInterface $response)
     {
         return $response;

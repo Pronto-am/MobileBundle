@@ -6,28 +6,14 @@ use Psr\Http\Message\ResponseInterface;
 
 class Endpoint
 {
+    private static array $instance = [];
+    private ClientInterface $client;
 
-    /** @var array $instance Array of instances */
-    private static $instance = [];
-    /** @var ClientInterface $client */
-    private $client;
-
-    /**
-     * Endpoint constructor.
-     *
-     * @param ClientInterface $client
-     */
     private function __construct(ClientInterface $client)
     {
         $this->client = $client;
     }
 
-    /**
-     * Get an endpoint instance
-     *
-     * @param ClientInterface $client
-     * @return self
-     */
     public static function getInstance(ClientInterface $client): self
     {
         $class = static::class;
@@ -40,10 +26,6 @@ class Endpoint
     }
 
     /**
-     * Perform GET request
-     *
-     * @param $endpoint
-     * @param array $query
      * @return mixed|ResponseInterface
      */
     public function requestGet(string $endpoint, array $query = [])
@@ -54,11 +36,6 @@ class Endpoint
     }
 
     /**
-     * Perform POST request
-     *
-     * @param $endpoint
-     * @param array $body
-     * @param array $query
      * @return mixed|ResponseInterface
      */
     public function requestPost(string $endpoint, array $body, array $query = [])
@@ -71,10 +48,6 @@ class Endpoint
     }
 
     /**
-     * Perform PUT request
-     *
-     * @param $endpoint
-     * @param array $body
      * @return mixed|ResponseInterface
      */
     public function requestPut(string $endpoint, array $body)
@@ -85,10 +58,6 @@ class Endpoint
     }
 
     /**
-     * Perform DELETE request
-     *
-     * @param $endpoint
-     * @param array $body
      * @return mixed|ResponseInterface
      */
     public function requestDelete(string $endpoint, array $body = [])
@@ -100,14 +69,6 @@ class Endpoint
         return $this->client->send($endpoint, $this->client::METHOD_DELETE);
     }
 
-    /**
-     * Perform a customizable request
-     *
-     * @param string $endpoint
-     * @param string $method
-     * @param array $query
-     * @param array $body
-     */
     public function request(string $endpoint, string $method = 'GET', array $query = [], array $body = []): void
     {
         // Provide parameters and body when they are set

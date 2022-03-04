@@ -6,9 +6,6 @@ use Exception;
 
 class File
 {
-    /**
-     * @param string $directory
-     */
     public static function rmDir(string $directory)
     {
         $files = glob($directory . '*', GLOB_MARK);

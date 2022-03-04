@@ -6,18 +6,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 class RequestBodyValidator
 {
-    /**
-     * @var array Missing
-     */
-    private $missing = [];
+    private array $missing = [];
 
-    /**
-     * Validate the existence of the required keys in the JSON body
-     *
-     * @param Request $request
-     * @param array $required
-     * @return bool
-     */
     public function isValid(Request $request, array $required): bool
     {
         $jsonKeys = array_keys($request->request->all());
@@ -28,11 +18,6 @@ class RequestBodyValidator
         return empty($this->missing);
     }
 
-    /**
-     * Get the validation message
-     *
-     * @return string
-     */
     public function getMessage(): string
     {
         if (empty($this->missing)) {

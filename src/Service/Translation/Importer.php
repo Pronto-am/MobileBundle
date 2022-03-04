@@ -2,8 +2,8 @@
 
 namespace Pronto\MobileBundle\Service\Translation;
 
-use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ObjectRepository;
 use Exception;
 use Pronto\MobileBundle\DTO\Translation\UploadDTO;
 use Pronto\MobileBundle\Entity\Translation;
@@ -19,41 +19,13 @@ class Importer
     public const FILE_TYPE_CSV = 'csv';
     public const FILE_TYPE_PLAIN_TEXT = 'plain_text';
 
-    /**
-     * @var EntityManagerInterface $entityManager
-     */
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
+    private array $availableLanguages;
+    private ProntoMobile $prontoMobile;
+    private ObjectRepository $translationKeyRepository;
+    private ObjectRepository $translationRepository;
+    private ?string $fileType;
 
-    /**
-     * @var array $availableLanguages
-     */
-    private $availableLanguages;
-
-    /**
-     * @var ProntoMobile $prontoMobile
-     */
-    private $prontoMobile;
-
-    /**
-     * @var ObjectRepository $translationKeyRepository
-     */
-    private $translationKeyRepository;
-
-    /**
-     * @var ObjectRepository $translationRepository
-     */
-    private $translationRepository;
-
-    /**
-     * @var string|null $fileType
-     */
-    private $fileType;
-
-    /**
-     * Importer constructor.
-     * @param EntityManagerInterface $entityManager
-     * @param ContainerInterface $container
-     */
     public function __construct(EntityManagerInterface $entityManager, ContainerInterface $container)
     {
         $this->entityManager = $entityManager;
@@ -68,11 +40,6 @@ class Importer
         $this->translationRepository = $this->entityManager->getRepository(Translation::class);
     }
 
-    /**
-     * @param UploadedFile $file
-     * @param UploadDTO $data
-     * @return bool
-     */
     public function import(UploadedFile $file, UploadDTO $data): bool
     {
         $contents = file_get_contents($file->getRealPath());
@@ -103,10 +70,6 @@ class Importer
         return true;
     }
 
-    /**
-     * @param string $string
-     * @return bool
-     */
     private function isXml(string $string): bool
     {
         $xml = @simplexml_load_string($string);
@@ -114,13 +77,6 @@ class Importer
         return $xml !== false;
     }
 
-    /**
-     * @param string $contents
-     * @param string $language
-     * @param string $type
-     * @param bool $android
-     * @param bool $ios
-     */
     private function fromXml(string $contents, string $language, string $type = 'app', bool $android = true, bool $ios = true): void
     {
         $parser = xml_parser_create();
@@ -144,14 +100,6 @@ class Importer
         }
     }
 
-    /**
-     * @param string $identifier
-     * @param string $type
-     * @param bool $android
-     * @param bool $ios
-     * @param string $description
-     * @return TranslationKey
-     */
     private function saveTranslationKey(string $identifier, string $type, bool $android = true, bool $ios = true, string $description = null): TranslationKey
     {
         $application = $this->prontoMobile->getApplication();
@@ -191,13 +139,7 @@ class Importer
         return $translationKey;
     }
 
-    /**
-     * @param TranslationKey $key
-     * @param string $language
-     * @param null|string $text
-     * @return Translation
-     */
-    private function saveTranslation(TranslationKey $key, string $language, string $text = null): Translation
+    private function saveTranslation(TranslationKey $key, string $language, string $text = null): void
     {
         $translation = $this->translationRepository->findOneBy([
                 'translationKey' => $key,
@@ -209,14 +151,8 @@ class Importer
         $translation->setLanguage($language);
 
         $this->entityManager->persist($translation);
-
-        return $translation;
     }
 
-    /**
-     * @param string $string
-     * @return bool
-     */
     private function isJson(string $string): bool
     {
         json_decode($string);
@@ -224,9 +160,6 @@ class Importer
         return json_last_error() === JSON_ERROR_NONE;
     }
 
-    /**
-     * @param string $contents
-     */
     private function fromJson(string $contents): void
     {
         try {
@@ -249,11 +182,6 @@ class Importer
         }
     }
 
-    /**
-     * @param array $translations
-     * @param string $language
-     * @return array
-     */
     private function filterTranslationsByLanguage(array $translations, string $language): array
     {
         $translated = array_filter($translations, function ($translation) use ($language) {
@@ -272,18 +200,11 @@ class Importer
         return $translated;
     }
 
-    /**
-     * @param UploadedFile $file
-     * @return bool
-     */
     private function isCsv(UploadedFile $file): bool
     {
         return $file->getClientOriginalExtension() === 'csv';
     }
 
-    /**
-     * @param UploadedFile $file
-     */
     private function fromCsv(UploadedFile $file): void
     {
         $first = true;
@@ -310,7 +231,7 @@ class Importer
                 } else {
                     [$identifier, $type, $description, $android, $ios] = $data;
 
-                    $translationKey = $this->saveTranslationKey($identifier, $type, (int) $android === 1, (int) $ios === 1, $description);
+                    $translationKey = $this->saveTranslationKey($identifier, $type, (int)$android === 1, (int)$ios === 1, $description);
 
                     foreach ($languages as $index => $code) {
                         $this->saveTranslation($translationKey, $code, $data[$index]);
@@ -327,9 +248,6 @@ class Importer
         }
     }
 
-    /**
-     * @return array
-     */
     private function getCsvHeaders(): array
     {
         $availableLanguages = $this->prontoMobile->getApplication()->getAvailableLanguages();
@@ -343,13 +261,6 @@ class Importer
         return $headers;
     }
 
-    /**
-     * @param UploadedFile $file
-     * @param string $language
-     * @param string $type
-     * @param bool $android
-     * @param bool $ios
-     */
     private function fromPlainText(UploadedFile $file, string $language, string $type = 'app', bool $android = true, bool $ios = true): void
     {
         $handle = $file->openFile();

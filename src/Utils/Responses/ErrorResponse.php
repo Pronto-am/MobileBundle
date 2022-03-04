@@ -25,24 +25,14 @@ class ErrorResponse extends BaseResponse
         AppVersion::class       => 15
     ];
 
-    /** @var string $entity */
-    private $entity;
+    private ?string $entity;
+    private ?int $errorCode;
 
-    /** @var int $errorCode */
-    private $errorCode;
-
-    /**
-     * ErrorResponse constructor.
-     * @param array $error
-     */
     public function __construct(array $error)
     {
         $this->parseError($error);
     }
 
-    /**
-     * @param array $error
-     */
     private function parseError(array $error): void
     {
         if (count($error) === 3) {
@@ -57,18 +47,11 @@ class ErrorResponse extends BaseResponse
         $this->setMessage($message);
     }
 
-    /**
-     * @param int $errorCode
-     */
     private function setErrorCode(int $errorCode): void
     {
         $this->errorCode = $errorCode;
     }
 
-    /**
-     * @param string $entity
-     * @return ErrorResponse
-     */
     public function forEntity(string $entity): self
     {
         if ($entity !== '') {
@@ -78,11 +61,6 @@ class ErrorResponse extends BaseResponse
         return $this;
     }
 
-    /**
-     * Create the error message body
-     *
-     * @return self
-     */
     public function create(): ResponseInterface
     {
         // Parse the entities name into the message if it's set
@@ -113,9 +91,6 @@ class ErrorResponse extends BaseResponse
         return $this;
     }
 
-    /**
-     * @return int
-     */
     private function getErrorCode(): int
     {
         // Get the prefix
@@ -127,11 +102,6 @@ class ErrorResponse extends BaseResponse
         return $prefix . $errorCode;
     }
 
-    /**
-     * Get the error code prefixes for specific entities
-     *
-     * @return int
-     */
     private function getErrorCodePrefix(): int
     {
         if ($this->entity !== null && isset(self::ERROR_CODE_PREFIXES[$this->entity])) {

@@ -6,25 +6,14 @@ use Doctrine\ORM\QueryBuilder;
 
 class WhereNotNullClause implements Clause
 {
-    /** @var string $field */
-    private $field;
+    private string $field;
 
-    /**
-     * WhereNotNullClause constructor.
-     * @param string $field
-     */
     public function __construct(string $field)
     {
         $this->field = $field;
     }
 
-    /**
-     * Add the clause to the query
-     *
-     * @param QueryBuilder $query
-     * @return void
-     */
-    public function addToQuery(&$query): void
+    public function addToQuery(QueryBuilder &$query): void
     {
         $query->andWhere($this->field . ' IS NOT NULL');
     }

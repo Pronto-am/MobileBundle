@@ -15,15 +15,8 @@ use UnexpectedValueException;
 
 class BlankForFileTypeValidator extends ConstraintValidator
 {
-    /**
-     * @var TranslatorInterface $translator
-     */
-    private $translator;
-
-    /**
-     * @var Request $request
-     */
-    private $request;
+    private TranslatorInterface $translator;
+    private ?Request $request;
 
     public function __construct(TranslatorInterface $translator, RequestStack $requestStack)
     {

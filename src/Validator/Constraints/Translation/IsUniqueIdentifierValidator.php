@@ -16,25 +16,10 @@ use UnexpectedValueException;
 
 class IsUniqueIdentifierValidator extends ConstraintValidator
 {
-    /**
-     * @var EntityManagerInterface $entityManager
-     */
-    private $entityManager;
-
-    /**
-     * @var ProntoMobile $prontoMobile
-     */
-    private $prontoMobile;
-
-    /**
-     * @var TranslatorInterface $translator
-     */
-    private $translator;
-
-    /**
-     * @var Request $request
-     */
-    private $request;
+    private EntityManagerInterface $entityManager;
+    private ProntoMobile $prontoMobile;
+    private TranslatorInterface $translator;
+    private ?Request $request;
 
     public function __construct(
         EntityManagerInterface $entityManager,

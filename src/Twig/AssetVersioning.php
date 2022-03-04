@@ -5,19 +5,11 @@ namespace Pronto\MobileBundle\Twig;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
-use Twig_Function;
 
 class AssetVersioning extends AbstractExtension
 {
-    /**
-     * @var array $manifest
-     */
-    private $manifest = [];
+    private array $manifest = [];
 
-    /**
-     * AssetVersioning constructor.
-     * @param KernelInterface $kernel
-     */
     public function __construct(KernelInterface $kernel)
     {
         // Try to parse the mix manifest
@@ -30,7 +22,7 @@ class AssetVersioning extends AbstractExtension
     }
 
     /**
-     * @return array|Twig_Function[]
+     * @return array|TwigFunction[]
      */
     public function getFunctions(): array
     {
@@ -39,12 +31,6 @@ class AssetVersioning extends AbstractExtension
         ];
     }
 
-    /**
-     * Get the versioned filename
-     *
-     * @param $fileName
-     * @return string
-     */
     public function getFile(string $fileName): string
     {
         return '/bundles/prontomobile' . ($this->manifest[$fileName] ?? $fileName);

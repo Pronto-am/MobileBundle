@@ -6,25 +6,14 @@ use Doctrine\ORM\QueryBuilder;
 
 class SelectClause implements Clause
 {
-    /** @var array $columns */
-    private $columns;
+    private array $columns;
 
-    /**
-     * SelectClause constructor.
-     * @param array $columns
-     */
     public function __construct(array $columns)
     {
         $this->columns = $columns;
     }
 
-    /**
-     * Add the clause to the query
-     *
-     * @param QueryBuilder $query
-     * @return void
-     */
-    public function addToQuery(&$query): void
+    public function addToQuery(QueryBuilder &$query): void
     {
         $query->select(implode(', ', $this->columns));
     }

@@ -13,9 +13,9 @@ use Pronto\MobileBundle\Utils\Firebase\CloudMessaging\Response;
 
 class Sender
 {
-    private Client $client;
+    private ?Client $client;
     private array $devices = [];
-    private Response $response;
+    private ?Response $response;
     private EntityManagerInterface $entityManager;
     private PushNotification $notification;
     private FirebaseStorage $firebaseStorage;
@@ -31,10 +31,10 @@ class Sender
         try {
             $this->client = new Client($firebaseServerKey);
         } catch (Exception $e) {
-            $this->client = false;
+            $this->client = null;
         }
 
-        return $this->client !== false;
+        return $this->client !== null;
     }
 
     public function setNotification(PushNotification $notification): void
@@ -75,14 +75,9 @@ class Sender
      */
     public function send(): void
     {
-        try {
-            $this->response = $this->client->sendNotification();
-        } catch (Exception $exception) {
-            // dump($exception); die;
-        }
+        $this->response = $this->client->sendNotification();
 
         $this->handleErrors();
-
         $this->saveStatistics();
     }
 

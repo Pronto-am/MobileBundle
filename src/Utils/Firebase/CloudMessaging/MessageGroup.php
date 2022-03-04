@@ -7,24 +7,12 @@ use Pronto\MobileBundle\Service\PushNotification\FirebaseStorage;
 
 class MessageGroup
 {
-
-    /** @var PushNotification $notification */
-    private $notification;
-
-    /** @var Message $message */
-    private $message;
-
-    /** @var string|null $language */
-    private $language;
-
-    /** @var string $defaultLanguage */
-    private $defaultLanguage;
-
-    /** @var array $tokens */
-    private $tokens;
-
-    /** @var FirebaseStorage */
-    private $firebaseStorage;
+    private PushNotification $notification;
+    private Message $message;
+    private ?string $language;
+    private string $defaultLanguage;
+    private array $tokens;
+    private FirebaseStorage $firebaseStorage;
 
     public function __construct(PushNotification $notification, FirebaseStorage $firebaseStorage, array $devices, string $language = null)
     {
@@ -37,17 +25,11 @@ class MessageGroup
         $this->setMessage();
     }
 
-    /**
-     * Set the default language when the language is missing
-     */
     private function setDefaultLanguage(): void
     {
         $this->defaultLanguage = $this->notification->getApplication()->getDefaultLanguage();
     }
 
-    /**
-     * Set the translated message
-     */
     private function setMessage(): void
     {
         $this->message = new Message();
@@ -74,12 +56,6 @@ class MessageGroup
         $this->message->addData('android_channel_id', 'CHANNEL_ID_DEFAULT');
     }
 
-    /**
-     * Get the translation of a property
-     *
-     * @param array $json
-     * @return string
-     */
     private function getTranslation(array $json): string
     {
         if ($this->language !== null && isset($json[$this->language]) && !empty($json[$this->language])) {
@@ -91,17 +67,11 @@ class MessageGroup
         }
     }
 
-    /**
-     * @return Message
-     */
     public function getMessage(): Message
     {
         return $this->message;
     }
 
-    /**
-     * @return array
-     */
     public function getTokens(): array
     {
         return $this->tokens;

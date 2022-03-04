@@ -15,31 +15,15 @@ class FileManager
     public const APP_VERSIONS_DIRECTORY = '/customers/app_versions';
     public const IMAGES_DIRECTORY = '/customers/images';
 
-    /**
-     * @var string $uploadsDir
-     */
-    private $uploadsDir;
+    private string $uploadsDir;
+    private Filesystem $fileSystem;
 
-    /**
-     * @var Filesystem $fileSystem
-     */
-    private $fileSystem;
-
-    /**
-     * FileManager constructor.
-     * @param ContainerInterface $container
-     * @param Filesystem $filesystem
-     */
     public function __construct(ContainerInterface $container, Filesystem $filesystem)
     {
         $this->fileSystem = $filesystem;
         $this->uploadsDir = $container->get(ProntoMobile::class)->getConfiguration('uploads_folder', 'uploads');
     }
 
-    /**
-     * @param string $file
-     * @return null|File
-     */
     public function get(string $file): ?File
     {
         try {
@@ -49,13 +33,6 @@ class FileManager
         }
     }
 
-    /**
-     * Upload the file
-     *
-     * @param string $directory
-     * @param UploadedFile $file
-     * @return string
-     */
     public function upload(string $directory, UploadedFile $file): string
     {
         $fileName = md5(uniqid('', true)) . '.' . $file->guessExtension();
@@ -64,10 +41,6 @@ class FileManager
         return $fileName;
     }
 
-    /**
-     * @param string $fileName
-     * @return bool
-     */
     public function remove(string $fileName): bool
     {
         try {

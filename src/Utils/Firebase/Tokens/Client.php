@@ -10,10 +10,6 @@ use stdClass;
 
 class Client extends BaseClient
 {
-    /**
-     * Client constructor.
-     * @param string $serverKey
-     */
     public function __construct(string $serverKey)
     {
         // Set the base url
@@ -29,12 +25,6 @@ class Client extends BaseClient
         }
     }
 
-    /**
-     * Parse the response
-     *
-     * @param ResponseInterface $response
-     * @return ResponseInterface|stdClass
-     */
     public function parseResponse(ResponseInterface $response)
     {
         try {

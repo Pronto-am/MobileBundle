@@ -2,20 +2,16 @@
 
 namespace Pronto\MobileBundle\Utils\Firebase\CloudMessaging;
 
+use GuzzleHttp\Exception\GuzzleException;
 use InvalidArgumentException;
 use Pronto\MobileBundle\Utils\Guzzle\BaseClient;
 use RuntimeException;
 
 class Client extends BaseClient
 {
-    /**
-     * @var array $messageGroups Array of message groups
-     */
-    private $messageGroups;
+    private array $messageGroups;
 
     /**
-     * Constructor
-     * @param string $serverKey FCM server key
      * @throws InvalidArgumentException
      */
     public function __construct(string $serverKey)
@@ -34,9 +30,7 @@ class Client extends BaseClient
     }
 
     /**
-     * Check if the server key is valid
-     *
-     * @return bool
+     * @throws GuzzleException
      */
     private function isServerKeyValid(): bool
     {
@@ -45,22 +39,15 @@ class Client extends BaseClient
         return $response->getStatusCode() !== 403;
     }
 
-    /**
-     * Set the groups the notification should be send to
-     *
-     * @param array $messageGroups
-     */
     public function setMessageGroups(array $messageGroups): void
     {
         $this->messageGroups = $messageGroups;
     }
 
     /**
-     * Send message to the tokens
-     *
-     * @return Response A response object regarding the send operation.
      * @throws RuntimeException
      * @throws InvalidArgumentException
+     * @throws GuzzleException
      */
     public function sendNotification(): Response
     {

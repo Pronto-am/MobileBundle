@@ -10,7 +10,7 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class ProntoMobileBundle extends Bundle
 {
-    public function getContainerExtension()
+    public function getContainerExtension(): ProntoMobileExtension
     {
         return new ProntoMobileExtension();
     }

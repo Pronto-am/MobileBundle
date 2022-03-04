@@ -6,26 +6,14 @@ use Doctrine\ORM\QueryBuilder;
 
 class GroupClause implements Clause
 {
+    private string $column;
 
-    /** @var string $columns */
-    private $column;
-
-    /**
-     * GroupClause constructor.
-     * @param $column
-     */
     public function __construct(string $column)
     {
         $this->column = $column;
     }
 
-    /**
-     * Add the clause to the query
-     *
-     * @param QueryBuilder $query
-     * @return void
-     */
-    public function addToQuery(&$query): void
+    public function addToQuery(QueryBuilder &$query): void
     {
         $query->groupBy($this->column);
     }

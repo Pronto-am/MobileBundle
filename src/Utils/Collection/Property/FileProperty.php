@@ -6,12 +6,6 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class FileProperty extends BaseType
 {
-
-    /**
-     * Parse the form data as entry value
-     *
-     * @return array
-     */
     public function parse(): array
     {
         // Set the upload directory
@@ -42,13 +36,6 @@ class FileProperty extends BaseType
         ];
     }
 
-    /**
-     * Upload the file
-     *
-     * @param $directory
-     * @param UploadedFile $file
-     * @return string
-     */
     private function uploadFile($directory, UploadedFile $file): string
     {
         $fileName = md5(uniqid('', true)) . '.' . $file->guessExtension();

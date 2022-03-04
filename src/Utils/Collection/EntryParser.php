@@ -15,25 +15,11 @@ use Symfony\Component\HttpFoundation\Request;
 
 class EntryParser
 {
-    /**
-     * @var array $entry
-     */
-    private $entry = [];
+    private array $entry = [];
+    private array $formData;
+    private FileBag $files;
 
-    /**
-     * @var array $formData
-     */
-    private $formData;
-
-    /**
-     * @var FileBag $files
-     */
-    private $files;
-
-    /**
-     * @var array $classes Mapping for the property types
-     */
-    private $classes = [
+    private array $classes = [
         'boolean'     => BooleanProperty::class,
         'coordinates' => CoordinatesProperty::class,
         'date'        => DateProperty::class,
@@ -41,11 +27,6 @@ class EntryParser
         'file'        => FileProperty::class
     ];
 
-    /**
-     * EntryParser constructor.
-     *
-     * @param Request $request
-     */
     public function __construct(Request $request)
     {
         $this->formData = $request->request->all();
@@ -57,19 +38,11 @@ class EntryParser
         $this->files = $request->files;
     }
 
-    /**
-     * @param array $initial
-     */
     public function setInitialData(array $initial): void
     {
         $this->entry = $initial;
     }
 
-    /**
-     * Add property values to the entry
-     *
-     * @param Property $property
-     */
     public function addProperty(Property $property): void
     {
         // Get the right property transformer
@@ -78,12 +51,6 @@ class EntryParser
         $this->entry = array_merge($this->entry, $type->parse());
     }
 
-    /**
-     * Get the transformer by property type
-     *
-     * @param Property $property
-     * @return PropertyType
-     */
     private function getPropertyTransformer(Property $property): PropertyType
     {
         $type = $property->getType()->getType();
@@ -101,11 +68,6 @@ class EntryParser
         return new BaseType($this->formData, $property);
     }
 
-    /**
-     * Get the entry object as array
-     *
-     * @return array
-     */
     public function getEntryObject(): array
     {
         return $this->entry;

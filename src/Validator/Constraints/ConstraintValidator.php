@@ -18,35 +18,12 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 abstract class ConstraintValidator extends BaseConstraintValidator
 {
-    /**
-     * @var EntityManagerInterface $entityManager
-     */
-    protected $entityManager;
-
-    /**
-     * @var ProntoMobile $prontoMobile
-     */
-    protected $prontoMobile;
-
-    /**
-     * @var TranslatorInterface $translator
-     */
-    protected $translator;
-
-    /**
-     * @var Request $request
-     */
-    protected $request;
-
-    /**
-     * @var Constraint $constraint
-     */
-    protected $constraint;
-
-    /**
-     * @var bool $skipNullValues
-     */
-    protected $skipNullValues = true;
+    protected EntityManagerInterface $entityManager;
+    protected ProntoMobile $prontoMobile;
+    protected TranslatorInterface $translator;
+    protected ?Request $request;
+    protected Constraint $constraint;
+    protected bool $skipNullValues = true;
 
     public function __construct(
         EntityManagerInterface $entityManager,

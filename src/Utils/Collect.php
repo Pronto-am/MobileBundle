@@ -6,12 +6,6 @@ use function is_array;
 
 class Collect
 {
-    /**
-     * Sort an array alphabetically
-     *
-     * @param array $collection
-     * @param string $attributeName
-     */
     public static function sortAlphabetically(array &$collection, string $attributeName = null): void
     {
         usort($collection, function ($previous, $next) use ($attributeName) {
@@ -28,13 +22,6 @@ class Collect
         });
     }
 
-    /**
-     * Exclude keys from an array
-     *
-     * @param array $collection
-     * @param array $keys
-     * @return array
-     */
     public static function excludeKeys(array $collection, array $keys = []): array
     {
         return array_filter($collection, function ($key) use ($keys) {
@@ -42,14 +29,6 @@ class Collect
         }, ARRAY_FILTER_USE_KEY);
     }
 
-    /**
-     * Get array value by inner value
-     *
-     * @param array $collection
-     * @param string $key
-     * @param $value
-     * @return mixed|null
-     */
     public static function getSingleObjectByInnerProperty(array $collection, string $key, $value)
     {
         $result = array_filter($collection, function ($object) use ($key, $value) {
@@ -66,13 +45,6 @@ class Collect
         return $result[0] ?? null;
     }
 
-    /**
-     * Change the key of an array to one of it's inner properties
-     *
-     * @param array $array
-     * @param string $key
-     * @return array
-     */
     public static function keyBy(array $array, string $key): array
     {
         return array_reduce($array, function ($result, $object) use ($key) {

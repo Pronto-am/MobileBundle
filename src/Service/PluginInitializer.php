@@ -9,24 +9,13 @@ use Pronto\MobileBundle\Entity\Plugin;
 
 class PluginInitializer
 {
-    /**
-     * @var EntityManagerInterface $entityManager
-     */
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
-    /**
-     * PluginInitializer constructor.
-     * @param EntityManagerInterface $entityManager
-     */
     public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
     }
 
-    /**
-     * @param Application $application
-     * @param Plugin $plugin
-     */
     public function initialize(Application $application, Plugin $plugin): void
     {
         $applicationPlugin = new ApplicationPlugin($application, $plugin);

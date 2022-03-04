@@ -11,10 +11,7 @@ use Pronto\MobileBundle\Validator\Constraints\TranslatableConstraint;
  */
 class BlankForFileType extends TranslatableConstraint
 {
-    /**
-     * @var string $extension
-     */
-    public $extension;
+    public string $extension;
 
     public function getTranslationKey(): string
     {

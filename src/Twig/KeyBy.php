@@ -10,9 +10,6 @@ use Twig\TwigFilter;
 
 class KeyBy extends AbstractExtension
 {
-    /**
-     * @return array
-     */
     public function getFilters(): array
     {
         return [
@@ -20,11 +17,6 @@ class KeyBy extends AbstractExtension
         ];
     }
 
-    /**
-     * @param array|PersistentCollection|ArrayCollection $array
-     * @param string $key
-     * @return array
-     */
     public function keyBy($array, string $key): array
     {
         if ($array instanceof PersistentCollection || $array instanceof ArrayCollection) {

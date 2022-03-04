@@ -7,38 +7,16 @@ use Symfony\Component\HttpFoundation\FileBag;
 
 class BaseType implements PropertyType
 {
-    /**
-     * @var array $fields
-     */
-    public $fields;
+    public array $fields;
+    public Property $property;
+    public ?FileBag $fileBag;
+    public array $identifier;
 
     /**
-     * @var Property $property
-     */
-    public $property;
-
-    /**
-     * @var array $fileBag
-     */
-    public $fileBag;
-
-    /**
-     * @var array $parsed
+     * @var mixed $parsed
      */
     public $parsed;
 
-    /**
-     * @var array $identifier
-     */
-    public $identifier;
-
-    /**
-     * PropertyType constructor.
-     *
-     * @param array $formData
-     * @param Property $property
-     * @param FileBag|null $fileBag
-     */
     public function __construct(array $formData, Property $property, FileBag $fileBag = null)
     {
         $this->property = $property;
@@ -50,12 +28,6 @@ class BaseType implements PropertyType
         }, ARRAY_FILTER_USE_KEY);
     }
 
-    /**
-     * Check if a field belongs to a property
-     *
-     * @param $field
-     * @return bool
-     */
     public function belongsToProperty($field): bool
     {
         [, $identifier] = $this->parseIdentifier($field);
@@ -63,12 +35,6 @@ class BaseType implements PropertyType
         return $identifier === $this->getIdentifier();
     }
 
-    /**
-     * Parse the language and identifier from the field name
-     *
-     * @param $field
-     * @return array
-     */
     public function parseIdentifier($field): array
     {
         if (strpos($field, ':') !== false) {
@@ -80,21 +46,11 @@ class BaseType implements PropertyType
         return [$language ?? null, $identifier[0]];
     }
 
-    /**
-     * Get the identifier of the property
-     *
-     * @return string
-     */
     public function getIdentifier(): string
     {
         return $this->property->getIdentifier();
     }
 
-    /**
-     * Parse the form data as entry value
-     *
-     * @return array
-     */
     public function parse(): array
     {
         // Define the structure for the parsed object
@@ -114,11 +70,6 @@ class BaseType implements PropertyType
         ];
     }
 
-    /**
-     * Check if a property is translatable
-     *
-     * @return boolean
-     */
     public function isTranslatable(): bool
     {
         return $this->property->isTranslatable();

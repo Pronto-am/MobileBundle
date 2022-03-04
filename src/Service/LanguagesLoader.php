@@ -3,12 +3,12 @@
 namespace Pronto\MobileBundle\Service;
 
 use Exception;
+use stdClass;
 use Symfony\Component\HttpKernel\Config\FileLocator;
 
 class LanguagesLoader
 {
-    /** @var array $languages */
-    private $languages;
+    private array $languages;
 
     public function __construct(FileLocator $fileLocator)
     {
@@ -27,7 +27,7 @@ class LanguagesLoader
         return $this->languages;
     }
 
-    public function getByCode(string $code)
+    public function getByCode(string $code): ?stdClass
     {
         foreach ($this->languages as $language) {
             if ($language->code === strtolower($code)) {

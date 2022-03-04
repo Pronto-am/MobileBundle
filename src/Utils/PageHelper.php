@@ -18,84 +18,29 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class PageHelper
 {
-    /**
-     * @var Request $request
-     */
-    private $request;
+    private Request $request;
+    private EntityRepository $repository;
+    private array $clauses = [];
+    private string $sortField;
+    private string $sortOrder;
+    private int $perPage;
+    private int $offset;
+    private int $currentPage;
+    private int $totalPages;
+    private int $totalRecords;
+    private ?array $list;
+    private ?string $query;
+    private string $countField;
 
-    /**
-     * @var EntityRepository $repository
-     */
-    private $repository;
-
-    /**
-     * @var array $clauses
-     */
-    private $clauses = [];
-
-    /**
-     * @var string $sortField
-     */
-    private $sortField;
-
-    /**
-     * @var string $sortOrder
-     */
-    private $sortOrder;
-
-    /**
-     * @var int $perPage
-     */
-    private $perPage;
-
-    /**
-     * @var int $offset
-     */
-    private $offset;
-
-    /**
-     * @var int $currentPage
-     */
-    private $currentPage;
-
-    /**
-     * @var int $totalPages
-     */
-    private $totalPages;
-
-    /**
-     * @var int $totalRecords
-     */
-    private $totalRecords;
-
-    /**
-     * @var mixed $list
-     */
-    private $list;
-
-    /**
-     * @var null|string $query
-     */
-    private $query;
-
-    /**
-     * @var string $countField
-     */
-    private $countField;
-
-    /**
-     * PageHelper constructor.
-     *
-     * @param Request $request
-     * @param EntityManager|ObjectManager $entityManager
-     * @param string $entity
-     * @param int $perPage
-     * @param string $sortField
-     * @param string $sortOrder
-     * @param string $countField
-     */
-    public function __construct(Request $request, EntityManager $entityManager, string $entity, int $perPage = 15, string $sortField = 't.id', $sortOrder = 'ASC', $countField = 't.id')
-    {
+    public function __construct(
+        Request $request,
+        EntityManager $entityManager,
+        string $entity,
+        int $perPage = 15,
+        string $sortField = 't.id',
+        string $sortOrder = 'ASC',
+        string $countField = 't.id'
+    ) {
         $this->request = $request;
         $this->perPage = $perPage;
         $this->sortField = $request->get('sortBy') ?? $sortField;
@@ -105,12 +50,6 @@ class PageHelper
         $this->repository = $entityManager->getRepository($entity);
     }
 
-    /**
-     * Create a url to sort a table by the column
-     *
-     * @param $label
-     * @param $column
-     */
     public function createSortableLink(string $label, string $column): void
     {
         $active = $this->sortField === $column;
@@ -120,48 +59,26 @@ class PageHelper
         echo '<a href="' . $url . '" class="column-sortable ' . ($active ? 'column-active' : '') . '">' . $label . ' <i class="fa fa-caret-' . ($active ? ($this->sortOrder === 'asc' ? 'up' : 'down') : 'up') . '" aria-hidden="true"></i></a>';
     }
 
-    /**
-     * Get the row number of the current record
-     *
-     * @param $key
-     * @return int
-     */
     public function getRowNumber(int $key): int
     {
         return (($this->currentPage - 1) * $this->perPage) + $key + 1;
     }
 
-    /**
-     * @return string
-     */
     public function getSortField(): string
     {
         return $this->sortField;
     }
 
-    /**
-     * @return string
-     */
     public function getSortOrder(): string
     {
         return $this->sortOrder;
     }
 
-    /**
-     * Add a clause to the query
-     *
-     * @param Clause $clause
-     */
     public function addClause(Clause $clause): void
     {
         $this->clauses[] = $clause;
     }
 
-    /**
-     * Get a list of results
-     *
-     * @return array
-     */
     public function getList(): array
     {
         // Prevent the query from being executed multiple times
@@ -183,11 +100,6 @@ class PageHelper
         return $this->list;
     }
 
-    /**
-     * Get the total number of records
-     *
-     * @return mixed
-     */
     private function setTotalRecords()
     {
         if ($this->query === null) {
@@ -205,12 +117,6 @@ class PageHelper
         }
     }
 
-    /**
-     * Add all clauses to the query
-     *
-     * @param QueryBuilder $query
-     * @param bool $withoutSelect
-     */
     private function addClausesToQuery(&$query, bool $withoutSelect = false): void
     {
         foreach ($this->clauses as $clause) {
@@ -222,9 +128,6 @@ class PageHelper
         }
     }
 
-    /**
-     * Set the current page and total number of pages
-     */
     private function setCurrentPage(): void
     {
         $this->currentPage = $this->request->get('page', 1);
@@ -242,11 +145,6 @@ class PageHelper
         }
     }
 
-    /**
-     * Generate the base query for one or more results
-     *
-     * @return QueryBuilder
-     */
     private function generateQuery(): QueryBuilder
     {
         $query = $this->repository->createQueryBuilder('t');
@@ -258,11 +156,6 @@ class PageHelper
         return $query;
     }
 
-    /**
-     * Create the pagination links
-     *
-     * @return string
-     */
     public function createPaginationLinks(): string
     {
         $adjacents = 1;
@@ -322,12 +215,6 @@ class PageHelper
         return $pagination;
     }
 
-    /**
-     * Generate the url with the query parameters
-     *
-     * @param $page
-     * @return string
-     */
     private function createPageLink(int $page): string
     {
         $queryString = str_replace('page=' . $this->currentPage, '', $this->request->getQueryString());
@@ -335,12 +222,6 @@ class PageHelper
         return $this->request->getPathInfo() . '?page=' . $page . '&' . $queryString;
     }
 
-    /**
-     * Create a single page button
-     *
-     * @param $pagination
-     * @param $counter
-     */
     private function createSinglePageButton(&$pagination, int $counter): void
     {
         if ($counter === $this->currentPage) {
@@ -350,11 +231,6 @@ class PageHelper
         }
     }
 
-    /**
-     * Add the ending pages with ellipsis
-     *
-     * @param $pagination
-     */
     private function addEndingEllipsis(&$pagination): void
     {
         $pagination .= '<li class="disabled"><a href="#!">...</a></li>';
@@ -362,11 +238,6 @@ class PageHelper
         $pagination .= '<li class="waves-effect"><a href="' . $this->createPageLink($this->totalPages) . '">' . $this->totalPages . '</a></li>';
     }
 
-    /**
-     * Add the starting pages with ellipsis
-     *
-     * @param $pagination
-     */
     private function addStartingEllipsis(&$pagination): void
     {
         $pagination .= '<li class="waves-effect"><a href="' . $this->createPageLink(1) . '">1</a></li>';
