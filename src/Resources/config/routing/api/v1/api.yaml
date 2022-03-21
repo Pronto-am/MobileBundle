@@ -102,6 +102,11 @@ app_version_file:
     _controller: Pronto\MobileBundle\Controller\Api\V1\AppVersionController:downloadAction
   condition: "context.getMethod() in ['GET']"
 
+app_version_new:
+  path: /versions/app
+  defaults:
+    _controller: Pronto\MobileBundle\Controller\Api\V1\AppVersionController:availableUpdateAction
+  condition: "context.getMethod() in ['GET']"
 
 #### REMOTE CONFIG ####
 

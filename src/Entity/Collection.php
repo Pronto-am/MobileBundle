@@ -48,7 +48,7 @@ class Collection extends TimestampedEntity implements ApiEntityInterface
     private $icon;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Application\Version")
+     * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Application\Version", inversedBy="collections")
      * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     private $applicationVersion;

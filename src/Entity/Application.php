@@ -43,7 +43,7 @@ class Application implements ApiEntityInterface
      */
     protected $allowedGrantTypes = [];
     /**
-     * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Customer")
+     * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Customer", inversedBy="applications")
      * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     private $customer;

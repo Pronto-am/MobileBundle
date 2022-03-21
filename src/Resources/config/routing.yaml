@@ -53,3 +53,9 @@ pronto_mobile_app_api_file:
   prefix: /api
   name_prefix: pronto_mobile_
   schemes: [https]
+
+pronto_mobile_app_version_new_deprecated:
+  path: /bundles/prontomobile/versions.php
+  defaults:
+    _controller: Pronto\MobileBundle\Controller\Api\V1\AppVersionController:availableUpdateAction
+  condition: "context.getMethod() in ['GET']"

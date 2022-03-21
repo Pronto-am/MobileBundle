@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Pronto\MobileBundle\Controller\Api\V1;
 
+use Composer\Semver\Comparator;
+use DateTimeInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Pronto\MobileBundle\Controller\Api\BaseApiController;
 use Pronto\MobileBundle\Entity\AppVersion;
@@ -11,9 +13,13 @@ use Pronto\MobileBundle\Entity\Plugin;
 use Pronto\MobileBundle\Exceptions\ApiException;
 use Pronto\MobileBundle\Exceptions\AppVersions\FileNotFoundException;
 use Pronto\MobileBundle\Exceptions\AppVersions\NotFoundException;
+use Pronto\MobileBundle\Exceptions\Auth\InvalidAuthorizationHeaderException;
+use Pronto\MobileBundle\Exceptions\Auth\InvalidAuthorizationTokenException;
+use Pronto\MobileBundle\Exceptions\Auth\InvalidPluginStateException;
 use Pronto\MobileBundle\Service\FileManager;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 
 class AppVersionController extends BaseApiController
@@ -95,5 +101,78 @@ class AppVersionController extends BaseApiController
         }
 
         return new BinaryFileResponse($file->getRealPath());
+    }
+
+    /**
+     * API-docs: Check for available app updates
+     *
+     * @api {get} /v1/versions/app Check for available app updates
+     * @apiName AppVersionCheck
+     * @apiGroup AppVersion
+     * @apiVersion 1.0.0
+     *
+     * @apiUse OAuthAuthorizationHeader
+     * @apiUse InvalidParameters
+     * @apiUse AuthorizationErrors
+     */
+
+    /**
+     * @throws InvalidAuthorizationHeaderException
+     * @throws InvalidAuthorizationTokenException
+     * @throws InvalidPluginStateException
+     * @throws NotFoundException
+     */
+    public function availableUpdateAction(EntityManagerInterface $entityManager): JsonResponse
+    {
+        // Validate the authorization
+        $this->validateAuthorization($this->getPluginIdentifier());
+
+        $versions = $entityManager->getRepository(AppVersion::class)->findBy([
+            'application' => $this->prontoMobile->getApplication()
+        ]);
+
+        // Determine which versions are new
+        $versions = array_reduce($versions, function ($result, AppVersion $version) {
+            if (Comparator::greaterThan($version->getVersion(), $_GET['version'])) {
+                $result[] = [
+                    'id'           => (int)$version->getId(),
+                    'version'      => $version->getVersion(),
+                    'required'     => $version->isRequired(),
+                    'description'  => $version->getDescription(),
+                    'url'          => $version->getUrl() ?? $this->generateUrl('app_version_file', [
+                            'id' => $version->getId(),
+                        ], UrlGeneratorInterface::ABSOLUTE_URL),
+                    'release_date' => $version->getReleaseDate(),
+                    'created_at'   => $version->getCreatedAt()->format(DateTimeInterface::ATOM),
+                    'updated_at'   => $version->getUpdatedAt()->format(DateTimeInterface::ATOM)
+                ];
+            }
+
+            return $result;
+        }, []);
+
+        // Sort the versions
+        usort($versions, function ($first, $second) {
+            if (Comparator::equalTo($first['version'], $second['version'])) {
+                return 0;
+            }
+
+            if (Comparator::greaterThan($first['version'], $second['version'])) {
+                return -1;
+            }
+
+            return 1;
+        });
+
+        if (count($versions) === 0) {
+            return new JsonResponse([
+                'error' => [
+                    'code'    => 404,
+                    'message' => 'No new versions available'
+                ]
+            ], 404);
+        }
+
+        return $this->successResponse($versions[0]);
     }
 }

@@ -26,7 +26,7 @@ class DeviceSegment
 
     /**
      * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Device")
+     * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Device", inversedBy="deviceSegments")
      * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     private $device;

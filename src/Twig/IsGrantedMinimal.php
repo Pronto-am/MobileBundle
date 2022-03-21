@@ -14,11 +14,14 @@ class IsGrantedMinimal extends AbstractExtension
         'ROLE_USER', 'ROLE_ADMIN', 'ROLE_SUPER_ADMIN'
     ];
 
-    private ?User $user;
+    private ?User $user = null;
 
     public function __construct(Security $security)
     {
-        $this->user = $security->getUser();
+        $user = $security->getUser();
+        if ($user instanceof User) {
+            $this->user = $user;
+        }
     }
 
     /**

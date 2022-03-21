@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Pronto\MobileBundle\Service;
 
 use Doctrine\ORM\EntityManagerInterface;
-use League\Bundle\OAuth2ServerBundle\Entity\AccessToken;
+use League\Bundle\OAuth2ServerBundle\Model\AccessToken;
 use League\Bundle\OAuth2ServerBundle\Security\Authentication\Token\OAuth2Token;
 use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\Application\ApplicationClient;

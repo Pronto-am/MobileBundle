@@ -5,20 +5,23 @@ declare(strict_types=1);
 namespace Pronto\MobileBundle\EventSubscriber\Kernel\OAuth;
 
 use Doctrine\ORM\EntityManagerInterface;
+use League\Bundle\OAuth2ServerBundle\Manager\ClientManagerInterface;
+use League\Bundle\OAuth2ServerBundle\Model\Client;
 use Pronto\MobileBundle\Entity\Application;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Trikoder\Bundle\OAuth2Bundle\Model\Client;
 
 class TokenRequestSubscriber implements EventSubscriberInterface
 {
     private EntityManagerInterface $entityManager;
+    private ClientManagerInterface $clientManager;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(EntityManagerInterface $entityManager, ClientManagerInterface $clientManager)
     {
         $this->entityManager = $entityManager;
+        $this->clientManager = $clientManager;
     }
 
     public static function getSubscribedEvents(): array
@@ -100,17 +103,20 @@ class TokenRequestSubscriber implements EventSubscriberInterface
             'secret'   => $clientSecret,
         ]);
 
-        $applicationClient = $application->getApplicationClients()->filter(
-            static function (Application\ApplicationClient $applicationClient) use ($clientSecret) {
-                return $applicationClient->getClient()->getSecret() === $clientSecret;
-            }
-        )->first();
+        foreach ($application->getApplicationClients() as $applicationClient) {
+            $client = $this->getClientByIdentifier($applicationClient->getClientIdentifier());
 
-        if (!$applicationClient instanceof Application\ApplicationClient) {
-            return null;
+            if ($client->getSecret() === $clientSecret) {
+                return $client;
+            }
         }
 
-        return $applicationClient->getClient();
+        return null;
+    }
+
+    private function getClientByIdentifier(string $identifier): Client
+    {
+        return $this->clientManager->find($identifier);
     }
 
     private function disectClientId(string $clientId): ?array
