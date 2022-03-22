@@ -24,7 +24,6 @@ use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 
 class DeviceController extends BaseApiController
 {
-
     /**
      * API-docs: Register a new device
      *
@@ -161,12 +160,8 @@ class DeviceController extends BaseApiController
 
         $device = new Device();
         $device->setApplication($this->prontoMobile->getApplication());
-
-        if (strtolower($request->request->get('platform')) === 'ios') {
-            $device->setApnsToken($request->request->get('apns_token'));
-        } else {
-            $device->setFirebaseToken($request->request->get('firebase_token'));
-        }
+        $device->setApnsToken($request->request->get('apns_token'));
+        $device->setFirebaseToken($request->request->get('firebase_token'));
 
         // Attach the app user when it's provided
         if ($request->request->get('user_identifier') !== null) {

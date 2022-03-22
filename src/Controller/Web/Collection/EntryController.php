@@ -164,7 +164,7 @@ class EntryController extends BaseController implements ValidatePluginStateInter
         }
 
         // Create a new entry parser with the form data
-        $entryParser = new EntryParser($request);
+        $entryParser = new EntryParser($request, $this->prontoMobile->getConfiguration('uploads_folder'));
         $entryParser->setInitialData($entry->getData());
 
         // Add the properties of the collection to the parser

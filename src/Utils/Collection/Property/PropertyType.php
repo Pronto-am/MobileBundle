@@ -7,8 +7,6 @@ use Symfony\Component\HttpFoundation\FileBag;
 
 interface PropertyType
 {
-    public function __construct(array $formData, Property $property, FileBag $fileBag = null);
-
     /**
      * Parse the form data as entry value
      */

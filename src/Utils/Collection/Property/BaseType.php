@@ -9,18 +9,12 @@ class BaseType implements PropertyType
 {
     public array $fields;
     public Property $property;
-    public ?FileBag $fileBag;
     public array $identifier;
+    public array $parsed;
 
-    /**
-     * @var mixed $parsed
-     */
-    public $parsed;
-
-    public function __construct(array $formData, Property $property, FileBag $fileBag = null)
+    public function __construct(array $formData, Property $property)
     {
         $this->property = $property;
-        $this->fileBag = $fileBag;
 
         // Filter out the form fields belonging to this property
         $this->fields = array_filter($formData, function ($key) {

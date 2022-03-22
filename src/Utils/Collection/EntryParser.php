@@ -18,6 +18,7 @@ class EntryParser
     private array $entry = [];
     private array $formData;
     private FileBag $files;
+    private ?string $uploadsDir;
 
     private array $classes = [
         'boolean'     => BooleanProperty::class,
@@ -27,7 +28,7 @@ class EntryParser
         'file'        => FileProperty::class
     ];
 
-    public function __construct(Request $request)
+    public function __construct(Request $request, ?string $uploadsDir = null)
     {
         $this->formData = $request->request->all();
 
@@ -36,6 +37,7 @@ class EntryParser
 
         // Set the additional files
         $this->files = $request->files;
+        $this->uploadsDir = $uploadsDir;
     }
 
     public function setInitialData(array $initial): void
@@ -62,7 +64,7 @@ class EntryParser
                 return new $class($this->formData, $property);
             }
 
-            return new $class($this->formData, $property, $this->files);
+            return new $class($this->formData, $property, $this->files, $this->uploadsDir);
         }
 
         return new BaseType($this->formData, $property);
