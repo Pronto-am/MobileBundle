@@ -166,9 +166,9 @@ class QueryGenerator
         $query = $this->createBaseQuery();
 
         // Add the ID to the query
-        $query .= 'AND entries.id = ? ';
+        $query .= 'AND entries.id = :entry_id ';
 
-        $queryParameters[] = $this->propertyFilters['id'];
+        $queryParameters[] = new Parameter('entry_id', $this->propertyFilters['id']['='], Types::STRING);
 
         return $query;
     }
@@ -230,7 +230,13 @@ class QueryGenerator
 
         /** @var Parameter $parameter */
         foreach ($parameters as $parameter) {
-            $statement->bindValue($parameter->getName(), $parameter->getValue(), $parameter->getType() === Types::FLOAT ? ParameterType::INTEGER : ParameterType::STRING);
+            $statement->bindValue(
+                $parameter->getName(),
+                $parameter->getValue(),
+                $parameter->getType() === Types::FLOAT
+                    ? ParameterType::INTEGER
+                    : ParameterType::STRING
+            );
         }
 
         return $statement->executeQuery();
@@ -403,6 +409,6 @@ class QueryGenerator
         // Execute the query
         $statement = $this->executeStatement($countQuery, $parameters);
 
-        return (int) $statement->fetchFirstColumn();
+        return (int)$statement->fetchFirstColumn();
     }
 }

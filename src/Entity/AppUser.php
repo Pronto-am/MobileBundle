@@ -8,6 +8,7 @@ use DateTime;
 use Doctrine\Common\Collections\Collection as DoctrineCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Exception;
+use League\OAuth2\Server\Entities\UserEntityInterface;
 use Pronto\MobileBundle\Traits\ApiEntityTrait;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -19,7 +20,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity
  * @ORM\Table(name="app_users")
  */
-class AppUser extends TimestampedEntity implements UserInterface, ApiEntityInterface, PasswordAuthenticatedUserInterface
+class AppUser extends TimestampedEntity implements UserInterface, ApiEntityInterface, PasswordAuthenticatedUserInterface, UserEntityInterface
 {
     use ApiEntityTrait;
 
@@ -264,6 +265,11 @@ class AppUser extends TimestampedEntity implements UserInterface, ApiEntityInter
     }
 
     public function getUserIdentifier(): string
+    {
+        return $this->email;
+    }
+
+    public function getIdentifier()
     {
         return $this->email;
     }

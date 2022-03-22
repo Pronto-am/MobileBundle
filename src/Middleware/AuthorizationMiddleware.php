@@ -3,7 +3,7 @@
 namespace Pronto\MobileBundle\Middleware;
 
 use Doctrine\ORM\EntityManagerInterface;
-use League\Bundle\OAuth2ServerBundle\Entity\AccessToken;
+use League\Bundle\OAuth2ServerBundle\Model\AccessToken;
 use League\Bundle\OAuth2ServerBundle\Security\Authentication\Token\OAuth2Token;
 use Pronto\MobileBundle\Entity\Application\ApplicationClient;
 use Pronto\MobileBundle\Exceptions\Auth\InvalidAuthorizationHeaderException;

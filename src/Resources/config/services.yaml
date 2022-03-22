@@ -58,4 +58,4 @@ services:
       - '@doctrine.orm.entity_manager'
       - '@security.token_storage'
     tags:
-      - { name: kernel.event_listener, event: trikoder.oauth2.user_resolve, method: onUserResolve }
+      - { name: kernel.event_listener, event: league.oauth2_server.event.user_resolve, method: onUserResolve }

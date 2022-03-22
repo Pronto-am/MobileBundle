@@ -1,7 +1,7 @@
 {% extends '@ProntoMobile/base.html.twig' %}
 
 {% block body %}
-    {% include '@ProntoMobile/components/pageTitle.html.twig' with {entity: 'translation', exists: translation != null, backButton: path('pronto_mobile_translations')} %}
+    {% include '@ProntoMobile/components/pageTitle.html.twig' with {entity: 'translation', exists: key != null, backButton: path('pronto_mobile_translations')} %}
 
     <div class="row card" id="details">
         <div class="card-content col s12">
@@ -46,7 +46,7 @@
 
                 <div class="row">
                     <div class="col s8">
-                        <textarea name="translations[{{ language.code }}]" class="materialize-textarea" data-lang="{{ language.code }}" id="translations_{{ key }}">{{ translations[language.code] }}</textarea>
+                        <textarea name="translations[{{ language.code }}]" class="materialize-textarea" data-lang="{{ language.code }}" id="translations_{{ key }}">{{ translations[language.code] is defined ? translations[language.code] : '' }}</textarea>
                     </div>
 
                     {% if language.code != applicationVersion.application.defaultLanguage %}

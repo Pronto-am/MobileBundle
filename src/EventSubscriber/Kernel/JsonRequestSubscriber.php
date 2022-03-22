@@ -22,7 +22,7 @@ class JsonRequestSubscriber implements EventSubscriberInterface
     {
         $request = $event->getRequest();
 
-        if (!$request->isMethod(Request::METHOD_POST)) {
+        if (!$request->isMethod(Request::METHOD_POST) && !$request->isMethod(Request::METHOD_PUT)) {
             return;
         }
 

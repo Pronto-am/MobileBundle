@@ -14,6 +14,7 @@ use Pronto\MobileBundle\Exceptions\Auth\InvalidAuthorizationTokenException;
 use Pronto\MobileBundle\Exceptions\Auth\InvalidPluginStateException;
 use Pronto\MobileBundle\Exceptions\TranslationKeys\ZipFileNotCreatedException;
 use Pronto\MobileBundle\Utils\File;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -93,6 +94,10 @@ class TranslationController extends BaseApiController
         if ($format === 'xml') {
             return $this->exportXml($translations, $kernel, $application);
         }
+
+        return new JsonResponse([
+            'data' => []
+        ]);
     }
 
     /**

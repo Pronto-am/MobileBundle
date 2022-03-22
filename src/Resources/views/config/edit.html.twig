@@ -1,7 +1,7 @@
 {% extends '@ProntoMobile/base.html.twig' %}
 
 {% block body %}
-    {% include '@ProntoMobile/components/pageTitle.html.twig' with {entity: 'remote_config', exists: version != null, backButton: path('pronto_mobile_remote_config')} %}
+    {% include '@ProntoMobile/components/pageTitle.html.twig' with {entity: 'remote_config', exists: configuration != null, backButton: path('pronto_mobile_remote_config')} %}
 
     <div class="row card">
         <div class="card-content col s12">
@@ -100,18 +100,18 @@
                 <div class="col s12">
                     <div class="config-type config-type-string">
                         <label for="remote_config_form_value_string">{{ 'remote_config.value'|trans }}</label>
-                        <input type="text" name="remote_config_form[value][string]" id="remote_config_form_value_string" value="{{ configuration.value }}">
+                        <input type="text" name="remote_config_form[value][string]" id="remote_config_form_value_string" value="{{ configuration ? configuration.value : '' }}">
                     </div>
 
                     <div class="config-type config-type-bool">
-                        <input type="checkbox" name="remote_config_form[value][bool]" id="remote_config_form_value_bool" value="1" {% if configuration.value == 1 %}checked{% endif %}>
+                        <input type="checkbox" name="remote_config_form[value][bool]" id="remote_config_form_value_bool" value="1" {% if configuration and configuration.value == 1 %}checked{% endif %}>
                         <label for="remote_config_form_value_bool">{{ configuration.name ?? 'remote_config.value'|trans }}</label>
                     </div>
 
                     <div class="config-type config-type-enum">
                         <label for="remote_config_form_value_enum">{{ 'remote_config.value'|trans }}</label>
-                        <select name="remote_config_form[value][enum][]" id="remote_config_form_value_enum" class="select2 browser-default" {% if configuration.options['multiple'] is defined and configuration.options['choices'] == true %}multiple{% endif %}>
-                            {% if configuration.options['choices'] is iterable %}
+                        <select name="remote_config_form[value][enum][]" id="remote_config_form_value_enum" class="select2 browser-default" {% if configuration and configuration.options['multiple'] is defined and configuration.options['choices'] == true %}multiple{% endif %}>
+                            {% if configuration and configuration.options['choices']|default(null) is iterable %}
                                 {% for option in configuration.options['choices'] %}
                                     <option {% if configuration.jsonValue is iterable and option in configuration.jsonValue %}selected{% endif %}>{{ option }}</option>
                                 {% endfor %}
@@ -121,19 +121,21 @@
 
                     <div class="config-type config-type-json">
                         <label for="remote_config_form_value_json">{{ 'remote_config.value'|trans }}</label>
-                        <div class="codeflask" data-name="remote_config_form[value][json]" data-language="json">{{ configuration.jsonValue|json_encode(constant('JSON_PRETTY_PRINT')) }}</div>
+                        <div class="codeflask" data-name="remote_config_form[value][json]" data-language="json">{{ configuration ? configuration.jsonValue|json_encode(constant('JSON_PRETTY_PRINT')) : '' }}</div>
                     </div>
 
                     <div class="config-type config-type-integer">
                         <label for="remote_config_form_value_integer">
                             {{ 'remote_config.value'|trans }}
 
-                            {% if configuration.options['min'] != '' and configuration.options['max'] != '' %}
-                                ({{ 'collection.entry.number_between'|trans({'%min%': configuration.options['min'], '%max%': configuration.options['max']}) }})
-                            {% elseif configuration.options['min'] != '' and configuration.options['max'] == '' %}
-                                ({{ 'collection.entry.number_greater_then'|trans({'%min%': configuration.options['min']}) }})
-                            {% elseif configuration.options['min'] == '' and configuration.options['max'] != '' %}
-                                ({{ 'collection.entry.number_less_then'|trans({'%max%': configuration.options['max']}) }})
+                            {% if configuration %}
+                                {% if configuration.options['min']|default('') != '' and configuration.options['max']|default('') != '' %}
+                                    ({{ 'collection.entry.number_between'|trans({'%min%': configuration.options['min']|default(''), '%max%': configuration.options['max']|default('')}) }})
+                                {% elseif configuration.options['min']|default('') != '' and configuration.options['max']|default('') == '' %}
+                                    ({{ 'collection.entry.number_greater_then'|trans({'%min%': configuration.options['min']|default('')}) }})
+                                {% elseif configuration.options['min']|default('') == '' and configuration.options['max']|default('') != '' %}
+                                    ({{ 'collection.entry.number_less_then'|trans({'%max%': configuration.options['max']|default('')}) }})
+                                {% endif %}
                             {% endif %}
                         </label>
 
@@ -141,19 +143,21 @@
                                name="remote_config_form[value][integer]"
                                id="remote_config_form_value_integer"
 
-                                {% if configuration.options['min'] != '' %}
-                                    min="{{ configuration.options['min'] }}"
+                                {% if configuration %}
+                                    {% if configuration.options['min']|default('') != '' %}
+                                        min="{{ configuration.options['min'] }}"
+                                    {% endif %}
+
+                                    {% if configuration.options['max']|default('') != '' %}
+                                        max="{{ configuration.options['max'] }}"
+                                    {% endif %}
+
+                                    {% if configuration.options['step']|default('') != '' %}
+                                        step="{{ configuration.options['step'] }}"
+                                    {% endif %}
                                 {% endif %}
 
-                                {% if configuration.options['max'] != '' %}
-                                    max="{{ configuration.options['max'] }}"
-                                {% endif %}
-
-                                {% if configuration.options['step'] != '' %}
-                                    step="{{ configuration.options['step'] }}"
-                                {% endif %}
-
-                               value="{{ configuration.value }}">
+                               value="{{ configuration ? configuration.value : '' }}">
                     </div>
                 </div>
             </div>

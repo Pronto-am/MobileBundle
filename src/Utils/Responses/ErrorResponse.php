@@ -25,8 +25,8 @@ class ErrorResponse extends BaseResponse
         AppVersion::class       => 15
     ];
 
-    private ?string $entity;
-    private ?int $errorCode;
+    private ?string $entity = null;
+    private ?int $errorCode = null;
 
     public function __construct(array $error)
     {

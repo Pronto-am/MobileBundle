@@ -261,9 +261,9 @@ class RemoteConfig extends TimestampedEntity implements ApiEntityInterface
     }
 
     /**
-     * @return string|null
+     * @return string|bool|float|null
      */
-    public function getValue(): ?string
+    public function getValue()
     {
         if ($this->getType()->equals(RemoteConfigType::INTEGER())) {
             return (float) $this->value;
@@ -275,10 +275,10 @@ class RemoteConfig extends TimestampedEntity implements ApiEntityInterface
     }
 
     /**
-     * @param string|null $value
+     * @param string|int|null $value
      * @return RemoteConfig
      */
-    public function setValue(?string $value): RemoteConfig
+    public function setValue($value): RemoteConfig
     {
         $this->value = $value;
         return $this;

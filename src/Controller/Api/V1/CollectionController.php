@@ -133,7 +133,6 @@ class CollectionController extends BaseApiController
     }
 
     /**
-     * @throws DBALException
      * @throws ApiException
      */
     public function getEntryAction(Retriever $retriever, $version, $identifier, $id): JsonResponse
