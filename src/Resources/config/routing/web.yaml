@@ -394,7 +394,7 @@ translations_delete:
   path: /translations/delete
   defaults:
     _controller: Pronto\MobileBundle\Controller\Web\TranslationController::deleteAction
-
+  condition: "context.getMethod() in ['POST']"
 
 #### APP VERSIONS ####
 

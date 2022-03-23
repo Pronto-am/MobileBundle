@@ -20,13 +20,9 @@ use Pronto\MobileBundle\Form\TranslationForm;
 use Pronto\MobileBundle\Service\JsonSerializer;
 use Pronto\MobileBundle\Service\Translation\Importer;
 use Pronto\MobileBundle\Utils\Collect;
-use Pronto\MobileBundle\Utils\Doctrine\WhereClause;
-use Pronto\MobileBundle\Utils\Optional;
-use Pronto\MobileBundle\Utils\PageHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -49,7 +45,8 @@ class TranslationController extends BaseController implements ValidateCustomerSe
             );
 
             $translationCount = $entityManager->getRepository(TranslationKey::class)->getCount(
-                $this->getApplication()
+                $this->getApplication(),
+                $request->query->get('search'),
             );
 
             return new JsonResponse([
@@ -251,7 +248,7 @@ class TranslationController extends BaseController implements ValidateCustomerSe
         return $response;
     }
 
-    public function deleteAction(Request $request, EntityManagerInterface $entityManager): RedirectResponse
+    public function deleteAction(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
         $translations = $entityManager->getRepository(TranslationKey::class)->findBy([
             'id'          => $request->get('translations'),
@@ -264,8 +261,6 @@ class TranslationController extends BaseController implements ValidateCustomerSe
 
         $entityManager->flush();
 
-        $this->addDataRemovedFlash();
-
-        return $this->redirectToRoute('pronto_mobile_translations');
+        return new JsonResponse();
     }
 }

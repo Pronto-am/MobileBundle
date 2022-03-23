@@ -54,12 +54,12 @@
                                         </thead>
                                         <tbody style="font-size: 12px;">
                                         <tr v-for="item of items">
-                                            <td>
+                                            <td style="vertical-align: top;">
                                                 <el-checkbox :value="selection.items.indexOf(item.id) > -1"
                                                              :key="item.id"
                                                              @change="(checked) => select(checked, item.id)"></el-checkbox>
                                             </td>
-                                            <td>
+                                            <td style="vertical-align: top;">
                                                 <p>
                                                     <a :href="'/admin/translations/edit/' + item.id">{{ item.identifier }}</a>
                                                 </p>
@@ -267,7 +267,7 @@ export default {
         },
 
         deleteSelection() {
-            this.$confirm('This will permanently delete the file. Continue?', 'Warning', {
+            this.$confirm('This will permanently delete the translation key. Continue?', 'Warning', {
                 confirmButtonText: 'OK',
                 cancelButtonText: 'Cancel',
                 type: 'warning'
@@ -278,7 +278,7 @@ export default {
                     translations: this.selection.items,
                 }).then(response => {
                     // When we're done, refresh the table
-                    this.fetch();
+                    this.fetch(true);
 
                 }).catch(error => {
                     //

@@ -54,13 +54,18 @@ class TranslationKeyRepository extends EntityRepository
      * @throws NoResultException
      * @throws NonUniqueResultException
      */
-    public function getCount(Application $application): int
+    public function getCount(Application $application, string $search = null): int
     {
-        return $this->createQueryBuilder('translationKey')
+        $query = $this->createQueryBuilder('translationKey')
             ->select('count(translationKey.id)')
             ->andWhere('translationKey.application = :application')
-            ->setParameter('application', $application)
-            ->getQuery()
-            ->getSingleScalarResult();
+            ->setParameter('application', $application);
+
+        if ($search !== null) {
+            $query = $query->andWhere('translationKey.identifier LIKE :identifier')
+                ->setParameter('identifier', '%' . $search . '%');
+        }
+
+        return $query->getQuery()->getSingleScalarResult();
     }
 }

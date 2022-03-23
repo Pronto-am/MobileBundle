@@ -1,7 +1,7 @@
 {% extends '@ProntoMobile/base.html.twig' %}
 
 {% block body %}
-    {% include '@ProntoMobile/components/pageTitle.html.twig' with {entity: 'translation', exists: translation != null, backButton: path('pronto_mobile_translations')} %}
+    {% include '@ProntoMobile/components/pageTitle.html.twig' with {entity: 'translations', exists: false, backButton: path('pronto_mobile_translations')} %}
 
     <div class="row card" id="details">
         <div class="card-content col s12">
