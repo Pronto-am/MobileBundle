@@ -10,7 +10,9 @@ class BaseType implements PropertyType
     public array $fields;
     public Property $property;
     public array $identifier;
-    public array $parsed;
+
+    /** @var mixed $parsed */
+    public $parsed;
 
     public function __construct(array $formData, Property $property)
     {
