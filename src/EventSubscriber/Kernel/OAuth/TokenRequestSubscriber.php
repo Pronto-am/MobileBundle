@@ -45,7 +45,7 @@ class TokenRequestSubscriber implements EventSubscriberInterface
                     'clientId'     => $clientId,
                     'clientSecret' => $clientSecret
                 ] = $credentials;
-                
+
                 $event->getRequest()->request->set('client_id', $clientId);
                 $event->getRequest()->request->set('client_secret', $clientSecret);
             }
@@ -104,6 +104,10 @@ class TokenRequestSubscriber implements EventSubscriberInterface
             'randomId' => $randomId,
             'secret'   => $clientSecret,
         ]);
+
+        if (!$application instanceof Application) {
+            return null;
+        }
 
         foreach ($application->getApplicationClients() as $applicationClient) {
             $client = $this->getClientByIdentifier($applicationClient->getClientIdentifier());
