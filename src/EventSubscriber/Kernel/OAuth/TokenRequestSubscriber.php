@@ -45,9 +45,9 @@ class TokenRequestSubscriber implements EventSubscriberInterface
                     'clientId'     => $clientId,
                     'clientSecret' => $clientSecret
                 ] = $credentials;
-
-                $newCredentials = base64_encode(sprintf('%s:%s', $clientId, $clientSecret));
-                $event->getRequest()->headers->set('authorization', $newCredentials);
+                
+                $event->getRequest()->request->set('client_id', $clientId);
+                $event->getRequest()->request->set('client_secret', $clientSecret);
             }
         }
 
@@ -63,6 +63,8 @@ class TokenRequestSubscriber implements EventSubscriberInterface
     private function getCredentialsFromHeaders(Request $request): ?array
     {
         $credentials = $request->headers->get('authorization');
+        $credentials = str_ireplace('basic', '', $credentials);
+        $credentials = rtrim(ltrim($credentials));
         $credentials = base64_decode($credentials);
 
         if ($credentials === false || strpos($credentials, ':') === false) {
