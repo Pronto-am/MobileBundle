@@ -1,4 +1,7 @@
-{% if property.translatable == false %}
+{% if entry == null %}
+    {% set propertyValue = property.config.defaultValue %}
+
+{% elseif property.translatable == false %}
     {% set propertyValue = attribute(entry.data, property.identifier) %}
 
 {% elseif attribute(attribute(entry.data, property.identifier), language) is defined %}
@@ -13,16 +16,16 @@
     <div class="col s12">
         {% set label = property.config.label is defined and property.config.label != '' ? property.config.label : property.name %}
 
-        <label for="{{ language ~ ':' ~ property.identifier }}" {% if property.required == true %}class="required"{% endif %}>{{ label }}</label>
+        <label for="{{ language|default('') ~ ':' ~ property.identifier }}" {% if property.required == true %}class="required"{% endif %}>{{ label }}</label>
 
         {% set class = property.type.config.defaultValue.class is defined ? property.type.config.defaultValue.class : '' %}
 
         {% if 'codeflask' in class and is_granted_minimal(property.editableForRole) %}
-            <div class="{{ class }}" data-name="{{ language ~ ':' ~ property.identifier }}" data-language="html"></div>
+            <div class="{{ class }}" data-name="{{ language|default('') ~ ':' ~ property.identifier }}" data-language="html"></div>
         {% else %}
-            <textarea name="{{ language ~ ':' ~ property.identifier }}"
+            <textarea name="{{ language|default('') ~ ':' ~ property.identifier }}"
                       class="materialize-textarea {{ class }}"
-                      id="{{ language ~ ':' ~ property.identifier }}"
+                      id="{{ language|default('') ~ ':' ~ property.identifier }}"
                       {% if not is_granted_minimal(property.editableForRole) %}readonly="readonly"{% endif %}>{{ propertyValue }}</textarea>
         {% endif %}
     </div>

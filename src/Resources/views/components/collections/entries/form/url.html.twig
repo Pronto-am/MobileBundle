@@ -1,4 +1,7 @@
-{% if property.translatable == false %}
+{% if entry == null %}
+    {% set propertyValue = property.config.defaultValue %}
+
+{% elseif property.translatable == false %}
     {% set propertyValue = attribute(entry.data, property.identifier) %}
 
 {% elseif attribute(attribute(entry.data, property.identifier), language) is defined %}
@@ -11,10 +14,10 @@
 
 <div class="row">
     <div class="col s12">
-        <label for="{{ language ~ ':' ~ property.identifier }}" {% if property.required == true %}class="required"{% endif %}>{{ property.name }}</label>
+        <label for="{{ language|default('') ~ ':' ~ property.identifier }}" {% if property.required == true %}class="required"{% endif %}>{{ property.name }}</label>
         <input type="url"
-               name="{{ language ~ ':' ~ property.identifier }}"
-               id="{{ language ~ ':' ~ property.identifier }}"
+               name="{{ language|default('') ~ ':' ~ property.identifier }}"
+               id="{{ language|default('') ~ ':' ~ property.identifier }}"
                {% if not is_granted_minimal(property.editableForRole) %}readonly="readonly"{% endif %}
                value="{{ propertyValue }}">
     </div>
