@@ -13,6 +13,7 @@ use Pronto\MobileBundle\Entity\PushNotification\Recipient;
 use Pronto\MobileBundle\EventSubscriber\ValidateApplicationSelectionInterface;
 use Pronto\MobileBundle\EventSubscriber\ValidateCustomerSelectionInterface;
 use Pronto\MobileBundle\Form\DeviceForm;
+use Pronto\MobileBundle\Service\LanguagesLoader;
 use Pronto\MobileBundle\Utils\Doctrine\LeftJoinClause;
 use Pronto\MobileBundle\Utils\Doctrine\SelectClause;
 use Pronto\MobileBundle\Utils\Doctrine\WhereClause;
@@ -35,8 +36,12 @@ class DeviceController extends BaseController implements ValidateCustomerSelecti
             ]);
     }
 
-    public function detailsAction(Request $request, EntityManagerInterface $entityManager, $identifier)
-    {
+    public function detailsAction(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        LanguagesLoader $languagesLoader,
+        $identifier
+    ) {
         /** @var Device $device */
         $device = $entityManager->getRepository(Device::class)->findOneBy([
             'id'          => $identifier,
@@ -78,6 +83,7 @@ class DeviceController extends BaseController implements ValidateCustomerSelecti
             'device'                  => $device,
             'notificationsPageHelper' => $pageHelper,
             'segments'                => $segments,
+            'languages'               => $languagesLoader,
             'deviceForm'              => $form->createView()
         ]);
     }

@@ -17,7 +17,6 @@ class LanguagesLoader
 
             $this->languages = json_decode($json);
         } catch (Exception $exception) {
-            dump($exception);
             $this->languages = [];
         }
     }
