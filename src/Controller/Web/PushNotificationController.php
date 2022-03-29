@@ -190,7 +190,7 @@ class PushNotificationController extends BaseController implements ValidateCusto
 
         $notification->setApplication($this->getApplication());
 
-        $notification->setClickAction($form['clickAction']);
+        $notification->setClickAction((int) $form['clickAction']);
 
         $notification->setTest(isset($form['test']));
 
