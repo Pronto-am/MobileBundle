@@ -29,7 +29,7 @@ class AppVersion extends TimestampedEntity implements ApiEntityInterface
      *
      * @Groups({"AppVersion"})
      */
-    private ?int $id;
+    private ?int $id = null;
 
     /**
      * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Application")
@@ -60,17 +60,18 @@ class AppVersion extends TimestampedEntity implements ApiEntityInterface
     /**
      * @ORM\Column(type="json_array", nullable=true)
      */
-    private ?array $description;
+    private ?array $description = null;
 
     /**
      * @ORM\Column(type="string", nullable=true)
      */
-    private ?string $url;
+    private ?string $url = null;
 
     /**
      * @ORM\Column(type="string", nullable=true)
+     * @var null|string|UploadedFile $fileName
      */
-    private ?string $fileName;
+    private $fileName = null;
 
     public function getId(): ?int
     {
@@ -155,7 +156,7 @@ class AppVersion extends TimestampedEntity implements ApiEntityInterface
     }
 
     /**
-     * @return string|UploadedFile
+     * @return null|string|UploadedFile
      */
     public function getFileName()
     {
