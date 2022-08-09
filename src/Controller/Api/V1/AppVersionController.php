@@ -19,6 +19,7 @@ use Pronto\MobileBundle\Exceptions\Auth\InvalidPluginStateException;
 use Pronto\MobileBundle\Service\FileManager;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 
@@ -122,7 +123,7 @@ class AppVersionController extends BaseApiController
      * @throws InvalidPluginStateException
      * @throws NotFoundException
      */
-    public function availableUpdateAction(EntityManagerInterface $entityManager): JsonResponse
+    public function availableUpdateAction(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
         // Validate the authorization
         $this->validateAuthorization($this->getPluginIdentifier());
@@ -171,6 +172,11 @@ class AppVersionController extends BaseApiController
                     'message' => 'No new versions available'
                 ]
             ], 404);
+        }
+
+        // Don't wrap it inside a "data" object
+        if (strpos($request->getPathInfo(), 'versions.php') !== false) {
+            return new JsonResponse($versions[0]);
         }
 
         return $this->successResponse($versions[0]);
