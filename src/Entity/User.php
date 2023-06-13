@@ -79,7 +79,7 @@ class User extends TimestampedEntity implements UserInterface, PasswordAuthentic
     private ?string $plainPassword = null;
 
     /**
-     * @ORM\Column(type="json_array")
+     * @ORM\Column(type="json")
      */
     private array $roles = [];
 

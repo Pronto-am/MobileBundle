@@ -15,7 +15,7 @@ class ProntoMobile
 {
     public array $configuration;
     private ?Request $request;
-    private string $activeModule;
+    private ?string $activeModule;
     private EntityManagerInterface $entityManager;
     private ?Application\Version $applicationVersion;
     private Application $application;

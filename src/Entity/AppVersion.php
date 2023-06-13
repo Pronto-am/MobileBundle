@@ -58,7 +58,7 @@ class AppVersion extends TimestampedEntity implements ApiEntityInterface
     private bool $required = false;
 
     /**
-     * @ORM\Column(type="json_array", nullable=true)
+     * @ORM\Column(type="json", nullable=true)
      */
     private ?array $description = null;
 

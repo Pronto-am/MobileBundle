@@ -7,6 +7,7 @@ use Doctrine\ORM\NonUniqueResultException;
 use Pronto\MobileBundle\Entity\Customer;
 use Pronto\MobileBundle\Entity\User;
 use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -58,7 +59,7 @@ class UserRepository extends EntityRepository implements PasswordUpgraderInterfa
             ->execute();
     }
 
-    public function upgradePassword(UserInterface $user, string $newHashedPassword): void
+    public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void
     {
         $user->setPassword($newHashedPassword);
         $this->getEntityManager()->flush($user);

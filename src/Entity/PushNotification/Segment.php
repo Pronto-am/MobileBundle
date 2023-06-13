@@ -40,7 +40,7 @@ class Segment implements ApiEntityInterface
     private $application;
 
     /**
-     * @ORM\Column(type="json_array")
+     * @ORM\Column(type="json")
      * @Assert\NotBlank()
      * @Groups({"PushNotification"})
      */

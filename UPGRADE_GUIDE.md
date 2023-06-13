@@ -10,7 +10,7 @@ Remove the reference of the former used dependency `friendsofsymfony/oauth2-serv
 
 ```suggestion
 - FOS\OAuthServerBundle\FOSOAuthServerBundle::class => ['all' => true],
-+ Trikoder\Bundle\OAuth2Bundle\TrikoderOAuth2Bundle::class => ['all' => true],
++ League\Bundle\OAuth2ServerBundle\LeagueOAuth2ServerBundle::class => ['all' => true],
 ```
 
 And delete the yaml config file of the bundle.

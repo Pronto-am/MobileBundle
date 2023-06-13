@@ -53,7 +53,7 @@ class Plugin
     private $icon;
 
     /**
-     * @ORM\Column(type="json_array")
+     * @ORM\Column(type="json")
      */
     private $defaultConfig;
 

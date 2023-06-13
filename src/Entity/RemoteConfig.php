@@ -91,7 +91,7 @@ class RemoteConfig extends TimestampedEntity implements ApiEntityInterface
 
     /**
      * @var array|null $options
-     * @ORM\Column(type="json_array", nullable=true)
+     * @ORM\Column(type="json", nullable=true)
      */
     private $options;
 
@@ -104,7 +104,7 @@ class RemoteConfig extends TimestampedEntity implements ApiEntityInterface
 
     /**
      * @var array|null $value
-     * @ORM\Column(type="json_array", nullable=true)
+     * @ORM\Column(type="json", nullable=true)
      */
     private $jsonValue;
 

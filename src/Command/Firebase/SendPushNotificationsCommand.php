@@ -29,7 +29,7 @@ class SendPushNotificationsCommand extends Command
     {
         $this->entityManager = $entityManager;
         $this->sender = $sender;
-        $this->prontoMobile = $container->get('Pronto\MobileBundle\Service\ProntoMobile');
+        $this->prontoMobile = $container->get(ProntoMobile::class);
 
         parent::__construct($name);
     }

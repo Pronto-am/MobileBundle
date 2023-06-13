@@ -77,7 +77,7 @@ class Application implements ApiEntityInterface
      */
     private $defaultLanguage;
     /**
-     * @ORM\Column(type="json_array")
+     * @ORM\Column(type="json")
      * @Assert\NotBlank()
      */
     private $availableLanguages;

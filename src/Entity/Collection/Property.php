@@ -54,7 +54,7 @@ class Property extends TimestampedEntity
 
     /**
      * @var array $config
-     * @ORM\Column(type="json_array")
+     * @ORM\Column(type="json")
      */
     private $config;
 

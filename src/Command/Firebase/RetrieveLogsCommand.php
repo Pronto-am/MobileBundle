@@ -42,7 +42,7 @@ class RetrieveLogsCommand extends Command
     {
         $this->entityManager = $entityManager;
         $this->googleServiceAccountLoader = $googleServiceAccountLoader;
-        $this->prontoMobile = $container->get('Pronto\MobileBundle\Service\ProntoMobile');
+        $this->prontoMobile = $container->get(ProntoMobile::class);
 
         parent::__construct($name);
     }

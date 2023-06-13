@@ -90,7 +90,7 @@ class AppUser extends TimestampedEntity implements UserInterface, ApiEntityInter
     private ?DateTime $lastLogin;
 
     /**
-     * @ORM\Column(type="json_array", nullable=true)
+     * @ORM\Column(type="json", nullable=true)
      */
     private ?array $extraData;
 

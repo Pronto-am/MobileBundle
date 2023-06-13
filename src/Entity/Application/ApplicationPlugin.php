@@ -37,7 +37,7 @@ class ApplicationPlugin
     private $active = false;
 
     /**
-     * @ORM\Column(type="json_array")
+     * @ORM\Column(type="json")
      */
     private $config;
 

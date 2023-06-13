@@ -40,7 +40,7 @@ class Entry extends TimestampedWithUserEntity implements ApiEntityInterface
     private $collection;
 
     /**
-     * @ORM\Column(type="json_array")
+     * @ORM\Column(type="json")
      *
      * @Groups({"Entry"})
      */
