@@ -8,7 +8,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use League\Bundle\OAuth2ServerBundle\Manager\ClientManagerInterface;
 use League\Bundle\OAuth2ServerBundle\Model\Client;
-use League\Bundle\OAuth2ServerBundle\Model\Grant;
+use League\Bundle\OAuth2ServerBundle\ValueObject\Grant;
 use Pronto\MobileBundle\Entity\Application;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
