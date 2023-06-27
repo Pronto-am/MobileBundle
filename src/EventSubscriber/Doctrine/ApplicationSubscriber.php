@@ -13,7 +13,7 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use League\Bundle\OAuth2ServerBundle\Manager\ClientManagerInterface;
 use League\Bundle\OAuth2ServerBundle\Model\Client;
-use League\Bundle\OAuth2ServerBundle\Model\Grant;
+use League\Bundle\OAuth2ServerBundle\ValueObject\Grant;
 use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\Application\Version;
 use Pronto\MobileBundle\Entity\Plugin;
