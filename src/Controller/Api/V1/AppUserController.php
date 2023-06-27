@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Exception;
+use League\Bundle\OAuth2ServerBundle\Security\User\NullUser;
 use Pronto\MobileBundle\Controller\Api\BaseApiController;
 use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\AppUser;
@@ -21,10 +22,11 @@ use Pronto\MobileBundle\Exceptions\AppUsers\NotFoundException;
 use Pronto\MobileBundle\Exceptions\AppUsers\UserAlreadyRegisteredException;
 use Pronto\MobileBundle\Exceptions\Auth\NotAuthorizedException;
 use Pronto\MobileBundle\Form\ResetPasswordForm;
-use Swift_Mailer;
-use Swift_Message;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Mailer\Mailer;
+use Symfony\Component\Mime\Address;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -217,7 +219,7 @@ class AppUserController extends BaseApiController
     /**
      * @throws ApiException
      */
-    public function requestPasswordResetLinkAction(Request $request, Swift_Mailer $mailer, EntityManagerInterface $entityManager, TranslatorInterface $translator): JsonResponse
+    public function requestPasswordResetLinkAction(Request $request, Mailer $mailer, EntityManagerInterface $entityManager, TranslatorInterface $translator): JsonResponse
     {
         // Validate the authorization header
         $this->validateAuthorization($this->getPluginIdentifier());
@@ -252,10 +254,11 @@ class AppUserController extends BaseApiController
         $domain = $this->prontoMobile->getConfiguration('domain', 'pronto.am');
 
         // Build the message with the password reset link
-        $message = (new Swift_Message($application->getName() . ' | ' . $translator->trans('authentication.reset_password')))
-            ->setFrom($companyEmail . '@' . $domain, $application->getCustomer()->getCompanyName())
-            ->setTo($user->getEmail(), $user->getFullName())
-            ->setBody(
+        $message = (new Email())
+            ->subject($application->getName() . ' | ' . $translator->trans('authentication.reset_password'))
+            ->from($companyEmail . '@' . $domain, $application->getCustomer()->getCompanyName())
+            ->to(new Address($user->getEmail(), $user->getFullName()))
+            ->html(
                 $this->renderView(
                     '@ProntoMobile/mails/users/app/password.html.twig',
                     [
@@ -370,7 +373,7 @@ class AppUserController extends BaseApiController
 
         $user = $this->getUser();
 
-        if ($user === null) {
+        if ($user === null || $user instanceof NullUser) {
             throw new NotAuthorizedException();
         }
 
@@ -448,7 +451,7 @@ class AppUserController extends BaseApiController
         /** @var AppUser $user */
         $user = $this->getUser();
 
-        if ($user === null) {
+        if ($user === null || $user instanceof NullUser) {
             throw new NotAuthorizedException();
         }
 

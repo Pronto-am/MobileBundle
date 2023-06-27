@@ -15,11 +15,12 @@ use Pronto\MobileBundle\Form\ProfileForm;
 use Pronto\MobileBundle\Form\UserForm;
 use Pronto\MobileBundle\Utils\Doctrine\WhereClause;
 use Pronto\MobileBundle\Utils\PageHelper;
-use Swift_Mailer;
-use Swift_Message;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\Mailer;
+use Symfony\Component\Mime\Address;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -87,7 +88,7 @@ class UserController extends BaseController implements ValidateCustomerSelection
         Request $request,
         EntityManagerInterface $entityManager,
         TranslatorInterface $translator,
-        Swift_Mailer $mailer,
+        Mailer $mailer,
         User $user = null
     ) {
         $customer = $this->getCustomer();
@@ -125,10 +126,11 @@ class UserController extends BaseController implements ValidateCustomerSelection
 
             if ($new) {
                 // Create an account activation link for the user and mail it
-                $message = (new Swift_Message($translator->trans('authentication.create_password')))
-                    ->setFrom('noreply@' . $domain)
-                    ->setTo($user->getEmail())
-                    ->setBody(
+                $message = (new Email())
+                    ->subject($translator->trans('authentication.create_password'))
+                    ->from('noreply@' . $domain)
+                    ->to(new Address($user->getEmail(), $user->getFullName()))
+                    ->html(
                         $this->renderView('@ProntoMobile/mails/registration.html.twig', [
                             'user'   => $user,
                             'action' => [

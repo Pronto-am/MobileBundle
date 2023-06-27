@@ -17,12 +17,12 @@ use Pronto\MobileBundle\Form\ResetPasswordEmailForm;
 use Pronto\MobileBundle\Form\ResetPasswordForm;
 use Pronto\MobileBundle\Utils\Responses\SuccessResponse;
 use RuntimeException;
-use Swift_Mailer;
-use Swift_Message;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\Mailer;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
@@ -79,11 +79,11 @@ class AuthenticationController extends BaseController implements RedirectWhenAut
     }
 
     public function resetPasswordFormAction(
-        Request                $request,
+        Request $request,
         EntityManagerInterface $entityManager,
-        AuthenticationUtils    $authenticationUtils,
-        Swift_Mailer           $mailer,
-        TranslatorInterface    $translator
+        AuthenticationUtils $authenticationUtils,
+        Mailer $mailer,
+        TranslatorInterface $translator
     ): Response {
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
@@ -112,10 +112,11 @@ class AuthenticationController extends BaseController implements RedirectWhenAut
                 $entityManager->persist($passwordReset);
                 $entityManager->flush();
 
-                $message = (new Swift_Message($translator->trans('authentication.reset_password')))
-                    ->setFrom('noreply@' . $domain)
-                    ->setTo($user->getEmail())
-                    ->setBody(
+                $message = (new Email())
+                    ->subject($translator->trans('authentication.reset_password'))
+                    ->from('noreply@' . $domain)
+                    ->to($user->getEmail())
+                    ->html(
                         $this->renderView(
                             '@ProntoMobile/mails/password.html.twig',
                             [
@@ -147,8 +148,12 @@ class AuthenticationController extends BaseController implements RedirectWhenAut
             ]);
     }
 
-    public function resetPasswordAction(Request $request, EntityManagerInterface $entityManager, TranslatorInterface $translator, $token): Response
-    {
+    public function resetPasswordAction(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        TranslatorInterface $translator,
+        $token
+    ): Response {
         /** @var PasswordReset $passwordReset */
         $passwordReset = $entityManager->getRepository(PasswordReset::class)->findOneBy([
             'token' => $token
@@ -179,7 +184,6 @@ class AuthenticationController extends BaseController implements RedirectWhenAut
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
 
-            /** @var User $user */
             $user = $passwordReset->getUser();
             $user->setPlainPassword($data['password']);
 
@@ -191,18 +195,7 @@ class AuthenticationController extends BaseController implements RedirectWhenAut
 
             $entityManager->flush();
 
-            $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
-            $this->get('security.token_storage')->setToken($token);
-            $this->get('session')->set('_security_main', serialize($token));
-
-            if ($user->getCustomer() !== null) {
-                // Set the customer in the cache
-                $request->getSession()->set(Customer::SESSION_IDENTIFIER, $user->getCustomer()->getId());
-
-                return $this->redirectToRoute('pronto_mobile_select_application');
-            }
-
-            return $this->redirectToRoute('pronto_mobile_select_customer');
+            return $this->redirectToRoute('pronto_mobile_login');
         }
 
         return $this->render('@ProntoMobile/authentication/password-reset.html.twig', [
@@ -237,18 +230,7 @@ class AuthenticationController extends BaseController implements RedirectWhenAut
             $entityManager->persist($user);
             $entityManager->flush();
 
-            $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
-            $this->get('security.token_storage')->setToken($token);
-            $this->get('session')->set('_security_main', serialize($token));
-
-            if ($user->getCustomer() !== null) {
-                // Set the customer in the cache
-                $request->getSession()->set(Customer::SESSION_IDENTIFIER, $user->getCustomer()->getId());
-
-                return $this->redirectToRoute('pronto_mobile_select_application');
-            }
-
-            return $this->redirectToRoute('pronto_mobile_select_customer');
+            return $this->redirectToRoute('pronto_mobile_login');
         }
 
         return $this->render('@ProntoMobile/authentication/password-reset.html.twig',

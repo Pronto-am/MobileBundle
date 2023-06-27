@@ -80,7 +80,11 @@ class JsonSerializer
 
     private function getClassName($entity): ?array
     {
-        if (is_array($entity) && count($entity) > 0) {
+        if (is_array($entity)) {
+            if (count($entity) === 0) {
+                return null;
+            }
+
             $entity = $entity[0];
         }
 
