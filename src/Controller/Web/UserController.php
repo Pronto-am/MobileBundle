@@ -18,7 +18,7 @@ use Pronto\MobileBundle\Utils\PageHelper;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mailer\Mailer;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -88,7 +88,7 @@ class UserController extends BaseController implements ValidateCustomerSelection
         Request $request,
         EntityManagerInterface $entityManager,
         TranslatorInterface $translator,
-        Mailer $mailer,
+        MailerInterface $mailer,
         User $user = null
     ) {
         $customer = $this->getCustomer();

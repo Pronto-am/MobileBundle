@@ -1,7 +1,9 @@
 {% extends '@ProntoMobile/base.html.twig' %}
 
 {% block body %}
-    <translations-index :languages="{{ pronto_mobile.application.availableLanguages|json_encode() }}"></translations-index>
+    <div id="vue-app">
+        <translations-index :languages="{{ pronto_mobile.application.availableLanguages|json_encode() }}"></translations-index>
+    </div>
 {% endblock %}
 
 {% block javascripts %}

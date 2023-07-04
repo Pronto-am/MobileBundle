@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mailer\Mailer;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -82,7 +82,7 @@ class AuthenticationController extends BaseController implements RedirectWhenAut
         Request $request,
         EntityManagerInterface $entityManager,
         AuthenticationUtils $authenticationUtils,
-        Mailer $mailer,
+        MailerInterface $mailer,
         TranslatorInterface $translator
     ): Response {
         // get the login error if there is one

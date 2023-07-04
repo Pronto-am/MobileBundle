@@ -27,6 +27,6 @@ if (Vue.prototype.$inProduction) {
 window.Vue = Vue;
 
 new Vue({
-    el: 'body > #container',
+    el: '#vue-app',
     i18n
 });

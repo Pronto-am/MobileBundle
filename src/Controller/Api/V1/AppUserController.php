@@ -24,7 +24,7 @@ use Pronto\MobileBundle\Exceptions\Auth\NotAuthorizedException;
 use Pronto\MobileBundle\Form\ResetPasswordForm;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Mailer\Mailer;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -219,7 +219,7 @@ class AppUserController extends BaseApiController
     /**
      * @throws ApiException
      */
-    public function requestPasswordResetLinkAction(Request $request, Mailer $mailer, EntityManagerInterface $entityManager, TranslatorInterface $translator): JsonResponse
+    public function requestPasswordResetLinkAction(Request $request, MailerInterface $mailer, EntityManagerInterface $entityManager, TranslatorInterface $translator): JsonResponse
     {
         // Validate the authorization header
         $this->validateAuthorization($this->getPluginIdentifier());
