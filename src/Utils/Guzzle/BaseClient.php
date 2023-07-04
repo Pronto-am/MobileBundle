@@ -35,7 +35,7 @@ class BaseClient implements ClientInterface
     {
         $client = new Client([
             'base_uri'    => $this->baseUrl,
-            'timeout'     => 10.0,
+            'timeout'     => 30.0,
             'http_errors' => false
         ]);
 

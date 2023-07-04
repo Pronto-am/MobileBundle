@@ -40,7 +40,8 @@
         "symfony/security-bundle": "^5.4",
         "league/oauth2-server-bundle": "^0.5",
         "symfony/routing": "^5.4",
-        "symfony/mailer": "^6.1"
+        "symfony/mailer": "^5.4",
+        "symfony/cache": "^5.4"
     },
     "require-dev": {
         "nelmio/alice": "^3.5.0",
