@@ -1,1 +1,18 @@
-.col.collection-card{position:relative}.col.collection-card .entry-settings{bottom:calc(1rem + 13px);left:calc(.75rem + 15px);position:absolute;z-index:1}.col.collection-card .entry-settings a{color:#a4a4a4;font-size:22px;padding:3px}
+.col.collection-card {
+  position: relative;
+}
+
+.col.collection-card .entry-settings {
+  position: absolute;
+  z-index: 1;
+  bottom: calc(1rem + 13px);
+  left: calc(0.75rem + 15px);
+}
+
+.col.collection-card .entry-settings a {
+  padding: 3px;
+  font-size: 22px;
+  color: #a4a4a4;
+}
+
+

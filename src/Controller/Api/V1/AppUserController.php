@@ -178,7 +178,7 @@ class AppUserController extends BaseApiController
         /** @var AppUser $user */
         $user = $entityManager->getRepository(AppUser::class)->find($userIdentifier);
 
-        if ($user === null) {
+        if ($user === null || $user instanceof NullUser) {
             throw new NotFoundException();
         }
 
