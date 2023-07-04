@@ -90,6 +90,8 @@ class SendPushNotificationsCommand extends Command
                     $this->sender->send();
                 } catch (Exception $exception) {
                     $output->writeln([' - Error sending the notification', ' - E: ' . $exception->getMessage()]);
+                    $notification->setBeingProcessed(0);
+                    $this->entityManager->persist($notification);
                     continue;
                 }
 
