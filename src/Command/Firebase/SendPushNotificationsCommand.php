@@ -90,7 +90,7 @@ class SendPushNotificationsCommand extends Command
                     $this->sender->send();
                 } catch (Exception $exception) {
                     $output->writeln([' - Error sending the notification', ' - E: ' . $exception->getMessage()]);
-                    $notification->setBeingProcessed(0);
+                    $notification->setBeingProcessed(false);
                     $this->entityManager->persist($notification);
                     continue;
                 }
@@ -107,7 +107,7 @@ class SendPushNotificationsCommand extends Command
                 $output->writeln('Firebase Server Key is invalid');
             }
 
-            $notification->setBeingProcessed(0);
+            $notification->setBeingProcessed(false);
             $this->entityManager->persist($notification);
         }
 
