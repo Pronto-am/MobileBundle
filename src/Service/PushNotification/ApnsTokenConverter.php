@@ -66,7 +66,7 @@ class ApnsTokenConverter
             }
 
             // Return the results
-            $results = array_merge($results, $response->results);
+            $results = array_merge($results, $response->results ?? []);
         }
 
         return $results;
