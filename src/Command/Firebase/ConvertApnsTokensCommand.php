@@ -107,5 +107,7 @@ class ConvertApnsTokensCommand extends Command
                 }
             }
         }
+
+        return Command::SUCCESS;
     }
 }
