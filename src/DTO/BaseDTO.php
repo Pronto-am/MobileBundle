@@ -6,14 +6,9 @@ namespace Pronto\MobileBundle\DTO;
 
 abstract class BaseDTO
 {
-    /** @var bool $new */
-    public $new = true;
+    public bool $new = true;
 
-    /**
-     * @param mixed|null $entity
-     * @return static
-     */
-    public static function fromEntity($entity)
+    public static function fromEntity(mixed $entity): self
     {
         if ($entity === null) {
             return new static();
@@ -44,14 +39,9 @@ abstract class BaseDTO
         return $data;
     }
 
-    /** @return array */
     abstract public static function getFillable(): array;
 
-    /**
-     * @param $entity
-     * @return mixed
-     */
-    public function toEntity($entity)
+    public function toEntity($entity): mixed
     {
         foreach (static::getFillable() as $field => $method) {
             // The fillable fields can be defined like: [$index] => [$fieldName] or [$fieldName] => [$methodName]
