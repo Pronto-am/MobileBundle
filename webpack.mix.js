@@ -40,10 +40,6 @@ mix
     .js(js.src + 'jscolor.js', js.dest)
     .js(js.src + 'plugins.js', js.dest)
 
-    // New vue resources
-    .sass('assets/sass/app.scss', 'src/Resources/public/build/css')
-    .js('assets/js/app.js', 'src/Resources/public/build/js').vue()
-
     .js(js.src + 'notifications/statistics.js', js.dest + '/notifications')
     .js(js.src + 'notifications/notifications.js', js.dest + '/notifications')
 
