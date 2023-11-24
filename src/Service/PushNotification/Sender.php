@@ -3,79 +3,122 @@
 namespace Pronto\MobileBundle\Service\PushNotification;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
+use GuzzleHttp\Exception\GuzzleException;
+use Kreait\Firebase\Contract\Messaging;
+use Kreait\Firebase\Exception\FirebaseException;
+use Kreait\Firebase\Exception\MessagingException;
+use Kreait\Firebase\Factory;
 use Pronto\MobileBundle\Entity\Device;
 use Pronto\MobileBundle\Entity\PushNotification;
 use Pronto\MobileBundle\Entity\PushNotification\Recipient;
-use Pronto\MobileBundle\Utils\Firebase\CloudMessaging\Client;
+use Pronto\MobileBundle\Repository\DeviceRepository;
 use Pronto\MobileBundle\Utils\Firebase\CloudMessaging\MessageGroup;
 use Pronto\MobileBundle\Utils\Firebase\CloudMessaging\Response;
+use Pronto\MobileBundle\Utils\Firebase\CloudMessaging\ResponseChunk;
 
 class Sender
 {
-    private ?Client $client;
     private array $devices = [];
     private ?Response $response;
-    private EntityManagerInterface $entityManager;
+    private Messaging $messaging;
     private PushNotification $notification;
-    private FirebaseStorage $firebaseStorage;
 
-    public function __construct(EntityManagerInterface $entityManager, FirebaseStorage $firebaseStorage)
-    {
-        $this->entityManager = $entityManager;
-        $this->firebaseStorage = $firebaseStorage;
+    public function __construct(
+        private readonly EntityManagerInterface $entityManager,
+        private readonly FirebaseStorage $firebaseStorage
+    ) {
     }
 
-    public function setServerKey(string $firebaseServerKey): bool
-    {
-        try {
-            $this->client = new Client($firebaseServerKey);
-        } catch (Exception $e) {
-            $this->client = null;
-        }
+    public function setServiceAccount(
+        array $serviceAccount
+    ): self {
+        $factory = new Factory();
+        $this->messaging = $factory
+            ->withServiceAccount($serviceAccount)
+            ->createMessaging();
 
-        return $this->client !== null;
+        return $this;
     }
 
-    public function setNotification(PushNotification $notification): void
-    {
+    public function setNotification(
+        PushNotification $notification
+    ): self {
         $this->notification = $notification;
-
-        $this->setMessageGroups();
+        return $this;
     }
 
-    private function setMessageGroups(): void
+    /**
+     * @return array<MessageGroup>
+     */
+    private function getMessageGroups(): array
     {
         $application = $this->notification->getApplication();
         $messageGroups = $languages = [];
+
+        /** @var DeviceRepository $deviceRepository */
+        $deviceRepository = $this->entityManager->getRepository(Device::class);
 
         foreach ($application->getAvailableLanguages() as $language) {
             $languages[] = $language['code'];
 
             // Get the devices by notification details and language
-            $devices = $this->entityManager->getRepository(Device::class)->findNotificationRecipientsByLanguage($this->notification, $language['code'], $this->notification->getTest());
+            $devices = $deviceRepository->findNotificationRecipientsByLanguage(
+                notification: $this->notification,
+                language: $language['code'],
+                isTest: $this->notification->getTest()
+            );
 
             $this->devices = array_merge($this->devices, $devices);
 
-            $messageGroups[] = new MessageGroup($this->notification, $this->firebaseStorage, $devices, $language['code']);
+            $messageGroups[] = new MessageGroup(
+                notification: $this->notification,
+                firebaseStorage: $this->firebaseStorage,
+                devices: $devices,
+                language: $language['code']
+            );
         }
 
         // Create another message group of left-over devices
-        $devices = $this->entityManager->getRepository(Device::class)->findNotificationRecipientsByExcludeLanguages($this->notification, $languages, $this->notification->getTest());
+        $devices = $deviceRepository->findNotificationRecipientsByExcludeLanguages(
+            notification: $this->notification,
+            excludeLanguages: $languages,
+            isTest: $this->notification->getTest()
+        );
 
         $this->devices = array_merge($this->devices, $devices);
 
-        $messageGroups[] = new MessageGroup($this->notification, $this->firebaseStorage, $devices);
+        $messageGroups[] = new MessageGroup(
+            notification: $this->notification,
+            firebaseStorage: $this->firebaseStorage,
+            devices: $devices
+        );
 
-        $this->client->setMessageGroups($messageGroups);
+        return $messageGroups;
     }
 
     /**
-     * Send the message to the Firebase cloud messaging API
+     * @throws MessagingException
+     * @throws FirebaseException
      */
     public function send(): void
     {
-        $this->response = $this->client->sendNotification();
+        $this->response = new Response();
+        $messageGroups = $this->getMessageGroups();
+        foreach ($messageGroups as $messageGroup) {
+
+            $chunks = array_chunk($messageGroup->getTokens(), 1000);
+
+            foreach ($chunks as $chunk) {
+                $report = $this->messaging->sendMulticast(
+                    message: $messageGroup->message,
+                    registrationTokens: $chunk,
+                );
+
+                $this->response->addReport(
+                    report: $report
+                );
+            }
+        }
 
         $this->handleErrors();
         $this->saveStatistics();
@@ -87,13 +130,8 @@ class Sender
     private function handleErrors(): void
     {
         if (count($this->getTokensToDelete()) > 0) {
-            // Delete old tokens
-            $this->entityManager->getRepository(Device::class)->setDisabledByTokens($this->getTokensToDelete());
-        }
-
-        // Update new tokens
-        foreach ($this->getTokensToModify() as $oldToken => $newToken) {
-            $this->entityManager->getRepository(Device::class)->updateToken($oldToken, $newToken);
+            $this->entityManager->getRepository(Device::class)
+                ->setDisabledByTokens($this->getTokensToDelete());
         }
     }
 
@@ -112,20 +150,6 @@ class Sender
     }
 
     /**
-     * Get updated tokens
-     *
-     * @return array
-     */
-    public function getTokensToModify(): array
-    {
-        if ($this->response !== null) {
-            return $this->response->getTokensToModify();
-        }
-
-        return [];
-    }
-
-    /**
      * Insert statistics for the sent push notification
      */
     private function saveStatistics(): void
@@ -138,9 +162,7 @@ class Sender
             if (in_array($device['firebaseToken'], $this->getTokensToDelete()) || in_array($device['firebaseToken'], $this->getTokensToRetry())) {
                 $recipient->setSent(false);
 
-                $reasons = $this->getFailureReasons();
-
-                $recipient->setDescription(isset($reasons[$device['firebaseToken']]) ? strtolower($reasons[$device['firebaseToken']]) : 'Unknown failure');
+                $recipient->setDescription('Unknown failure');
             } elseif ($device['firebaseToken'] === null) {
                 $recipient->setSent(false);
                 $recipient->setDescription('nofirebasetoken');
@@ -169,20 +191,6 @@ class Sender
     }
 
     /**
-     * Get the failure reasons if the response is set
-     *
-     * @return array
-     */
-    public function getFailureReasons(): array
-    {
-        if ($this->response !== null) {
-            return $this->response->getFailureReasons();
-        }
-
-        return [];
-    }
-
-    /**
      * Display logging of the sent push notification
      *
      * @return array
@@ -193,9 +201,6 @@ class Sender
 
         $logs[] = 'Successful: ' . $this->getSuccessCount();
         $logs[] = 'Failures: ' . $this->getFailureCount();
-        $logs[] = 'Modified: ' . $this->getModifyCount();
-        $logs[] = 'Tokens to retry: ' . json_encode($this->getTokensToRetry());
-        $logs[] = 'Tokens to modify: ' . json_encode(array_keys($this->getTokensToModify()));
         $logs[] = 'Tokens to delete: ' . json_encode($this->getTokensToDelete());
 
         return $logs;
@@ -224,20 +229,6 @@ class Sender
     {
         if ($this->response !== null) {
             return $this->response->getFailureCount();
-        }
-
-        return 0;
-    }
-
-    /**
-     * Get the modify count of the push notification
-     *
-     * @return int
-     */
-    public function getModifyCount(): int
-    {
-        if ($this->response !== null) {
-            return $this->response->getModifyCount();
         }
 
         return 0;

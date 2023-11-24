@@ -4,22 +4,17 @@ namespace Pronto\MobileBundle\Utils;
 
 class Optional
 {
-    /**
-     * @var mixed $value
-     */
-    protected $value;
-
-    public function __construct($value)
-    {
-        $this->value = $value;
+    public function __construct(
+        protected mixed $value
+    ) {
     }
 
-    public static function get($value): Optional
+    public static function get(mixed $value): Optional
     {
-        return new self($value);
+        return new self(value: $value);
     }
 
-    public function __get($key)
+    public function __get($key): mixed
     {
         if (is_object($this->value)) {
             return $this->value->{$key} ?? null;
@@ -28,7 +23,7 @@ class Optional
         return null;
     }
 
-    public function __isset($name)
+    public function __isset($name): mixed
     {
         if (is_object($this->value)) {
             return isset($this->value->{$name});
@@ -37,7 +32,7 @@ class Optional
         return false;
     }
 
-    public function __call($name, $arguments)
+    public function __call($name, $arguments): mixed
     {
         if (is_object($this->value)) {
             return $this->value->{$name}($arguments) ?? null;

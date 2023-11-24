@@ -19,16 +19,14 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class SendPushNotificationsCommand extends Command
 {
-    private EntityManagerInterface $entityManager;
-
-    private Sender $sender;
-
     private ProntoMobile $prontoMobile;
 
-    public function __construct(EntityManagerInterface $entityManager, ContainerInterface $container, Sender $sender, $name = null)
-    {
-        $this->entityManager = $entityManager;
-        $this->sender = $sender;
+    public function __construct(
+        readonly EntityManagerInterface $entityManager,
+        readonly Sender $sender,
+        ContainerInterface $container,
+        $name = null
+    ) {
         $this->prontoMobile = $container->get(ProntoMobile::class);
 
         parent::__construct($name);

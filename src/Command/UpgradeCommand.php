@@ -20,17 +20,15 @@ class UpgradeCommand extends Command
 {
     private const ASSISTABLE_VERSIONS = ['2.0.0'];
 
-    private EntityManagerInterface $entityManager;
-    private ClientManagerInterface $clientManager;
-
-    public function __construct(ClientManagerInterface $clientManager, EntityManagerInterface $entityManager, $name = null)
-    {
+    public function __construct(
+        readonly ClientManagerInterface $clientManager,
+        readonly EntityManagerInterface $entityManager,
+        $name = null
+    ) {
         parent::__construct($name);
-        $this->entityManager = $entityManager;
-        $this->clientManager = $clientManager;
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setName('pronto:upgrade:assist')
             ->addArgument('version', InputArgument::REQUIRED, 'The version you are updating to')

@@ -2,24 +2,26 @@
 
 namespace Pronto\MobileBundle\Utils\Firebase\CloudMessaging;
 
+use Kreait\Firebase\Messaging\AndroidConfig;
+use Kreait\Firebase\Messaging\ApnsConfig;
+use Kreait\Firebase\Messaging\CloudMessage;
+use Kreait\Firebase\Messaging\Notification;
 use Pronto\MobileBundle\Entity\PushNotification;
 use Pronto\MobileBundle\Service\PushNotification\FirebaseStorage;
 
 class MessageGroup
 {
-    private PushNotification $notification;
-    private Message $message;
-    private ?string $language;
+    readonly CloudMessage $message;
     private string $defaultLanguage;
     private array $tokens;
-    private FirebaseStorage $firebaseStorage;
 
-    public function __construct(PushNotification $notification, FirebaseStorage $firebaseStorage, array $devices, string $language = null)
-    {
-        $this->notification = $notification;
-        $this->language = $language;
+    public function __construct(
+        private readonly PushNotification $notification,
+        private readonly FirebaseStorage $firebaseStorage,
+        array $devices,
+        private $language = null,
+    ) {
         $this->tokens = array_column($devices, 'firebaseToken');
-        $this->firebaseStorage = $firebaseStorage;
 
         $this->setDefaultLanguage();
         $this->setMessage();
@@ -32,9 +34,17 @@ class MessageGroup
 
     private function setMessage(): void
     {
-        $this->message = new Message();
-        $this->message->setTitle($this->getTranslation($this->notification->getTitle()));
-        $this->message->setContent($this->getTranslation($this->notification->getContent()));
+        $notification = Notification::fromArray([
+            'title' => $this->getTranslation($this->notification->getTitle()),
+            'body'  => $this->getTranslation($this->notification->getContent()),
+        ]);
+
+        $data = [
+            // Set the triggers for the statistics
+            'notificationIdentifier' => $this->notification->getId(),
+            // Add channel id for android
+            'android_channel_id'     => 'CHANNEL_ID_DEFAULT',
+        ];
 
         // Add a click action url if it's set
         if ($this->notification->getClickAction() === PushNotification::TYPE_URL_ACTION) {
@@ -42,18 +52,26 @@ class MessageGroup
 
             $clickAction = !empty($clickAction[$this->language]) ? $clickAction[$this->language] : $clickAction[$this->defaultLanguage];
 
-            $this->message->addData('clickAction', $clickAction);
+            $data['clickAction'] = $clickAction;
         } elseif ($this->notification->getClickAction() === PushNotification::TYPE_HTML_ACTION) {
 
             $language = $this->language ?? $this->defaultLanguage;
-            $this->message->addData('clickAction', $this->firebaseStorage->generateUrlForPushNotification($this->notification, $language));
+            $data['clickAction'] = $this->firebaseStorage->generateUrlForPushNotification($this->notification, $language);
         }
 
-        // Set the triggers for the statistics
-        $this->message->addData('notificationIdentifier', $this->notification->getId());
+        $this->message = CloudMessage::new()
+            ->withNotification($notification)
+            ->withAndroidConfig(AndroidConfig::fromArray([
+                'ttl'      => '3600s',
+                'priority' => 'high',
 
-        // Add channel id for android
-        $this->message->addData('android_channel_id', 'CHANNEL_ID_DEFAULT');
+            ]))
+            ->withApnsConfig(ApnsConfig::fromArray([
+                'headers' => [
+                    'apns-priority' => '10',
+                ],
+            ]))
+            ->withData($data);
     }
 
     private function getTranslation(array $json): string
@@ -65,11 +83,8 @@ class MessageGroup
         if (isset($json[$this->defaultLanguage])) {
             return $json[$this->defaultLanguage];
         }
-    }
 
-    public function getMessage(): Message
-    {
-        return $this->message;
+        return '';
     }
 
     public function getTokens(): array

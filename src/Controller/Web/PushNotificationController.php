@@ -21,6 +21,9 @@ use Pronto\MobileBundle\EventSubscriber\ValidateApplicationSelectionInterface;
 use Pronto\MobileBundle\EventSubscriber\ValidateCustomerSelectionInterface;
 use Pronto\MobileBundle\EventSubscriber\ValidatePluginStateInterface;
 use Pronto\MobileBundle\Form\PushNotificationForm;
+use Pronto\MobileBundle\Repository\Application\PluginRepository;
+use Pronto\MobileBundle\Repository\PushNotification\RecipientRepository;
+use Pronto\MobileBundle\Repository\PushNotificationRepository;
 use Pronto\MobileBundle\Service\JsonTranslator;
 use Pronto\MobileBundle\Utils\Date;
 use Pronto\MobileBundle\Utils\Doctrine\GroupClause;
@@ -44,11 +47,21 @@ class PushNotificationController extends BaseController implements ValidateCusto
         return Plugin::PUSH_NOTIFICATIONS;
     }
 
-    public function indexAction(Request $request, EntityManagerInterface $entityManager): Response
-    {
+    public function indexAction(
+        Request $request,
+        EntityManagerInterface $entityManager
+    ): Response {
         $application = $this->getApplication();
 
-        $pageHelper = new PageHelper($request, $entityManager, PushNotification::class, 15, 't.sent', 'DESC');
+        $pageHelper = new PageHelper(
+            request: $request,
+            entityManager: $entityManager,
+            entity: PushNotification::class,
+            perPage: 15,
+            sortField: 't.sent',
+            sortOrder: 'DESC'
+        );
+
         $pageHelper->addClause(new SelectClause([
             't AS notification',
             'COUNT(r.sent) AS devices',
@@ -66,19 +79,21 @@ class PushNotificationController extends BaseController implements ValidateCusto
             'application' => $application
         ]);
 
-        return $this->render('@ProntoMobile/notifications/index.html.twig',
-            [
-                'pageHelper'             => $pageHelper,
-                'scheduledNotifications' => $scheduledNotifications
-            ]);
+        return $this->render('@ProntoMobile/notifications/index.html.twig', [
+            'pageHelper'             => $pageHelper,
+            'scheduledNotifications' => $scheduledNotifications
+        ]);
     }
 
     /**
      * @throws NoResultException
      * @throws NonUniqueResultException
      */
-    public function editAction(ContainerInterface $container, JsonTranslator $jsonTranslator, EntityManagerInterface $entityManager, $identifier = null)
-    {
+    public function editAction(
+        JsonTranslator $jsonTranslator,
+        EntityManagerInterface $entityManager,
+        $identifier = null
+    ): Response {
         $notification = null;
 
         if ($identifier !== null) {
@@ -127,8 +142,12 @@ class PushNotificationController extends BaseController implements ValidateCusto
     /**
      * @throws ORMException
      */
-    public function saveAction(Request $request, EntityManagerInterface $entityManager, UserInterface $user, $identifier = null): RedirectResponse
-    {
+    public function saveAction(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        UserInterface $user,
+        $identifier = null
+    ): RedirectResponse {
         $notification = null;
 
         if ($identifier !== null) {
@@ -190,7 +209,7 @@ class PushNotificationController extends BaseController implements ValidateCusto
 
         $notification->setApplication($this->getApplication());
 
-        $notification->setClickAction((int) $form['clickAction']);
+        $notification->setClickAction((int)$form['clickAction']);
 
         $notification->setTest(isset($form['test']));
 
@@ -210,8 +229,10 @@ class PushNotificationController extends BaseController implements ValidateCusto
         return $this->redirectToRoute('pronto_mobile_notifications');
     }
 
-    public function detailsAction(EntityManagerInterface $entityManager, $identifier)
-    {
+    public function detailsAction(
+        EntityManagerInterface $entityManager,
+        $identifier
+    ): Response {
         $notification = $entityManager->getRepository(PushNotification::class)->find($identifier);
 
         if ($notification === null || $notification->getApplication()->getId() !== $this->getApplication()->getId()) {
@@ -219,19 +240,24 @@ class PushNotificationController extends BaseController implements ValidateCusto
             return $this->redirectToRoute('pronto_mobile_notifications');
         }
 
-        $bounced = $entityManager->getRepository(Recipient::class)->getBounceCountByNotification($notification);
-        $sent = $entityManager->getRepository(Recipient::class)->getSuccessfulSentCountByNotification($notification);
-        $opened = $entityManager->getRepository(Recipient::class)->getOpenedCountByNotification($notification);
+        /** @var RecipientRepository $recipientRepository */
+        $recipientRepository = $entityManager->getRepository(Recipient::class);
+
+        $bounced = $recipientRepository->getBounceCountByNotification($notification);
+        $sent = $recipientRepository->getSuccessfulSentCountByNotification($notification);
+        $opened = $recipientRepository->getOpenedCountByNotification($notification);
 
         $sentStatistics = [
-            (int) $bounced,
-            (int) $sent,
-            (int) $opened
+            (int)$bounced,
+            (int)$sent,
+            (int)$opened
         ];
 
-        $clickedStatistics = $entityManager->getRepository(Recipient::class)->getClickedCountByNotification($notification);
+        $clickedStatistics = $recipientRepository
+            ->getClickedCountByNotification($notification);
 
-        $platformStatistics = $entityManager->getRepository(Recipient::class)->getSuccessfulSentCountByNotificationGroupByPlatform($notification);
+        $platformStatistics = $recipientRepository
+            ->getSuccessfulSentCountByNotificationGroupByPlatform($notification);
 
         // Show en empty doughnut when the notification was sent to 0 devices
         if (empty($platformStatistics)) {
@@ -246,8 +272,14 @@ class PushNotificationController extends BaseController implements ValidateCusto
             ];
         }
 
+        /** @var PluginRepository $applicationPluginRepository */
+        $applicationPluginRepository = $entityManager->getRepository(ApplicationPlugin::class);
         /** @var ApplicationPlugin $plugin */
-        $plugin = $entityManager->getRepository(ApplicationPlugin::class)->findOneByApplicationAndIdentifier($this->getApplication(), Plugin::PUSH_NOTIFICATIONS);
+        $plugin = $applicationPluginRepository->findOneByApplicationAndIdentifier(
+            application: $this->getApplication(),
+            identifier: Plugin::PUSH_NOTIFICATIONS
+        );
+
         $config = $plugin->getConfig();
 
         return $this->render('@ProntoMobile/notifications/details.html.twig', [
@@ -265,9 +297,19 @@ class PushNotificationController extends BaseController implements ValidateCusto
         $segment = $request->request->getInt('segment');
         $testDevices = $request->request->get('testDevices', []);
 
-        $recipients = $entityManager->getRepository(PushNotification::class)->getRecipientCount($this->getApplication(), $segment, $test, $testDevices);
+        /** @var PushNotificationRepository $pushNotificationRepository */
+        $pushNotificationRepository = $entityManager->getRepository(PushNotification::class);
 
-        $response = new SuccessResponse(['recipients' => $recipients]);
+        $recipients = $pushNotificationRepository->getRecipientCount(
+            application: $this->getApplication(),
+            segment: $segment,
+            test: $test,
+            testDevices: $testDevices
+        );
+
+        $response = new SuccessResponse([
+            'recipients' => $recipients
+        ]);
 
         return $response->create()->getJsonResponse();
     }

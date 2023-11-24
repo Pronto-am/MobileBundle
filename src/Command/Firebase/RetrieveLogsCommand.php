@@ -8,6 +8,7 @@ use DateTime;
 use DateTimeZone;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use Kreait\Firebase\Exception\DatabaseException;
 use Kreait\Firebase\Factory;
 use Pronto\MobileBundle\Entity\AppUser;
 use Pronto\MobileBundle\Entity\Device;
@@ -30,24 +31,21 @@ class RetrieveLogsCommand extends Command
     // Decryption method for the table contents
     public const DECRYPTION_METHOD = 'aes-256-cbc';
 
-    private EntityManagerInterface $entityManager;
-
-    private GoogleServiceAccountLoader $googleServiceAccountLoader;
-
     private ProntoMobile $prontoMobile;
 
     private OutputInterface $output;
 
-    public function __construct(EntityManagerInterface $entityManager, GoogleServiceAccountLoader $googleServiceAccountLoader, ContainerInterface $container, $name = null)
-    {
-        $this->entityManager = $entityManager;
-        $this->googleServiceAccountLoader = $googleServiceAccountLoader;
+    public function __construct(
+        readonly EntityManagerInterface $entityManager,
+        readonly GoogleServiceAccountLoader $googleServiceAccountLoader,
+        ContainerInterface $container, $name = null
+    ) {
         $this->prontoMobile = $container->get(ProntoMobile::class);
 
         parent::__construct($name);
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setName('firebase:database:logs')
             ->setDescription('Retrieve the app logins from the Firebase database')
@@ -56,6 +54,7 @@ class RetrieveLogsCommand extends Command
 
     /**
      * @throws Exception
+     * @throws DatabaseException
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
@@ -76,8 +75,8 @@ class RetrieveLogsCommand extends Command
 
         $factory = new Factory();
 
-        $firebase = $factory->withServiceAccount($serviceAccount)->create();
-        $database = $firebase->getDatabase()->getReference(self::LOG_TABLE_NAME);
+        $firebase = $factory->withServiceAccount($serviceAccount);
+        $database = $firebase->createDatabase()->getReference(self::LOG_TABLE_NAME);
         $snapshot = $database->getSnapshot();
 
         $output->writeln('- Accessing the logs database');
@@ -100,12 +99,17 @@ class RetrieveLogsCommand extends Command
                 continue;
             }
 
-            // Try to decrypt the data
             try {
                 $configuration = $this->prontoMobile->getConfiguration('firebase');
                 $decryptionPassword = $configuration['storage_decryption_password'];
 
-                $data = openssl_decrypt($value['data'], self::DECRYPTION_METHOD, $decryptionPassword, 0, $value['iv']);
+                $data = openssl_decrypt(
+                    data: $value['data'],
+                    cipher_algo: self::DECRYPTION_METHOD,
+                    passphrase: $decryptionPassword,
+                    iv: $value['iv']
+                );
+
             } catch (Exception $exception) {
                 $output->writeln([
                     'Could not decrypt this data: ' . $value['data'],
@@ -158,7 +162,8 @@ class RetrieveLogsCommand extends Command
         // Put code inside try catch to prevent crashing the cronjob
         try {
             /** @var Device $device */
-            $device = $this->entityManager->getRepository(Device::class)->find($data->device_identifier);
+            $device = $this->entityManager->getRepository(Device::class)
+                ->find($data->device_identifier);
 
             if ($device === null) {
                 return;
@@ -202,10 +207,10 @@ class RetrieveLogsCommand extends Command
     {
         // Put code inside try catch to prevent crashing the cronjob
         try {
-            /** @var AppUser $user */
-            $user = $this->entityManager->getRepository(AppUser::class)->find($data->user_identifier);
+            $user = $this->entityManager->getRepository(AppUser::class)
+                ->find($data->user_identifier);
 
-            if ($user === null) {
+            if (!$user instanceof AppUser) {
                 return;
             }
 
@@ -223,14 +228,13 @@ class RetrieveLogsCommand extends Command
     {
         // Put code inside try catch to prevent crashing the cronjob
         try {
-            /** @var Recipient $notificationRecipient */
             $notificationRecipient = $this->entityManager->getRepository(Recipient::class)->findOneBy([
                 'pushNotification' => $data->notification_identifier,
                 'device'           => $data->device_identifier
             ]);
 
             // Check if the recipient exists
-            if ($notificationRecipient === null) {
+            if (!$notificationRecipient instanceof Recipient) {
                 return;
             }
 

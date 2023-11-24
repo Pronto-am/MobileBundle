@@ -11,6 +11,8 @@ use GuzzleHttp\Exception\GuzzleException;
 use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\Device;
 use Pronto\MobileBundle\Entity\Plugin;
+use Pronto\MobileBundle\Repository\ApplicationRepository;
+use Pronto\MobileBundle\Repository\DeviceRepository;
 use Pronto\MobileBundle\Service\ProntoMobile;
 use Pronto\MobileBundle\Service\PushNotification\ApnsTokenConverter;
 use Symfony\Component\Console\Command\Command;
@@ -20,20 +22,14 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class ConvertApnsTokensCommand extends Command
 {
-    private EntityManagerInterface $entityManager;
-
-    private ApnsTokenConverter $apnsTokenConverter;
-
     private ProntoMobile $prontoMobile;
 
     public function __construct(
-        EntityManagerInterface $entityManager,
-        ContainerInterface     $container,
-        ApnsTokenConverter     $apnsTokenConverter,
-                               $name = null
+        private readonly EntityManagerInterface $entityManager,
+        private readonly ApnsTokenConverter $apnsTokenConverter,
+        ContainerInterface $container,
+        $name = null
     ) {
-        $this->entityManager = $entityManager;
-        $this->apnsTokenConverter = $apnsTokenConverter;
         $this->prontoMobile = $container->get(ProntoMobile::class);
 
         parent::__construct($name);
@@ -50,8 +46,14 @@ class ConvertApnsTokensCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        /** @var ApplicationRepository $applicationRepository */
+        $applicationRepository = $this->entityManager->getRepository(Application::class);
+
+        /** @var DeviceRepository $deviceRepository */
+        $deviceRepository = $this->entityManager->getRepository(Device::class);
+
         // Select the applications which contain empty firebase tokens
-        $applications = $this->entityManager->getRepository(Application::class)->getWithMissingFirebaseTokens();
+        $applications = $applicationRepository->getWithMissingFirebaseTokens();
 
         // There are no tokens to convert, alert the user
         if (count($applications) === 0) {
@@ -69,7 +71,7 @@ class ConvertApnsTokensCommand extends Command
             $referencedApplication = $this->entityManager->getReference(Application::class, $application['id']);
 
             // Get the devices with a missing firebase token
-            $devices = $this->entityManager->getRepository(Device::class)->getByMissingFirebaseToken($referencedApplication);
+            $devices = $deviceRepository->getByMissingFirebaseToken($referencedApplication);
 
             try {
                 // Get the configuration of the push notifications plugin
@@ -103,7 +105,11 @@ class ConvertApnsTokensCommand extends Command
             // Loop through the results and add the firebase tokens to the apns tokens
             foreach ($results as $result) {
                 if ($result->status === 'OK') {
-                    $this->entityManager->getRepository(Device::class)->addFirebaseToken($application['id'], $result->apns_token, $result->registration_token);
+                    $deviceRepository->addFirebaseToken(
+                        applicationId: $application['id'],
+                        apnsToken: $result->apns_token,
+                        firebaseToken: $result->registration_token
+                    );
                 }
             }
         }

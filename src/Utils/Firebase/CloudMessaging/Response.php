@@ -2,26 +2,24 @@
 
 namespace Pronto\MobileBundle\Utils\Firebase\CloudMessaging;
 
+use Kreait\Firebase\Messaging\MulticastSendReport;
+
 class Response
 {
     private int $successCount = 0;
     private int $failureCount = 0;
-    private int $modifyCount = 0;
-    private array $tokensToModify = [];
     private array $tokensToDelete = [];
-    private array $tokensToRetry = [];
-    private array $failureReasons = [];
 
-    public function addChunk(ResponseChunk $chunk): void
+    public function addReport(MulticastSendReport $report): void
     {
-        $this->successCount += $chunk->getSuccessCount();
-        $this->failureCount += $chunk->getFailureCount();
-        $this->modifyCount += $chunk->getModifyCount();
+        $this->successCount += $report->successes()->count();
+        $this->failureCount += $report->failures()->count();
 
-        $this->tokensToModify = array_merge($this->tokensToModify, $chunk->getTokensToModify());
-        $this->tokensToDelete = array_merge($this->tokensToDelete, $chunk->getTokensToDelete());
-        $this->tokensToRetry = array_merge($this->tokensToRetry, $chunk->getTokensToRetry());
-        $this->failureReasons = array_merge($this->failureReasons, $chunk->getFailureReasons());
+        $this->tokensToDelete = array_merge(
+            $this->tokensToDelete,
+            $report->invalidTokens(),
+            $report->unknownTokens(),
+        );
     }
 
     public function getSuccessCount(): int
@@ -34,28 +32,8 @@ class Response
         return $this->failureCount;
     }
 
-    public function getModifyCount(): int
-    {
-        return $this->modifyCount;
-    }
-
-    public function getTokensToModify(): array
-    {
-        return $this->tokensToModify;
-    }
-
     public function getTokensToDelete(): array
     {
         return $this->tokensToDelete;
-    }
-
-    public function getTokensToRetry(): array
-    {
-        return $this->tokensToRetry;
-    }
-
-    public function getFailureReasons(): array
-    {
-        return $this->failureReasons;
     }
 }

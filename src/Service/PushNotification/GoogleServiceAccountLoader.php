@@ -2,7 +2,7 @@
 
 namespace Pronto\MobileBundle\Service\PushNotification;
 
-use Kreait\Firebase\ServiceAccount;
+use InvalidArgumentException;
 use Symfony\Component\HttpKernel\Config\FileLocator;
 
 class GoogleServiceAccountLoader
@@ -14,10 +14,17 @@ class GoogleServiceAccountLoader
         $this->fileLocator = $fileLocator;
     }
 
-    public function fromFile(): ServiceAccount
+    public function fromFile(): array
     {
         $file = $this->fileLocator->locate('../google-service-account.json');
+        $contents = json_decode(file_get_contents($file), true);
 
-        return ServiceAccount::fromJsonFile($file);
+        if (!array_key_exists('client_email', $contents) || !array_key_exists('private_key', $contents)) {
+            throw new InvalidArgumentException(
+                'Service account credentials invalid'
+            );
+        }
+
+        return $contents;
     }
 }

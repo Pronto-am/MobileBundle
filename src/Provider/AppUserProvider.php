@@ -13,14 +13,13 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class AppUserProvider implements UserProviderInterface, PasswordUpgraderInterface
 {
-    protected EntityManagerInterface $entityManager;
 
-    public function __construct(EntityManagerInterface $entityManager)
-    {
-        $this->entityManager = $entityManager;
+    public function __construct(
+        protected readonly EntityManagerInterface $entityManager
+    ) {
     }
 
-    public function loadUserByUsername(string $username): UserInterface
+    public function loadUserByUsername($username): UserInterface
     {
         return $this->loadUserByIdentifier($username);
     }
@@ -61,8 +60,10 @@ class AppUserProvider implements UserProviderInterface, PasswordUpgraderInterfac
         return AppUser::class === $class || is_subclass_of($class, AppUser::class);
     }
 
-    public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void
-    {
+    public function upgradePassword(
+        PasswordAuthenticatedUserInterface $user,
+        string $newHashedPassword
+    ): void {
         $user->setPassword($newHashedPassword);
     }
 }
