@@ -52,7 +52,7 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
 
     public function authenticate(Request $request): Passport
     {
-        $input = $request->request->get('login_form', []);
+        $input = $request->request->all('login_form') ?? [];
 
         return new Passport(
             new UserBadge($input['email'], function ($userIdentifier) {
@@ -131,7 +131,7 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
 
     private function upgradePassword(Request $request, User $user)
     {
-        $input = $request->request->get('login_form', []);
+        $input = $request->request->all('login_form') ?? [];
 
         // Rehash password
         $this->entityManager->getRepository(User::class)->upgradePassword(

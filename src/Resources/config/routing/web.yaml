@@ -3,29 +3,29 @@
 select_customer:
   path: /customers
   defaults:
-    _controller: Pronto\MobileBundle\Controller\Web\CustomerController:selectCustomerAction
+    _controller: Pronto\MobileBundle\Controller\Web\CustomerController::selectCustomerAction
   condition: "context.getMethod() in ['GET']"
 
 set_customer:
   path: /customers
   defaults:
-    _controller: Pronto\MobileBundle\Controller\Web\CustomerController:setCustomerAction
+    _controller: Pronto\MobileBundle\Controller\Web\CustomerController::setCustomerAction
   condition: "context.getMethod() in ['POST']"
 
 add_customer:
   path: /customers/add
   defaults:
-    _controller: Pronto\MobileBundle\Controller\Web\CustomerController:addAction
+    _controller: Pronto\MobileBundle\Controller\Web\CustomerController::addAction
 
 edit_customer:
   path: /customers/edit
   defaults:
-    _controller: Pronto\MobileBundle\Controller\Web\CustomerController:editAction
+    _controller: Pronto\MobileBundle\Controller\Web\CustomerController::editAction
 
 delete_customer:
   path: /customers/delete
   defaults:
-    _controller: Pronto\MobileBundle\Controller\Web\CustomerController:deleteAction
+    _controller: Pronto\MobileBundle\Controller\Web\CustomerController::deleteAction
   condition: "context.getMethod() in ['POST']"
 
 

@@ -295,7 +295,7 @@ class PushNotificationController extends BaseController implements ValidateCusto
     {
         $test = $request->request->getBoolean('test');
         $segment = $request->request->getInt('segment');
-        $testDevices = $request->request->get('testDevices', []);
+        $testDevices = $request->request->all('testDevices') ?? [];
 
         /** @var PushNotificationRepository $pushNotificationRepository */
         $pushNotificationRepository = $entityManager->getRepository(PushNotification::class);
