@@ -2,7 +2,7 @@
 {% set applicationVersion = pronto_mobile.applicationVersion %}
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8"/>
     <title>{% block title %}Pronto - App management{% endblock %}</title>
@@ -21,7 +21,7 @@
     <div id="side-nav">
         <a href="{{ path('pronto_mobile_homepage') }}">
             {% if customer.logo != null %}
-                <img src="uploads/customers/images/{{ (attribute(customer.logo, 'fileName') is defined ? customer.logo.fileName : customer.logo) }}" alt="Pronto"/>
+                <img src="/uploads/customers/images/{{ (attribute(customer.logo, 'fileName') is defined ? customer.logo.fileName : customer.logo) }}" alt="Pronto"/>
             {% else %}
                 <img id="logo" src="{{ mix('/images/logo-sidemenu.png') }}" alt="Pronto"/>
             {% endif %}

@@ -89,8 +89,8 @@ class CustomerController extends BaseController
         // The form requires an instance of File, so parse the filename to a File object
         if ($originalCustomer->getLogo() !== null) {
             try {
-                $file = new File('/' . Str::removeSlashes($uploadsFolder, true, true), '/customers/images/' . $originalCustomer->getLogo());
-            } catch (FileNotFoundException $exception) {
+                $file = new File('/' . Str::removeSlashes($uploadsFolder, true, true) . '/customers/images/' . $originalCustomer->getLogo());
+            } catch (FileNotFoundException) {
                 $file = null;
             }
 

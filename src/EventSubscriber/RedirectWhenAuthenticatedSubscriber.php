@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Pronto\MobileBundle\EventSubscriber;
 
-use Exception;
 use Pronto\MobileBundle\Exceptions\UserRedirectException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -18,14 +17,10 @@ use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundE
 
 class RedirectWhenAuthenticatedSubscriber implements EventSubscriberInterface
 {
-    private AuthorizationCheckerInterface $authorizationChecker;
-
-    private UrlGeneratorInterface $router;
-
-    public function __construct(AuthorizationCheckerInterface $authorizationChecker, UrlGeneratorInterface $router)
-    {
-        $this->authorizationChecker = $authorizationChecker;
-        $this->router = $router;
+    public function __construct(
+        private readonly AuthorizationCheckerInterface $authorizationChecker,
+        private readonly UrlGeneratorInterface $router
+    ) {
     }
 
     public static function getSubscribedEvents(): array
@@ -42,10 +37,11 @@ class RedirectWhenAuthenticatedSubscriber implements EventSubscriberInterface
     public function onKernelController(ControllerEvent $event): void
     {
         try {
-            if (HttpKernelInterface::MASTER_REQUEST !== $event->getRequestType() || !$this->authorizationChecker->isGranted('ROLE_USER')) {
+            if (HttpKernelInterface::MAIN_REQUEST !== $event->getRequestType() ||
+                !$this->authorizationChecker->isGranted('ROLE_USER')) {
                 return;
             }
-        } catch (AuthenticationCredentialsNotFoundException $exception) {
+        } catch (AuthenticationCredentialsNotFoundException) {
             return;
         }
 

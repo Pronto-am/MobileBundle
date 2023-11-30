@@ -33,7 +33,5 @@ class ExceptionSubscriber implements EventSubscriberInterface
             $event->allowCustomResponseCode();
             $event->setResponse($exception->response());
         }
-
-        return;
     }
 }

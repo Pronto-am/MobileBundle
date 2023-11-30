@@ -44,7 +44,8 @@
     },
     "require-dev": {
         "nelmio/alice": "^3.5.0",
-        "symfony/phpunit-bridge": "^6.4"
+        "symfony/phpunit-bridge": "^6.4",
+        "rector/rector": "^0.18.11"
     },
     "autoload": {
         "psr-4": {

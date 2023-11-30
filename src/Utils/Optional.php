@@ -23,7 +23,7 @@ class Optional
         return null;
     }
 
-    public function __isset($name): mixed
+    public function __isset($name): bool
     {
         if (is_object($this->value)) {
             return isset($this->value->{$name});

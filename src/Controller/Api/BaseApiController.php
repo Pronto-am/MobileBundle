@@ -18,6 +18,7 @@ use Pronto\MobileBundle\Service\TokenInspectionService;
 use Pronto\MobileBundle\Traits\JsonResponseGenerators;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Contracts\Service\Attribute\Required;
 
 class BaseApiController extends AbstractController
 {
@@ -37,17 +38,13 @@ class BaseApiController extends AbstractController
         $this->tokenInspectionService = $tokenInspectionService;
     }
 
-    /**
-     * @required
-     */
+    #[Required]
     public function setRequestBodyValidator(RequestBodyValidator $requestValidator): void
     {
         $this->requestValidator = $requestValidator;
     }
 
-    /**
-     * @required
-     */
+    #[Required]
     public function setJsonSerializer(JsonSerializer $serializer): void
     {
         $this->serializer = $serializer;

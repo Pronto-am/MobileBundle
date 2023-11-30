@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Pronto\MobileBundle\EventSubscriber;
 
-use Exception;
 use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\Application\ApplicationPlugin;
 use Pronto\MobileBundle\Exceptions\InactivePluginException;
@@ -19,19 +18,12 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ValidatePluginStateSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var UrlGeneratorInterface
-     */
-    private $router;
+    private ProntoMobile $prontoMobile;
 
-    /**
-     * @var ProntoMobile $prontoMobile
-     */
-    private $prontoMobile;
-
-    public function __construct(UrlGeneratorInterface $router, ContainerInterface $container)
-    {
-        $this->router = $router;
+    public function __construct(
+        private readonly UrlGeneratorInterface $router,
+        ContainerInterface $container
+    ) {
         $this->prontoMobile = $container->get(ProntoMobile::class);
     }
 

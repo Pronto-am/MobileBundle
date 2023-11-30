@@ -33,7 +33,7 @@ class IsUniqueIdentifierValidator extends ConstraintValidator
         $this->request = $requestStack->getCurrentRequest();
     }
 
-    public function validate($value, Constraint $constraint)
+    public function validate($value, Constraint $constraint): void
     {
         if (!$constraint instanceof IsUniqueIdentifier) {
             throw new UnexpectedTypeException($constraint, IsUniqueIdentifier::class);

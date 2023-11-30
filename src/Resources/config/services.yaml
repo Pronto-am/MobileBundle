@@ -37,12 +37,6 @@ services:
     resource: '../../Serializer/Normalizer'
     tags: ['serializer.normalizer']
 
-  #### PRONTO MOBILE DOCTRINE EVENT SUBSCRIBERS ####
-  Pronto\MobileBundle\EventSubscriber\Doctrine\:
-    resource: '../../EventSubscriber/Doctrine'
-    tags:
-      - { name: doctrine.event_subscriber, connection: default }
-
   #### PRONTO MOBILE DATA FIXTURES ####
   Pronto\MobileBundle\DataFixtures\:
     resource: '../../DataFixtures'

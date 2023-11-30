@@ -39,7 +39,7 @@ class AppUserProvider implements UserProviderInterface, PasswordUpgraderInterfac
         return $user;
     }
 
-    public function refreshUser(UserInterface $user)
+    public function refreshUser(UserInterface $user): UserInterface
     {
         $class = get_class($user);
 

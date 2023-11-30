@@ -304,6 +304,7 @@ device.test_devices: Test devices
 plugin: plugin
 plugins: plugins
 plugin.active: Active
+plugin.firebaseServiceAccount: Firebase Service Account
 plugin.firebaseAccessToken: Firebase access token
 plugin.notificationHtmlTemplate: Notification HTML template
 plugin.nodejsEndpointToken: Node JS Facebook access token

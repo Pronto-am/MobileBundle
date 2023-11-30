@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Pronto\MobileBundle\EventSubscriber\Doctrine;
+namespace Pronto\MobileBundle\EventListener\Doctrine\Notification;
 
-use Doctrine\Common\EventSubscriber;
+use Doctrine\Bundle\DoctrineBundle\Attribute\AsEntityListener;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\PrePersistEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
@@ -20,61 +20,43 @@ use Pronto\MobileBundle\Repository\Application\PluginRepository;
 use Pronto\MobileBundle\Service\PushNotification\GoogleServiceAccountLoader;
 use Psr\Log\LoggerInterface;
 
-class NotificationSubscriber implements EventSubscriber
+#[AsEntityListener(event: Events::prePersist, method: 'prePersist', entity: PushNotification::class)]
+#[AsEntityListener(event: Events::preUpdate, method: 'preUpdate', entity: PushNotification::class)]
+class UpdateFile
 {
     public function __construct(
-        readonly LoggerInterface $logger,
-        readonly EntityManagerInterface $entityManager,
-        readonly GoogleServiceAccountLoader $googleServiceAccountLoader
+        private readonly LoggerInterface $logger,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly GoogleServiceAccountLoader $googleServiceAccountLoader
     ) {
     }
 
-    public function getSubscribedEvents(): array
+    /**
+     * @throws NonUniqueResultException
+     * @throws NoResultException
+     */
+    public function prePersist(PushNotification $pushNotification, PrePersistEventArgs $args): void
     {
-        return [
-            Events::prePersist,
-            Events::preUpdate,
-        ];
+        $this->handleFile($pushNotification);
     }
 
     /**
      * @throws NonUniqueResultException
      * @throws NoResultException
      */
-    public function prePersist(PrePersistEventArgs $args): void
+    public function preUpdate(PushNotification $pushNotification, PreUpdateEventArgs $args): void
     {
-        $entity = $args->getObject();
-
-        if (!$entity instanceof PushNotification) {
-            return;
-        }
-
-        $this->handleFile($entity);
+        $this->handleFile($pushNotification);
     }
 
     /**
      * @throws NonUniqueResultException
      * @throws NoResultException
      */
-    public function preUpdate(PreUpdateEventArgs $args): void
-    {
-        $entity = $args->getObject();
-
-        if (!$entity instanceof PushNotification) {
-            return;
-        }
-
-        $this->handleFile($entity);
-    }
-
-    /**
-     * @throws NonUniqueResultException
-     * @throws NoResultException
-     */
-    private function handleFile(PushNotification $entity): void
+    private function handleFile(PushNotification $pushNotification): void
     {
         // The entity must be a push notification with HTML webview
-        if ($entity->getClickAction() !== 2) {
+        if ($pushNotification->getClickAction() !== 2) {
             return;
         }
 
@@ -89,7 +71,7 @@ class NotificationSubscriber implements EventSubscriber
 
         $firebase = $factory->withServiceAccount($serviceAccount);
         $bucket = $firebase->createStorage()->getBucket();
-        $application = $entity->getApplication();
+        $application = $pushNotification->getApplication();
 
         /** @var PluginRepository $repository */
         $repository = $this->entityManager->getRepository(ApplicationPlugin::class);
@@ -102,10 +84,10 @@ class NotificationSubscriber implements EventSubscriber
 
         $config = $plugin->getConfig();
 
-        $clickActionHtml = $entity->getClickActionHtml();
+        $clickActionHtml = $pushNotification->getClickActionHtml();
 
         foreach ($clickActionHtml as $language => $content) {
-            $path = 'notifications/' . $entity->getId() . '/' . $language . '/' . $entity->getId() . '.html';
+            $path = 'notifications/' . $pushNotification->getId() . '/' . $language . '/' . $pushNotification->getId() . '.html';
 
             // Use the default language HTML when the provided language is empty
             if (empty($content)) {

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Pronto\MobileBundle\EventSubscriber;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
 use InvalidArgumentException;
 use Pronto\MobileBundle\Entity\Application\Version;
 use Pronto\MobileBundle\Exceptions\InvalidApplicationSelectionException;
@@ -20,20 +19,14 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ValidateApplicationSelectionSubscriber implements EventSubscriberInterface
 {
-    private UrlGeneratorInterface $router;
-
-    private EntityManagerInterface $entityManager;
-
     private ProntoMobile $prontoMobile;
 
     public function __construct(
-        UrlGeneratorInterface $router,
+        private readonly UrlGeneratorInterface $router,
+        private readonly EntityManagerInterface $entityManager,
         ContainerInterface $container,
-        EntityManagerInterface $entityManager
     ) {
-        $this->router = $router;
         $this->prontoMobile = $container->get(ProntoMobile::class);
-        $this->entityManager = $entityManager;
     }
 
     public static function getSubscribedEvents(): array
@@ -58,7 +51,7 @@ class ValidateApplicationSelectionSubscriber implements EventSubscriberInterface
         $session = $event->getRequest()->getSession();
 
         // Get the id from the session
-        $id = $session !== null ? $session->get(Version::SESSION_IDENTIFIER) : null;
+        $id = $session?->get(Version::SESSION_IDENTIFIER);
 
         // Get the application version from the repository
         $applicationVersion = $id !== null ? $this->entityManager->getRepository(Version::class)->find($id) : null;

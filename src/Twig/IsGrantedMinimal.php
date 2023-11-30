@@ -3,7 +3,7 @@
 namespace Pronto\MobileBundle\Twig;
 
 use Pronto\MobileBundle\Entity\User;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 use Twig_Function;

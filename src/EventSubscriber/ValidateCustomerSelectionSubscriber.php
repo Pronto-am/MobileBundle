@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Pronto\MobileBundle\EventSubscriber;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
-use InvalidArgumentException;
 use Pronto\MobileBundle\Entity\Customer;
 use Pronto\MobileBundle\Exceptions\InvalidCustomerSelectionException;
 use Pronto\MobileBundle\Service\ProntoMobile;
@@ -20,17 +18,14 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ValidateCustomerSelectionSubscriber implements EventSubscriberInterface
 {
-    private UrlGeneratorInterface $router;
-
     private ProntoMobile $prontoMobile;
 
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(UrlGeneratorInterface $router, ContainerInterface $container, EntityManagerInterface $entityManager)
-    {
-        $this->router = $router;
+    public function __construct(
+        private readonly UrlGeneratorInterface $router,
+        private readonly EntityManagerInterface $entityManager,
+        ContainerInterface $container,
+    ) {
         $this->prontoMobile = $container->get('Pronto\MobileBundle\Service\ProntoMobile');
-        $this->entityManager = $entityManager;
     }
 
     public static function getSubscribedEvents(): array
@@ -55,7 +50,7 @@ class ValidateCustomerSelectionSubscriber implements EventSubscriberInterface
         $session = $event->getRequest()->getSession();
 
         // Get the id from the session
-        $id = $session !== null ? $session->get(Customer::SESSION_IDENTIFIER) : null;
+        $id = $session?->get(Customer::SESSION_IDENTIFIER);
 
         // Get the customer from the repository
         $customer = $id !== null ? $this->entityManager->getRepository(Customer::class)->find($id) : null;

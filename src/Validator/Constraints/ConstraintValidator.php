@@ -37,7 +37,7 @@ abstract class ConstraintValidator extends BaseConstraintValidator
         $this->request = $requestStack->getCurrentRequest();
     }
 
-    public function validate($value, Constraint $constraint)
+    public function validate($value, Constraint $constraint): void
     {
         $this->constraint = $constraint;
 

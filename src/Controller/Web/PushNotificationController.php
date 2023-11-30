@@ -157,7 +157,10 @@ class PushNotificationController extends BaseController implements ValidateCusto
 
         // Check if the notification is already sent, because editing is then impossible
         if ($notification !== null && $notification->getSent() !== null && $notification->getScheduledSending() === null) {
-            return $this->redirectToRoute('pronto_mobile_notifications_details', ['id' => $notification->getId()]);
+            return $this->redirectToRoute(
+                route: 'pronto_mobile_notifications_details',
+                parameters: ['id' => $notification->getId()]
+            );
         }
 
         if ($notification === null) {
@@ -167,14 +170,13 @@ class PushNotificationController extends BaseController implements ValidateCusto
         $body = $request->request->all();
 
         $translations = [
-            'title'           => [],
-            'content'         => [],
-            'clickActionUrl'  => [],
-            'clickActionHtml' => []
+            'title'          => [],
+            'content'        => [],
+            'clickActionUrl' => [],
         ];
 
         // Get the form data
-        $form = $request->request->get('push_notification_form');
+        $form = $request->request->all('push_notification_form') ?? [];
         $form['testDevices'] = $body['testDevices'] ?? [];
 
         unset($body['testDevices'], $body['push_notification_form']);

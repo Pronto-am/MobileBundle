@@ -15,14 +15,19 @@ use Pronto\MobileBundle\Form\Application\VersionForm;
 use Pronto\MobileBundle\Utils\Responses\SuccessResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class VersionController extends BaseController
 {
     /**
      * @throws EntityNotFoundException
      */
-    public function editAction(Request $request, EntityManagerInterface $entityManager, int $applicationId, $id = null)
-    {
+    public function editAction(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        int $applicationId,
+        $id = null
+    ): Response {
         $application = $entityManager->getRepository(Application::class)->findOrFail($applicationId);
 
         $applicationVersion = $id !== null ? $entityManager->getRepository(Version::class)->find($id) : null;
@@ -57,8 +62,10 @@ class VersionController extends BaseController
     /**
      * @throws EntityNotFoundException
      */
-    public function deleteAction(Request $request, EntityManagerInterface $entityManager): JsonResponse
-    {
+    public function deleteAction(
+        Request $request,
+        EntityManagerInterface $entityManager
+    ): JsonResponse {
         $id = $request->request->get('id');
 
         $version = $entityManager->getRepository(Version::class)->findOneByOrFail([

@@ -7,6 +7,7 @@ namespace Pronto\MobileBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection as DoctrineCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -165,12 +166,12 @@ class Customer
         $this->sidebarColor = $sidebarColor;
     }
 
-    public function getLogo(): ?string
+    public function getLogo(): string | UploadedFile | null
     {
         return $this->logo;
     }
 
-    public function setLogo(?string $logo): void
+    public function setLogo(string | UploadedFile | null $logo): void
     {
         $this->logo = $logo;
     }

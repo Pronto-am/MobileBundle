@@ -10,9 +10,9 @@ use Pronto\MobileBundle\Service\PushNotification\FirebaseStorage;
 use Symfony\Component\Serializer\Exception\CircularReferenceException;
 use Symfony\Component\Serializer\Exception\InvalidArgumentException;
 use Symfony\Component\Serializer\Exception\LogicException;
-use Symfony\Component\Serializer\Normalizer\ContextAwareNormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-class PushNotificationNormalizer implements ContextAwareNormalizerInterface
+class PushNotificationNormalizer implements NormalizerInterface
 {
     private FirebaseStorage $firebaseStorage;
 
@@ -63,6 +63,13 @@ class PushNotificationNormalizer implements ContextAwareNormalizerInterface
             'click_action_html_url' => $clickActionHtmlUrl,
             'sent'                  => $object->getSent()->format(DateTime::ISO8601),
             'test'                  => $object->getTest(),
+        ];
+    }
+
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            PushNotification::class => true,
         ];
     }
 

@@ -15,14 +15,10 @@ use Symfony\Component\HttpKernel\KernelEvents;
 
 class TokenRequestSubscriber implements EventSubscriberInterface
 {
-    private EntityManagerInterface $entityManager;
-    private ClientManagerInterface $clientManager;
-
-    public function __construct(EntityManagerInterface $entityManager, ClientManagerInterface $clientManager)
-    {
-        $this->entityManager = $entityManager;
-        $this->clientManager = $clientManager;
-    }
+    public function __construct(
+        private readonly EntityManagerInterface $entityManager,
+        private readonly ClientManagerInterface $clientManager
+    ) {}
 
     public static function getSubscribedEvents(): array
     {

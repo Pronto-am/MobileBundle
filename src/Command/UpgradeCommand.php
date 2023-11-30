@@ -10,6 +10,7 @@ use League\Bundle\OAuth2ServerBundle\Manager\ClientManagerInterface;
 use League\Bundle\OAuth2ServerBundle\Model\Client;
 use League\Bundle\OAuth2ServerBundle\ValueObject\Grant;
 use Pronto\MobileBundle\Entity\Application;
+use Pronto\MobileBundle\Entity\Plugin;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -18,7 +19,10 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class UpgradeCommand extends Command
 {
-    private const ASSISTABLE_VERSIONS = ['2.0.0'];
+    private const VERSION_2_0_0 = '2.0.0';
+    private const VERSION_3_0_0 = '3.0.0';
+
+    private const ASSISTABLE_VERSIONS = [self::VERSION_2_0_0, self::VERSION_3_0_0];
 
     public function __construct(
         readonly ClientManagerInterface $clientManager,
@@ -49,8 +53,13 @@ class UpgradeCommand extends Command
             return Command::INVALID;
         }
 
-        // Version for now is only 2.0.0
-        $this->migrateOAuthClients();
+        if ($version === self::VERSION_2_0_0) {
+            $this->migrateOAuthClients();
+
+        } else if ($version === self::VERSION_3_0_0) {
+            // Update plugin configuration
+            $this->updatePluginConfiguration();
+        }
 
         return Command::SUCCESS;
     }
@@ -101,4 +110,31 @@ class UpgradeCommand extends Command
             new Grant('refresh_token')
         ];
     }
+
+    private function updatePluginConfiguration(): void
+    {
+        $pluginRepository = $this->entityManager->getRepository(Plugin::class);
+        $plugin = $pluginRepository->findOneBy([
+            'identifier' => Plugin::PUSH_NOTIFICATIONS,
+        ]);
+
+        $config = $plugin->getDefaultConfig();
+        $config['firebaseServiceAccount'] = $config['firebaseAccessToken'];
+        unset($config['firebaseAccessToken']);
+
+        $plugin->setDefaultConfig($config);
+        $this->entityManager->persist($plugin);
+        $this->entityManager->flush();
+    }
 }
+
+//{
+//    "firebaseAccessToken": {
+//    "type": "text",
+//		"value": ""
+//	},
+//	"notificationHtmlTemplate": {
+//    "type": "code",
+//		"value": "<html><head><style type=\"text/css\"></style></head><body></body></html>"
+//	}
+//}

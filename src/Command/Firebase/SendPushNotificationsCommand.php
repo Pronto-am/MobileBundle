@@ -32,7 +32,7 @@ class SendPushNotificationsCommand extends Command
         parent::__construct($name);
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setName('firebase:notifications:send')
             ->setDescription('Sends the push notifications, scheduled for the current time')

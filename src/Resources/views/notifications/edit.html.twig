@@ -55,7 +55,6 @@
                         <select name="{{ language.code ~ '_clickAction' }}" id="{{ language.code ~ '_clickAction' }}" class="click-action-trigger click-action">
                             <option value="0">{{ 'push_notification.nothing'|trans|capitalize }}</option>
                             <option value="1" {% if selected == 1 %}selected{% endif %}>{{ 'push_notification.click_action_url'|trans|capitalize }}</option>
-                            <option value="2" {% if selected == 2 %}selected{% endif %}>{{ 'push_notification.click_action_html'|trans|capitalize }}</option>
                         </select>
                     </div>
                 </div>
@@ -65,20 +64,6 @@
                         <label for="{{ language.code ~ '_clickActionUrl' }}">{{ 'push_notification.click_action_url'|trans|capitalize }}</label>
                         <input name="{{ language.code ~ '_clickActionUrl' }}" placeholder="http://" class="click-action-url" id="{{ language.code ~ '_clickActionUrl' }}" type="text"
                                value="{{ attribute(notification.clickActionUrl, language.code) is defined ? attribute(notification.clickActionUrl, language.code) : '' }}" required>
-                    </div>
-                </div>
-
-                <div class="row click-action html">
-                    <div class="col m12 l7">
-                        <label for="{{ language.code ~ '_clickActionHtml' }}">{{ 'push_notification.click_action_html'|trans|capitalize }}</label>
-                        <textarea name="{{ language.code ~ '_clickActionHtml' }}" placeholder="{{ 'push_notification.click_action_html'|trans|capitalize }}" class="trumbowyg click-action-html"
-                                  id="{{ language.code ~ '_clickActionHtml' }}">{{ attribute(notification.clickActionHtml, language.code) is defined ? attribute(notification.clickActionHtml, language.code) : '' }}</textarea>
-                    </div>
-
-                    <div class="col m12 l5">
-                        {% include '@ProntoMobile/components/browser.html.twig' %}
-
-                        <textarea id="html-template" style="display: none;">{{ pluginConfig['notificationHtmlTemplate']|raw }}</textarea>
                     </div>
                 </div>
             </div>
