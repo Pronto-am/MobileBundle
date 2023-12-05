@@ -3,10 +3,9 @@
 namespace Pronto\MobileBundle\Service;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\NoResultException;
 use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\Application\ApplicationPlugin;
+use Pronto\MobileBundle\Entity\Application\Version;
 use Pronto\MobileBundle\Entity\Customer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -15,17 +14,22 @@ class ProntoMobile
 {
     public array $configuration;
     private ?Request $request;
-    private ?string $activeModule;
-    private EntityManagerInterface $entityManager;
-    private ?Application\Version $applicationVersion;
-    private Application $application;
-    private Customer $customer;
+    private bool $statelessRequest;
+    private ?string $activeModule = null;
 
-    public function __construct(RequestStack $requestStack, EntityManagerInterface $entityManager, array $config)
-    {
+    private ?Customer $customer = null;
+    private ?Application $application = null;
+    private ?Version $applicationVersion = null;
+
+    public function __construct(
+        private readonly EntityManagerInterface $entityManager,
+        RequestStack $requestStack,
+        array $config
+    ) {
         $this->request = $requestStack->getCurrentRequest();
-        $this->entityManager = $entityManager;
         $this->configuration = $config;
+
+        $this->statelessRequest = $this->request?->attributes->get('_stateless', false) ?? true;
 
         // Set the needed properties
         $this->initialize();
@@ -34,12 +38,62 @@ class ProntoMobile
     private function initialize(): void
     {
         $this->setActiveModule();
+
+        // Get the selected application, version and customer
+        $this->setSelectedCustomer();
+        $this->setSelectedApplicationVersion();
+    }
+
+    private function setSelectedCustomer(): void
+    {
+        if (!$this->request instanceof Request || $this->statelessRequest) {
+            return;
+        }
+
+        // Get the id from the session
+        $session = $this->request->getSession();
+        $id = $session?->get(Customer::SESSION_IDENTIFIER);
+
+        if ($id === null) {
+            return;
+        }
+
+        // Get the customer from the repository
+        $customer = $this->entityManager->getRepository(Customer::class)->find($id);
+
+        // Add the customer to the ProntoMobile service
+        if ($customer instanceof Customer) {
+            $this->setCustomer($customer);
+        }
+    }
+
+    private function setSelectedApplicationVersion(): void
+    {
+        if (!$this->request instanceof Request || $this->statelessRequest) {
+            return;
+        }
+
+        // Get the id from the session
+        $session = $this->request->getSession();
+        $id = $session->get(Version::SESSION_IDENTIFIER);
+
+        if ($id === null) {
+            return;
+        }
+
+        // Get the application version from the repository
+        $applicationVersion = $this->entityManager->getRepository(Version::class)->find($id);
+
+        // Add the version to the ProntoMobile service
+        if ($applicationVersion instanceof Version) {
+            $this->setApplicationVersion($applicationVersion);
+        }
     }
 
     private function setActiveModule(): void
     {
         // This part of the code doesn't work inside the terminal, so check for existance of the request object
-        if ($this->request === null) {
+        if (!$this->request instanceof Request || $this->statelessRequest) {
             return;
         }
 
@@ -67,12 +121,12 @@ class ProntoMobile
         return $this->activeModule;
     }
 
-    public function getApplicationVersion(): ?Application\Version
+    public function getApplicationVersion(): ?Version
     {
         return $this->applicationVersion;
     }
 
-    public function setApplicationVersion(Application\Version $applicationVersion): void
+    public function setApplicationVersion(Version $applicationVersion): void
     {
         $this->applicationVersion = $applicationVersion;
 
@@ -102,7 +156,7 @@ class ProntoMobile
 
     public function pluginIsActive($identifier): bool
     {
-        if ($this->applicationVersion === null) {
+        if (!$this->applicationVersion instanceof Version) {
             return false;
         }
 
@@ -117,12 +171,7 @@ class ProntoMobile
         return !empty($plugins);
     }
 
-    /**
-     * @param int|Application|null $application
-     * @throws NoResultException
-     * @throws NonUniqueResultException
-     */
-    public function getPluginConfiguration(string $plugin, $application = null): array
+    public function getPluginConfiguration(string $plugin, int|Application|null $application = null): array
     {
         $application = $application ?? $this->application;
 
@@ -130,10 +179,14 @@ class ProntoMobile
             $application = $this->entityManager->getRepository(Application::class)->find($application);
         }
 
-        /** @var ApplicationPlugin $plugin */
-        $plugin = $this->entityManager->getRepository(ApplicationPlugin::class)->findOneByApplicationAndIdentifier($application, $plugin);
+        /** @var ApplicationPlugin $applicationPlugin */
+        $applicationPlugin = $this->entityManager->getRepository(ApplicationPlugin::class)
+            ->findOneByApplicationAndIdentifier(
+                application: $application,
+                identifier: $plugin
+            );
 
-        return $plugin->getConfig();
+        return $applicationPlugin->getConfig();
     }
 
     public function getConfiguration($node = null, $default = null)

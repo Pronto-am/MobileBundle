@@ -21,7 +21,6 @@ class ValidateApplicationSelectionSubscriber implements EventSubscriberInterface
 {
     public function __construct(
         private readonly UrlGeneratorInterface $router,
-        private readonly EntityManagerInterface $entityManager,
         private readonly ProntoMobile $prontoMobile,
     ) {
     }
@@ -49,17 +48,9 @@ class ValidateApplicationSelectionSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $session = $event->getRequest()->getSession();
-
-        // Get the id from the session
-        $id = $session?->get(Version::SESSION_IDENTIFIER);
-
         // Get the application version from the repository
-        $applicationVersion = $id !== null ? $this->entityManager->getRepository(Version::class)->find($id) : null;
-
-        // Add the version to the ProntoMobile service
-        if ($applicationVersion !== null) {
-            $this->prontoMobile->setApplicationVersion($applicationVersion);
+        $applicationVersion = $this->prontoMobile->getApplicationVersion();
+        if ($applicationVersion instanceof Version) {
             return;
         }
 

@@ -8,7 +8,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Pronto\MobileBundle\Entity\Customer;
 use Pronto\MobileBundle\Exceptions\InvalidCustomerSelectionException;
 use Pronto\MobileBundle\Service\ProntoMobile;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
@@ -20,7 +19,6 @@ class ValidateCustomerSelectionSubscriber implements EventSubscriberInterface
 {
     public function __construct(
         private readonly UrlGeneratorInterface $router,
-        private readonly EntityManagerInterface $entityManager,
         private readonly ProntoMobile $prontoMobile,
     ) {
     }
@@ -29,7 +27,7 @@ class ValidateCustomerSelectionSubscriber implements EventSubscriberInterface
     {
         return [
             KernelEvents::CONTROLLER => 'onKernelController',
-            //KernelEvents::EXCEPTION  => 'onKernelException',
+            KernelEvents::EXCEPTION  => 'onKernelException',
         ];
     }
 
@@ -48,17 +46,8 @@ class ValidateCustomerSelectionSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $session = $event->getRequest()->getSession();
-
-        // Get the id from the session
-        $id = $session?->get(Customer::SESSION_IDENTIFIER);
-
-        // Get the customer from the repository
-        $customer = $id !== null ? $this->entityManager->getRepository(Customer::class)->find($id) : null;
-
-        // Add the customer to the ProntoMobile service
-        if ($customer !== null) {
-            $this->prontoMobile->setCustomer($customer);
+        $customer = $this->prontoMobile->getCustomer();
+        if ($customer instanceof Customer) {
             return;
         }
 
