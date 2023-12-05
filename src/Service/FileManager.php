@@ -16,12 +16,12 @@ class FileManager
     public const IMAGES_DIRECTORY = '/customers/images';
 
     private string $uploadsDir;
-    private Filesystem $fileSystem;
 
-    public function __construct(ContainerInterface $container, Filesystem $filesystem)
-    {
-        $this->fileSystem = $filesystem;
-        $this->uploadsDir = $container->get(ProntoMobile::class)->getConfiguration('uploads_folder', 'uploads');
+    public function __construct(
+        private readonly Filesystem $filesystem,
+        ProntoMobile $prontoMobile,
+    ) {
+        $this->uploadsDir = $prontoMobile->getConfiguration('uploads_folder', 'uploads');
     }
 
     public function get(string $file): ?File
@@ -44,7 +44,7 @@ class FileManager
     public function remove(string $fileName): bool
     {
         try {
-            $this->fileSystem->remove(Str::concatDirectories($this->uploadsDir, $fileName));
+            $this->filesystem->remove(Str::concatDirectories($this->uploadsDir, $fileName));
             return true;
         } catch (Exception $exception) {
             return false;

@@ -6,71 +6,48 @@ namespace Pronto\MobileBundle\Entity;
 
 use Doctrine\Common\Collections\Collection as DoctrineCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Exception;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-/**
- * Class User
- * @package Pronto\MobileBundle\Entity
- *
- * @ORM\Entity(repositoryClass="Pronto\MobileBundle\Repository\UserRepository")
- * @ORM\Table(name="users")
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Table(name: 'users')]
+#[ORM\Entity(repositoryClass: 'Pronto\MobileBundle\Repository\UserRepository')]
+#[ORM\HasLifecycleCallbacks]
 class User extends TimestampedEntity implements UserInterface, PasswordAuthenticatedUserInterface
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     * @ORM\Column(type="integer")
-     *
-     * @Groups({"TimestampedWithUserEntity"})
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
+    #[ORM\Column(type: 'integer')]
+    #[Groups(['TimestampedWithUserEntity'])]
     private ?int $id = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Customer")
-     * @ORM\JoinColumn(onDelete="CASCADE")
-     */
+    #[ORM\ManyToOne(targetEntity: 'Pronto\MobileBundle\Entity\Customer')]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private ?Customer $customer;
 
-    /**
-     * @ORM\Column(type="string")
-     *
-     * @Groups({"TimestampedWithUserEntity"})
-     */
+
+    #[ORM\Column(type: 'string')]
+    #[Groups(['TimestampedWithUserEntity'])]
     private string $firstName;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     *
-     * @Groups({"TimestampedWithUserEntity"})
-     */
+
+    #[ORM\Column(type: 'string', nullable: true)]
+    #[Groups(['TimestampedWithUserEntity'])]
     private ?string $insertion = null;
 
-    /**
-     * @ORM\Column(type="string")
-     *
-     * @Groups({"TimestampedWithUserEntity"})
-     */
+
+    #[ORM\Column(type: 'string')]
+    #[Groups(['TimestampedWithUserEntity'])]
     private string $lastName;
 
-    /**
-     * @ORM\Column(type="string", unique=true)
-     */
+    #[ORM\Column(type: 'string', unique: true)]
     private string $email;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private ?string $password = null;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private ?string $activationToken = null;
 
     /**
@@ -78,26 +55,23 @@ class User extends TimestampedEntity implements UserInterface, PasswordAuthentic
      */
     private ?string $plainPassword = null;
 
-    /**
-     * @ORM\Column(type="json")
-     */
+    #[ORM\Column(type: 'json')]
     private array $roles = [];
 
-    /**
-     * @ORM\OneToMany(targetEntity="Pronto\MobileBundle\Entity\PushNotification", mappedBy="sentBy")
-     */
+    #[ORM\OneToMany(
+        mappedBy: 'sentBy',
+        targetEntity: 'Pronto\MobileBundle\Entity\PushNotification')
+    ]
     private DoctrineCollection $pushNotifications;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Pronto\MobileBundle\Entity\User\UserLogin", mappedBy="user")
-     * @ORM\OrderBy({"date" = "DESC"})
-     */
+    #[ORM\OneToMany(
+        mappedBy: 'user',
+        targetEntity: 'Pronto\MobileBundle\Entity\User\UserLogin')
+    ]
+    #[ORM\OrderBy(['date' => 'DESC'])]
     private DoctrineCollection $logins;
 
-    /**
-     * @ORM\PrePersist
-     * @throws Exception
-     */
+    #[ORM\PrePersist]
     public function onPrePersist(): void
     {
         parent::onPrePersist();
@@ -140,9 +114,7 @@ class User extends TimestampedEntity implements UserInterface, PasswordAuthentic
         $this->lastName = $lastName;
     }
 
-    /**
-     * @Groups({"TimestampedWithUserEntity"})
-     */
+    #[Groups(['TimestampedWithUserEntity'])]
     public function getFullName(): string
     {
         return empty($this->insertion) ? $this->firstName . ' ' . $this->lastName : $this->firstName . ' ' . $this->insertion . ' ' . $this->lastName;
@@ -158,7 +130,7 @@ class User extends TimestampedEntity implements UserInterface, PasswordAuthentic
         $this->email = $email;
     }
 
-    public function getPassword(): string
+    public function getPassword(): ?string
     {
         return $this->password;
     }
@@ -229,7 +201,7 @@ class User extends TimestampedEntity implements UserInterface, PasswordAuthentic
     public function addRole(string $role): void
     {
         if (!in_array($role, $this->roles)) {
-            array_push($this->roles, $role);
+            $this->roles[] = $role;
         }
     }
 

@@ -20,15 +20,12 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 #[AsEntityListener(event: Events::postLoad, method: 'postLoad', entity: Customer::class)]
 class InitializeAccount
 {
-    private ProntoMobile $prontoMobile;
-
     public function __construct(
         private readonly FileManager $fileManager,
         private readonly EntityManagerInterface $entityManager,
         private readonly TranslatorInterface $translator,
-        ContainerInterface $container,
+        private readonly ProntoMobile $prontoMobile,
     ) {
-        $this->prontoMobile = $container->get('Pronto\MobileBundle\Service\ProntoMobile');
     }
 
     public function postPersist(Customer $customer, PostPersistEventArgs $args): void

@@ -23,15 +23,15 @@ class RemoteConfigDTO extends BaseDTO
 
     /**
      * @var string $name
-     * @Assert\NotBlank()
      */
+    #[Assert\NotBlank]
     public $name;
 
     /**
      * @var string $identifier
-     * @Assert\NotBlank()
      * @IsUniqueIdentifier
      */
+    #[Assert\NotBlank]
     public $identifier;
 
     /**
@@ -41,8 +41,8 @@ class RemoteConfigDTO extends BaseDTO
 
     /**
      * @var string $type
-     * @Assert\NotBlank()
      */
+    #[Assert\NotBlank]
     public $type;
 
     /**

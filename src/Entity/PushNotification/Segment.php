@@ -14,10 +14,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Class Recipient
  * @package Pronto\MobileBundle\Entity
- *
- * @ORM\Entity(repositoryClass="Pronto\MobileBundle\Repository\PushNotification\SegmentRepository")
- * @ORM\Table(name="push_notification_segments")
  */
+#[ORM\Table(name: 'push_notification_segments')]
+#[ORM\Entity(repositoryClass: 'Pronto\MobileBundle\Repository\PushNotification\SegmentRepository')]
 class Segment implements ApiEntityInterface
 {
     use ApiEntityTrait;
@@ -25,30 +24,22 @@ class Segment implements ApiEntityInterface
     // Custom entity error messages
     public const INVALID_SEGMENT_PARAMETER = [422, 22, 'Segments has to be a list with the id and whether the device is subscribed or not'];
 
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     * @ORM\Column(type="integer")
-     * @Groups({"PushNotification"})
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
+    #[ORM\Column(type: 'integer')]
+    #[Groups(['PushNotification'])]
     private $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Application")
-     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
-     */
+    #[ORM\ManyToOne(targetEntity: 'Pronto\MobileBundle\Entity\Application')]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private $application;
 
-    /**
-     * @ORM\Column(type="json")
-     * @Assert\NotBlank()
-     * @Groups({"PushNotification"})
-     */
+    #[ORM\Column(type: 'json')]
+    #[Assert\NotBlank]
+    #[Groups(['PushNotification'])]
     private $name;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Pronto\MobileBundle\Entity\Device\DeviceSegment", mappedBy="segment")
-     */
+    #[ORM\OneToMany(targetEntity: 'Pronto\MobileBundle\Entity\Device\DeviceSegment', mappedBy: 'segment')]
     private $deviceSegments;
 
     /**

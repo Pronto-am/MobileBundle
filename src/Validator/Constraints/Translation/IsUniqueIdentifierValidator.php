@@ -16,20 +16,14 @@ use UnexpectedValueException;
 
 class IsUniqueIdentifierValidator extends ConstraintValidator
 {
-    private EntityManagerInterface $entityManager;
-    private ProntoMobile $prontoMobile;
-    private TranslatorInterface $translator;
     private ?Request $request;
 
     public function __construct(
-        EntityManagerInterface $entityManager,
-        ContainerInterface $container,
-        TranslatorInterface $translator,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly ProntoMobile $prontoMobile,
+        private readonly TranslatorInterface $translator,
         RequestStack $requestStack
     ) {
-        $this->entityManager = $entityManager;
-        $this->prontoMobile = $container->get(ProntoMobile::class);
-        $this->translator = $translator;
         $this->request = $requestStack->getCurrentRequest();
     }
 
@@ -51,7 +45,7 @@ class IsUniqueIdentifierValidator extends ConstraintValidator
         }
 
         $data = $this->request->request->get('translation_form');
-        $id = (int) $data['id'];
+        $id = (int)$data['id'];
         $id = $id > 0 ? $id : null;
 
         // Determine whether the identifier is already being used

@@ -22,16 +22,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class ConvertApnsTokensCommand extends Command
 {
-    private ProntoMobile $prontoMobile;
-
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly ApnsTokenConverter $apnsTokenConverter,
-        ContainerInterface $container,
+        private readonly ProntoMobile $prontoMobile,
         $name = null
     ) {
-        $this->prontoMobile = $container->get(ProntoMobile::class);
-
         parent::__construct($name);
     }
 

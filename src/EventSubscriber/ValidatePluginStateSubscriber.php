@@ -18,13 +18,10 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ValidatePluginStateSubscriber implements EventSubscriberInterface
 {
-    private ProntoMobile $prontoMobile;
-
     public function __construct(
         private readonly UrlGeneratorInterface $router,
-        ContainerInterface $container
+        private readonly ProntoMobile $prontoMobile,
     ) {
-        $this->prontoMobile = $container->get(ProntoMobile::class);
     }
 
     public static function getSubscribedEvents(): array

@@ -6,6 +6,7 @@ namespace Pronto\MobileBundle\Controller\Api\V1;
 
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Pronto\MobileBundle\Controller\Api\BaseApiController;
 use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\AppUser;
@@ -105,7 +106,15 @@ class DeviceController extends BaseApiController
         $this->validateAuthorization();
 
         // Validate the body
-        $this->validateRequestContent($request, ['name', 'model', 'manufacturer', 'platform', 'os_version', 'app_version', 'language']);
+        $this->validateRequestContent($request, [
+            'name',
+            'model',
+            'manufacturer',
+            'platform',
+            'os_version',
+            'app_version',
+            'language'
+        ]);
 
         // Check if either the firebase or apns token is present
         if ($request->request->get('firebase_token') === null &&
@@ -131,6 +140,8 @@ class DeviceController extends BaseApiController
         }
 
         if ($device !== null) {
+            return $this->successResponse($this->serializer->serialize($device, [new DateTimeNormalizer()]));
+
             if ($device->getTokenState()) {
                 throw (new AlreadyRegisteredException())->withData($this->serializer->serialize($device, [new DateTimeNormalizer()]));
             } else {
@@ -185,8 +196,8 @@ class DeviceController extends BaseApiController
         $device->setLastLogin(new DateTime());
 
         // Save additional data
-        if ($request->request->get('extra_data') !== null) {
-            $device->setExtraData($request->request->get('extra_data'));
+        if ($request->request->all('extra_data') !== null) {
+            $device->setExtraData($request->request->all('extra_data'));
         }
 
         $entityManager->persist($device);

@@ -14,41 +14,30 @@ use Pronto\MobileBundle\Traits\ApiEntityTrait;
 /**
  * Class Recipient
  * @package Pronto\MobileBundle\Entity
- *
- * @ORM\Entity(repositoryClass="Pronto\MobileBundle\Repository\PushNotification\RecipientRepository")
- * @ORM\Table(name="push_notification_recipients")
  */
+#[ORM\Table(name: 'push_notification_recipients')]
+#[ORM\Entity(repositoryClass: 'Pronto\MobileBundle\Repository\PushNotification\RecipientRepository')]
 class Recipient implements ApiEntityInterface
 {
     use ApiEntityTrait;
 
-    /**
-     * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\PushNotification", inversedBy="pushNotificationRecipients")
-     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
-     */
+    #[ORM\Id]
+    #[ORM\ManyToOne(targetEntity: 'Pronto\MobileBundle\Entity\PushNotification', inversedBy: 'pushNotificationRecipients')]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private $pushNotification;
 
-    /**
-     * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Device", inversedBy="pushNotificationRecipients")
-     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
-     */
+    #[ORM\Id]
+    #[ORM\ManyToOne(targetEntity: 'Pronto\MobileBundle\Entity\Device', inversedBy: 'pushNotificationRecipients')]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private $device;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: 'boolean')]
     private $sent = true;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $description;
 
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $opened;
 
     public function __construct(PushNotification $pushNotification, Device $device)

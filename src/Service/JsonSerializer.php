@@ -2,13 +2,11 @@
 
 namespace Pronto\MobileBundle\Service;
 
-use Doctrine\Common\Annotations\AnnotationException;
-use Doctrine\Common\Annotations\AnnotationReader;
 use Exception;
 use Pronto\MobileBundle\Entity\ApiEntityInterface;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
-use Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader;
+use Symfony\Component\Serializer\Mapping\Loader\AttributeLoader;
 use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
@@ -21,9 +19,7 @@ class JsonSerializer
     public function __construct()
     {
         $this->classMetadataFactory = new ClassMetadataFactory(
-            new AnnotationLoader(
-                new AnnotationReader()
-            )
+            new AttributeLoader()
         );
     }
 

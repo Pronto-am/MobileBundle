@@ -11,24 +11,19 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * Class TimestampedEntity
  * @package Pronto\MobileBundle\Entity
- *
- * @ORM\MappedSuperclass
- * @ORM\HasLifecycleCallbacks
  */
+#[ORM\MappedSuperclass]
+#[ORM\HasLifecycleCallbacks]
 abstract class TimestampedEntity
 {
-    /**
-     * @ORM\Column(type="datetime")
-     *
-     * @Groups({"TimestampedEntity"})
-     */
+    
+    #[ORM\Column(type: 'datetime')]
+    #[Groups(['TimestampedEntity'])]
     private $createdAt;
 
-    /**
-     * @ORM\Column(type="datetime")
-     *
-     * @Groups({"TimestampedEntity"})
-     */
+    
+    #[ORM\Column(type: 'datetime')]
+    #[Groups(['TimestampedEntity'])]
     private $updatedAt;
 
     /**
@@ -65,9 +60,8 @@ abstract class TimestampedEntity
 
     /**
      * Triggered on pre persist
-     *
-     * @ORM\PrePersist
      */
+    #[ORM\PrePersist]
     public function onPrePersist(): void
     {
         $this->createdAt = new DateTime();
@@ -76,9 +70,8 @@ abstract class TimestampedEntity
 
     /**
      * Triggered on pre update
-     *
-     * @ORM\PreUpdate
      */
+    #[ORM\PreUpdate]
     public function onPreUpdate(): void
     {
         $this->updatedAt = new DateTime();

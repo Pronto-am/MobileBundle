@@ -9,32 +9,23 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Class Type
  * @package Pronto\MobileBundle\Entity
- *
- * @ORM\Entity
- * @ORM\Table(name="collection_relationship_types")
  */
+#[ORM\Table(name: 'collection_relationship_types')]
+#[ORM\Entity]
 class Type
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
+    #[ORM\Column(type: 'integer')]
     private $id;
 
-    /**
-     * @ORM\Column(type="string")
-     */
+    #[ORM\Column(type: 'string')]
     private $name;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: 'boolean')]
     private $hasMany = false;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: 'boolean')]
     private $canBeEmpty = false;
 
     /**

@@ -13,9 +13,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 class UserDTO extends BaseDTO
 {
     /**
-     * @Assert\NotBlank()
      * @var string $firstName
      */
+    #[Assert\NotBlank]
     public $firstName;
 
     /**
@@ -24,16 +24,16 @@ class UserDTO extends BaseDTO
     public $insertion;
 
     /**
-     * @Assert\NotBlank()
      * @var string $lastName
      */
+    #[Assert\NotBlank]
     public $lastName;
 
     /**
-     * @Assert\NotBlank()
-     * @Assert\Email()
      * @var string $email
      */
+    #[Assert\NotBlank]
+    #[Assert\Email]
     public $email;
 
     /**

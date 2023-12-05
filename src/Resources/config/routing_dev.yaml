@@ -18,4 +18,4 @@ _testing:
   path: /test/config
   schemes: [https]
   defaults:
-    _controller: Pronto\MobileBundle\Controller\Web\DefaultController:testBundleConfigurationAction
+    _controller: Pronto\MobileBundle\Controller\Web\DefaultController::testBundleConfigurationAction

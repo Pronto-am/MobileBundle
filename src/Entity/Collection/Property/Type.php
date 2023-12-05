@@ -9,10 +9,9 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Class Type
  * @package Pronto\MobileBundle\Entity
- *
- * @ORM\Entity
- * @ORM\Table(name="collection_property_types")
  */
+#[ORM\Table(name: 'collection_property_types')]
+#[ORM\Entity]
 class Type
 {
     // Set the types as publicly accessible variables
@@ -29,41 +28,27 @@ class Type
     public const TYPE_COORDINATES = 'coordinates';
     public const TYPE_FILE = 'file';
 
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
+    #[ORM\Column(type: 'integer')]
     private $id;
 
-    /**
-     * @ORM\Column(type="string")
-     */
+    #[ORM\Column(type: 'string')]
     private $type;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: 'boolean')]
     private $translatable = false;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: 'boolean')]
     private $listviewCompatible = false;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: 'boolean')]
     private $jsonListviewCompatible = false;
 
-    /**
-     * @ORM\Column(type="smallint")
-     */
+    #[ORM\Column(type: 'smallint')]
     private $ordering;
 
-    /**
-     * @ORM\Column(type="json")
-     */
+    #[ORM\Column(type: 'json')]
     private $config;
 
     /**

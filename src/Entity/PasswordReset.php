@@ -12,28 +12,21 @@ use Ramsey\Uuid\Uuid;
 /**
  * Class PasswordReset
  * @package Pronto\MobileBundle\Entity
- *
- * @ORM\Entity()
- * @ORM\Table(name="password_resets")
- * @ORM\HasLifecycleCallbacks
  */
+#[ORM\Table(name: 'password_resets')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class PasswordReset
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="string", unique=true)
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'string', unique: true)]
     private $token;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\User")
-     * @ORM\JoinColumn(onDelete="CASCADE")
-     */
+    #[ORM\ManyToOne(targetEntity: 'Pronto\MobileBundle\Entity\User')]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private $user;
 
-    /**
-     * @ORM\Column(type="datetime")
-     */
+    #[ORM\Column(type: 'datetime')]
     private $createdAt;
 
     /**
@@ -48,9 +41,9 @@ class PasswordReset
     /**
      * Triggered on pre persist
      *
-     * @ORM\PrePersist
      * @throws Exception
      */
+    #[ORM\PrePersist]
     public function onPrePersist(): void
     {
         $this->token = Uuid::uuid1()->toString();

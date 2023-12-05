@@ -15,31 +15,31 @@ pronto_mobile_logout:
   path: /logout
   schemes: [https]
   defaults:
-    _controller: Pronto\MobileBundle\Controller\Web\AuthenticationController:logoutAction
+    _controller: Pronto\MobileBundle\Controller\Web\AuthenticationController::logoutAction
 
 pronto_mobile_forgot_password:
   path: /password/reset
   schemes: [https]
   defaults:
-    _controller: Pronto\MobileBundle\Controller\Web\AuthenticationController:resetPasswordFormAction
+    _controller: Pronto\MobileBundle\Controller\Web\AuthenticationController::resetPasswordFormAction
 
 pronto_mobile_reset_password:
   path: /password/reset/{token}
   schemes: [https]
   defaults:
-    _controller: Pronto\MobileBundle\Controller\Web\AuthenticationController:resetPasswordAction
+    _controller: Pronto\MobileBundle\Controller\Web\AuthenticationController::resetPasswordAction
 
 pronto_mobile_create_password:
   path: /password/create/{token}
   schemes: [https]
   defaults:
-    _controller: Pronto\MobileBundle\Controller\Web\AuthenticationController:createPasswordAction
+    _controller: Pronto\MobileBundle\Controller\Web\AuthenticationController::createPasswordAction
 
 pronto_mobile_app_users_reset_password:
   path: /users/app/password/reset/{token}
   schemes: [https]
   defaults:
-    _controller: Pronto\MobileBundle\Controller\Api\V1\AppUserController:resetPasswordAction
+    _controller: Pronto\MobileBundle\Controller\Api\V1\AppUserController::resetPasswordAction
 
 
 pronto_mobile_app_web_file:
@@ -57,5 +57,5 @@ pronto_mobile_app_api_file:
 pronto_mobile_app_version_new_deprecated:
   path: /bundles/prontomobile/versions.php
   defaults:
-    _controller: Pronto\MobileBundle\Controller\Api\V1\AppVersionController:availableUpdateAction
+    _controller: Pronto\MobileBundle\Controller\Api\V1\AppVersionController::availableUpdateAction
   condition: "context.getMethod() in ['GET']"

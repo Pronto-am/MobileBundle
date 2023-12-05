@@ -15,11 +15,11 @@ use Ramsey\Uuid\Uuid;
 /**
  * Class Sender
  * @package Pronto\MobileBundle\Entity
- *
- * @ORM\Entity(repositoryClass="Pronto\MobileBundle\Repository\PushNotificationRepository")
- * @ORM\Table(name="push_notifications", indexes={@ORM\Index(name="being_processed", columns={"being_processed"})})
- * @ORM\HasLifecycleCallbacks
  */
+#[ORM\Table(name: 'push_notifications')]
+#[ORM\Index(name: 'being_processed', columns: ['being_processed'])]
+#[ORM\Entity(repositoryClass: 'Pronto\MobileBundle\Repository\PushNotificationRepository')]
+#[ORM\HasLifecycleCallbacks]
 class PushNotification implements ApiEntityInterface
 {
     use ApiEntityTrait;
@@ -30,91 +30,61 @@ class PushNotification implements ApiEntityInterface
 
     public const TYPE_SCHEDULE = 3;
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="string", unique=true)
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'string', unique: true)]
     private $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Application")
-     * @ORM\JoinColumn(onDelete="CASCADE")
-     */
+    #[ORM\ManyToOne(targetEntity: 'Pronto\MobileBundle\Entity\Application')]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private $application;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\User", inversedBy="pushNotifications")
-     * @ORM\JoinColumn(onDelete="SET NULL", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: 'Pronto\MobileBundle\Entity\User', inversedBy: 'pushNotifications')]
+    #[ORM\JoinColumn(onDelete: 'SET NULL', nullable: true)]
     private $sentBy;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\PushNotification\Segment")
-     * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
-     */
+    #[ORM\ManyToOne(targetEntity: 'Pronto\MobileBundle\Entity\PushNotification\Segment')]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
     private $segment;
 
-    /**
-     * @ORM\Column(type="json")
-     */
+    #[ORM\Column(type: 'json')]
     private $title;
 
-    /**
-     * @ORM\Column(type="json", nullable=true)
-     */
+    #[ORM\Column(type: 'json', nullable: true)]
     private $content;
 
-    /**
-     * @ORM\Column(type="integer", nullable=false)
-     */
+    #[ORM\Column(type: 'integer', nullable: false)]
     private $clickAction;
 
-    /**
-     * @ORM\Column(type="json", nullable=true)
-     */
+    #[ORM\Column(type: 'json', nullable: true)]
     private $clickActionUrl;
 
-    /**
-     * @ORM\Column(type="json", nullable=true)
-     */
+    #[ORM\Column(type: 'json', nullable: true)]
     private $clickActionHtml;
 
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $sent;
 
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $scheduledSending;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: 'boolean')]
     private $test = false;
 
-    /**
-     * @ORM\Column(type="json")
-     */
+    #[ORM\Column(type: 'json')]
     private $testDevices;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: 'boolean')]
     private $beingProcessed = false;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Pronto\MobileBundle\Entity\PushNotification\Recipient", mappedBy="pushNotification")
-     */
+    #[ORM\OneToMany(targetEntity: 'Pronto\MobileBundle\Entity\PushNotification\Recipient', mappedBy: 'pushNotification')]
     private $pushNotificationRecipients;
 
     /**
      * Triggered on pre persist
      *
-     * @ORM\PrePersist
      * @throws Exception
      */
+    #[ORM\PrePersist]
     public function onPrePersist(): void
     {
         $this->id = Uuid::uuid1()->toString();

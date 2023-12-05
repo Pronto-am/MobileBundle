@@ -16,87 +16,63 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="app_users")
- */
+#[ORM\Table(name: 'app_users')]
+#[ORM\Entity]
 class AppUser extends TimestampedEntity implements UserInterface, ApiEntityInterface, PasswordAuthenticatedUserInterface, UserEntityInterface
 {
     use ApiEntityTrait;
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="string", unique=true)
-     *
-     * @Groups({"AppUser", "Device"})
-     */
+    
+    #[ORM\Id]
+    #[ORM\Column(type: 'string', unique: true)]
+    #[Groups(['AppUser', 'Device'])]
     private ?string $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Application")
-     * @ORM\JoinColumn(onDelete="CASCADE")
-     */
+    #[ORM\ManyToOne(targetEntity: 'Pronto\MobileBundle\Entity\Application')]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private Application $application;
 
-    /**
-     * @ORM\Column(type="string")
-     * @Assert\NotBlank()
-     *
-     * @Groups({"AppUser", "Device"})
-     */
+    
+    #[ORM\Column(type: 'string')]
+    #[Assert\NotBlank]
+    #[Groups(['AppUser', 'Device'])]
     private string $firstName;
 
-    /**
-     * @ORM\Column(type="string")
-     * @Assert\NotBlank()
-     *
-     * @Groups({"AppUser", "Device"})
-     */
+    
+    #[ORM\Column(type: 'string')]
+    #[Assert\NotBlank]
+    #[Groups(['AppUser', 'Device'])]
     private string $lastName;
 
-    /**
-     * @ORM\Column(type="string")
-     * @Assert\NotBlank()
-     * @Assert\Email()
-     *
-     * @Groups({"AppUser", "Device"})
-     */
+    
+    #[ORM\Column(type: 'string')]
+    #[Assert\NotBlank]
+    #[Assert\Email]
+    #[Groups(['AppUser', 'Device'])]
     private string $email;
 
-    /**
-     * @ORM\Column(type="string")
-     */
+    #[ORM\Column(type: 'string')]
     private ?string $password;
 
     private ?string $plainPassword;
 
-    /**
-     * @ORM\Column(type="boolean")
-     *
-     * @Groups({"AppUser", "Device"})
-     */
+    
+    #[ORM\Column(type: 'boolean')]
+    #[Groups(['AppUser', 'Device'])]
     private bool $activated = false;
 
-    /**
-     * @ORM\Column(type="string")
-     */
+    #[ORM\Column(type: 'string')]
     private string $activationToken;
 
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     *
-     * @Groups({"AppUser", "Device"})
-     */
+    
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    #[Groups(['AppUser', 'Device'])]
     private ?DateTime $lastLogin;
 
-    /**
-     * @ORM\Column(type="json", nullable=true)
-     */
+    #[ORM\Column(type: 'json', nullable: true)]
     private ?array $extraData;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Pronto\MobileBundle\Entity\Device", mappedBy="appUser")
-     */
+    #[ORM\OneToMany(targetEntity: 'Pronto\MobileBundle\Entity\Device', mappedBy: 'appUser')]
     private DoctrineCollection $devices;
 
     public static function getSerializerCallbacks(): array
@@ -109,9 +85,9 @@ class AppUser extends TimestampedEntity implements UserInterface, ApiEntityInter
     }
 
     /**
-     * @ORM\PrePersist
      * @throws Exception
      */
+    #[ORM\PrePersist]
     public function onPrePersist(): void
     {
         parent::onPrePersist();
@@ -146,9 +122,7 @@ class AppUser extends TimestampedEntity implements UserInterface, ApiEntityInter
         $this->lastName = $lastName;
     }
 
-    /**
-     * @Groups({"AppUser"})
-     */
+    #[Groups(['AppUser'])]
     public function getFullName(): string
     {
         return $this->firstName . ' ' . $this->lastName;
@@ -226,9 +200,7 @@ class AppUser extends TimestampedEntity implements UserInterface, ApiEntityInter
         $this->lastLogin = $lastLogin;
     }
 
-    /**
-     * @Groups({"AppUser", "Device"})
-     */
+    #[Groups(['AppUser', 'Device'])]
     public function getExtraData(): ?array
     {
         return (array) $this->extraData;

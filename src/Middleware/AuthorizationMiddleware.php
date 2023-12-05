@@ -15,18 +15,12 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class AuthorizationMiddleware extends Middleware
 {
-    private AuthorizationCheckerInterface $authorizationChecker;
-    private TokenStorageInterface $tokenStorage;
-    private EntityManagerInterface $entityManager;
-    private ProntoMobile $prontoMobile;
-
-    public function __construct(ContainerInterface $container, EntityManagerInterface $entityManager)
-    {
-        $this->authorizationChecker = $container->get('security.authorization_checker');
-        $this->tokenStorage = $container->get('security.token_storage');
-        $this->prontoMobile = $container->get('Pronto\MobileBundle\Service\ProntoMobile');
-        $this->entityManager = $entityManager;
-
+    public function __construct(
+        private readonly AuthorizationCheckerInterface $authorizationChecker,
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly ProntoMobile $prontoMobile,
+    ) {
         parent::__construct();
     }
 

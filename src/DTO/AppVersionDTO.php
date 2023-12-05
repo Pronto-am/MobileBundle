@@ -17,21 +17,21 @@ class AppVersionDTO extends BaseDTO
 {
     /**
      * @var string $version
-     * @Assert\NotBlank()
      * @IsSemanticVersion
      */
+    #[Assert\NotBlank]
     public $version;
 
     /**
      * @var string $platform
-     * @Assert\NotBlank()
      */
+    #[Assert\NotBlank]
     public $platform;
 
     /**
      * @var string $releaseDate
-     * @Assert\NotBlank()
      */
+    #[Assert\NotBlank]
     public $releaseDate;
 
     /**
@@ -41,9 +41,9 @@ class AppVersionDTO extends BaseDTO
 
     /**
      * @var string $description
-     * @Assert\Type(type="array")
      * @Assert\All(constraints={@Assert\NotBlank()})
      */
+    #[Assert\Type(type: 'array')]
     public $description;
 
     /**
@@ -72,9 +72,9 @@ class AppVersionDTO extends BaseDTO
     }
 
     /**
-     * @Assert\Callback
      * @param ExecutionContextInterface $context
      */
+    #[Assert\Callback]
     public function validate(ExecutionContextInterface $context)
     {
         if ($this->url === null && $this->file === null) {

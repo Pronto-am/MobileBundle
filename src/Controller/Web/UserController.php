@@ -38,8 +38,11 @@ class UserController extends BaseController implements ValidateCustomerSelection
             ]);
     }
 
-    public function profileAction(Request $request, EntityManagerInterface $entityManager, UserInterface $user)
-    {
+    public function profileAction(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        UserInterface $user
+    ): Response {
         $profileDTO = ProfileDTO::fromEntity($user);
         $profileForm = $this->createForm(ProfileForm::class, $profileDTO);
 
@@ -65,7 +68,9 @@ class UserController extends BaseController implements ValidateCustomerSelection
 
                 if ($passwordForm->isSubmitted() && $passwordForm->isValid()) {
                     $data = $passwordForm->getData();
+                    //dd($data);
                     $user->setPlainPassword($data['password']);
+                    //dd($user);
 
                     $entityManager->persist($user);
                     $entityManager->flush();

@@ -9,9 +9,12 @@ use League\Bundle\OAuth2ServerBundle\Event\UserResolveEvent;
 use League\Bundle\OAuth2ServerBundle\Model\AbstractClient;
 use Pronto\MobileBundle\Entity\Application\ApplicationClient;
 use Pronto\MobileBundle\Entity\AppUser;
+use Pronto\MobileBundle\Provider\AppUserProvider;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
+#[AsEventListener(event: UserResolveEvent::class, method: 'onUserResolve')]
 final class UserResolveListener
 {
     private UserProviderInterface $userProvider;
@@ -21,7 +24,7 @@ final class UserResolveListener
     private EntityManagerInterface $entityManager;
 
     public function __construct(
-        UserProviderInterface $userProvider,
+        AppUserProvider $userProvider,
         UserPasswordHasherInterface $passwordHasher,
         EntityManagerInterface $entityManager
     ) {

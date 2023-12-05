@@ -10,9 +10,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 class VersionDTO extends BaseDTO
 {
     /**
-     * @Assert\NotBlank()
      * @var string
      */
+    #[Assert\NotBlank]
     public $name;
 
     /**

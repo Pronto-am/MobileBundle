@@ -9,36 +9,24 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class ApplicationDTO extends BaseDTO
 {
-    /**
-     * @Assert\NotBlank()
-     */
+    #[Assert\NotBlank]
     public $name;
 
     public $label;
 
-    /**
-     * @Assert\NotBlank()
-     */
+    #[Assert\NotBlank]
     public $color;
 
-    /**
-     * @Assert\NotBlank()
-     */
+    #[Assert\NotBlank]
     public $androidBundleIdentifier;
 
-    /**
-     * @Assert\NotBlank()
-     */
+    #[Assert\NotBlank]
     public $iosBundleIdentifier;
 
-    /**
-     * @Assert\NotBlank()
-     */
+    #[Assert\NotBlank]
     public $defaultLanguage;
 
-    /**
-     * @Assert\NotBlank()
-     */
+    #[Assert\NotBlank]
     public $availableLanguages;
 
     public static function getFillable(): array

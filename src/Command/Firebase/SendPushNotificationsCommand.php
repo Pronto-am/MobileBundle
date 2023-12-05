@@ -19,16 +19,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class SendPushNotificationsCommand extends Command
 {
-    private ProntoMobile $prontoMobile;
-
     public function __construct(
-        readonly EntityManagerInterface $entityManager,
-        readonly Sender $sender,
-        ContainerInterface $container,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly Sender $sender,
+        private readonly ProntoMobile $prontoMobile,
         $name = null
     ) {
-        $this->prontoMobile = $container->get(ProntoMobile::class);
-
         parent::__construct($name);
     }
 
@@ -81,29 +77,37 @@ class SendPushNotificationsCommand extends Command
             $application = $notification->getApplication();
             $configuration = $this->prontoMobile->getPluginConfiguration(Plugin::PUSH_NOTIFICATIONS, $application);
 
-            if ($this->sender->setServerKey($configuration[Plugin::PUSH_NOTIFICATIONS_FIREBASE_TOKEN])) {
-
-                try {
-                    $this->sender->setNotification($notification);
-                    $this->sender->send();
-                } catch (Exception $exception) {
-                    $output->writeln([' - Error sending the notification', ' - E: ' . $exception->getMessage()]);
-                    $notification->setBeingProcessed(false);
-                    $this->entityManager->persist($notification);
-                    continue;
-                }
-
-                $output->writeln($this->sender->getLogging());
-
-                // Set the notification to sent and remove the scheduled datetime
-                if ($notification->getSent() === null) {
-                    $notification->setSent(new DateTime());
-                }
-
-                $notification->setScheduledSending(null);
-            } else {
-                $output->writeln('Firebase Server Key is invalid');
+            $serviceAccountString = $configuration[Plugin::PUSH_NOTIFICATIONS_FIREBASE_SERVICE_ACCOUNT];
+            if (!is_string($serviceAccountString)) {
+                $output->writeln('Firebase Service Account is invalid');
+                continue;
             }
+
+            $serviceAccount = json_decode($serviceAccountString, true);
+            if (!is_array($serviceAccount) || json_last_error() !== JSON_ERROR_NONE) {
+                $output->writeln('Firebase Service Account is invalid');
+                continue;
+            }
+
+            try {
+                $this->sender->setServiceAccount($serviceAccount)
+                    ->setNotification($notification)
+                    ->send();
+            } catch (Exception $exception) {
+                $output->writeln([' - Error sending the notification', ' - E: ' . $exception->getMessage()]);
+                $notification->setBeingProcessed(false);
+                $this->entityManager->persist($notification);
+                continue;
+            }
+
+            $output->writeln($this->sender->getLogging());
+
+            // Set the notification to sent and remove the scheduled datetime
+            if ($notification->getSent() === null) {
+                $notification->setSent(new DateTime());
+            }
+
+            $notification->setScheduledSending(null);
 
             $notification->setBeingProcessed(false);
             $this->entityManager->persist($notification);

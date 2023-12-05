@@ -10,10 +10,9 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Class Plugin
  * @package Pronto\MobileBundle\Entity
- *
- * @ORM\Entity
- * @ORM\Table(name="plugins")
  */
+#[ORM\Table(name: 'plugins')]
+#[ORM\Entity]
 class Plugin
 {
     // Plugin names
@@ -25,41 +24,29 @@ class Plugin
     public const REMOTE_CONFIG = 'remote_config';
 
     // Config settings
-    public const PUSH_NOTIFICATIONS_FIREBASE_TOKEN = 'firebaseAccessToken';
+    public const PUSH_NOTIFICATIONS_FIREBASE_SERVICE_ACCOUNT = 'firebaseServiceAccount';
     public const PUSH_NOTIFICATIONS_NOTIFICATION_TEMPLATE = 'notificationHtmlTemplate';
     public const APP_USERS_REGISTRATION_ENABLED = 'registrationEnabled';
     public const APP_USERS_ACTIVATION_REQUIRED = 'accountActivationViaEmail';
 
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
+    #[ORM\Column(type: 'integer')]
     private $id;
 
-    /**
-     * @ORM\Column(type="string")
-     */
+    #[ORM\Column(type: 'string')]
     private $name;
 
-    /**
-     * @ORM\Column(type="string")
-     */
+    #[ORM\Column(type: 'string')]
     private $identifier;
 
-    /**
-     * @ORM\Column(type="string")
-     */
+    #[ORM\Column(type: 'string')]
     private $icon;
 
-    /**
-     * @ORM\Column(type="json")
-     */
+    #[ORM\Column(type: 'json')]
     private $defaultConfig;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Pronto\MobileBundle\Entity\Application\ApplicationPlugin", mappedBy="plugin")
-     */
+    #[ORM\OneToMany(targetEntity: 'Pronto\MobileBundle\Entity\Application\ApplicationPlugin', mappedBy: 'plugin')]
     private $applicationPlugins;
 
     /**

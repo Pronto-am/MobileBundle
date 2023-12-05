@@ -11,99 +11,61 @@ use Doctrine\ORM\Mapping as ORM;
 use Pronto\MobileBundle\Traits\ApiEntityTrait;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity(repositoryClass="Pronto\MobileBundle\Repository\ApplicationRepository")
- * @ORM\Table(name="applications")
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Table(name: 'applications')]
+#[ORM\Entity(repositoryClass: 'Pronto\MobileBundle\Repository\ApplicationRepository')]
+#[ORM\HasLifecycleCallbacks]
 class Application implements ApiEntityInterface
 {
     use ApiEntityTrait;
 
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
+    #[ORM\Column(type: 'integer')]
     protected $id;
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected $randomId;
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected $secret;
-    /**
-     * @ORM\Column(type="array", nullable=true)
-     */
+    #[ORM\Column(type: 'array', nullable: true)]
     protected $redirectUris = [];
-    /**
-     * @ORM\Column(type="array", nullable=true)
-     */
+    #[ORM\Column(type: 'array', nullable: true)]
     protected $allowedGrantTypes = [];
-    /**
-     * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Customer", inversedBy="applications")
-     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
-     */
+    #[ORM\ManyToOne(targetEntity: 'Pronto\MobileBundle\Entity\Customer', inversedBy: 'applications')]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private $customer;
-    /**
-     * @ORM\Column(type="string")
-     * @Assert\NotBlank()
-     */
+    #[ORM\Column(type: 'string')]
+    #[Assert\NotBlank]
     private $name;
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $label;
-    /**
-     * @ORM\Column(type="string")
-     * @Assert\NotBlank()
-     */
+    #[ORM\Column(type: 'string')]
+    #[Assert\NotBlank]
     private $color;
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     * @Assert\NotBlank()
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
+    #[Assert\NotBlank]
     private $androidBundleIdentifier;
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     * @Assert\NotBlank()
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
+    #[Assert\NotBlank]
     private $iosBundleIdentifier;
-    /**
-     * @ORM\Column(type="string")
-     * @Assert\NotBlank()
-     */
+    #[ORM\Column(type: 'string')]
+    #[Assert\NotBlank]
     private $defaultLanguage;
-    /**
-     * @ORM\Column(type="json")
-     * @Assert\NotBlank()
-     */
+    #[ORM\Column(type: 'json')]
+    #[Assert\NotBlank]
     private $availableLanguages;
-    /**
-     * @ORM\Column(type="datetime")
-     */
+    #[ORM\Column(type: 'datetime')]
     private $createdAt;
 
     /*
      * The next properties are from the old FOS OAuth server
      */
-    /**
-     * @ORM\Column(type="datetime")
-     */
+    #[ORM\Column(type: 'datetime')]
     private $updatedAt;
-    /**
-     * @ORM\OneToMany(targetEntity="Pronto\MobileBundle\Entity\Application\ApplicationPlugin", mappedBy="application")
-     */
+    #[ORM\OneToMany(targetEntity: 'Pronto\MobileBundle\Entity\Application\ApplicationPlugin', mappedBy: 'application')]
     private $applicationPlugins;
-    /**
-     * @ORM\OneToMany(targetEntity="Pronto\MobileBundle\Entity\Application\Version", mappedBy="application")
-     */
+    #[ORM\OneToMany(targetEntity: 'Pronto\MobileBundle\Entity\Application\Version', mappedBy: 'application')]
     private $applicationVersions;
-    /**
-     * @ORM\OneToMany(targetEntity="Pronto\MobileBundle\Entity\Application\ApplicationClient", mappedBy="application")
-     */
+    #[ORM\OneToMany(targetEntity: 'Pronto\MobileBundle\Entity\Application\ApplicationClient', mappedBy: 'application')]
     private $applicationClients;
 
     public function __construct()
@@ -113,18 +75,14 @@ class Application implements ApiEntityInterface
         $this->applicationClients = new ArrayCollection();
     }
 
-    /**
-     * @ORM\PrePersist
-     */
+    #[ORM\PrePersist]
     public function onPrePersist()
     {
         $this->createdAt = new DateTime();
         $this->updatedAt = new DateTime();
     }
 
-    /**
-     * @ORM\PreUpdate
-     */
+    #[ORM\PreUpdate]
     public function onPreUpdate()
     {
         $this->updatedAt = new DateTime();

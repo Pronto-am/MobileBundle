@@ -10,80 +10,51 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="customers")
- */
+#[ORM\Table(name: 'customers')]
+#[ORM\Entity]
 class Customer
 {
     public const SESSION_IDENTIFIER = '_pronto.customer';
 
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
+    #[ORM\Column(type: 'integer')]
     private $id;
 
-    /**
-     * @ORM\Column(type="string")
-     * @Assert\NotBlank()
-     */
+    #[ORM\Column(type: 'string')]
+    #[Assert\NotBlank]
     private $companyName;
 
-    /**
-     * @ORM\Column(type="string")
-     * @Assert\NotBlank()
-     */
+    #[ORM\Column(type: 'string')]
+    #[Assert\NotBlank]
     private $contactPerson;
 
-    /**
-     * @ORM\Column(type="string")
-     * @Assert\NotBlank()
-     */
+    #[ORM\Column(type: 'string')]
+    #[Assert\NotBlank]
     private $phoneNumber;
 
-    /**
-     * @ORM\Column(type="string")
-     * @Assert\NotBlank()
-     */
+    #[ORM\Column(type: 'string')]
+    #[Assert\NotBlank]
     private $email;
 
-    /**
-     * @ORM\Column(type="string")
-     * @Assert\NotBlank()
-     */
+    #[ORM\Column(type: 'string')]
+    #[Assert\NotBlank]
     private $primaryColor;
 
-    /**
-     * @ORM\Column(type="string")
-     * @Assert\NotBlank()
-     */
+    #[ORM\Column(type: 'string')]
+    #[Assert\NotBlank]
     private $secondaryColor;
 
-    /**
-     * @ORM\Column(type="string")
-     * @Assert\NotBlank()
-     */
+    #[ORM\Column(type: 'string')]
+    #[Assert\NotBlank]
     private $sidebarColor;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Pronto\MobileBundle\Entity\Application", mappedBy="customer")
-     */
+    #[ORM\OneToMany(targetEntity: 'Pronto\MobileBundle\Entity\Application', mappedBy: 'customer')]
     private $applications;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     * @Assert\File(mimeTypes={
-     *     "image/jpeg", "image/png"
-     *     })
-     * @Assert\Image(
-     *     minWidth = 500,
-     *     maxWidth = 500,
-     *     minHeight = 120,
-     *     maxHeight = 120
-     * )
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
+    #[Assert\File(mimeTypes: ['image/jpeg', 'image/png'])]
+    #[Assert\Image(minWidth: 500, maxWidth: 500, minHeight: 120, maxHeight: 120)]
     private $logo;
 
     public function __construct()

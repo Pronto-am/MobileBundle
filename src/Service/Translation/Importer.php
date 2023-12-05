@@ -9,7 +9,6 @@ use Pronto\MobileBundle\DTO\Translation\UploadDTO;
 use Pronto\MobileBundle\Entity\Translation;
 use Pronto\MobileBundle\Entity\TranslationKey;
 use Pronto\MobileBundle\Service\ProntoMobile;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class Importer
@@ -19,17 +18,15 @@ class Importer
     public const FILE_TYPE_CSV = 'csv';
     public const FILE_TYPE_PLAIN_TEXT = 'plain_text';
 
-    private EntityManagerInterface $entityManager;
     private array $availableLanguages;
-    private ProntoMobile $prontoMobile;
     private ObjectRepository $translationKeyRepository;
     private ObjectRepository $translationRepository;
     private ?string $fileType;
 
-    public function __construct(EntityManagerInterface $entityManager, ContainerInterface $container)
-    {
-        $this->entityManager = $entityManager;
-        $this->prontoMobile = $container->get('Pronto\MobileBundle\Service\ProntoMobile');
+    public function __construct(
+        private readonly EntityManagerInterface $entityManager,
+        private readonly ProntoMobile $prontoMobile,
+    ) {
         $this->availableLanguages = array_reduce($this->prontoMobile->getApplication()->getAvailableLanguages(), function ($result, $language) {
             $result[] = $language['code'];
 
@@ -105,9 +102,9 @@ class Importer
         $application = $this->prontoMobile->getApplication();
 
         $translationKey = $this->translationKeyRepository->findOneBy([
-                'identifier'  => $identifier,
-                'application' => $application
-            ]) ?? new TranslationKey();
+            'identifier'  => $identifier,
+            'application' => $application
+        ]) ?? new TranslationKey();
 
         $translationKey->setIdentifier($identifier);
         $translationKey->setType($type);
@@ -142,9 +139,9 @@ class Importer
     private function saveTranslation(TranslationKey $key, string $language, string $text = null): void
     {
         $translation = $this->translationRepository->findOneBy([
-                'translationKey' => $key,
-                'language'       => $language
-            ]) ?? new Translation();
+            'translationKey' => $key,
+            'language'       => $language
+        ]) ?? new Translation();
 
         $translation->setTranslationKey($key);
         $translation->setText($text);

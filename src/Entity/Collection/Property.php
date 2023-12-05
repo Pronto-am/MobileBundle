@@ -12,92 +12,91 @@ use Pronto\MobileBundle\Entity\TimestampedEntity;
 /**
  * Class Property
  * @package Pronto\MobileBundle\Entity
- *
- * @ORM\Entity(repositoryClass="Pronto\MobileBundle\Repository\Collection\PropertyRepository")
- * @ORM\Table(name="collection_properties")
  */
+#[ORM\Table(name: 'collection_properties')]
+#[ORM\Entity(repositoryClass: 'Pronto\MobileBundle\Repository\Collection\PropertyRepository')]
 class Property extends TimestampedEntity
 {
     /**
      * @var int $id
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     * @ORM\Column(type="integer")
      */
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
+    #[ORM\Column(type: 'integer')]
     private $id;
 
     /**
      * @var Collection $collection
-     * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Collection", inversedBy="properties")
-     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
+    #[ORM\ManyToOne(targetEntity: 'Pronto\MobileBundle\Entity\Collection', inversedBy: 'properties')]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private $collection;
 
     /**
      * @var Type $type
-     * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Collection\Property\Type")
-     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
+    #[ORM\ManyToOne(targetEntity: 'Pronto\MobileBundle\Entity\Collection\Property\Type')]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private $type;
 
     /**
      * @var string $name
-     * @ORM\Column(type="string")
      */
+    #[ORM\Column(type: 'string')]
     private $name;
 
     /**
      * @var string $identifier
-     * @ORM\Column(type="string")
      */
+    #[ORM\Column(type: 'string')]
     private $identifier;
 
     /**
      * @var array $config
-     * @ORM\Column(type="json")
      */
+    #[ORM\Column(type: 'json')]
     private $config;
 
     /**
      * @var boolean $required
-     * @ORM\Column(type="boolean")
      */
+    #[ORM\Column(type: 'boolean')]
     private $required = true;
 
     /**
      * @var boolean $includeInListView
-     * @ORM\Column(type="boolean")
      */
+    #[ORM\Column(type: 'boolean')]
     private $includeInListView = true;
 
     /**
      * @var boolean $includeInJsonListView
-     * @ORM\Column(type="boolean")
      */
+    #[ORM\Column(type: 'boolean')]
     private $includeInJsonListView = true;
 
     /**
      * @var boolean $entryTitle
-     * @ORM\Column(type="boolean")
      */
+    #[ORM\Column(type: 'boolean')]
     private $entryTitle = false;
 
     /**
      * @var int $ordering
-     * @ORM\Column(type="integer")
      */
+    #[ORM\Column(type: 'integer')]
     private $ordering;
 
     /**
      * @var boolean $translatable
-     * @ORM\Column(type="boolean")
      */
+    #[ORM\Column(type: 'boolean')]
     private $translatable = true;
 
     /**
      * @var string|null $editableForRole
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $editableForRole = 'ROLE_USER';
 
     /**

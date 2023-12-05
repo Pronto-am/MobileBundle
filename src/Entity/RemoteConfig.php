@@ -13,99 +13,96 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * Class RemoteConfig
  * @package Pronto\MobileBundle\Entity
- *
- * @ORM\Entity(repositoryClass="Pronto\MobileBundle\Repository\RemoteConfigRepository")
- * @ORM\Table(name="remote_config")
  */
+#[ORM\Table(name: 'remote_config')]
+#[ORM\Entity(repositoryClass: 'Pronto\MobileBundle\Repository\RemoteConfigRepository')]
 class RemoteConfig extends TimestampedEntity implements ApiEntityInterface
 {
     use ApiEntityTrait;
 
     /**
      * @var int|null $id
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     * @ORM\Column(type="integer")
      *
-     * @Groups({"RemoteConfig"})
      */
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
+    #[ORM\Column(type: 'integer')]
+    #[Groups(['RemoteConfig'])]
     private $id;
 
     /**
      * @var Application $application
-     * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Application")
-     * @ORM\JoinColumn(onDelete="CASCADE")
      */
+    #[ORM\ManyToOne(targetEntity: 'Pronto\MobileBundle\Entity\Application')]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private $application;
 
     /**
      * @var DateTime $releaseDate
-     * @ORM\Column(type="datetime", nullable=true)
-     * @Groups({"RemoteConfig"})
      */
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    #[Groups(['RemoteConfig'])]
     private $releaseDate;
 
     /**
      * @var boolean $android
-     *
-     * @ORM\Column(type="boolean", nullable=true)
-     * @Groups({"RemoteConfig"})
      */
+    #[ORM\Column(type: 'boolean', nullable: true)]
+    #[Groups(['RemoteConfig'])]
     private $android;
 
     /**
      * @var boolean $ios
-     *
-     * @ORM\Column(type="boolean", nullable=true)
-     * @Groups({"RemoteConfig"})
      */
+    #[ORM\Column(type: 'boolean', nullable: true)]
+    #[Groups(['RemoteConfig'])]
     private $ios;
 
     /**
      * @var string $name
-     * @ORM\Column(type="string")
-     * @Groups({"RemoteConfig"})
      */
+    #[ORM\Column(type: 'string')]
+    #[Groups(['RemoteConfig'])]
     private $name;
 
     /**
      * @var string $identifier
-     * @ORM\Column(type="string")
-     * @Groups({"RemoteConfig"})
      */
+    #[ORM\Column(type: 'string')]
+    #[Groups(['RemoteConfig'])]
     private $identifier;
 
     /**
      * @var string $description
-     * @ORM\Column(type="string", nullable=true)
-     * @Groups({"RemoteConfig"})
      */
+    #[ORM\Column(type: 'string', nullable: true)]
+    #[Groups(['RemoteConfig'])]
     private $description;
 
     /**
      * @var string $type
-     * @ORM\Column(type="string")
-     * @Groups({"RemoteConfig"})
      */
+    #[ORM\Column(type: 'string')]
+    #[Groups(['RemoteConfig'])]
     private $type;
 
     /**
      * @var array|null $options
-     * @ORM\Column(type="json", nullable=true)
      */
+    #[ORM\Column(type: 'json', nullable: true)]
     private $options;
 
     /**
      * @var string $value
-     * @ORM\Column(type="string", nullable=true)
-     * @Groups({"RemoteConfig"})
      */
+    #[ORM\Column(type: 'string', nullable: true)]
+    #[Groups(['RemoteConfig'])]
     private $value;
 
     /**
      * @var array|null $value
-     * @ORM\Column(type="json", nullable=true)
      */
+    #[ORM\Column(type: 'json', nullable: true)]
     private $jsonValue;
 
     /**

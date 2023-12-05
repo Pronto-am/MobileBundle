@@ -11,40 +11,31 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * Class TimestampedWithUserEntity
  * @package Pronto\MobileBundle\Entity
- *
- * @ORM\MappedSuperclass
- * @ORM\HasLifecycleCallbacks
  */
+#[ORM\MappedSuperclass]
+#[ORM\HasLifecycleCallbacks]
 abstract class TimestampedWithUserEntity
 {
-    /**
-     * @ORM\Column(type="datetime")
-     *
-     * @Groups({"TimestampedWithUserEntity"})
-     */
+    
+    #[ORM\Column(type: 'datetime')]
+    #[Groups(['TimestampedWithUserEntity'])]
     private $createdAt;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\User")
-     * @ORM\JoinColumn(nullable=true, onDelete="set null")
-     *
-     * @Groups({"TimestampedWithUserEntity"})
-     */
+    
+    #[ORM\ManyToOne(targetEntity: 'Pronto\MobileBundle\Entity\User')]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'set null')]
+    #[Groups(['TimestampedWithUserEntity'])]
     private $createdBy;
 
-    /**
-     * @ORM\Column(type="datetime")
-     *
-     * @Groups({"TimestampedWithUserEntity"})
-     */
+    
+    #[ORM\Column(type: 'datetime')]
+    #[Groups(['TimestampedWithUserEntity'])]
     private $updatedAt;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\User")
-     * @ORM\JoinColumn(nullable=true, onDelete="set null")
-     *
-     * @Groups({"TimestampedWithUserEntity"})
-     */
+    
+    #[ORM\ManyToOne(targetEntity: 'Pronto\MobileBundle\Entity\User')]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'set null')]
+    #[Groups(['TimestampedWithUserEntity'])]
     private $updatedBy;
 
     /**
@@ -113,9 +104,8 @@ abstract class TimestampedWithUserEntity
 
     /**
      * Triggered on pre persist
-     *
-     * @ORM\PrePersist()
      */
+    #[ORM\PrePersist]
     public function onPrePersist(): void
     {
         $this->createdAt = new DateTime();
@@ -124,9 +114,8 @@ abstract class TimestampedWithUserEntity
 
     /**
      * Triggered on pre update
-     *
-     * @ORM\PreUpdate()
      */
+    #[ORM\PreUpdate]
     public function onPreUpdate(): void
     {
         $this->updatedAt = new DateTime();

@@ -16,47 +16,39 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * Class Entry
  * @package Pronto\MobileBundle\Entity
- *
- * @ORM\Entity(repositoryClass="Pronto\MobileBundle\Repository\Collection\EntryRepository")
- * @ORM\Table(name="collection_entries", indexes={@ORM\Index(name="active_entries_by_collection", columns={"collection_id", "active"})})
- * @ORM\HasLifecycleCallbacks
  */
+#[ORM\Table(name: 'collection_entries')]
+#[ORM\Index(name: 'active_entries_by_collection', columns: ['collection_id', 'active'])]
+#[ORM\Entity(repositoryClass: 'Pronto\MobileBundle\Repository\Collection\EntryRepository')]
+#[ORM\HasLifecycleCallbacks]
 class Entry extends TimestampedWithUserEntity implements ApiEntityInterface
 {
     use ApiEntityTrait;
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="string", unique=true)
-     *
-     * @Groups({"Entry"})
-     */
+    
+    #[ORM\Id]
+    #[ORM\Column(type: 'string', unique: true)]
+    #[Groups(['Entry'])]
     private $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Collection", inversedBy="entries")
-     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
-     */
+    #[ORM\ManyToOne(targetEntity: 'Pronto\MobileBundle\Entity\Collection', inversedBy: 'entries')]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private $collection;
 
-    /**
-     * @ORM\Column(type="json")
-     *
-     * @Groups({"Entry"})
-     */
+    
+    #[ORM\Column(type: 'json')]
+    #[Groups(['Entry'])]
     private $data;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: 'boolean')]
     private $active = true;
 
     /**
      * Triggered on pre persist
      *
-     * @ORM\PrePersist
      * @throws Exception
      */
+    #[ORM\PrePersist]
     public function onPrePersist(): void
     {
         parent::onPrePersist();

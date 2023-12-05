@@ -16,9 +16,9 @@ class TranslationDTO extends BaseDTO
 
     /**
      * @var string $identifier
-     * @Assert\NotBlank()
      * @IsUniqueIdentifier
      */
+    #[Assert\NotBlank]
     public $identifier;
 
     /**
@@ -28,8 +28,8 @@ class TranslationDTO extends BaseDTO
 
     /**
      * @var string $type
-     * @Assert\NotBlank()
      */
+    #[Assert\NotBlank]
     public $type;
 
     /**

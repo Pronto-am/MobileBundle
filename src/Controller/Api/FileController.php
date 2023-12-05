@@ -21,8 +21,6 @@ class FileController extends BaseApiController
 {
     private FileManager $fileManager;
 
-    private EntityManagerInterface $entityManager;
-
     public function __construct(
         ProntoMobile $prontoMobile,
         TokenInspectionService $tokenInspectionService,

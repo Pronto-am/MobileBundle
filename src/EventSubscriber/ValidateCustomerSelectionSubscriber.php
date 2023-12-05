@@ -18,21 +18,18 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ValidateCustomerSelectionSubscriber implements EventSubscriberInterface
 {
-    private ProntoMobile $prontoMobile;
-
     public function __construct(
         private readonly UrlGeneratorInterface $router,
         private readonly EntityManagerInterface $entityManager,
-        ContainerInterface $container,
+        private readonly ProntoMobile $prontoMobile,
     ) {
-        $this->prontoMobile = $container->get('Pronto\MobileBundle\Service\ProntoMobile');
     }
 
     public static function getSubscribedEvents(): array
     {
         return [
             KernelEvents::CONTROLLER => 'onKernelController',
-            KernelEvents::EXCEPTION  => 'onKernelException',
+            //KernelEvents::EXCEPTION  => 'onKernelException',
         ];
     }
 
@@ -45,6 +42,10 @@ class ValidateCustomerSelectionSubscriber implements EventSubscriberInterface
             [$controller] = $event->getController();
         } else {
             $controller = $event->getController();
+        }
+
+        if (!$controller instanceof ValidateCustomerSelectionInterface) {
+            return;
         }
 
         $session = $event->getRequest()->getSession();
@@ -62,9 +63,7 @@ class ValidateCustomerSelectionSubscriber implements EventSubscriberInterface
         }
 
         // If the customer isn't set, throw an exception
-        if ($controller instanceof ValidateCustomerSelectionInterface) {
-            throw new InvalidCustomerSelectionException('No customer set in the session');
-        }
+        throw new InvalidCustomerSelectionException('No customer set in the session');
     }
 
     public function onKernelException(ExceptionEvent $event): void

@@ -11,29 +11,21 @@ use Ramsey\Uuid\Uuid;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity()
- * @ORM\Table(name="application_clients")
- */
+#[ORM\Table(name: 'application_clients')]
+#[ORM\Entity]
 class ApplicationClient
 {
     use HasUuid;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Application", inversedBy="applicationClients")
-     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
-     */
+    #[ORM\ManyToOne(targetEntity: 'Pronto\MobileBundle\Entity\Application', inversedBy: 'applicationClients')]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private Application $application;
 
-    /**
-     * @ORM\Column(type="string")
-     */
+    #[ORM\Column(type: 'string')]
     private string $clientIdentifier;
 
-    /**
-     * @ORM\Column(type="string")
-     * @Assert\NotBlank()
-     */
+    #[ORM\Column(type: 'string')]
+    #[Assert\NotBlank]
     private string $name;
 
     public function __construct(Application $application, Client $client, string $name)

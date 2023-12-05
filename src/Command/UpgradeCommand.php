@@ -119,7 +119,12 @@ class UpgradeCommand extends Command
         ]);
 
         $config = $plugin->getDefaultConfig();
-        $config['firebaseServiceAccount'] = $config['firebaseAccessToken'];
+
+        if (isset($config[Plugin::PUSH_NOTIFICATIONS_FIREBASE_SERVICE_ACCOUNT])) {
+            return;
+        }
+
+        $config[Plugin::PUSH_NOTIFICATIONS_FIREBASE_SERVICE_ACCOUNT] = $config['firebaseAccessToken'];
         unset($config['firebaseAccessToken']);
 
         $plugin->setDefaultConfig($config);
@@ -127,14 +132,3 @@ class UpgradeCommand extends Command
         $this->entityManager->flush();
     }
 }
-
-//{
-//    "firebaseAccessToken": {
-//    "type": "text",
-//		"value": ""
-//	},
-//	"notificationHtmlTemplate": {
-//    "type": "code",
-//		"value": "<html><head><style type=\"text/css\"></style></head><body></body></html>"
-//	}
-//}

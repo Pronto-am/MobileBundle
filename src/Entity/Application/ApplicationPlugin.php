@@ -11,34 +11,25 @@ use Pronto\MobileBundle\Entity\Plugin;
 /**
  * Class ApplicationPlugin
  * @package Pronto\MobileBundle\Entity
- *
- * @ORM\Entity(repositoryClass="Pronto\MobileBundle\Repository\Application\PluginRepository")
- * @ORM\Table(name="application_plugins")
  */
+#[ORM\Table(name: 'application_plugins')]
+#[ORM\Entity(repositoryClass: 'Pronto\MobileBundle\Repository\Application\PluginRepository')]
 class ApplicationPlugin
 {
-    /**
-     * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Application", inversedBy="applicationPlugins")
-     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
-     */
+    #[ORM\Id]
+    #[ORM\ManyToOne(targetEntity: 'Pronto\MobileBundle\Entity\Application', inversedBy: 'applicationPlugins')]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private $application;
 
-    /**
-     * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Plugin", inversedBy="applicationPlugins")
-     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
-     */
+    #[ORM\Id]
+    #[ORM\ManyToOne(targetEntity: 'Pronto\MobileBundle\Entity\Plugin', inversedBy: 'applicationPlugins')]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private $plugin;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: 'boolean')]
     private $active = false;
 
-    /**
-     * @ORM\Column(type="json")
-     */
+    #[ORM\Column(type: 'json')]
     private $config;
 
     public function __construct(Application $application, Plugin $plugin)

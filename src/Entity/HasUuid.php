@@ -4,19 +4,18 @@ declare(strict_types=1);
 
 namespace Pronto\MobileBundle\Entity;
 
-use Symfony\Component\Uid\Uuid;
+use Ramsey\Uuid\Uuid;
+use Doctrine\ORM\Mapping as ORM;
 
 trait HasUuid
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="string", length=36)
-     */
-    protected $id;
+    #[ORM\Id]
+    #[ORM\Column(type: 'string', length: 36)]
+    protected string $id;
 
     public function __construct()
     {
-        $this->id = Uuid::v4()->toRfc4122();
+        $this->id = Uuid::uuid4()->toString();
     }
 
     public function getId(): string

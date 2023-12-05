@@ -14,63 +14,46 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * Class AppVersion
  * @package Pronto\MobileBundle\Entity
- *
- * @ORM\Entity
- * @ORM\Table(name="app_versions")
  */
+#[ORM\Table(name: 'app_versions')]
+#[ORM\Entity]
 class AppVersion extends TimestampedEntity implements ApiEntityInterface
 {
     use ApiEntityTrait;
 
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     * @ORM\Column(type="integer")
-     *
-     * @Groups({"AppVersion"})
-     */
+    
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
+    #[ORM\Column(type: 'integer')]
+    #[Groups(['AppVersion'])]
     private ?int $id = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Application")
-     * @ORM\JoinColumn(onDelete="CASCADE")
-     */
+    #[ORM\ManyToOne(targetEntity: 'Pronto\MobileBundle\Entity\Application')]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private Application $application;
 
-    /**
-     * @ORM\Column(type="string")
-     */
+    #[ORM\Column(type: 'string')]
     private string $version;
 
-    /**
-     * @ORM\Column(type="date")
-     */
+    #[ORM\Column(type: 'date')]
     private DateTime $releaseDate;
 
-    /**
-     * @ORM\Column(type="string")
-     */
+    #[ORM\Column(type: 'string')]
     private string $platform;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: 'boolean')]
     private bool $required = false;
 
-    /**
-     * @ORM\Column(type="json", nullable=true)
-     */
+    #[ORM\Column(type: 'json', nullable: true)]
     private ?array $description = null;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private ?string $url = null;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
      * @var null|string|UploadedFile $fileName
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $fileName = null;
 
     public function getId(): ?int

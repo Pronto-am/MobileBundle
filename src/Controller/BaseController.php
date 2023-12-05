@@ -15,13 +15,10 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class BaseController extends AbstractController
 {
-    protected ProntoMobile $prontoMobile;
-    private TranslatorInterface $translator;
-
-    public function __construct(TranslatorInterface $translator, ContainerInterface $container)
-    {
-        $this->prontoMobile = $container->get(ProntoMobile::class);
-        $this->translator = $translator;
+    public function __construct(
+        private readonly TranslatorInterface $translator,
+        protected readonly ProntoMobile $prontoMobile,
+    ) {
     }
 
     public function addDataSavedFlash(): void

@@ -7,7 +7,6 @@ namespace Pronto\MobileBundle\Validator\Constraints;
 use Doctrine\ORM\EntityManagerInterface;
 use Pronto\MobileBundle\Enum\VariableType;
 use Pronto\MobileBundle\Service\ProntoMobile;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Validator\Constraint;
@@ -18,22 +17,16 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 abstract class ConstraintValidator extends BaseConstraintValidator
 {
-    protected EntityManagerInterface $entityManager;
-    protected ProntoMobile $prontoMobile;
-    protected TranslatorInterface $translator;
     protected ?Request $request;
     protected Constraint $constraint;
     protected bool $skipNullValues = true;
 
     public function __construct(
-        EntityManagerInterface $entityManager,
-        ContainerInterface $container,
-        TranslatorInterface $translator,
+        protected readonly EntityManagerInterface $entityManager,
+        protected readonly ProntoMobile $prontoMobile,
+        protected readonly TranslatorInterface $translator,
         RequestStack $requestStack
     ) {
-        $this->entityManager = $entityManager;
-        $this->prontoMobile = $container->get(ProntoMobile::class);
-        $this->translator = $translator;
         $this->request = $requestStack->getCurrentRequest();
     }
 
@@ -47,7 +40,7 @@ abstract class ConstraintValidator extends BaseConstraintValidator
         }
 
         // Custom constraints should ignore null and empty values to allow other constraints (NotBlank, NotNull, etc.) take care of that
-        if ($this->skipNullValues && ($value === null || empty($value))) {
+        if ($this->skipNullValues && empty($value)) {
             return;
         }
 

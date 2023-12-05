@@ -16,26 +16,26 @@ class RelationshipDTO extends BaseDTO
 {
     /**
      * @var string $name
-     * @Assert\NotBlank()
      */
+    #[Assert\NotBlank]
     public $name;
 
     /**
      * @var string $identifier
-     * @Assert\NotBlank()
      */
+    #[Assert\NotBlank]
     public $identifier;
 
     /**
      * @var Collection $relatedCollection
-     * @Assert\NotBlank()
      */
+    #[Assert\NotBlank]
     public $relatedCollection;
 
     /**
      * @var string $type
-     * @Assert\NotBlank()
      */
+    #[Assert\NotBlank]
     public $type;
 
     /**

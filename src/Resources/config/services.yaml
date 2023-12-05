@@ -14,9 +14,9 @@ services:
     # if you need to do this, you can override this setting on individual services
     public: false
 
+  # Don't autowire, because the third argument is being set in the ProntoMobileExtension class
   Pronto\MobileBundle\Service\ProntoMobile:
     autowire: false
-    class: Pronto\MobileBundle\Service\ProntoMobile
     public: true
     arguments:
       - '@request_stack'
@@ -24,7 +24,7 @@ services:
       - []
 
   Pronto\MobileBundle\:
-    resource: '../../{Command,Controller,DataFixtures,EventSubscriber,Middleware,Provider,Security,Service,Repository,Validator}'
+    resource: '../../{Command,Controller,DataFixtures,EventListener,Middleware,Provider,Security,Service,Repository,Validator}'
     exclude: '../../Service/ProntoMobile.php'
 
   #### TWIG EXTENSIONS ####
@@ -44,12 +44,3 @@ services:
 
   pronto_mobile_app_user_provider:
     class: Pronto\MobileBundle\Provider\AppUserProvider
-
-  Pronto\MobileBundle\EventListener\OAuth\UserResolveListener:
-    arguments:
-      - '@pronto_mobile_app_user_provider'
-      - '@security.password_hasher'
-      - '@doctrine.orm.entity_manager'
-      - '@security.token_storage'
-    tags:
-      - { name: kernel.event_listener, event: league.oauth2_server.event.user_resolve, method: onUserResolve }

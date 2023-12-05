@@ -9,12 +9,11 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\PrePersistEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Events;
-use Pronto\MobileBundle\Entity\AppUser;
 use Pronto\MobileBundle\Entity\User;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-#[AsEntityListener(event: Events::prePersist, method: 'prePersist', entity: AppUser::class)]
-#[AsEntityListener(event: Events::preUpdate, method: 'preUpdate', entity: AppUser::class)]
+#[AsEntityListener(event: Events::prePersist, method: 'prePersist', entity: User::class)]
+#[AsEntityListener(event: Events::preUpdate, method: 'preUpdate', entity: User::class)]
 class HashPassword
 {
     public function __construct(
@@ -39,7 +38,7 @@ class HashPassword
 
     private function encodePassword(User $user): void
     {
-        if (!$user->getPlainPassword()) {
+        if ($user->getPlainPassword() === null) {
             return;
         }
 

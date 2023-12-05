@@ -39,24 +39,27 @@ class ProntoMobile
     private function setActiveModule(): void
     {
         // This part of the code doesn't work inside the terminal, so check for existance of the request object
-        if ($this->request !== null) {
-            $url = explode('/', $this->request->getRequestUri());
-
-            if (count($url) > 0 && $url[1] === 'admin') {
-
-                $differentModules = ['collections', 'notifications', 'users', 'versions'];
-
-                // The active module is a larger string for above modules
-                if (isset($url[2], $url[3]) && $url[3] !== 'edit' && $url[3] !== 'details' && in_array($url[2], $differentModules)) {
-                    $this->activeModule = $url[2] . '/' . $url[3];
-                } else {
-                    $this->activeModule = $url[2] ?? null;
-                }
-
-                // Remove the query string
-                $this->activeModule = strtok($this->activeModule, '?');
-            }
+        if ($this->request === null) {
+            return;
         }
+
+        $url = explode('/', $this->request->getRequestUri());
+
+        if (count($url) > 0 && $url[1] === 'admin') {
+
+            $differentModules = ['collections', 'notifications', 'users', 'versions'];
+
+            // The active module is a larger string for above modules
+            if (isset($url[2], $url[3]) && $url[3] !== 'edit' && $url[3] !== 'details' && in_array($url[2], $differentModules)) {
+                $this->activeModule = $url[2] . '/' . $url[3];
+            } else {
+                $this->activeModule = $url[2] ?? null;
+            }
+
+            // Remove the query string
+            $this->activeModule = strtok($this->activeModule, '?');
+        }
+
     }
 
     public function getActiveModule(): ?string

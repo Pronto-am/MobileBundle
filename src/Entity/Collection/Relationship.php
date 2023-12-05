@@ -14,64 +14,49 @@ use Ramsey\Uuid\Uuid;
 /**
  * Class Relationship
  * @package Pronto\MobileBundle\Entity
- *
- * @ORM\Entity()
- * @ORM\Table(name="collection_relationships")
- * @ORM\HasLifecycleCallbacks
  */
+#[ORM\Table(name: 'collection_relationships')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class Relationship extends TimestampedEntity
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="string", unique=true)
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'string', unique: true)]
     private $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Collection", inversedBy="relationships")
-     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
-     */
+    #[ORM\ManyToOne(targetEntity: 'Pronto\MobileBundle\Entity\Collection', inversedBy: 'relationships')]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private $collection;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Collection")
-     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
-     */
+    #[ORM\ManyToOne(targetEntity: 'Pronto\MobileBundle\Entity\Collection')]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private $relatedCollection;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Collection\Relationship\Type")
-     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
-     */
+    #[ORM\ManyToOne(targetEntity: 'Pronto\MobileBundle\Entity\Collection\Relationship\Type')]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private $type;
 
-    /**
-     * @ORM\Column(type="string")
-     */
+    #[ORM\Column(type: 'string')]
     private $name;
 
-    /**
-     * @ORM\Column(type="string")
-     */
+    #[ORM\Column(type: 'string')]
     private $identifier;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: 'boolean')]
     private $includeInJsonListView = true;
 
     /**
      * @var string|null $editableForRole
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $editableForRole = 'ROLE_USER';
 
     /**
      * Triggered on pre persist
      *
-     * @ORM\PrePersist
      * @throws Exception
      */
+    #[ORM\PrePersist]
     public function onPrePersist(): void
     {
         parent::onPrePersist();

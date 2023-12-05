@@ -19,14 +19,11 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ValidateApplicationSelectionSubscriber implements EventSubscriberInterface
 {
-    private ProntoMobile $prontoMobile;
-
     public function __construct(
         private readonly UrlGeneratorInterface $router,
         private readonly EntityManagerInterface $entityManager,
-        ContainerInterface $container,
+        private readonly ProntoMobile $prontoMobile,
     ) {
-        $this->prontoMobile = $container->get(ProntoMobile::class);
     }
 
     public static function getSubscribedEvents(): array
@@ -48,6 +45,10 @@ class ValidateApplicationSelectionSubscriber implements EventSubscriberInterface
             $controller = $event->getController();
         }
 
+        if (!$controller instanceof ValidateApplicationSelectionInterface) {
+            return;
+        }
+
         $session = $event->getRequest()->getSession();
 
         // Get the id from the session
@@ -62,9 +63,7 @@ class ValidateApplicationSelectionSubscriber implements EventSubscriberInterface
             return;
         }
 
-        if ($controller instanceof ValidateApplicationSelectionInterface) {
-            throw new InvalidApplicationSelectionException('No application version set in the session');
-        }
+        throw new InvalidApplicationSelectionException('No application version set in the session');
     }
 
     /**

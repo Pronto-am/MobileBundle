@@ -14,43 +14,35 @@ use Ramsey\Uuid\Uuid;
 /**
  * Class Type
  * @package Pronto\MobileBundle\Entity
- *
- * @ORM\Entity(repositoryClass="Pronto\MobileBundle\Repository\Collection\Relationship\MapperRepository")
- * @ORM\Table(name="collection_relationship_mappers", indexes={@ORM\Index(name="entry_left_id", columns={"entry_left_id"})})
- * @ORM\HasLifecycleCallbacks
  */
+#[ORM\Table(name: 'collection_relationship_mappers')]
+#[ORM\Index(name: 'entry_left_id', columns: ['entry_left_id'])]
+#[ORM\Entity(repositoryClass: 'Pronto\MobileBundle\Repository\Collection\Relationship\MapperRepository')]
+#[ORM\HasLifecycleCallbacks]
 class Mapper extends TimestampedEntity
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="string", unique=true)
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'string', unique: true)]
     private $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Collection\Entry")
-     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
-     */
+    #[ORM\ManyToOne(targetEntity: 'Pronto\MobileBundle\Entity\Collection\Entry')]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private $entryLeft;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Collection\Entry")
-     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
-     */
+    #[ORM\ManyToOne(targetEntity: 'Pronto\MobileBundle\Entity\Collection\Entry')]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private $entryRight;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Collection")
-     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
-     */
+    #[ORM\ManyToOne(targetEntity: 'Pronto\MobileBundle\Entity\Collection')]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private $relatedCollection;
 
     /**
      * Triggered on pre persist
      *
-     * @ORM\PrePersist
      * @throws Exception
      */
+    #[ORM\PrePersist]
     public function onPrePersist(): void
     {
         parent::onPrePersist();

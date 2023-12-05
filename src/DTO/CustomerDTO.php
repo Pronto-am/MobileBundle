@@ -13,60 +13,53 @@ use Symfony\Component\Validator\Constraints as Assert;
 class CustomerDTO extends BaseDTO
 {
     /**
-     * @Assert\NotBlank()
      * @var string $companyName
      */
+    #[Assert\NotBlank]
     public $companyName;
 
     /**
-     * @Assert\NotBlank()
      * @var string $contactPerson
      */
+    #[Assert\NotBlank]
     public $contactPerson;
 
     /**
-     * @Assert\NotBlank()
      * @var string $phoneNumber
      */
+    #[Assert\NotBlank]
     public $phoneNumber;
 
     /**
-     * @Assert\NotBlank()
-     * @Assert\Email()
      * @var string $email
      */
+    #[Assert\NotBlank]
+    #[Assert\Email]
     public $email;
 
     /**
-     * @Assert\NotBlank()
      * @var string $primaryColor
      */
+    #[Assert\NotBlank]
     public $primaryColor;
 
     /**
-     * @Assert\NotBlank()
      * @var string $secondaryColor
      */
+    #[Assert\NotBlank]
     public $secondaryColor;
 
     /**
-     * @Assert\NotBlank()
      * @var string $sidebarColor
      */
+    #[Assert\NotBlank]
     public $sidebarColor;
 
     /**
-     * @Assert\File(mimeTypes={
-     *     "image/jpeg", "image/png"
-     *     })
-     * @Assert\Image(
-     *     minWidth = 500,
-     *     maxWidth = 500,
-     *     minHeight = 120,
-     *     maxHeight = 120
-     * )
      * @var string $logo
      */
+    #[Assert\File(mimeTypes: ['image/jpeg', 'image/png'])]
+    #[Assert\Image(minWidth: 500, maxWidth: 500, minHeight: 120, maxHeight: 120)]
     public $logo;
 
     /**

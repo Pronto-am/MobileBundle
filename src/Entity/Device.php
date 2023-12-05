@@ -15,11 +15,11 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * Class Device
  * @package Pronto\MobileBundle\Entity
- *
- * @ORM\Entity(repositoryClass="Pronto\MobileBundle\Repository\DeviceRepository")
- * @ORM\Table(name="devices", indexes={@ORM\Index(name="state_and_notifications", columns={"token_state", "push_notifications"})})
- * @ORM\HasLifecycleCallbacks
  */
+#[ORM\Table(name: 'devices')]
+#[ORM\Index(name: 'state_and_notifications', columns: ['token_state', 'push_notifications'])]
+#[ORM\Entity(repositoryClass: 'Pronto\MobileBundle\Repository\DeviceRepository')]
+#[ORM\HasLifecycleCallbacks]
 class Device implements ApiEntityInterface
 {
     use ApiEntityTrait;
@@ -28,140 +28,102 @@ class Device implements ApiEntityInterface
     public const DEVICE_ALREADY_REGISTERED = [422, 22, 'This device is already registered'];
     public const MISSING_APNS_OR_FIREBASE_TOKEN = [422, 23, 'Either the firebaseToken or the apnsToken should be provided'];
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="string", unique=true)
-     *
-     * @Groups({"Device"})
-     */
+    
+    #[ORM\Id]
+    #[ORM\Column(type: 'string', unique: true)]
+    #[Groups(['Device'])]
     private $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Application")
-     * @ORM\JoinColumn(onDelete="CASCADE")
-     */
+    #[ORM\ManyToOne(targetEntity: 'Pronto\MobileBundle\Entity\Application')]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private $application;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\AppUser", inversedBy="devices")
-     * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
-     *
-     * @Groups({"Device"})
-     */
+    
+    #[ORM\ManyToOne(targetEntity: 'Pronto\MobileBundle\Entity\AppUser', inversedBy: 'devices')]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'CASCADE')]
+    #[Groups(['Device'])]
     private $appUser;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     *
-     * @Groups({"Device"})
-     */
+    
+    #[ORM\Column(type: 'string', nullable: true)]
+    #[Groups(['Device'])]
     private $firebaseToken;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     *
-     * @Groups({"Device"})
-     */
+    
+    #[ORM\Column(type: 'string', nullable: true)]
+    #[Groups(['Device'])]
     private $apnsToken;
 
-    /**
-     * @ORM\Column(type="string")
-     *
-     * @Groups({"Device"})
-     */
+    
+    #[ORM\Column(type: 'string')]
+    #[Groups(['Device'])]
     private $name;
 
-    /**
-     * @ORM\Column(type="string")
-     *
-     * @Groups({"Device"})
-     */
+    
+    #[ORM\Column(type: 'string')]
+    #[Groups(['Device'])]
     private $model;
 
-    /**
-     * @ORM\Column(type="string")
-     *
-     * @Groups({"Device"})
-     */
+    
+    #[ORM\Column(type: 'string')]
+    #[Groups(['Device'])]
     private $manufacturer;
 
-    /**
-     * @ORM\Column(type="string")
-     *
-     * @Groups({"Device"})
-     */
+    
+    #[ORM\Column(type: 'string')]
+    #[Groups(['Device'])]
     private $platform;
 
-    /**
-     * @ORM\Column(type="string")
-     *
-     * @Groups({"Device"})
-     */
+    
+    #[ORM\Column(type: 'string')]
+    #[Groups(['Device'])]
     private $osVersion;
 
-    /**
-     * @ORM\Column(type="string")
-     *
-     * @Groups({"Device"})
-     */
+    
+    #[ORM\Column(type: 'string')]
+    #[Groups(['Device'])]
     private $appVersion;
 
-    /**
-     * @ORM\Column(type="boolean")
-     *
-     * @Groups({"Device"})
-     */
+    
+    #[ORM\Column(type: 'boolean')]
+    #[Groups(['Device'])]
     private $testDevice = false;
 
-    /**
-     * @ORM\Column(type="boolean")
-     *
-     * @Groups({"Device"})
-     */
+    
+    #[ORM\Column(type: 'boolean')]
+    #[Groups(['Device'])]
     private $tokenState = true;
 
-    /**
-     * @ORM\Column(type="boolean")
-     *
-     * @Groups({"Device"})
-     */
+    
+    #[ORM\Column(type: 'boolean')]
+    #[Groups(['Device'])]
     private $pushNotifications = true;
 
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     *
-     * @Groups({"Device"})
-     */
+    
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    #[Groups(['Device'])]
     private $lastLogin;
 
-    /**
-     * @ORM\Column(type="string")
-     *
-     * @Groups({"Device"})
-     */
+    
+    #[ORM\Column(type: 'string')]
+    #[Groups(['Device'])]
     private $language;
 
-    /**
-     * @ORM\Column(type="json", nullable=true)
-     */
+    #[ORM\Column(type: 'json', nullable: true)]
     private $extraData;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Pronto\MobileBundle\Entity\PushNotification\Recipient", mappedBy="device")
-     */
+    #[ORM\OneToMany(targetEntity: 'Pronto\MobileBundle\Entity\PushNotification\Recipient', mappedBy: 'device')]
     private $pushNotificationRecipients;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Pronto\MobileBundle\Entity\Device\DeviceSegment", mappedBy="device")
-     */
+    #[ORM\OneToMany(targetEntity: 'Pronto\MobileBundle\Entity\Device\DeviceSegment', mappedBy: 'device')]
     private $deviceSegments;
 
     /**
      * Triggered on pre persist
      *
-     * @ORM\PrePersist
      * @throws Exception
      */
+    #[ORM\PrePersist]
     public function onPrePersist(): void
     {
         $this->id = Uuid::uuid1()->toString();
@@ -435,9 +397,8 @@ class Device implements ApiEntityInterface
      * Get meta data of the device, specially created for the json serializer
      *
      * @return array
-     *
-     * @Groups({"Device"})
      */
+    #[Groups(['Device'])]
     public function getMetaData(): array
     {
         return (array) $this->extraData;

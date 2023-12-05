@@ -31,17 +31,14 @@ class RetrieveLogsCommand extends Command
     // Decryption method for the table contents
     public const DECRYPTION_METHOD = 'aes-256-cbc';
 
-    private ProntoMobile $prontoMobile;
-
     private OutputInterface $output;
 
     public function __construct(
-        readonly EntityManagerInterface $entityManager,
-        readonly GoogleServiceAccountLoader $googleServiceAccountLoader,
-        ContainerInterface $container, $name = null
+        private readonly EntityManagerInterface $entityManager,
+        private readonly GoogleServiceAccountLoader $googleServiceAccountLoader,
+        private readonly ProntoMobile $prontoMobile,
+        $name = null
     ) {
-        $this->prontoMobile = $container->get(ProntoMobile::class);
-
         parent::__construct($name);
     }
 

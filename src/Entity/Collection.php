@@ -14,59 +14,42 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Class Collection
  * @package Pronto\MobileBundle\Entity
- *
- * @ORM\Entity(repositoryClass="Pronto\MobileBundle\Repository\CollectionRepository")
- * @ORM\Table(name="collections")
  */
+#[ORM\Table(name: 'collections')]
+#[ORM\Entity(repositoryClass: 'Pronto\MobileBundle\Repository\CollectionRepository')]
 class Collection extends TimestampedEntity implements ApiEntityInterface
 {
     use ApiEntityTrait;
 
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
+    #[ORM\Column(type: 'integer')]
     private $id;
 
-    /**
-     * @ORM\Column(type="string")
-     * @Assert\NotBlank()
-     */
+    #[ORM\Column(type: 'string')]
+    #[Assert\NotBlank]
     private $name;
 
-    /**
-     * @ORM\Column(type="string")
-     * @Assert\NotBlank()
-     */
+    #[ORM\Column(type: 'string')]
+    #[Assert\NotBlank]
     private $identifier;
 
-    /**
-     * @ORM\Column(type="string")
-     * @Assert\NotBlank()
-     */
+    #[ORM\Column(type: 'string')]
+    #[Assert\NotBlank]
     private $icon;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Application\Version", inversedBy="collections")
-     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
-     */
+    #[ORM\ManyToOne(targetEntity: 'Pronto\MobileBundle\Entity\Application\Version', inversedBy: 'collections')]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private $applicationVersion;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Pronto\MobileBundle\Entity\Collection\Property", mappedBy="collection")
-     * @ORM\OrderBy({"ordering" = "ASC"})
-     */
+    #[ORM\OneToMany(targetEntity: 'Pronto\MobileBundle\Entity\Collection\Property', mappedBy: 'collection')]
+    #[ORM\OrderBy(['ordering' => 'ASC'])]
     private $properties;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Pronto\MobileBundle\Entity\Collection\Entry", mappedBy="collection")
-     */
+    #[ORM\OneToMany(targetEntity: 'Pronto\MobileBundle\Entity\Collection\Entry', mappedBy: 'collection')]
     private $entries;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Pronto\MobileBundle\Entity\Collection\Relationship", mappedBy="collection")
-     */
+    #[ORM\OneToMany(targetEntity: 'Pronto\MobileBundle\Entity\Collection\Relationship', mappedBy: 'collection')]
     private $relationships;
 
     public function __construct()

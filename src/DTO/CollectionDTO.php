@@ -13,21 +13,21 @@ use Symfony\Component\Validator\Constraints as Assert;
 class CollectionDTO extends BaseDTO
 {
     /**
-     * @Assert\NotBlank()
      * @var string
      */
+    #[Assert\NotBlank]
     public $name;
 
     /**
-     * @Assert\NotBlank()
      * @var string
      */
+    #[Assert\NotBlank]
     public $identifier;
 
     /**
-     * @Assert\NotBlank()
      * @var string
      */
+    #[Assert\NotBlank]
     public $icon;
 
     /**

@@ -12,72 +12,60 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * Class TranslationKey
  * @package Pronto\MobileBundle\Entity
- *
- * @ORM\Entity(repositoryClass="Pronto\MobileBundle\Repository\TranslationKeyRepository")
- * @ORM\Table(name="translation_keys")
  */
+#[ORM\Table(name: 'translation_keys')]
+#[ORM\Entity(repositoryClass: 'Pronto\MobileBundle\Repository\TranslationKeyRepository')]
 class TranslationKey extends TimestampedEntity implements ApiEntityInterface
 {
     use ApiEntityTrait;
 
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     * @ORM\Column(type="integer")
-     * @Groups({"TranslationKey"})
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
+    #[ORM\Column(type: 'integer')]
+    #[Groups(['TranslationKey'])]
     private $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Pronto\MobileBundle\Entity\Application")
-     * @ORM\JoinColumn(onDelete="CASCADE")
-     */
+    #[ORM\ManyToOne(targetEntity: 'Pronto\MobileBundle\Entity\Application')]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private $application;
 
     /**
      * @var string $identifier
-     *
-     * @ORM\Column(type="string")
-     * @Groups({"TranslationKey"})
      */
+    #[ORM\Column(type: 'string')]
+    #[Groups(['TranslationKey'])]
     private $identifier;
 
     /**
      * @var string|null $description
-     *
-     * @ORM\Column(type="string", nullable=true)
-     * @Groups({"TranslationKey"})
      */
+    #[ORM\Column(type: 'string', nullable: true)]
+    #[Groups(['TranslationKey'])]
     private $description;
 
     /**
      * @var string $type
-     *
-     * @ORM\Column(type="string")
-     * @Groups({"TranslationKey"})
      */
+    #[ORM\Column(type: 'string')]
+    #[Groups(['TranslationKey'])]
     private $type;
 
     /**
      * @var boolean $android
-     *
-     * @ORM\Column(type="boolean")
-     * @Groups({"TranslationKey"})
      */
+    #[ORM\Column(type: 'boolean')]
+    #[Groups(['TranslationKey'])]
     private $android;
 
     /**
      * @var boolean $ios
-     *
-     * @ORM\Column(type="boolean")
-     * @Groups({"TranslationKey"})
      */
+    #[ORM\Column(type: 'boolean')]
+    #[Groups(['TranslationKey'])]
     private $ios;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Pronto\MobileBundle\Entity\Translation", mappedBy="translationKey")
-     * @Groups({"TranslationKey"})
-     */
+    #[ORM\OneToMany(targetEntity: 'Pronto\MobileBundle\Entity\Translation', mappedBy: 'translationKey')]
+    #[Groups(['TranslationKey'])]
     private $translations;
 
     /**

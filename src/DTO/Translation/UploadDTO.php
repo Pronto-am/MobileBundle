@@ -9,9 +9,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class UploadDTO
 {
-    /**
-     * @Assert\NotBlank(message="A file of type .json, .xml, .csv or .strings should be provided")
-     */
+    #[Assert\NotBlank(message: 'A file of type .json, .xml, .csv or .strings should be provided')]
     public $file;
 
     /**

@@ -3,6 +3,7 @@
 namespace Pronto\MobileBundle\Provider;
 
 use Doctrine\ORM\EntityManagerInterface;
+use League\Bundle\OAuth2ServerBundle\Security\User\NullUser;
 use Pronto\MobileBundle\Entity\AppUser;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
@@ -57,7 +58,8 @@ class AppUserProvider implements UserProviderInterface, PasswordUpgraderInterfac
 
     public function supportsClass($class): bool
     {
-        return AppUser::class === $class || is_subclass_of($class, AppUser::class);
+        return AppUser::class === $class
+            || is_subclass_of($class, AppUser::class);
     }
 
     public function upgradePassword(

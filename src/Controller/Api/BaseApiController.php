@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Pronto\MobileBundle\Controller\Api;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\Application\ApplicationPlugin;
 use Pronto\MobileBundle\Entity\Plugin;
@@ -27,6 +28,7 @@ class BaseApiController extends AbstractController
     protected ProntoMobile $prontoMobile;
 
     protected RequestBodyValidator $requestValidator;
+    protected EntityManagerInterface $entityManager;
 
     protected JsonSerializer $serializer;
 
@@ -48,6 +50,12 @@ class BaseApiController extends AbstractController
     public function setJsonSerializer(JsonSerializer $serializer): void
     {
         $this->serializer = $serializer;
+    }
+
+    #[Required]
+    public function setEntityManager(EntityManagerInterface $entityManager): void
+    {
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -208,15 +216,13 @@ class BaseApiController extends AbstractController
      */
     private function validatePluginState(Application $application, string $identifier): bool
     {
-        $entityManager = $this->getDoctrine()->getManager();
-
         /** @var Plugin $plugin */
-        $plugin = $entityManager->getRepository(Plugin::class)->findOneBy([
+        $plugin = $this->entityManager->getRepository(Plugin::class)->findOneBy([
             'identifier' => $identifier
         ]);
 
         /** @var ApplicationPlugin $applicationPlugin */
-        $applicationPlugin = $entityManager->getRepository(ApplicationPlugin::class)->findOneBy([
+        $applicationPlugin = $this->entityManager->getRepository(ApplicationPlugin::class)->findOneBy([
             'plugin'      => $plugin,
             'application' => $application,
             'active'      => true
