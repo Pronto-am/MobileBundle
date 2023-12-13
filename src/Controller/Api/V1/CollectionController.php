@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Pronto\MobileBundle\Controller\Api\V1;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Pronto\MobileBundle\Controller\Api\BaseApiController;
 use Pronto\MobileBundle\Entity\Application;
@@ -13,11 +14,12 @@ use Pronto\MobileBundle\Exceptions\ApiException;
 use Pronto\MobileBundle\Exceptions\Auth\NotAuthorizedException;
 use Pronto\MobileBundle\Exceptions\Collections\NotFoundException;
 use Pronto\MobileBundle\Service\Collection\Retriever;
+use Pronto\MobileBundle\Service\ProntoMobile;
+use Pronto\MobileBundle\Service\TokenInspectionService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class CollectionController extends BaseApiController
 {
-
     /**
      * API-docs: Get a list of entries of a collection
      *
@@ -102,10 +104,10 @@ class CollectionController extends BaseApiController
     /**
      * @throws ApiException
      */
-    private function getCollection(string $version, string $identifier): Collection
-    {
-        $entityManager = $this->getDoctrine()->getManager();
-
+    private function getCollection(
+        string $version,
+        string $identifier
+    ): Collection {
         /** @var Application $application */
         $application = $this->prontoMobile->getApplication();
 
@@ -120,7 +122,7 @@ class CollectionController extends BaseApiController
         }
 
         /** @var Collection $collection */
-        $collection = $entityManager->getRepository(Collection::class)->findOneBy([
+        $collection = $this->entityManager->getRepository(Collection::class)->findOneBy([
             'identifier'         => $identifier,
             'applicationVersion' => $applicationVersion
         ]);
