@@ -3,7 +3,6 @@
 namespace Pronto\MobileBundle\Service\PushNotification;
 
 use Doctrine\ORM\EntityManagerInterface;
-use GuzzleHttp\Exception\GuzzleException;
 use Kreait\Firebase\Contract\Messaging;
 use Kreait\Firebase\Exception\FirebaseException;
 use Kreait\Firebase\Exception\MessagingException;
@@ -14,7 +13,6 @@ use Pronto\MobileBundle\Entity\PushNotification\Recipient;
 use Pronto\MobileBundle\Repository\DeviceRepository;
 use Pronto\MobileBundle\Utils\Firebase\CloudMessaging\MessageGroup;
 use Pronto\MobileBundle\Utils\Firebase\CloudMessaging\Response;
-use Pronto\MobileBundle\Utils\Firebase\CloudMessaging\ResponseChunk;
 
 class Sender
 {
@@ -156,10 +154,13 @@ class Sender
     {
         // Insert the devices for statistics
         foreach ($this->devices as $device) {
-            $recipient = new Recipient($this->notification, $this->entityManager->getReference(Device::class, $device['id']));
+            $recipient = new Recipient(
+                pushNotification: $this->notification,
+                device: $this->entityManager->getReference(Device::class, $device['id'])
+            );
 
             // Check if there was an error sending to this specific device, and log it
-            if (in_array($device['firebaseToken'], $this->getTokensToDelete()) || in_array($device['firebaseToken'], $this->getTokensToRetry())) {
+            if (in_array($device['firebaseToken'], $this->getTokensToDelete())) {
                 $recipient->setSent(false);
 
                 $recipient->setDescription('Unknown failure');
@@ -174,20 +175,6 @@ class Sender
         $this->devices = [];
 
         $this->entityManager->flush();
-    }
-
-    /**
-     * Get the tokens that need a new attempt at sending the notification
-     *
-     * @return array
-     */
-    public function getTokensToRetry(): array
-    {
-        if ($this->response !== null) {
-            return $this->response->getTokensToRetry();
-        }
-
-        return [];
     }
 
     /**
