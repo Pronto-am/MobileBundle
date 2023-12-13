@@ -57,6 +57,14 @@ class UpgradeCommand extends Command
             $this->migrateOAuthClients();
 
         } else if ($version === self::VERSION_3_0_0) {
+            try {
+
+                // Delete access tokens table
+                $this->truncateAccessTokensTable();
+            } catch (Exception $exception) {
+                $outputStyle->warning('Unable to truncate access tokens: ' . $exception->getMessage());
+            }
+
             // Update plugin configuration
             $this->updatePluginConfiguration();
         }
@@ -109,6 +117,15 @@ class UpgradeCommand extends Command
             new Grant('password'),
             new Grant('refresh_token')
         ];
+    }
+
+    private function truncateAccessTokensTable(): void
+    {
+        $connection = $this->entityManager->getConnection();
+        $platform = $connection->getDatabasePlatform();
+
+        $truncateSql = $platform->getTruncateTableSQL('access_tokens');
+        $connection->executeQuery($truncateSql);
     }
 
     private function updatePluginConfiguration(): void

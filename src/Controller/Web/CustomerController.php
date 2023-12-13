@@ -7,6 +7,7 @@ namespace Pronto\MobileBundle\Controller\Web;
 use Doctrine\ORM\EntityManagerInterface;
 use Pronto\MobileBundle\Controller\BaseController;
 use Pronto\MobileBundle\DTO\CustomerDTO;
+use Pronto\MobileBundle\Entity\Application;
 use Pronto\MobileBundle\Entity\Customer;
 use Pronto\MobileBundle\Exceptions\EntityNotFoundException;
 use Pronto\MobileBundle\Form\CustomerForm;
@@ -130,10 +131,15 @@ class CustomerController extends BaseController
 
     public function deleteAction(Request $request, EntityManagerInterface $entityManager, TranslatorInterface $translator): JsonResponse
     {
-        $customer = $entityManager->getRepository(Customer::class)->findOneBy(['id' => $request->request->get('id')]);
+        $customer = $entityManager->getRepository(Customer::class)
+            ->findOneBy(['id' => $request->request->get('id')]);
 
         $entityManager->remove($customer);
         $entityManager->flush();
+
+        // Remove the custom from session storage
+        $request->getSession()->remove(Customer::SESSION_IDENTIFIER);
+        $request->getSession()->remove(Application\Version::SESSION_IDENTIFIER);
 
         $this->addFlash(
             'success',
