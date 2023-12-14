@@ -3,15 +3,19 @@
 namespace Pronto\MobileBundle\Service\PushNotification;
 
 use Exception;
+use Google\Auth\Credentials\ServiceAccountCredentials;
+use Google\Auth\Middleware\AuthTokenMiddleware;
+use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
-use Pronto\MobileBundle\Utils\Firebase\Tokens\Client;
+use GuzzleHttp\HandlerStack;
+use Psr\Http\Message\ResponseInterface;
 
 class ApnsTokenConverter
 {
     private int $numberOfTokens = 0;
     private array $chunks = [];
     private string $bundle;
-    private string $serverKey;
+    private array $serviceAccount;
 
     public function setBundle(string $bundle): void
     {
@@ -21,6 +25,11 @@ class ApnsTokenConverter
     public function setDevices(array $devices): void
     {
         $this->convertDevicesToTokens($devices);
+    }
+
+    public function setServiceAccount(array $serviceAccount): void
+    {
+        $this->serviceAccount = $serviceAccount;
     }
 
     private function convertDevicesToTokens(array $devices): void
@@ -36,15 +45,10 @@ class ApnsTokenConverter
         $this->chunks = array_chunk($tokens, 100);
     }
 
-    public function setServerKey(string $serverKey): void
-    {
-        $this->serverKey = $serverKey;
-    }
-
     /**
      * @throws GuzzleException
      */
-    public function convert()
+    public function convert(): array|false
     {
         if (!$this->canConvert()) {
             return false;
@@ -56,17 +60,12 @@ class ApnsTokenConverter
         foreach ($this->chunks as $chunk) {
             try {
                 $response = $this->execute($chunk);
-            } catch (Exception $exception) {
+            } catch (Exception) {
                 continue;
             }
 
-            // If the response didn't contain an object, return false
-            if ($response === false) {
-                return false;
-            }
-
             // Return the results
-            $results = array_merge($results, $response->results ?? []);
+            $results = array_merge($results, $response['results'] ?? []);
         }
 
         return $results;
@@ -74,22 +73,43 @@ class ApnsTokenConverter
 
     private function canConvert(): bool
     {
-        return $this->numberOfTokens !== 0 && !empty($this->serverKey) && !empty($this->bundle);
+        return $this->numberOfTokens !== 0 && !empty($this->serviceAccount) && !empty($this->bundle);
     }
 
     /**
      * @throws GuzzleException
      */
-    private function execute(array $chunk)
+    private function execute(array $chunk): array
     {
-        $client = new Client($this->serverKey);
+        $credentials = new ServiceAccountCredentials(
+            scope: ['https://www.googleapis.com/auth/firebase.messaging'],
+            jsonKey: $this->serviceAccount,
+        );
 
-        $client->setBody([
-            'application' => $this->bundle,
-            'sandbox'     => false,
-            'apns_tokens' => $chunk
+        $middleware = new AuthTokenMiddleware($credentials);
+        $stack = HandlerStack::create();
+        $stack->push($middleware);
+
+        $client = new Client([
+            'handler'  => $stack,
+            'base_uri' => 'https://iid.googleapis.com',
+            'auth'     => 'google_auth',
         ]);
 
-        return $client->send('', 'POST');
+        $response = $client->post(
+            uri: '/iid/v1:batchImport',
+            options: [
+                'headers' => [
+                    'access_token_auth' => 'true'
+                ],
+                'json'    => [
+                    'application' => $this->bundle,
+                    'sandbox'     => false,
+                    'apns_tokens' => $chunk
+                ],
+            ]
+        );
+
+        return json_decode($response->getBody()->getContents(), true);
     }
 }

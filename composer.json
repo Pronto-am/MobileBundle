@@ -40,7 +40,8 @@
         "league/oauth2-server-bundle": "^0.5",
         "symfony/routing": "^6.4",
         "symfony/mailer": "^6.4",
-        "symfony/cache": "^6.4"
+        "symfony/cache": "^6.4",
+        "google/auth": "^1.33"
     },
     "require-dev": {
         "nelmio/alice": "^3.5.0",

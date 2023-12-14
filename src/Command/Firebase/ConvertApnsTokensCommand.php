@@ -73,9 +73,21 @@ class ConvertApnsTokensCommand extends Command
                 // Get the configuration of the push notifications plugin
                 $config = $this->prontoMobile->getPluginConfiguration(Plugin::PUSH_NOTIFICATIONS, (int)$application['id']);
 
+                $serviceAccountString = $config[Plugin::PUSH_NOTIFICATIONS_FIREBASE_SERVICE_ACCOUNT];
+                if (!is_string($serviceAccountString)) {
+                    $output->writeln('Firebase Service Account is invalid');
+                    continue;
+                }
+
+                $serviceAccount = json_decode($serviceAccountString, true);
+                if (!is_array($serviceAccount) || json_last_error() !== JSON_ERROR_NONE) {
+                    $output->writeln('Firebase Service Account is invalid');
+                    continue;
+                }
+
                 // Set the necessary information
                 $this->apnsTokenConverter->setBundle($application['ios_bundle_identifier']);
-                $this->apnsTokenConverter->setServerKey($config[Plugin::PUSH_NOTIFICATIONS_FIREBASE_TOKEN]);
+                $this->apnsTokenConverter->setServiceAccount($serviceAccount);
                 $this->apnsTokenConverter->setDevices($devices);
 
                 $results = $this->apnsTokenConverter->convert();
@@ -100,11 +112,11 @@ class ConvertApnsTokensCommand extends Command
 
             // Loop through the results and add the firebase tokens to the apns tokens
             foreach ($results as $result) {
-                if ($result->status === 'OK') {
+                if ($result['status'] === 'OK') {
                     $deviceRepository->addFirebaseToken(
                         applicationId: $application['id'],
-                        apnsToken: $result->apns_token,
-                        firebaseToken: $result->registration_token
+                        apnsToken: $result['apns_token'],
+                        firebaseToken: $result['registration_token'],
                     );
                 }
             }
