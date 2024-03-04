@@ -16,7 +16,7 @@ class PushNotificationDTO extends BaseDTO
 
     public DateTime $scheduledSending;
 
-    public int|null $segment;
+    public $segment;
 
     public bool $test;
 
