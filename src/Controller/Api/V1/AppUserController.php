@@ -79,8 +79,8 @@ class AppUserController extends BaseApiController
         }
 
         // Save additional data
-        if ($request->request->get('extra_data') !== null) {
-            $user->setExtraData(json_decode(json_encode($request->request->get('extra_data')), true));
+        if ($request->request->all()['extra_data'] !== null) {
+            $user->setExtraData(json_decode(json_encode($request->request->all()['extra_data']), true));
         }
 
         $entityManager->persist($user);
@@ -478,8 +478,8 @@ class AppUserController extends BaseApiController
         }
 
         // Save additional data
-        if ($request->request->get('extra_data') !== null) {
-            $user->setExtraData(json_decode(json_encode($request->request->get('extra_data')), true));
+        if ($request->request->all()['extra_data'] !== null) {
+            $user->setExtraData(json_decode(json_encode($request->request->all()['extra_data']), true));
         }
 
         $entityManager->persist($user);
