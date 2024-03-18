@@ -14,7 +14,7 @@ use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
-#[AsEventListener(event: UserResolveEvent::class, method: 'onUserResolve')]
+//#[AsEventListener(event: UserResolveEvent::class, method: 'onUserResolve')]
 final class UserResolveListener
 {
     private UserProviderInterface $userProvider;

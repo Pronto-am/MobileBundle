@@ -7,17 +7,21 @@ namespace Pronto\MobileBundle\EventSubscriber\Kernel\OAuth;
 use Doctrine\ORM\EntityManagerInterface;
 use League\Bundle\OAuth2ServerBundle\Manager\ClientManagerInterface;
 use League\Bundle\OAuth2ServerBundle\Model\Client;
+use League\OAuth2\Server\AuthorizationServer;
+use Monolog\Logger;
 use Pronto\MobileBundle\Entity\Application;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\Routing\RequestContext;
 
 class TokenRequestSubscriber implements EventSubscriberInterface
 {
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
-        private readonly ClientManagerInterface $clientManager
+        private readonly ClientManagerInterface $clientManager,
     ) {}
 
     public static function getSubscribedEvents(): array
@@ -51,7 +55,8 @@ class TokenRequestSubscriber implements EventSubscriberInterface
         if ($request->request->has('client_id')) {
             $clientId = $this->getClientIdFromBody($request);
             if ($clientId !== null) {
-                $event->getRequest()->request->set('client_id', $clientId);
+                $request->request->set('client_id', $clientId);
+                $request->attributes->set('client_id_pronto_legacy', $clientId);
             }
         }
     }
