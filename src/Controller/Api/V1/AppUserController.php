@@ -248,7 +248,7 @@ class AppUserController extends BaseApiController
         $entityManager->flush();
 
         // Lowercase and strip spaces from the company name
-        $companyEmail = strtolower(str_replace(' ', '', $application->getCustomer()->getCompanyName()));
+        $companyEmail = strtolower(str_replace([' ', '+'], '', $application->getCustomer()->getCompanyName()));
 
         // Get the domain name of the CMS
         $domain = $this->prontoMobile->getConfiguration('domain', 'pronto.am');
@@ -256,7 +256,7 @@ class AppUserController extends BaseApiController
         // Build the message with the password reset link
         $message = (new Email())
             ->subject($application->getName() . ' | ' . $translator->trans('authentication.reset_password'))
-            ->from($companyEmail . '@' . $domain, $application->getCustomer()->getCompanyName())
+            ->from(new Address($companyEmail . '@' . $domain, $application->getCustomer()->getCompanyName()))
             ->to(new Address($user->getEmail(), $user->getFullName()))
             ->html(
                 $this->renderView(
