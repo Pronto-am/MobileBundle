@@ -7,6 +7,7 @@ namespace Pronto\MobileBundle\Controller\Api\V1;
 use Composer\Semver\Comparator;
 use DateTimeInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Pronto\MobileBundle\Controller\Api\BaseApiController;
 use Pronto\MobileBundle\Entity\AppVersion;
 use Pronto\MobileBundle\Entity\Plugin;
@@ -134,7 +135,13 @@ class AppVersionController extends BaseApiController
 
         // Determine which versions are new
         $versions = array_reduce($versions, function ($result, AppVersion $version) {
-            if (Comparator::greaterThan($version->getVersion(), $_GET['version'])) {
+            try {
+                $greaterThen = Comparator::greaterThan($version->getVersion(), $_GET['version']);
+            }  catch (Exception) {
+                $greaterThen = true;
+            }
+
+            if ($greaterThen) {
                 $result[] = [
                     'id'           => (int)$version->getId(),
                     'version'      => $version->getVersion(),
