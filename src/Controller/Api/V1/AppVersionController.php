@@ -136,7 +136,7 @@ class AppVersionController extends BaseApiController
         // Determine which versions are new
         $versions = array_reduce($versions, function ($result, AppVersion $version) {
             try {
-                $greaterThen = Comparator::greaterThan($version->getVersion(), $_GET['version']);
+                $greaterThen = Comparator::greaterThan($version->getVersion(), $_GET['version'] ?? '0.0.0');
             }  catch (Exception) {
                 $greaterThen = true;
             }
